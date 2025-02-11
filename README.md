@@ -73,8 +73,6 @@
   - 微軟官方 SQL Server **輕量版**，適合開發與測試。
   - **搭配管理工具**：[SQL Server Management Studio (SSMS)](https://aka.ms/ssmsfullsetup)
 
-> **（可選）Oracle 練習環境**：[Oracle Database Express](https://www.oracle.com/database/technologies/xe-downloads.html)（學習門檻較高）
-
 ---
 
 ### 2.3 資料庫管理工具
@@ -82,37 +80,59 @@
 - ✅ **[SQL Server Management Studio (SSMS)](https://aka.ms/ssmsfullsetup)**
   - 微軟官方 GUI 工具，方便管理 SQL Server。
 
-- ✅ **[DBeaver](https://dbeaver.io/)**（可選）
-  - **跨平台資料庫管理工具**，支援 SQL Server、Oracle、MySQL。
-
 ---
 
-### 2.4 Web 伺服器（若要開發網頁版請假系統）
-
-- ✅ **[IIS Express](https://docs.microsoft.com/en-us/iis/extensions/introduction-to-iis-express/iis-express-overview)**（內建於 Visual Studio）
-  - ASP.NET MVC / Web API 開發時的測試伺服器。
-
-- ✅ **[Postman](https://www.postman.com/)**（測試 API）
-  - 若請假系統有 API，Postman 可測試 API 請求與回應。
-
----
-
-### 2.5 可選工具（開發與除錯）
-
-- ✅ **[Git](https://git-scm.com/)**（版本控制，推薦搭配 GitHub / GitLab）
-- ✅ **[Docker](https://www.docker.com/)**（若要使用容器化技術管理 SQL Server 或 Web 應用程式）
-
----
-
-### 2.6 開發步驟（以請假系統為例）
+### 2.4 開發步驟（以聯絡人管理系統為例）
 
 **設定環境**
 
-1️⃣ **安裝 SQL Server Express 與 SSMS**，建立 **請假申請表 (LeaveRequests)**
+1️⃣ **建立資料庫與資料表**
+
+   - 使用 SSMS 建立名為 `ContactDB` 的資料庫。
+   - 在 `ContactDB` 中建立名為 `Contacts` 的資料表，包含以下欄位：
+     - `Id`（主鍵，自動增量）
+     - `Name`（聯絡人姓名）
+     - `Phone`（聯絡人電話）
+     - `Email`（聯絡人電子郵件）
 
 2️⃣ **使用 Visual Studio 撰寫 C# 後端程式**
 
-3️⃣ **撰寫 SQL 語法**，讓 C# 與資料庫溝通
+   - 建立一個新的 C# 專案，並引用 `Microsoft.Data.SqlClient` 套件。
+   - 實作以下功能：
+     - **新增聯絡人**：將使用者輸入的姓名、電話和電子郵件新增到 `Contacts` 資料表。
+     - **查詢聯絡人**：根據姓名查詢聯絡人的詳細資訊。
+     - **更新聯絡人**：根據聯絡人 ID 更新其姓名、電話或電子郵件。
+     - **刪除聯絡人**：根據聯絡人 ID 刪除其資料。
 
-4️⃣ **（可選）開發 Web 介面**，使用 ASP.NET MVC 或 Blazor
+3️⃣ **撰寫 SQL 語法，讓 C# 與資料庫溝通**
+
+   - 使用參數化查詢來防止 SQL 注入攻擊。
+   - 例如，新增聯絡人的 SQL 語法：
+     ```csharp
+     string insertQuery = "INSERT INTO Contacts (Name, Phone, Email) VALUES (@Name, @Phone, @Email)";
+     using (SqlCommand command = new SqlCommand(insertQuery, connection))
+     {
+         command.Parameters.AddWithValue("@Name", name);
+         command.Parameters.AddWithValue("@Phone", phone);
+         command.Parameters.AddWithValue("@Email", email);
+         command.ExecuteNonQuery();
+     }
+     ```
+
+4️⃣ **（可選）開發 Web 介面**
+
+   - 使用 ASP.NET MVC 或 Blazor 建立簡單的 Web 介面，讓使用者可以透過瀏覽器進行聯絡人管理操作。
+
+---
+
+### 2.5 參考資源
+
+- **教學課程：實作 CRUD 功能 - ASP.NET MVC 搭配 EF Core**
+  - 這篇教學詳細介紹了如何在 ASP.NET MVC 中實作 CRUD（建立、讀取、更新、刪除）功能，並使用 Entity Framework Core 進行資料庫操作。
+  - :contentReference[oaicite:0]{index=0}
+
+- **影片教學：Complete CRUD Operation in Asp.Net C# With SQL Server**
+  - 這段影片教學展示了如何在 ASP.NET C# 中完成 CRUD 操作，並與 SQL Server 整合。
+  - 
+
 
