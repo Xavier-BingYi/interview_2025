@@ -22,7 +22,23 @@
     ```
     - 優化解法（使用哈希表）
     ```cpp
+    class Solution {
+    public:
+        vector<int> twoSum(vector<int>& nums, int target) {
+            // 使用哈希表來存儲已經遍歷過的元素和其索引
+            unordered_map<int, int> map;
 
+            for (int i = 0; i < nums.size(); i++) {
+                int complement = target - nums[i]; // 計算補數
+                if (map.find(complement) != map.end()) {
+                    return {map[complement], i}; // 找到解
+                }
+                map[nums[i]] = i; // 將當前元素與其索引加入哈希表
+            }
+
+            return {}; // 如果沒找到，返回空 vector
+        }
+    };
     ```
 - [ ] **Easy** [Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/) (#26) - **雙指標操作**
 - [ ] **Easy** [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) (#217) - **基本查找**

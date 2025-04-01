@@ -4,13 +4,21 @@
 - [ ] 測試 I2C loopback（MCU 自己接自己）
 
 # 2. MCU 系統架構
-- [ ] GPIO 控制與 PWM 產生
-- [ ] 設定時脈樹 (Clock Tree) 並理解 PLL
-- [ ] 記憶體架構（SRAM / Flash）與 Linker file (`flash.ld` vs `ram.ld`)
-- [ ] 測試將 firmware 放入 RAM (`ram.ld`) 運行
+- [ ] **記憶體架構（SRAM / Flash）與 Linker file (`flash.ld` 與 `ram.ld`)**
+  - 了解如何配置 MCU 的記憶體區域，並根據不同需求設定 Linker file，將程式碼和資料正確地放置於不同的記憶體區域。掌握如何使用 `flash.ld` 和 `ram.ld` 來分配 Flash 和 RAM 的記憶體區域，以便達成最佳效能與系統穩定性。
+
+- [ ] **測試將固件放入 RAM (`ram.ld`) 運行**
+  - 進行固件測試時，將程式碼加載到 RAM 中執行可以加速執行速度，並避免對 Flash 記憶體的修改。了解如何在 Linker file 中配置這一部分，並根據需要將程式碼和數據放入 RAM 以提高執行效率。
+
+- [ ] **MCU 選型標準：評估接口數量、定時器資源、記憶體需求及 Flash 使用與執行需求**
+  - 在選擇 MCU 時，評估所需的硬體資源，這包括接口數量、定時器資源、記憶體大小以及 Flash 記憶體的使用需求。選擇合適的 MCU 應該根據應用需求，確保硬體資源符合預期的功能需求。
+
+- [ ] **如何選擇支援 Linux 或 RTOS 作業系統的 MCU？**
+  - 了解不同 MCU 的處理能力、記憶體配置及處理器架構（例如是否具備記憶體管理單元 MMU 等功能）。若需要選擇支援 Linux 的 MCU，通常應考慮更高階的處理器架構，例如 ARM Cortex-A 系列，而非單純的 MCU。此部分需考量處理器架構、記憶體管理單元（MMU）的需求，以及如何整合外部儲存裝置（如 NAND Flash）來支援 Linux 系統的運行。
 
 # 3. 中斷處理 (EXTI & NVIC)
 - [ ] 使用 EXTI 觸發 GPIO 切換 LED
+- [ ] 分析何時需要使用 Pulling，何時需要使用 Interrupt
 - [ ] 嘗試在 RTOS 環境下使用中斷喚醒 Task
 
 # 4. 作業系統概念
@@ -107,7 +115,6 @@
 - [ ] 研究指令管線 (Pipeline) 的概念，理解指令並行執行的方式以及如何提高指令執行的效能。
 
 ## 總線架構與通訊 (Bus Architecture and Communication)
-- [ ] 學習總線系統的工作原理，包括數據總線、地址總線和控制總線。
 - [ ] 了解如何通過總線進行資料傳輸，並學習常見的總線架構如 PCI、I2C、SPI 等。
 
 ## 中斷與例外處理 (Interrupts and Exceptions)
