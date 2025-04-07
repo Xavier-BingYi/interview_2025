@@ -4,29 +4,7 @@
 
 目前我的英文程度約為台灣國中生的水準，從國中畢業後幾乎未再接觸英文，許多國中時學過的單字也已經遺忘，因此需要從最基礎的部分重新開始學習。我希望你能夠循序漸進地協助我學習，並根據我的進度調整教學內容，確保我能夠穩步進步。
 
-接下來，我會將我的 MD 檔案傳送給你，請特別注意每次學習的單字不要重複，以確保學習的多樣性與效率。
-
-# 📚 多益閱讀測驗練習：文章閱讀技巧
-
-🔹 **文章閱讀技巧**
-
-1. **先閱讀問題，了解重點**
-   - 先看問題再讀文章，可以幫助你專注於重要信息
-   - 問題通常圍繞：誰、什麼、何時、何地、為何、如何
-
-2. **掌握段落的主題句**
-   - 段落首句通常是主題句，包含段落的主要內容
-   - 尾句可能總結或強調重點
-
-3. **找出關鍵詞**
-   - 名字、日期、數字、專業術語
-   - 轉折詞：but, however, although, nevertheless
-   - 結論詞：therefore, thus, as a result, in conclusion
-
-4. **掌握文章結構**
-   - 時間順序：first, then, after that, finally
-   - 因果關係：because, since, as a result
-   - 對比關係：however, but, although, despite
+接下來，我會將我的 MD 檔案傳送給你，請特別注意每次學習的單字不要重複，以確保學習的多樣性與效率，並且要保持教學內容版面的一致性。
 
 ---
 
@@ -81,7 +59,9 @@
    - He **works** hard.（他努力工作。）
    - They **run** every morning.（他們每天早上跑步。）
 
-**✅ 練習**
+---
+
+## ✅ 練習
 - 用「employee, product, meeting」各造 1 句
 
 ---
@@ -112,7 +92,7 @@
 
 ---
 
-# 第二天學習計畫
+# 第二天
 
 ## 📌 目標
 1. 記住 25 個新單字
@@ -173,7 +153,9 @@
    - He **isn’t** the manager.（他不是經理。）
    - They **aren’t** in the office.（他們不在辦公室。）
 
-**✅ 練習**
+---
+
+## ✅ 練習
 - 用「promotion, strategy, investor」造 3 句疑問句
 - 用「conference, inventory, retire」造 3 句否定句
 
@@ -193,14 +175,16 @@
 
 ---
 
-# 第三天學習計畫
+# 第三天
 
-📌 **目標**
-- 記住 25 個新單字
-- 學習現在式與過去式的基本比較
-- 熟悉多益閱讀測驗的 片語填空 與 邏輯推理 題型
+## 📌 目標
+1. 記住 25 個新單字
+2. 學習現在式與過去式的基本比較
+3. 熟悉多益閱讀測驗的片語填空與邏輯推理題型
 
-📝 **單字學習 (25 個)**
+---
+
+## 📝 單字學習 (25 個)
 
 | 單字      | 詞性  | 中文意思   | 例句                                   |
 |-----------|-------|------------|----------------------------------------|
@@ -211,7 +195,7 @@
 | confirm   | v.    | 確認        | Please confirm your attendance.        |
 | reserve   | v.    | 預約；保留  | I'd like to reserve a table for two.   |
 | notify    | v.    | 通知        | You will be notified by email.         |
-| charge    | n./v. | 費用；收費  | They charge $5 for delivery.          |
+| charge    | n./v. | 費用；收費  | They charge $5 for delivery.           |
 | receipt   | n.    | 收據        | Keep the receipt for your records.     |
 | refund    | n./v. | 退款        | I asked for a refund because of the defect. |
 | expire    | v.    | 到期        | My passport expires next year.         |
@@ -230,23 +214,25 @@
 | inquiry   | n.    | 詢問        | We received an inquiry about our services. |
 | verify    | v.    | 核實        | Please verify your identity before proceeding. |
 
-📖 **基礎語法：現在式vs過去式**
+---
 
-🔹 **現在式（Present Simple）回顧**
+## 📖 基礎語法：現在式vs過去式
+
+### 🔹 現在式（Present Simple）回顧
 - 用於表達習慣、常態或一般事實
   - He works at ABC Company. （他在ABC公司工作。）
   - They meet every Monday. （他們每週一開會。）
 
-🔹 **過去式（Past Simple）基礎**
+### 🔹 過去式（Past Simple）基礎
 - 用於表達已經完成的過去動作
   - He worked at ABC Company last year. （他去年在ABC公司工作。）
   - They met yesterday. （他們昨天開會了。）
 
-🔹 **主要時間標記詞**
+### 🔹 主要時間標記詞
 - 現在式：every day, usually, always, sometimes, often
 - 過去式：yesterday, last week, last month, two days ago, in 2020
 
-🔹 **動詞過去式變化**
+### 🔹 動詞過去式變化
 - 規則變化：加 -ed
   - work → worked
   - talk → talked
@@ -263,7 +249,9 @@
   - make → made
   - come → came
 
-✅ **練習題：辨別時態並填入正確形式**
+---
+
+## ✅ 練習題：辨別時態並填入正確形式
 
 1. The company (launch) ________ a new product last month.
 2. Our team always (meet) ________ on Friday mornings.
@@ -271,9 +259,11 @@
 4. The manager usually (approve) ________ requests within 24 hours.
 5. We (attend) ________ the conference last week.
 
-📚 **多益閱讀測驗練習**
+---
 
-1️⃣ **片語填空**
+## 📚 多益閱讀測驗練習
+
+### 1️⃣ 片語填空
 
 練習1：
 
@@ -302,7 +292,7 @@ All employees must comply ________ the new regulations.
 
 答案：B（comply with 是固定搭配）
 
-2️⃣ **邏輯推理**
+### 2️⃣ 邏輯推理
 
 閱讀段落：
 
@@ -331,14 +321,14 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
 
 ---
 
-# 第四天學習計畫
+# 第四天
 
-📌 **目標**
-- 記住 25 個新商業英文單字
-- 學習現在進行式的用法
-- 加強多益閱讀測驗中的文章閱讀技巧
+## 📌 目標
+1. 記住 25 個新商業英文單字
+2. 學習現在進行式的用法
+3. 加強多益閱讀測驗中的文章閱讀技巧
 
-📝 **單字學習 (25 個)**
+## 📝 單字學習 (25 個)
 
 | 單字        | 詞性   | 中文意思           | 例句                                           |
 |-------------|--------|--------------------|------------------------------------------------|
@@ -366,17 +356,19 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
 | efficiency | n.     | 效率               | We need to improve our efficiency.            |
 | priority   | n.     | 優先事項           | Customer satisfaction is our top priority.    |
 | flexible   | adj.   | 靈活的             | We offer flexible working hours.              |
-| benefit    | n.     | 福利；好處         | The company provides good benefits.           |
+| benefit    | n.     | 福利；好處         | The company provides good benefits.         |
 
-📖 **基礎語法：現在進行式**
+---
 
-🔹 **現在進行式的形成**
+## 📖 基礎語法：現在進行式
+
+### 🔹 現在進行式的形成
 - 現在進行式 = be 動詞 (am/is/are) + 動詞 ing 形式
   - I am working on a new project. (我正在進行一個新專案。)
   - She is writing a report. (她正在寫報告。)
   - They are having a meeting. (他們正在開會。)
 
-🔹 **現在進行式的用法**
+### 🔹 現在進行式的用法
 1. **表示現在正在進行的動作**
    - The manager is interviewing a new candidate now. (經理現在正在面試新候選人。)
    - We are discussing the new marketing strategy. (我們正在討論新的行銷策略。)
@@ -385,14 +377,16 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
    - I am attending a conference next week. (我下週要參加一個會議。)
    - They are launching the new product next month. (他們下個月要推出新產品。)
 
-🔹 **現在式 vs. 現在進行式**
+### 🔹 現在式 vs. 現在進行式
 - **現在式**：表示習慣性、經常性的動作或一般事實
   - I work in the marketing department. (我在行銷部門工作。)
 
 - **現在進行式**：表示正在進行的動作
   - I am working on a special project this week. (這週我正在進行一個特別專案。)
 
-✅ **練習題：使用現在進行式**
+---
+
+## ✅ 練習題：使用現在進行式
 1. The team (discuss) _________ the new policy right now.
 2. Our company (implement) _________ a new system this month.
 3. She (prepare) _________ for her presentation tomorrow.
@@ -401,5 +395,488 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
 
 ---
 
-# 第五天學習計畫(尚未開始)
+# 第五天
 
+## 📌 目標
+1. 記住 25 個新商業英文單字  
+2. 學習過去進行式的用法  
+3. 練習多益閱讀測驗中的商業信件和電子郵件題型
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字        | 詞性   | 中文意思           | 例句                                           |
+|-------------|--------|--------------------|------------------------------------------------|
+| agenda      | n.     | 議程               | The meeting agenda has been sent to all participants. |
+| appointment | n.     | 約會；預約         | I have an appointment with the doctor at 3 PM. |
+| campaign    | n.     | 活動；宣傳         | The marketing campaign was very successful.    |
+| catalog     | n.     | 目錄               | The new product catalog is available online.   |
+| certificate | n.     | 證書               | He received a certificate after completing the course. |
+| delegate    | v./n.  | 委派；代表         | The manager delegated the task to her assistant. |
+| develop     | v.     | 發展；開發         | We need to develop a new strategy.             |
+| device      | n.     | 設備；裝置         | This is a new electronic device.               |
+| executive   | n.     | 主管；行政人員     | She is an executive in a large corporation.    |
+| expand      | v.     | 擴展；擴大         | The company plans to expand into new markets.  |
+| feedback    | n.     | 回饋               | We value customer feedback.                    |
+| generate    | v.     | 產生；創造         | The new system will generate more revenue.     |
+| guideline   | n.     | 指導方針           | Please follow the company guidelines.          |
+| hardware    | n.     | 硬體               | We need to upgrade our computer hardware.      |
+| launch      | v./n.  | 推出；發布         | The company will launch a new product next week. |
+| manual      | n.     | 手冊；說明書       | Please read the user manual before operating the machine. |
+| network     | n./v.  | 網絡；建立關係     | Networking is important in business.           |
+| organize    | v.     | 組織；安排         | She organized an important conference.         |
+| outsource   | v.     | 外包               | The company decided to outsource IT services.  |
+| participant | n.     | 參與者             | There were 50 participants in the workshop.    |
+| register    | v.     | 註冊               | You need to register for the seminar by Friday.|
+| relocate    | v.     | 搬遷；重新安置     | The office will relocate to a new building.    |
+| resolve     | v.     | 解決               | We need to resolve this issue quickly.         |
+| software    | n.     | 軟體               | The company develops accounting software.      |
+| sponsor     | v./n.  | 贊助               | They sponsor many charity events.              |
+
+---
+
+## 📖 基礎語法：過去進行式
+
+### 🔹 過去進行式的形成
+
+過去進行式 = **be 動詞的過去式 (was/were) + 動詞 ing 形式**
+
+#### ✅ 例句：
+- I was working late yesterday.  
+  *我昨天工作到很晚。*
+
+- They were meeting with clients all morning.  
+  *他們整個早上都在和客戶開會。*
+
+---
+
+### 🔹 過去進行式的用法
+
+#### 1. 表示過去某個時間點**正在進行**的動作：
+
+- When she called, I was writing a report.  
+  *當她打電話時，我正在寫報告。*
+
+- At 3 PM yesterday, they were discussing the new project.  
+  *昨天下午 3 點，他們正在討論新專案。*
+
+#### 2. 表示過去一段時間內**持續進行**的動作：
+
+- Last week, we were developing a new marketing strategy.  
+  *上週，我們一直在開發新的行銷策略。*
+
+- They were working on the project all day.  
+  *他們整天都在進行這個專案。*
+
+---
+
+### 🔹 過去式 vs. 過去進行式
+
+| 時態        | 用法                         | 例句 |
+|-------------|------------------------------|------|
+| 過去式      | 表示過去已經完成的動作       | I finished the report yesterday.  <br> *我昨天完成了報告。* |
+| 過去進行式  | 表示某個時間點正在進行的動作 | I was finishing the report when my boss called.  <br> *當老闆打電話時，我正在完成報告。* |
+
+---
+
+## ✅ 練習題：使用過去進行式
+1. While the manager (present) _________  the results, the power went out.  
+2. She (wait) _________ for the client when I arrived.  
+3. The employees (work) _________ overtime all last week.  
+4. When the error occurred, we (test) _________ the new system.  
+5. They (discuss) _________ the contract terms during the meeting.
+
+---
+
+## 📚 多益閱讀測驗練習：商業信件和電子郵件
+
+### 🔹 商業電子郵件格式
+
+- **收件人 (To:)** - 電子郵件接收者  
+- **副本 (Cc:)** - 需要知道信息但不需要直接回應的人  
+- **主旨 (Subject:)** - 簡潔明確地說明郵件內容  
+- **稱呼 (Salutation)** - Dear Mr./Ms./Dr. + 姓氏  
+- **正文 (Body)** - 內容簡明扼要  
+- **結尾 (Closing)** - Sincerely, Best regards, Thank you  
+- **簽名 (Signature)** - 寄件人姓名和聯繫方式  
+
+---
+
+### 🔹 閱讀商業信件的技巧
+
+1. **快速瀏覽標題和格式**  
+   - 辨識信件類型（邀請、通知、確認等）  
+   - 確認日期、收件人和寄件人  
+
+2. **找出目的和重點**  
+   - 信件的主要目的往往在第一段  
+   - 細節和具體要求通常在中間段落  
+   - 行動要求或截止日期通常在最後一段  
+
+3. **關注商業書信常見用語**  
+   - 開頭：With reference to..., Regarding...  
+   - 中間：Please note that..., We would like to inform you...  
+   - 結尾：Please do not hesitate to contact us..., We look forward to...
+
+---
+
+### 🔹 練習閱讀：商業電子郵件
+
+閱讀下面的電子郵件，然後回答問題：
+
+```
+To: j.miller@techcorp.com
+Cc: a.wilson@techcorp.com
+Subject: Upcoming Training Session - April 15
+
+Dear Mr. Miller,
+
+I am writing to inform you about the upcoming staff training session scheduled for April 15, 2025, from 9:00 AM to 4:00 PM at the main conference room.
+
+As discussed in our last meeting, this session will focus on the new customer management software that our company will implement next month. All department managers are required to attend as they will be responsible for training their team members afterward.
+
+Please bring your laptop and the user manual that was distributed last week. If you have not received the manual yet, please contact the IT department as soon as possible.
+
+A detailed agenda will be sent to you three days before the session. If you have any questions or special requirements, please do not hesitate to contact me.
+
+Thank you for your cooperation.
+
+Best regards,
+Sarah Johnson
+HR Training Coordinator
+TechCorp Inc.
+Tel: 555-123-4567
+s.johnson@techcorp.com
+```
+
+#### 問題：
+
+1. What is the main purpose of this email?  
+   (A) To announce a new software implementation  
+   (B) To invite managers to a training session  
+   (C) To distribute a user manual  
+   (D) To share the training agenda  
+
+2. When will the training session take place?  
+   (A) Next month  
+   (B) Three days from now  
+   (C) April 15, 2025  
+   (D) Last week  
+
+3. What should Mr. Miller bring to the session?  
+   (A) His team members  
+   (B) A new software  
+   (C) His laptop and user manual  
+   (D) The detailed agenda  
+
+4. What will happen if Mr. Miller hasn't received the user manual?  
+   (A) He should contact Sarah Johnson  
+   (B) He should contact the IT department  
+   (C) He should wait for three more days  
+   (D) He cannot attend the training  
+
+5. According to the email, what will be sent three days before the session?  
+   (A) The user manual  
+   (B) A detailed agenda  
+   (C) A list of special requirements  
+   (D) Contact information  
+
+#### 答案：
+1. (B)  
+2. (C)  
+3. (C)  
+4. (B)  
+5. (B)
+
+---
+
+# 第六天
+
+## 📌 目標
+1. 記住 25 個新商業英文單字
+2. 學習未來式的用法
+3. 練習多益閱讀測驗中的廣告與公告題型
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字          | 詞性   | 中文意思       | 例句                                        |
+|---------------|--------|----------------|---------------------------------------------|
+| achieve       | v.     | 達成           | We need to achieve our sales targets.       |
+| accurate      | adj.   | 準確的         | The report contains accurate information.   |
+| analyze       | v.     | 分析           | Let's analyze the market data.              |
+| appreciate    | v.     | 感謝；欣賞     | I appreciate your help on this project.     |
+| authorize     | v.     | 授權           | Only managers can authorize this expense.   |
+| brief         | adj./v.| 簡短的；簡述   | Please keep your presentation brief.        |
+| calculate     | v.     | 計算           | Can you calculate the total cost?           |
+| collaborate   | v.     | 合作           | Our teams will collaborate on this project. |
+| conduct       | v.     | 進行；舉辦     | The company will conduct a survey.          |
+| contribute    | v.     | 貢獻；投稿     | Everyone should contribute to the discussion.|
+| coordinate    | v.     | 協調           | She will coordinate the event.              |
+| decrease      | v./n.  | 減少           | Sales decreased by 10% last month.          |
+| demonstrate   | v.     | 展示；證明     | Let me demonstrate how this works.          |
+| distribute    | v.     | 分發；分配     | The company distributes products worldwide. |
+| effective     | adj.   | 有效的         | This is a very effective solution.          |
+| emphasize     | v.     | 強調           | I want to emphasize the importance of teamwork. |
+| enhance       | v.     | 提升；增強     | This new system will enhance productivity.  |
+| guarantee     | v./n.  | 保證           | We guarantee delivery within 24 hours.      |
+| identify      | v.     | 識別；確認     | We need to identify potential problems.     |
+| illustrate    | v.     | 闡明；說明     | The graph illustrates sales growth.         |
+| increase      | v./n.  | 增加           | Profits increased by 20%.                   |
+| indicate      | v.     | 表明；指示     | The results indicate a positive trend.      |
+| influence     | v./n.  | 影響           | Their marketing campaign influenced our strategy. |
+| inform        | v.     | 通知           | Please inform all staff about the changes.  |
+| investigate   | v.     | 調查           | We will investigate the complaint.          |
+
+---
+
+## 📖 基礎語法：未來式
+
+### 🔹 未來式的表達方式
+
+英文中表達未來的方式主要有以下幾種：
+
+#### 1. **will + 原形動詞**
+- 用於表達未來將發生的事情或決定
+- 例句：
+  - I will submit the report tomorrow. (我明天會提交報告。)
+  - They will attend the conference next week. (他們下週會參加會議。)
+
+#### 2. **be going to + 原形動詞**
+- 用於表達計劃好的事情或明顯的預測
+- 例句：
+  - We are going to launch a new product next month. (我們下個月要推出新產品。)
+  - It's going to rain this afternoon. (今天下午要下雨了。)
+
+#### 3. **現在進行式表達未來**
+- 用於表達已經安排好的近期未來事項
+- 例句：
+  - I am meeting a client tomorrow morning. (我明天早上要見客戶。)
+  - The manager is flying to Tokyo next week. (經理下週要飛去東京。)
+
+---
+
+### 🔹 未來式的用法比較
+
+| 表達方式 | 主要用途 | 例句 |
+|----------|---------|------|
+| will | 臨時決定、預測、承諾 | I will help you with this project. <br> (我會幫你完成這個專案。) |
+| be going to | 預先計劃、明顯的未來趨勢 | We are going to implement a new system. <br> (我們要實施一個新系統。) |
+| 現在進行式 | 已安排的未來事件 | They are presenting their proposal tomorrow. <br> (他們明天要提出他們的提案。) |
+
+---
+
+### 🔹 常用的未來時間表達
+- tomorrow (明天)
+- next week/month/year (下週/月/年)
+- in the future (在未來)
+- soon (很快)
+- in a few days (幾天後)
+- this weekend (這個週末)
+
+---
+
+## ✅ 練習題：使用未來式
+
+1. The company (launch) _________ a new advertising campaign next month.
+2. I (attend) _________ a business meeting tomorrow morning at 9 AM.
+3. We (implement) _________ the new procedures next week.
+4. She (present) _________ her findings at the conference tomorrow.
+5. They (not/participate) _________ in the trade show next year.
+
+---
+
+## 📚 多益閱讀測驗練習：廣告與公告題型
+
+### 🔹 廣告和公告的特點
+
+1. **標題或主題醒目**
+   - 核心信息通常位於開頭或以粗體標示
+   - 例如："Job Vacancy", "Special Offer", "Notice to All Employees"
+
+2. **簡潔明確的語言**
+   - 使用簡短句子傳達關鍵信息
+   - 避免使用過多的專業術語
+
+3. **強調重要細節**
+   - 日期、時間、地點通常會特別標明
+   - 價格、折扣、截止日期等關鍵信息很重要
+
+4. **清晰的結構**
+   - 通常包含標題、正文、聯繫方式
+   - 可能使用項目符號或編號列表呈現信息
+
+---
+
+### 🔹 閱讀廣告和公告的技巧
+
+1. **找出廣告/公告的主要目的**
+   - 是招聘廣告？特價促銷？會議通知？
+   - 目的通常在標題或第一句中明確表達
+
+2. **識別關鍵細節**
+   - 重點關注數字、日期、地點、條件
+   - 注意關鍵詞如"must", "required", "deadline"等
+
+3. **注意任何限制或條件**
+   - 例如："offer valid until...", "only for...", "requirements include..."
+
+4. **找出下一步行動**
+   - 廣告或公告通常會指示讀者該做什麼
+   - 例如："apply by...", "contact us at...", "register before..."
+
+---
+
+### 🔹 練習閱讀：公司公告
+
+閱讀下面的公司公告，然後回答問題：
+
+```
+NOTICE TO ALL EMPLOYEES
+
+OFFICE RELOCATION
+
+Please be informed that our company will be relocating to a new office building effective June 1, 2025. The new office address is:
+
+Brightfield Tower
+123 Business Avenue, 15th Floor
+Downtown Business District
+
+Important Information:
+• All employees must clear their current workstations by May 28, 2025.
+• Packing materials will be available in the supply room starting May 15.
+• The IT department will handle the transfer of all computer equipment.
+• There will be no business operations on May 30-31 during the move.
+• All employees are expected to report to the new office location on June 1 at regular working hours.
+
+An orientation session for the new office facilities will be held on June 1 at 9:00 AM in the main conference room.
+
+For any questions or special arrangements, please contact the Facilities Management team at ext. 4567 or email: facilities@company.com.
+
+Thank you for your cooperation.
+
+Robert Thompson
+Operations Director
+May 5, 2025
+```
+
+#### 問題：
+
+1. What is the main purpose of this notice?
+   (A) To announce a company expansion
+   (B) To inform employees about an office move
+   (C) To invite employees to an orientation session
+   (D) To introduce a new Operations Director
+
+2. When will employees need to clear their workstations?
+   (A) May 15, 2025
+   (B) May 28, 2025
+   (C) May 30, 2025
+   (D) June 1, 2025
+
+3. Who will handle the transfer of computer equipment?
+   (A) Individual employees
+   (B) The Facilities Management team
+   (C) The IT department
+   (D) Robert Thompson
+
+4. On which days will there be no business operations?
+   (A) May 15-28
+   (B) May 28-31
+   (C) May 30-31
+   (D) June 1
+
+5. What will happen at 9:00 AM on June 1?
+   (A) The office will open for the first time
+   (B) An orientation session will be held
+   (C) Employees must report to work
+   (D) The moving process will begin
+
+#### 答案：
+1. (B)
+2. (B)
+3. (C)
+4. (C)
+5. (B)
+
+---
+
+### 🔹 練習閱讀：招聘廣告
+
+閱讀下面的招聘廣告，然後回答問題：
+
+```
+JOB VACANCY
+
+MARKETING SPECIALIST
+
+TechGlobal Inc., a leading technology company, is seeking a qualified Marketing Specialist to join our growing team.
+
+Position Overview:
+• Develop and implement marketing strategies to promote our products and services
+• Create engaging content for various digital platforms
+• Analyze market trends and competitor activities
+• Manage social media campaigns and monitor their performance
+• Prepare marketing reports and presentations
+
+Requirements:
+• Bachelor's degree in Marketing, Business, or related field
+• Minimum 3 years of experience in digital marketing
+• Excellent written and verbal communication skills
+• Proficiency in MS Office and marketing software
+• Experience with social media management and analytics tools
+
+We offer:
+• Competitive salary package
+• Comprehensive health insurance
+• Flexible working hours
+• Professional development opportunities
+• Modern office environment
+
+Interested candidates should submit their resume and cover letter to hr@techglobal.com by May 20, 2025.
+
+Only shortlisted candidates will be contacted for an interview.
+
+TechGlobal Inc. is an equal opportunity employer.
+```
+
+#### 問題：
+
+1. What position is being advertised?
+   (A) Marketing Manager
+   (B) Social Media Specialist
+   (C) Marketing Specialist
+   (D) Digital Content Creator
+
+2. What is the minimum work experience required?
+   (A) No experience required
+   (B) 2 years
+   (C) 3 years
+   (D) 5 years
+
+3. What is NOT mentioned as a benefit of this position?
+   (A) Flexible working hours
+   (B) Transportation allowance
+   (C) Health insurance
+   (D) Professional development opportunities
+
+4. What is the application deadline?
+   (A) Not mentioned
+   (B) Immediately
+   (C) May 20, 2025
+   (D) May 31, 2025
+
+5. Which of the following is NOT a required job responsibility?
+   (A) Creating digital content
+   (B) Training new employees
+   (C) Analyzing market trends
+   (D) Managing social media campaigns
+
+#### 答案：
+1. (C)
+2. (C)
+3. (B)
+4. (C)
+5. (B)
