@@ -880,3 +880,615 @@ TechGlobal Inc. is an equal opportunity employer.
 3. (B)
 4. (C)
 5. (B)
+
+---
+
+# 第七天
+
+## 📌 目標
+1. 記住 25 個新商業英文單字
+2. 學習比較級和最高級的用法
+3. 練習多益閱讀測驗中的圖表和表格理解題型
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字        | 詞性   | 中文意思           | 例句                                           |
+|-------------|--------|--------------------|------------------------------------------------|
+| acquire     | v.     | 獲得；收購         | The company plans to acquire its competitor.   |
+| alternative | n./adj.| 替代品；選擇       | We need to consider alternative solutions.     |
+| applicant   | n.     | 申請人             | There are many applicants for this position.   |
+| assist      | v.     | 協助               | I'm happy to assist you with this task.        |
+| attitude    | n.     | 態度               | A positive attitude is important in customer service. |
+| capability  | n.     | 能力；性能         | The new system has improved capabilities.      |
+| challenge   | n./v.  | 挑戰               | Meeting the deadline will be a challenge.      |
+| commitment  | n.     | 承諾；投入         | We need your full commitment to this project.  |
+| communicate | v.     | 溝通               | It's important to communicate clearly.         |
+| competitive | adj.   | 競爭的             | We operate in a highly competitive market.     |
+| consider    | v.     | 考慮               | Please consider our proposal carefully.        |
+| consistent  | adj.   | 一致的；穩定的     | The quality of our service must be consistent. |
+| consult     | v.     | 咨詢               | You should consult with the manager first.     |
+| critical    | adj.   | 關鍵的；批判的     | Time management is critical for this project.  |
+| diverse     | adj.   | 多樣的；多元的     | We have a diverse team of professionals.       |
+| eliminate   | v.     | 消除；排除         | We need to eliminate unnecessary expenses.     |
+| ensure      | v.     | 確保               | Please ensure that all forms are complete.     |
+| establish   | v.     | 建立；設立         | We need to establish a good relationship with clients. |
+| facilitate  | v.     | 促進；使容易       | The new system will facilitate better communication. |
+| genuine     | adj.   | 真實的；真誠的     | We offer genuine leather products.             |
+| hesitate    | v.     | 猶豫               | Don't hesitate to ask if you have questions.   |
+| impact      | n./v.  | 影響；衝擊         | The new policy will have a significant impact. |
+| improve     | v.     | 改善               | We are constantly working to improve our services. |
+| initiative  | n.     | 主動性；倡議       | She showed great initiative in solving the problem. |
+| innovate    | v.     | 創新               | Companies must innovate to stay competitive.   |
+
+---
+
+## 📖 基礎語法：比較級和最高級
+
+### 🔹 形容詞和副詞的比較級
+
+比較級用於比較兩個人或物之間的差異。
+
+#### 1. 一般規則
+
+**短音節詞 (1-2音節)：加 -er**
+- fast → faster (快 → 更快)
+- cheap → cheaper (便宜 → 更便宜)
+
+**以 e 結尾：加 -r**
+- large → larger (大 → 更大)
+- nice → nicer (好 → 更好)
+
+**以「子音+y」結尾：y 變 i，加 -er**
+- easy → easier (容易 → 更容易)
+- busy → busier (忙 → 更忙)
+
+**以「子音+母音+子音」結尾：重複最後一個字母，加 -er**
+- big → bigger (大 → 更大)
+- hot → hotter (熱 → 更熱)
+
+**長詞 (3音節以上)：more + 原形**
+- expensive → more expensive (昂貴 → 更昂貴)
+- difficult → more difficult (困難 → 更困難)
+
+#### 2. 不規則形式
+
+- good → better (好 → 更好)
+- bad → worse (壞 → 更壞)
+- many/much → more (多 → 更多)
+- little → less (少 → 更少)
+
+#### 3. 比較級句型
+
+- A is + 比較級 + than B
+  - Our new office is bigger than the old one.  
+    (我們的新辦公室比舊的大。)
+  
+  - The meeting was more productive than expected.  
+    (會議比預期更有成效。)
+
+---
+
+### 🔹 形容詞和副詞的最高級
+
+最高級用於比較三個或三個以上的人或物中，指出最突出的一個。
+
+#### 1. 一般規則
+
+**短音節詞 (1-2音節)：加 -est**
+- fast → fastest (快 → 最快)
+- cheap → cheapest (便宜 → 最便宜)
+
+**以 e 結尾：加 -st**
+- large → largest (大 → 最大)
+- nice → nicest (好 → 最好)
+
+**以「子音+y」結尾：y 變 i，加 -est**
+- easy → easiest (容易 → 最容易)
+- busy → busiest (忙 → 最忙)
+
+**以「子音+母音+子音」結尾：重複最後一個字母，加 -est**
+- big → biggest (大 → 最大)
+- hot → hottest (熱 → 最熱)
+
+**長詞 (3音節以上)：most + 原形**
+- expensive → most expensive (昂貴 → 最昂貴)
+- difficult → most difficult (困難 → 最困難)
+
+#### 2. 不規則形式
+
+- good → best (好 → 最好)
+- bad → worst (壞 → 最壞)
+- many/much → most (多 → 最多)
+- little → least (少 → 最少)
+
+#### 3. 最高級句型
+
+- A is the + 最高級 + (in/of) ...
+  - This is the largest company in the industry.  
+    (這是業內最大的公司。)
+  
+  - She is the most experienced person on our team.  
+    (她是我們團隊中經驗最豐富的人。)
+
+---
+
+## ✅ 練習題：使用比較級和最高級
+
+1. Our new product is (good) ________ than our competitor's product.
+2. This is (expensive) ________ hotel in the city.
+3. The project deadline is getting (close) ________.
+4. She works (efficient) ________ in the morning than in the afternoon.
+5. This report contains (much) ________ information than the previous one.
+6. Mr. Johnson is (experienced) ________ manager in our company.
+7. The meeting room on the fifth floor is (large) ________ meeting room in the building.
+8. Today's presentation was (bad) ________ than yesterday's.
+9. This is (important) ________ decision we have to make this year.
+10. The new computer system is (reliable) ________ than the old one.
+
+---
+
+## 📚 多益閱讀測驗練習：圖表和表格理解
+
+### 🔹 圖表和表格的類型
+
+在多益測驗中，你可能會遇到不同類型的圖表和表格：
+
+1. **長條圖 (Bar Charts)**：比較不同類別的數量
+2. **折線圖 (Line Graphs)**：顯示隨時間變化的趨勢
+3. **圓餅圖 (Pie Charts)**：顯示整體中各部分所占的比例
+4. **表格 (Tables)**：以行和列的形式呈現數據
+
+---
+
+### 🔹 閱讀圖表和表格的技巧
+
+1. **理解圖表的標題和標籤**
+   - 標題告訴你圖表的主題
+   - 軸線標籤說明了數據的單位和範圍
+
+2. **識別趨勢和模式**
+   - 上升或下降的趨勢
+   - 最高點和最低點
+   - 異常值或特殊模式
+
+3. **比較不同數據點**
+   - 找出最大值和最小值
+   - 計算百分比變化
+   - 比較不同類別或時間點
+
+4. **結合圖表和文字**
+   - 圖表通常配有說明文字
+   - 問題可能要求你整合圖表和文字中的信息
+
+---
+
+### 🔹 練習閱讀：公司季度銷售報告圖表
+
+請分析下面的銷售數據表，然後回答問題：
+
+**ABC公司 2024年季度銷售數據（單位：千美元）**
+
+| 產品類別 | 第一季度 | 第二季度 | 第三季度 | 第四季度 | 年度總計 |
+|----------|----------|----------|----------|----------|----------|
+| 辦公設備 | 120      | 145      | 132      | 180      | 577      |
+| 電子產品 | 230      | 210      | 250      | 310      | 1,000    |
+| 家具     | 95       | 110      | 105      | 125      | 435      |
+| 文具     | 75       | 82       | 70       | 90       | 317      |
+| 季度總計 | 520      | 547      | 557      | 705      | 2,329    |
+
+#### 問題：
+
+1. Which product category had the highest total sales for the year?
+   (A) Office Equipment
+   (B) Electronics
+   (C) Furniture
+   (D) Stationery
+
+2. In which quarter did ABC Company have the highest total sales?
+   (A) First Quarter
+   (B) Second Quarter
+   (C) Third Quarter
+   (D) Fourth Quarter
+
+3. What was the percentage increase in Electronics sales from the first quarter to the fourth quarter?
+   (A) About 25%
+   (B) About 35%
+   (C) About 45%
+   (D) About 55%
+
+4. Which product category showed the most consistent sales throughout the year?
+   (A) Office Equipment
+   (B) Electronics
+   (C) Furniture
+   (D) Stationery
+
+5. What percentage of the company's total annual sales came from Furniture?
+   (A) About 14%
+   (B) About 19%
+   (C) About 25%
+   (D) About 30%
+
+#### 答案：
+1. (B) - Electronics had the highest total sales of 1,000 thousand dollars.
+2. (D) - The Fourth Quarter had the highest total sales of 705 thousand dollars.
+3. (B) - (310-230)/230 = 80/230 ≈ 0.35 or about 35% increase.
+4. (C) - Furniture showed the least variation between quarters.
+5. (B) - 435/2,329 ≈ 0.187 or about 19%.
+
+---
+
+### 🔹 練習閱讀：員工滿意度調查圖表
+
+請看下面的員工滿意度調查圖表，然後回答問題：
+
+**全球科技公司員工滿意度調查結果（2024年）**
+
+圖表描述：這是一個圓餅圖，顯示了員工對公司不同方面的滿意度評分（5分為最高分）。
+
+- 工作環境：35%的員工給予5分，40%給予4分，15%給予3分，7%給予2分，3%給予1分
+- 薪資待遇：20%的員工給予5分，35%給予4分，25%給予3分，15%給予2分，5%給予1分
+- 職業發展：25%的員工給予5分，30%給予4分，30%給予3分，10%給予2分，5%給予1分
+- 工作與生活平衡：30%的員工給予5分，25%給予4分，20%給予3分，15%給予2分，10%給予1分
+- 管理層支持：15%的員工給予5分，30%給予4分，35%給予3分，15%給予2分，5%給予1分
+
+#### 問題：
+
+1. Which aspect of the company received the highest percentage of 5-point ratings?
+   (A) Work Environment
+   (B) Salary and Benefits
+   (C) Career Development
+   (D) Work-Life Balance
+
+2. What percentage of employees gave a rating of 3 or lower for Management Support?
+   (A) 35%
+   (B) 45%
+   (C) 55%
+   (D) 65%
+
+3. For which aspect did at least 70% of employees give a rating of 4 or 5?
+   (A) Work Environment only
+   (B) Salary and Benefits only
+   (C) Both Work Environment and Career Development
+   (D) All aspects except Management Support
+
+4. What is the average rating for Work-Life Balance? (Calculate: (5×30% + 4×25% + 3×20% + 2×15% + 1×10%) ÷ 100%)
+   (A) 3.2
+   (B) 3.5
+   (C) 3.7
+   (D) 4.0
+
+5. Which aspect has the highest percentage of dissatisfied employees (ratings of 1 or 2)?
+   (A) Work Environment
+   (B) Salary and Benefits
+   (C) Career Development
+   (D) Work-Life Balance
+
+#### 答案：
+1. (A) - Work Environment received 35% of 5-point ratings, which is the highest.
+2. (C) - Management Support: 35% + 15% + 5% = 55% gave a rating of 3 or lower.
+3. (A) - Work Environment: 35% + 40% = 75% gave a rating of 4 or 5.
+4. (B) - (5×0.3 + 4×0.25 + 3×0.2 + 2×0.15 + 1×0.1) = 3.5
+5. (D) - Work-Life Balance: 15% + 10% = 25% gave ratings of 1 or 2.
+
+---
+
+# 第八天
+
+## 📌 目標
+1. 記住 25 個新商業英文單字
+2. 學習情態動詞的用法
+3. 練習多益閱讀測驗中的備忘錄和報告理解題型
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字          | 詞性   | 中文意思       | 例句                                        |
+|---------------|--------|----------------|---------------------------------------------|
+| accomplish    | v.     | 完成；達成     | We accomplished all our goals this quarter. |
+| acknowledge   | v.     | 承認；確認     | Please acknowledge receipt of this email.   |
+| adapt         | v.     | 適應；調整     | We need to adapt to the changing market.    |
+| allocate      | v.     | 分配           | The manager will allocate resources for the project. |
+| approach      | n./v.  | 方法；接近     | We need a new approach to this problem.     |
+| approve       | v.     | 批准；同意     | The board approved the new budget.          |
+| assign        | v.     | 指派；分配     | I'll assign this task to Sarah.             |
+| assume        | v.     | 假設；承擔     | Don't assume it will be easy.               |
+| balance       | n./v.  | 平衡；結餘     | We need to balance costs and quality.       |
+| beneficial    | adj.   | 有益的         | This training will be beneficial for your career. |
+| clarify       | v.     | 澄清           | Could you clarify this point for me?        |
+| comply        | v.     | 遵守；符合     | All employees must comply with safety regulations. |
+| comprehensive | adj.   | 全面的；綜合的 | We need a comprehensive analysis of the market. |
+| conclude      | v.     | 結束；推斷     | The meeting concluded at 4 PM.              |
+| confidential  | adj.   | 機密的         | This information is strictly confidential.  |
+| construct     | v.     | 建造；構建     | The company is constructing a new facility. |
+| convey        | v.     | 傳達；運送     | The email conveyed important information.   |
+| cooperate     | v.     | 合作           | All departments must cooperate on this project. |
+| coordinate    | v.     | 協調；整合     | She coordinates all marketing activities.   |
+| criteria      | n.     | 標準；準則     | The applicant meets all our criteria.       |
+| determine     | v.     | 決定；確定     | We need to determine the cause of the problem. |
+| devote        | v.     | 致力於；奉獻   | She devotes a lot of time to her work.      |
+| encounter     | v./n.  | 遭遇；相遇     | We encountered some unexpected problems.    |
+| essential     | adj.   | 必要的；本質的 | Communication is essential for success.     |
+| evaluate      | v.     | 評估；評價     | Let's evaluate the results of the campaign. |
+
+---
+
+## 📖 基礎語法：情態動詞
+
+情態動詞用於表達可能性、必要性、建議、許可和能力等。它們總是與主要動詞的原形一起使用。
+
+### 🔹 常見的情態動詞
+
+#### 1. **can / could**
+   - 表示能力
+     - I can speak three languages. (我能說三種語言。)
+     - She could finish the report by 5 PM. (她能在下午5點前完成報告。)
+   
+   - 表示許可
+     - Can I use your phone? (我可以用你的電話嗎？)
+     - Could I leave early today? (我今天可以早點離開嗎？)
+   
+   - 表示可能性
+     - It can be very busy during rush hour. (繁忙時段可能非常忙。)
+     - The project could be delayed. (這個專案可能會延遲。)
+
+#### 2. **may / might**
+   - 表示許可（較正式）
+     - May I come in? (我可以進來嗎？)
+   
+   - 表示可能性
+     - The meeting may last two hours. (會議可能持續兩小時。)
+     - He might attend the conference. (他可能會參加會議。)
+
+#### 3. **must / have to**
+   - 表示必要性或義務
+     - All employees must wear ID badges. (所有員工必須佩戴識別證。)
+     - You have to submit the report by Friday. (你必須在週五前提交報告。)
+   
+   - 表示強烈推測
+     - She's not answering her phone. She must be in a meeting. (她沒接電話，她一定在開會。)
+
+#### 4. **should / ought to**
+   - 表示建議或期望
+     - You should update your resume. (你應該更新你的履歷。)
+     - Companies ought to invest in employee training. (公司應該投資員工培訓。)
+
+#### 5. **will / would**
+   - 表示未來的行動或意願
+     - I will send you the files tomorrow. (我明天會發文件給你。)
+     - Would you help me with this project? (你願意幫我處理這個專案嗎？)
+
+### 🔹 情態動詞的否定式
+
+情態動詞的否定形式是在情態動詞後加 "not"：
+- cannot (can't)
+- could not (couldn't)
+- may not
+- might not (mightn't)
+- must not (mustn't)
+- should not (shouldn't)
+- will not (won't)
+- would not (wouldn't)
+
+例句：
+- You cannot use your phone during the meeting. (會議期間你不能使用手機。)
+- You shouldn't send confidential information by email. (你不應該通過電子郵件發送機密信息。)
+
+### 🔹 情態動詞的問句
+
+情態動詞的問句形式是將情態動詞放在主詞前：
+- Can you finish this by tomorrow? (你明天能完成這個嗎？)
+- Should we reschedule the meeting? (我們應該重新安排會議嗎？)
+- Would you like to join our team? (你想加入我們的團隊嗎？)
+
+---
+
+## ✅ 練習題：使用情態動詞
+
+1. You (must/can) ________ wear safety equipment in this area. It's required by law.
+2. (May/Should) ________ I use your computer for a moment?
+3. The new software (can/might) ________ be difficult to learn at first.
+4. We (should/will) ________ consider all options before making a decision.
+5. You (must/may) ________ be tired after working all day.
+6. Employees (can/should) ________ notify their managers if they will be absent.
+7. The meeting (will/could) ________ start late because the presenter is stuck in traffic.
+8. I (may/have to) ________ work overtime to finish this project on time.
+9. (Can/Should) ________ you speak a little louder, please?
+10. We (will/might) ________ not be able to deliver the order by Friday.
+
+---
+
+## 📚 多益閱讀測驗練習：備忘錄和報告理解
+
+### 🔹 備忘錄和報告的特點
+
+#### 1. 備忘錄 (Memo)
+- 用於公司內部溝通
+- 通常較為簡短、直接
+- 標準格式包括：To, From, Date, Subject
+- 重點清晰明確，常有行動要求
+
+#### 2. 報告 (Report)
+- 提供詳細信息和分析
+- 通常包含多個部分和標題
+- 可能包括數據、圖表和建議
+- 結構化程度高，有摘要和結論
+
+### 🔹 閱讀備忘錄和報告的技巧
+
+1. **識別目的和主要信息**
+   - 首先閱讀標題、摘要或第一段
+   - 尋找關鍵詞如：purpose, objective, aim
+
+2. **掌握結構**
+   - 注意標題、小標題和段落結構
+   - 找出重要的日期、數字和名稱
+
+3. **注意行動項目**
+   - 找出報告建議或要求的行動
+   - 注意截止日期和責任分配
+
+4. **識別結論和建議**
+   - 通常在文件末尾
+   - 可能用粗體或項目符號標注重點
+
+---
+
+### 🔹 練習閱讀：公司內部備忘錄
+
+閱讀下面的備忘錄，然後回答問題：
+
+```
+MEMORANDUM
+
+TO: All Department Heads
+FROM: Jennifer Lee, Human Resources Director
+DATE: April 10, 2025
+SUBJECT: Annual Performance Review Process
+
+The annual performance review process for all employees will begin on May 1, 2025. Please note the following important dates and actions:
+
+Key Dates:
+• May 1-15: Employees complete self-evaluation forms
+• May 16-31: Managers conduct performance reviews
+• June 1-15: Department heads review and approve evaluations
+• June 20: All reviews must be submitted to HR
+
+Actions Required:
+1. Attend the performance review training session on April 20 at 10:00 AM in Conference Room A.
+2. Distribute self-evaluation forms to your team members by April 25.
+3. Schedule review meetings with each team member during the designated period.
+4. Submit all completed review forms to HR no later than June 20.
+
+This year, we will be using the new online evaluation system. Training materials are available on the company intranet under "HR Resources." If you encounter any difficulties with the system, please contact the IT Help Desk at ext. 4444.
+
+Remember that these reviews are essential for determining promotions, salary adjustments, and professional development opportunities for the upcoming fiscal year.
+
+Thank you for your cooperation.
+```
+
+#### 問題：
+
+1. What is the main purpose of this memo?
+   (A) To announce a new online evaluation system
+   (B) To outline the annual performance review process
+   (C) To introduce a new Human Resources Director
+   (D) To inform about salary adjustments
+
+2. When must employees complete their self-evaluation forms?
+   (A) By April 25
+   (B) Between May 1 and May 15
+   (C) Between May 16 and May 31
+   (D) By June 20
+
+3. What must department heads do by April 25?
+   (A) Attend a training session
+   (B) Complete self-evaluation forms
+   (C) Distribute forms to team members
+   (D) Submit reviews to HR
+
+4. Where can employees find training materials for the new system?
+   (A) In Conference Room A
+   (B) From the IT Help Desk
+   (C) From their department heads
+   (D) On the company intranet
+
+5. According to the memo, what is one purpose of the performance reviews?
+   (A) To evaluate the HR department
+   (B) To test the new online system
+   (C) To determine promotions
+   (D) To schedule training sessions
+
+#### 答案：
+1. (B)
+2. (B)
+3. (C)
+4. (D)
+5. (C)
+
+---
+
+### 🔹 練習閱讀：市場研究報告
+
+閱讀下面的報告摘錄，然後回答問題：
+
+```
+MARKET RESEARCH REPORT: CONSUMER ELECTRONICS INDUSTRY
+Prepared by: Global Research Partners
+Date: March 15, 2025
+For: XYZ Electronics Corporation
+
+EXECUTIVE SUMMARY
+
+This report analyzes current trends in the consumer electronics market with a focus on smartphones, tablets, and wearable devices. Our research indicates that the global market for these products will grow by approximately 8.5% over the next fiscal year, with particularly strong growth in emerging markets (12.3%).
+
+KEY FINDINGS
+
+1. Market Share
+   XYZ Electronics currently holds 14% of the global smartphone market, placing it fourth among major manufacturers. This represents a 2% increase from last year but remains 5% behind the market leader.
+
+2. Consumer Preferences
+   Survey data shows that consumers increasingly prioritize battery life (76%) and camera quality (68%) over processor speed (45%) when purchasing new smartphones. For tablets, screen size and resolution remain the primary considerations (82%).
+
+3. Emerging Trends
+   Wearable technology continues to show strong growth potential, with an estimated market expansion of 15% annually for the next three years. Smart watches represent the largest segment (62%), followed by fitness trackers (28%).
+
+4. Competitive Analysis
+   Major competitors have increased their research and development spending by an average of 12% in the past year, with a focus on artificial intelligence features and improved battery technology.
+
+RECOMMENDATIONS
+
+Based on our analysis, we recommend that XYZ Electronics:
+
+1. Increase investment in battery technology and camera systems for the next generation of smartphones.
+2. Expand the wearable device product line, particularly in the smart watch category.
+3. Strengthen marketing presence in Southeast Asian markets, where brand recognition lags behind competitors by 15-20%.
+4. Consider strategic partnerships with software developers to enhance AI capabilities.
+
+Implementation of these recommendations could potentially increase market share by 2-3% within 18 months and position XYZ Electronics more competitively in the wearable technology segment.
+```
+
+#### 問題：
+
+1. What is XYZ Electronics' current position in the global smartphone market?
+   (A) First
+   (B) Second
+   (C) Third
+   (D) Fourth
+
+2. According to the report, what percentage of consumers prioritize camera quality when purchasing smartphones?
+   (A) 45%
+   (B) 62%
+   (C) 68%
+   (D) 76%
+
+3. Which market is expected to grow the most in the next fiscal year?
+   (A) Global smartphone market
+   (B) Emerging markets
+   (C) Wearable technology market
+   (D) Tablet market
+
+4. What is NOT mentioned as a recommendation for XYZ Electronics?
+   (A) Investing in battery technology
+   (B) Expanding the tablet product line
+   (C) Increasing marketing in Southeast Asia
+   (D) Forming strategic partnerships
+
+5. By how much has XYZ Electronics' market share increased compared to last year?
+   (A) 2%
+   (B) 5%
+   (C) 8.5%
+   (D) 12.3%
+
+#### 答案：
+1. (D)
+2. (C)
+3. (C) - 15% annual growth for wearable technology vs. 8.5% for global market and 12.3% for emerging markets
+4. (B)
+5. (A)
+
+---
+
+第九天(尚未完成)
