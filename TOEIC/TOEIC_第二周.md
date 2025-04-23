@@ -1063,3 +1063,186 @@ Implementation of these recommendations could potentially increase market share 
 3. (C) - 15% annual growth for wearable technology vs. 8.5% for global market and 12.3% for emerging markets
 4. (B)
 5. (A)
+
+---
+
+# 📘 TOEIC 第二週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. We have an ______ with the client at 3 PM.  
+   (A) certificate (B) sponsor (C) manual (D) appointment  
+
+2. The company decided to ______ its headquarters to a bigger city.  
+   (A) guideline (B) relocate (C) network (D) resolve  
+
+3. Every ______ needs to register before the seminar.  
+   (A) participant (B) sponsor (C) delegate (D) organizer  
+
+4. Please check the ______ before the meeting starts.  
+   (A) guideline (B) agenda (C) manual (D) register  
+
+5. They will try to ______ the issue by tomorrow.  
+   (A) hardware (B) certificate (C) campaign (D) resolve  
+
+6. You must ______ online to join the conference.  
+   (A) register (B) executive (C) launch (D) delegate  
+
+7. The event was a success thanks to our main ______.  
+   (A) catalog (B) sponsor (C) executive (D) expansion  
+
+8. We need to ______ the results to understand the problem.  
+   (A) analyze (B) hardware (C) manual (D) resolve  
+
+9. The computer is having some ______ problems.  
+   (A) catalog (B) device (C) expand (D) hardware  
+
+10. This software helps engineers ______ new applications.  
+    (A) device (B) software (C) develop (D) executive  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. They ______ a new product when the power went out.  
+    (A) launch (B) launched (C) were launching (D) will launch  
+
+12. I ______ to the seminar tomorrow.  
+    (A) go (B) went (C) am going (D) goes  
+
+13. While she ______ the email, the phone rang.  
+    (A) write (B) was writing (C) writes (D) wrote  
+
+14. They ______ the new guidelines next month.  
+    (A) announced (B) announce (C) are announcing (D) will announce  
+
+15. We ______ on the report all afternoon yesterday.  
+    (A) are working (B) were working (C) will work (D) works  
+
+16. He ______ a business trip next Friday.  
+    (A) takes (B) is taking (C) was taking (D) took  
+
+17. They ______ the room when the manager arrived.  
+    (A) clean (B) were cleaning (C) cleaned (D) are cleaning  
+
+18. She ______ you the details later.  
+    (A) tell (B) will tell (C) told (D) telling  
+
+19. At 3 PM, we ______ with a client.  
+    (A) talked (B) were talking (C) will talk (D) talk  
+
+20. The company ______ a new branch next year.  
+    (A) open (B) opens (C) will open (D) opening  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+**Email Notice**  
+There will be a training session on April 15 to introduce a new software system. All department managers must attend. Please bring your laptops and printed manuals. A detailed agenda will be sent out before the training.
+
+21. What is the purpose of the training session mentioned in the email?  
+    (A) To review the company history  
+    (B) To learn about a new software  
+    (C) To meet new employees  
+    (D) To practice presentations  
+
+22. When will the training be held?  
+    (A) April 10  
+    (B) April 12  
+    (C) April 15  
+    (D) April 20  
+
+23. Who must attend the training?  
+    (A) Only new employees  
+    (B) Only IT staff  
+    (C) All department managers  
+    (D) Only the HR team  
+
+24. What should participants bring to the training?  
+    (A) Business cards  
+    (B) Laptops and manuals  
+    (C) Reports  
+    (D) Lunch  
+
+25. What will be sent before the training?  
+    (A) A video link  
+    (B) A schedule for lunch  
+    (C) A list of attendees  
+    (D) A detailed agenda
+
+## 📘 TOEIC 第二週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | D    |
+| 2    | B    |
+| 3    | A    |
+| 4    | B    |
+| 5    | D    |
+| 6    | A    |
+| 7    | B    |
+| 8    | A    |
+| 9    | D    |
+| 10   | C    |
+| 11   | C    |
+| 12   | C    |
+| 13   | B    |
+| 14   | D    |
+| 15   | B    |
+| 16   | B    |
+| 17   | B    |
+| 18   | B    |
+| 19   | B    |
+| 20   | C    |
+| 21   | B    |
+| 22   | C    |
+| 23   | C    |
+| 24   | B    |
+| 25   | D    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **appointment**：與客戶約定的「預約」時間，正確答案為 (D)。  
+2. **relocate**：公司遷移總部，用「搬遷」最合適，正確答案為 (B)。  
+3. **participant**：參加會議的人為「參與者」，正確答案為 (A)。  
+4. **agenda**：會議開始前要看「議程表」，正確答案為 (B)。  
+5. **resolve**：處理問題用「解決」這個動詞，正確答案為 (D)。  
+6. **register**：線上註冊才能參加會議，正確答案為 (A)。  
+7. **sponsor**：活動成功是因為「贊助商」的幫忙，正確答案為 (B)。  
+8. **analyze**：分析資料以了解問題，正確答案為 (A)。  
+9. **hardware**：電腦硬體出現問題，正確答案為 (D)。  
+10. **develop**：工程師使用軟體來「開發」新應用，正確答案為 (C)。
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **were launching**：當電力中斷時，動作正在進行中，用過去進行式。  
+12. **am going**：描述明天預定要做的事，使用現在進行式表未來。  
+13. **was writing**：另一個動作（電話響）打斷正在寫信的行為，用過去進行式。  
+14. **will announce**：下個月才會發布，用未來式。  
+15. **were working**：昨天整個下午都在進行的動作，用過去進行式。  
+16. **is taking**：計劃中的行程，用現在進行式。  
+17. **were cleaning**：經理來的時候，他們正在打掃，用過去進行式。  
+18. **will tell**：描述未來會說明細節，用未來式。  
+19. **were talking**：指定過去某一時間正在做的動作，用過去進行式。  
+20. **will open**：公司明年開新分部，用未來式。
+
+---
+
+### 三、閱讀理解（Reading）
+
+> **Email Notice**  
+> There will be a training session on April 15 to introduce a new software system. All department managers must attend. Please bring your laptops and printed manuals. A detailed agenda will be sent out before the training.
+
+21. **To learn about a new software**：第一句明確指出訓練目的是介紹新軟體。  
+22. **April 15**：訓練時間直接寫在第一句。  
+23. **All department managers**：所有部門經理都必須參加。  
+24. **Laptops and manuals**：信中請大家攜帶筆電與手冊。  
+25. **A detailed agenda**：會議前會發出詳細議程。
+

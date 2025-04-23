@@ -4,132 +4,135 @@
 
 ---
 
-## 一、從系統架構的角度
+## 1. 從系統架構的角度
 
-### 1. Mainframe 系統
+### 1.1 Mainframe Systems
 
-#### ▸ Batch（批次處理）
-- 一次處理一個 Job，無互動。
-- CPU 常 idle，效能低。
+#### ▸ Batch System
+- 最早的電腦系統之一，一次處理一個 Job，無法互動。
+- 使用者將程式、資料與控制卡提交給 operator 排程。
+- 作業系統負責 job 間的控制轉移（transfer control），無需人為干預。
+- 缺點：
+  - 無互動性（non-interactive）
+  - 一次僅能執行一個 Job（single job）
+  - CPU 常處於 idle 狀態，效率低
 
-#### ▸ Multi-programming（多重程式設計）
-- 多個程式佔用主記憶體，減少閒置時間。
-- Spooling 技術提高 CPU 與 I/O 利用率。
+#### ▸ Multi-programming System
+- 多個程式同時駐留在主記憶體中，透過 CPU scheduling 輪流執行。
+- 透過 I/O 與運算的重疊（overlapping），提高資源利用率。
+- 使用 **Spooling** 技術：I/O 可不經 CPU，僅在完成時通知 CPU。
+- OS 核心職責：
+  - Memory management（記憶體分配）
+  - CPU scheduling（處理器分配）
+  - I/O system（裝置管理）
 
-#### ▸ Time-sharing（分時系統）
-- 多使用者互動，CPU 快速切換任務。
-- 回應時間 < 1 秒，支援鍵盤與螢幕。
-
----
-
-### 2. Desktop Systems
-
-- 單一使用者，操作便利，支援 GUI。
-- 常見 OS：Windows, macOS, Linux。
-- 較缺乏資源保護，易受病毒攻擊。
-
----
-
-### 3. Parallel Systems（平行處理）
-
-| 類型 | 特性 |
-|------|------|
-| **SMP（對稱）** | 每個處理器執行相同作業系統，需同步保護資料一致性。 |
-| **AMP（非對稱）** | Master 分派任務給 slave，更常見於大型系統。 |
-
-**優點：**
-- 提升 Throughput。
-- 降低成本（共用記憶體、裝置）。
-- 提高可靠性。
+#### ▸ Time-sharing System（= Multi-tasking）
+- 支援多使用者互動，使用者可立即看到結果（response time < 1s）。
+- 透過時間切片（time slice）方式在多個程序間快速切換。
+- 常見裝置：鍵盤、螢幕。
+- 作業系統額外職責：
+  - Virtual memory（虛擬記憶體管理）
+  - File system & Disk management（檔案與磁碟管理）
+  - Process synchronization & Deadlock handling（同步與死結處理）
 
 ---
 
-### 4. Multi-core 與 Many-core
+### 1.2 系統架構概述（Computer-System Architecture）
 
-- **Multi-core**：2~8 核心，常見於 PC、手機。
-- **Many-core**：10 核以上，用於高效能運算（如 GPU）。
+#### ▸ Desktop Systems
+- 單人使用，常見 OS：Windows, macOS, Linux。
+- 支援 GUI，注重便利性與反應速度。
+- 缺點：較缺乏安全機制，易受病毒攻擊。
 
----
+#### ▸ Parallel Systems（Tightly Coupled Systems）
+- 多個 CPU 核心共享主記憶體與裝置，效能佳。
+- 分為：
+  - **SMP（Symmetric Multiprocessor）**：每個 CPU 狀態對等，需同步資料一致性。
+  - **AMP（Asymmetric Multiprocessor）**：一顆 Master CPU 負責分配任務，適用大型系統。
+- 優點：
+  - 提升 throughput（運算吞吐量）
+  - 成本較低（資源共享）
+  - 可靠性高（部分 CPU 故障時系統可持續運作）
 
-### 5. 記憶體架構（Memory Access）
+#### ▸ Multi-core vs. Many-core
+- Multi-core：單一 CPU 上整合多個核心（2~8），常見於一般 PC。
+- Many-core：核心數超過 10，甚至數十、數百，常見於 GPU、高效能運算。
+- GPU 採 SIMD（Single Instruction Multiple Data）架構，適合資料平行處理（data parallelism）。
 
+#### ▸ Memory Access Architecture
 | 架構 | UMA | NUMA |
 |------|-----|------|
 | 記憶體存取時間 | 相同 | 不同 |
-| 結構 | 所有 CPU 透過同樣方式接到主記憶體 | 系統分成多個 nodes，每個 node 有 local memory |
-| 特性 | 易於管理、設計簡單 | 效能佳，需考慮記憶體區域性 |
+| 結構 | 所有 CPU 接到同一記憶體 | 系統分為多個 nodes，各有 local memory |
+| 特性 | 效能一致、簡單設計 | 跨 node 存取速度較慢，需考慮 locality |
 
 ---
 
-## 二、使用者導向的系統分類
+### 1.3 Distributed Systems（Loosely Coupled）
 
-### 1. Distributed Systems（分散式系統）
-
-#### ▸ 架構形式
-- **Client-Server**：集中管理易建構，但 server 易成為 bottleneck。
-- **Peer-to-Peer**：無主從，所有節點地位平等；可靠性高、擴展性好。
-
-#### ▸ 特性
-- Loosely coupled，透過網路通訊。
+#### ▸ 架構與特性
+- 多台電腦透過網路（I/O bus、LAN）互相連接。
 - 每台電腦擁有自己的 local memory，不共享記憶體。
-- 支援 Resource Sharing、Load Balancing、Fault Tolerance。
+- 資料交換須透過網路進行。
+- 易於擴充，可靠性高（單台故障不影響整體系統）。
+
+#### ▸ 使用目的
+- Resource sharing
+- Load balancing / Load sharing
+- Reliability / Fault-tolerance
+
+#### ▸ 架構類型
+- **Client-Server**：
+  - 類似 Master-Slave 模式，server 負責分派與協調。
+  - 缺點是 server 容易成為效能瓶頸（bottleneck）。
+  - 可透過分散式伺服器與 backup server 提升可靠性。
+- **Peer-to-Peer**：
+  - 所有節點地位平等，依靠 protocols 或 rules 溝通。
+  - 無單一故障點（no single point of failure）
+  - 系統彈性高、可靠性強（如 Internet）
 
 ---
 
-### 2. Clustered Systems（叢集系統）
+### 1.4 Clustered Systems
 
-- 多台電腦透過高速 LAN（如 Infiniband）連接。
-- 通常部署於同一區域內，具高效能與低延遲。
-
-**分類：**
-- **Asymmetric**：主機執行，備援機監控。
-- **Symmetric**：多台同時執行並互相監控。
-
----
-
-## 三、特殊目的系統
-
-### 1. Real-Time Systems（即時系統）
-
-| 分類 | 特性 | 範例 |
-|------|------|------|
-| **Hard** | 必須在 deadline 前完成，否則系統失敗 | 飛彈系統、車控 |
-| **Soft** | 儘量準時完成，過時影響不大 | 串流影音、多媒體 |
-
-- Scheduler 是系統設計的關鍵。
-- 常用演算法：**EDF（Earliest Deadline First）**。
-- 硬即時系統常無硬碟，只依賴主記憶體（避免不穩定延遲）。
+- 屬於分散式系統的特殊類型。
+- 多台電腦透過高速 LAN（如 Infiniband）連線，部署在同一地區。
+- 效能高、延遲低，常用於資料中心或高效能需求場景。
+- 分為：
+  - **Asymmetric clustering**：一台主機執行，其他待命。
+  - **Symmetric clustering**：多台主機同時執行並互相監控。
 
 ---
 
-### 2. Multimedia Systems（多媒體系統）
+## 2. 使用者導向的系統分類
 
-- 涉及音訊與視訊（如串流、直播）。
-- 有時間同步需求（如 30 fps）。
-- 多使用壓縮技術、On-demand 傳輸。
+### 2.1 Real-Time Systems
+
+- 強調「準時完成」，而非「立即反應」。
+- 任務必須在使用者定義的 deadline 前完成。
+- Scheduler 必須保證任務能在期限內完成。
+
+#### ▸ 類型
+- **Hard Real-Time**：若錯過 deadline，系統將發生嚴重失敗（如飛彈控制）。
+  - 通常不使用 secondary storage，只依賴記憶體。
+- **Soft Real-Time**：盡量在期限內完成，錯過會影響品質但不致崩潰。
+  - 常見於多媒體系統（如串流播放）
 
 ---
 
-### 3. Handheld / Embedded Systems（手持／嵌入式系統）
+### 2.2 Multimedia Systems
 
-- **裝置**：手機、PDA、嵌入式控制器。
-- **限制**：記憶體小、處理器慢、電池壽命短、螢幕小。
-- 通常使用**專用作業系統**。
+- 處理音訊與視訊（例如直播、串流播放）
+- 需處理時間同步與資料壓縮問題（30 fps 等）
+- 常用 on-demand 技術與壓縮格式降低傳輸量
 
 ---
 
-## 系統對照總整理
+### 2.3 Handheld / Embedded Systems
 
-| 系統類型 | 特性 | 架構類型 |
-|----------|------|-----------|
-| **Mainframe** | 批次、多工、共用主機 | Centralized |
-| **Desktop** | 單人使用、互動方便 | 單機 |
-| **Parallel** | 多核心、共享記憶體 | Tightly Coupled |
-| **Distributed** | 獨立節點、透過網路溝通 | Loosely Coupled |
-| **Clustered** | 多機同地連線、I/O 快 | LAN 架構 |
-| **Real-Time** | 準時性導向、可靠性要求高 | 通常為嵌入式 |
-| **Multimedia** | 視訊同步、反應速度 | 多為 Soft Real-Time |
-| **Handheld** | 輕量化、低耗能 | 嵌入式／專用 OS |
+- 例：PDA、手機、嵌入式裝置
+- 特性：記憶體小、處理器慢、電池壽命短、螢幕小
+- 使用專門的作業系統（specialized OS）
 
 ---
 
@@ -137,186 +140,61 @@
 
 > **主題：作業系統的基本概念與硬體保護機制**
 
----
+## 1. 作業系統基本定義與功能
 
-## 一、作業系統的定義與目的
+### 1.1 OS 是什麼
 
-### 1. 作業系統是什麼？
+#### ▸ OS 的本質與介面角色
+- OS 是使用者程式與硬體之間 **主要且必要的介面**
+- 管理所有資源存取，提供抽象化操作方式（virtual machine interface）
 
-- 作業系統是**常駐軟體**，用來控制與抽象硬體資源，供使用者應用程式使用。
-- 提供一個「虛擬機器介面」，隱藏實體硬體細節。
+> 📌 註：課堂中強調 OS 是 "only" interface，但實務上不嚴謹，例如在 embedded systems 或 bare-metal programming 中，程式可直接操作硬體，不一定需要 OS。
 
-```
-Physical Machine ← OS → Virtual Machine
-```
-
-- 提供 Application Programming Interface (API)，使應用程式與硬體隔離。
-
----
-
-### 2. 作業系統的三種角色
-
-- **Resource Allocator**：資源分配器，確保效率與公平性。
-- **Control Program**：控制使用者程式與 I/O 運作，防止誤用與錯誤。
-- **Kernel**：常駐於系統中，負責最基本的作業系統功能。
+#### ▸ OS 與其他軟體的差異
+- OS 是「常駐系統」中的 permanent 軟體
+- 相較於一般應用程式，OS 提供的 API 抽象化硬體，使上層程式無需直接控制硬體
 
 ---
 
-### 3. 作業系統的目標
+### 1.2 OS 的核心功能與運作方式
 
-- **方便性（Convenience）**：讓系統好用（個人電腦需求）。
-- **效率（Efficiency）**：有效使用硬體（共享系統需求）。
+#### ▸ OS 的主要角色與職責
+1. **Resource Allocator**：管理並分配系統資源（CPU、memory、I/O），兼顧效率與公平性  
+2. **Control Program**：控制 user programs 與 I/O 行為，防止錯誤或誤用  
+3. **Coordinator**：協調多使用者與多程序的資源競爭  
+4. **Interface Provider**：以 system call / API 提供應用程式操作系統資源的介面
 
----
+#### ▸ 程式執行流程與 system call 運作
+- 程式透過 compiler 編譯為 .o 檔，再進行 linking（會自動 link 到 system library）
+- 例如 `printf()` 最終透過 C library 呼叫對應的 system call（如 `write()`），由 OS 執行輸出動作
 
-### 4. 作業系統的重要性
-
-- 系統 API 是應用程式與硬體之間的唯一橋梁。
-- 作業系統錯誤可能導致整台電腦重啟。
-- 掌握 OS 技術＝掌握軟體與硬體產業主導權。
-- 作業系統設計與電腦架構互相影響。
-
----
-
-### 5. 現代常見作業系統
-
-| 平台       | 作業系統                         |
-|------------|----------------------------------|
-| x86        | Linux（CentOS、Ubuntu）、Windows |
-| PowerPC    | macOS                            |
-| Mobile     | Android、iOS、Ubuntu Touch       |
-| Embedded   | Embedded Linux、Windows CE       |
+#### ▸ 執行模式與驅動架構
+- **User mode**：應用程式執行環境  
+- **Kernel mode**：OS 本身執行的空間與權限範圍  
+- 驅動程式（driver）屬於 OS，可動態安裝，用來控制 I/O 裝置
 
 ---
 
-## 二、電腦系統結構與運作
+### 1.3 OS 的設計目標與重要性
 
-### 1. 組成元件（四層）
+#### ▸ OS 的設計目標
+- **Convenience**：讓系統更容易使用（例：GUI）
+- **Efficiency**：提升效能與資源使用效率
 
-1. 使用者（User）
-2. 應用程式（Application Programs）
-3. 作業系統（Operating System）
-4. 硬體（Hardware）
+> ⚠️ 二者常互相衝突，例如 GUI 雖提升便利性但會消耗更多資源
 
----
-
-### 2. 硬體架構與裝置控制
-
-- 多個 CPU 與裝置控制器（Device Controllers）共用一條 Bus 與主記憶體。
-- CPU 與裝置可同時執行，爭用記憶體存取（Memory Cycles）。
-- I/O 流程：
-  - 裝置 → 控制器 Local Buffer → CPU → 記憶體。
+#### ▸ 為什麼 OS 很重要
+- OS API 是使用者應用程式與硬體之間的介面
+- OS 一旦 crash，整台系統會停擺，**不得有錯誤（bug）**
+- 掌握 OS 技術即可影響整個軟硬體生態（例：Microsoft 建立 Windows 平台主導權）
 
 ---
 
-### 3. Busy-Wait I/O（繁忙等待）
-
-- 最簡單的裝置操作方式。
-- 缺點：CPU 不能處理其他工作，效率低。
+## 2. 電腦系統組織
 
 ---
 
-### 4. Interrupt I/O（中斷驅動 I/O）
-
-- 裝置完成操作時觸發中斷，通知 CPU。
-- 中斷處理流程：
-  1. 裝置驅動程式啟動 I/O
-  2. 裝置完成後產生中斷
-  3. CPU 呼叫中斷處理程式（Interrupt Handler）
-  4. 處理完後回到原工作
-
-- 現代作業系統皆為中斷驅動架構。
-
----
-
-### 5. Trap vs Interrupt
-
-| 類型   | 來源     | 範例                     |
-|--------|----------|--------------------------|
-| Interrupt | 硬體 | I/O 完成、Timer 到期等       |
-| Trap      | 軟體 | 除以 0、系統呼叫、錯誤處理等 |
-
----
-
-## 三、儲存階層與快取管理
-
-### 1. 儲存裝置階層（Storage Hierarchy）
-
-- 越上層 → 速度快、成本高、容量小。
-- 越下層 → 容量大、速度慢、成本低。
-
-| 層級         | 裝置範例        | 特性             |
-|--------------|------------------|------------------|
-| 寄存器        | CPU Register     | 最快、最小       |
-| 快取（Cache） | SRAM             | 速度快、成本高   |
-| 主記憶體      | DRAM             | 唯一 CPU 可直接存取 |
-| 次儲存        | 硬碟、SSD        | 非揮發、大容量   |
-
----
-
-### 2. RAM 類型
-
-- **DRAM（動態）**：需定期重整、耗電少、成本低。
-- **SRAM（靜態）**：不用重整、速度快、成本高，常用於 Cache。
-
----
-
-### 3. 磁碟存取機制
-
-- 傳輸時間 = 資料大小 ÷ 傳輸速率
-- 隨機存取時間 = seek time + rotational latency
-
----
-
-### 4. 快取（Caching）
-
-- 常用資料從慢速儲存複製到快取區。
-- 如果資料已在快取 → 直接使用。
-- 若不在 → 從下層搬移到快取再使用。
-
----
-
-### 5. 一致性與同步問題（Coherency & Consistency）
-
-- 相同資料存在多個層級 → 一致性問題。
-- 多任務存取時需同步最新資料版本。
-- 分散式系統難以同步，資料可能不一致。
-
----
-
-## 四、硬體保護機制
-
-### 1. Dual-Mode Operation（雙模式操作）
-
-- 區分兩種模式：
-  - **User Mode**：執行使用者程式。
-  - **Kernel Mode**（Monitor Mode）：執行 OS。
-- Mode Bit 由硬體指示目前執行狀態。
-- Interrupt、Trap 發生時自動進入 Kernel Mode。
-
----
-
-### 2. I/O Protection
-
-- 所有 I/O 指令為特權指令，只能在 Kernel Mode 執行。
-- 防止使用者程式改寫中斷向量表或非法操作 I/O。
-
----
-
-### 3. Memory Protection
-
-- 防止程式間記憶體資料誤存／存取。
-- 透過 Base Register（起始位址）與 Limit Register（範圍大小）定義合法記憶體區段。
-
----
-
-### 4. CPU Protection
-
-- 防止無窮迴圈佔用 CPU。
-- 利用 **Timer**：
-  - 每次 clock tick 減一。
-  - 值為 0 時產生中斷，回到作業系統。
-- Timer 是特權指令，用於 Time-sharing 管理。
+## 3. 硬體保護（Hardware Protection）
 
 ---
 
