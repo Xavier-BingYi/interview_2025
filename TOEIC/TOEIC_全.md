@@ -1625,11 +1625,20 @@ We apologize for any inconvenience and appreciate your understanding.
 
 ## ✅ 練習題：填入正確的連接詞或受詞子句內容
 
-1. I believe ______ he can do it.  
-2. She said ______ she would be late.  
-3. We know ______ the office is closed today.  
-4. He told me ______ he got the job.  
-5. They think ______ the plan needs more work.
+1. I believe he can do it.  
+   → I believe **that** he can do it.
+
+2. She said she would be late.  
+   → She said **that** she would be late.
+
+3. We know the office is closed today.  
+   → We know **that** the office is closed today.
+
+4. He told me he got the job.  
+   → He told me **that** he got the job.
+
+5. They think the plan needs more work.  
+   → They think **that** the plan needs more work.
 
 ---
 
@@ -1663,11 +1672,17 @@ Project Manager
    (C) Friday at 3:00 PM  
    (D) Monday at 2:00 PM  
 
+   → (B) **Friday at 2:00 PM**  
+   ✉️ 郵件中明確提到：「scheduled for this Friday at 2:00 PM in Conference Room B」
+
 2. What will be discussed in the meeting?  
    (A) Budget and salaries  
    (B) Team training plans  
    (C) Current projects and next month’s goals  
    (D) Marketing strategies only  
+
+   → (C) **Current projects and next month’s goals**  
+   ✉️ 郵件說明：「We will review our current projects and discuss next month’s goals」
 
 3. What should employees bring to the meeting?  
    (A) Marketing reports  
@@ -1675,17 +1690,26 @@ Project Manager
    (C) Project updates and suggestions  
    (D) Lunch and drinks  
 
+   → (C) **Project updates and suggestions**  
+   ✉️ 郵件中提醒：「come prepared with your project updates and any suggestions for improvement」
+
 4. What should employees do if they can’t attend?  
    (A) Join by video call  
    (B) Ask a colleague to join  
    (C) Inform their manager  
    (D) Skip the meeting  
 
+   → (C) **Inform their manager**  
+   ✉️ 郵件中寫道：「please inform your manager in advance」
+
 5. Who sent this email?  
    (A) Jessica’s assistant  
    (B) The HR department  
    (C) Jessica Lin  
    (D) A team leader  
+
+   → (C) **Jessica Lin**  
+   ✉️ 信件簽名為「Jessica Lin – Project Manager」
 
 ---
 
@@ -1745,13 +1769,22 @@ Project Manager
 
 ---
 
-## ✅ 練習題：填入適當動詞形式
+## ✅ 練習題：改寫為被動語態
 
-1. If we (lower) _______ the price, more customers will buy it.  
-2. If I (have) _______ more free time, I would travel more.  
-3. If they (finish) _______ the report, the manager will approve it.  
-4. If I (be) _______ the CEO, I would hire more staff.  
-5. If we (not/improve) _______ efficiency, we will lose customers.
+1. The team submitted the report.  
+   → The report **was submitted** by the team.
+
+2. The company will launch a new product.  
+   → A new product **will be launched** by the company.
+
+3. They are designing a new logo.  
+   → A new logo **is being designed** by them.
+
+4. The HR department has approved the policy.  
+   → The policy **has been approved** by the HR department.
+
+5. The technician repaired the computer.  
+   → The computer **was repaired** by the technician.
 
 ---
 
@@ -1782,11 +1815,17 @@ If you have any questions, feel free to contact the HR Department.
    (C) To launch a wellness program  
    (D) To schedule a meeting  
 
+   → (C) **To launch a wellness program**  
+   ✉️ 開頭說明：「We are pleased to announce the launch of our new Staff Wellness Program」
+
 2. When does the program begin?  
    (A) May 10  
    (B) June 1  
    (C) Next week  
    (D) July 1  
+
+   → (B) **June 1**  
+   ✉️ 文中明確寫道：「beginning on June 1」
 
 3. What will be included in the wellness program?  
    (A) Travel incentives  
@@ -1794,17 +1833,26 @@ If you have any questions, feel free to contact the HR Department.
    (C) Fitness classes and healthy meals  
    (D) Sales training  
 
+   → (C) **Fitness classes and healthy meals**  
+   ✉️ 詳細說明內容包括：「weekly fitness classes, mental health workshops, and access to healthy meals」
+
 4. Is participation mandatory?  
    (A) Yes, for all employees  
    (B) No, but highly encouraged  
    (C) Only for new staff  
    (D) Yes, for HR staff  
 
+   → (B) **No, but highly encouraged**  
+   ✉️ 信中說明：「Participation is voluntary but highly encouraged」
+
 5. Who should employees contact for questions?  
    (A) Nancy Wu  
    (B) Operations Department  
    (C) Their manager  
-   (D) HR Department
+   (D) HR Department  
+
+   → (D) **HR Department**  
+   ✉️ 最後一句說明：「feel free to contact the HR Department」
 
 ---
 
@@ -1874,19 +1922,19 @@ If you have any questions, feel free to contact the HR Department.
 ## ✅ 練習題：改寫為被動語態
 
 1. The team submitted the report.  
-→ _______________________________________
+   → The report **was submitted** by the team.
 
 2. The company will launch a new product.  
-→ _______________________________________
+   → A new product **will be launched** by the company.
 
 3. They are designing a new logo.  
-→ _______________________________________
+   → A new logo **is being designed** by them.
 
 4. The HR department has approved the policy.  
-→ _______________________________________
+   → The policy **has been approved** by the HR department.
 
 5. The technician repaired the computer.  
-→ _______________________________________
+   → The computer **was repaired** by the technician.
 
 ---
 
@@ -1918,11 +1966,17 @@ Project Coordinator
    (C) To remind about document submission  
    (D) To introduce a new project coordinator  
 
+   → (C) **To remind about document submission**  
+   ✉️ 一開頭就寫道：「This is a friendly reminder that all project reports must be submitted...」
+
 2. What is the deadline for submitting reports?  
    (A) May 1, 2025  
    (B) May 3, 2025, at 5 PM  
    (C) May 5, 2025, at 9 AM  
    (D) May 2, 2025  
+
+   → (B) **May 3, 2025, at 5 PM**  
+   ✉️ 郵件中明確寫出：「by Friday, May 3, 2025, at 5:00 PM」
 
 3. Where should the documents be submitted?  
    (A) To HR  
@@ -1930,17 +1984,26 @@ Project Coordinator
    (C) To the shared drive  
    (D) On paper  
 
+   → (C) **To the shared drive**  
+   ✉️ 郵件中指示：「Please upload your documents to the shared drive」
+
 4. What should you do after submitting your report?  
    (A) Wait for confirmation  
    (B) Call the manager  
    (C) Notify your project lead  
    (D) Resend the email  
 
+   → (C) **Notify your project lead**  
+   ✉️ 郵件提到：「notify your project lead once submitted」
+
 5. Who should be contacted in case of technical problems?  
    (A) David Lin  
    (B) HR  
    (C) The project lead  
-   (D) IT support
+   (D) IT support  
+
+   → (D) **IT support**  
+   ✉️ 郵件中寫道：「If you encounter any technical issues, contact IT support before the deadline」
 
 ---
 
@@ -2003,10 +2066,19 @@ Project Coordinator
 ## ✅ 練習題：填入正確的比較級或最高級
 
 1. This laptop is ______ than the older model. (fast)  
+   → This laptop is **faster** than the older model. *(比較級)*
+
 2. She is the ______ person on the team. (experienced)  
+   → She is the **most experienced** person on the team. *(最高級)*
+
 3. Today is ______ than yesterday. (hot)  
+   → Today is **hotter** than yesterday. *(比較級，注意雙寫 t)*
+
 4. That was the ______ presentation I’ve ever seen. (bad)  
-5. Our new policy is ______ than the old one. (effective)
+   → That was the **worst** presentation I’ve ever seen. *(最高級，不規則變化)*
+
+5. Our new policy is ______ than the old one. (effective)  
+   → Our new policy is **more effective** than the old one. *(比較級，多音節詞加 more)*
 
 ---
 
@@ -2061,6 +2133,28 @@ Sales Director
    (B) Disappointed  
    (C) Encouraging  
    (D) Demanding
+
+### 🔹 閱讀理解題答案
+
+1. What is the main purpose of this email?  
+   → (C) **To celebrate sales achievement**  
+   ✉️ 郵件開頭提到：「congratulate everyone」以及「we achieved the highest sales growth」，明顯是表揚成果。
+
+2. Which branches performed the best?  
+   → (B) **Kaohsiung and Taichung**  
+   ✉️ 文中寫道：「Our top-performing branches were Taichung and Kaohsiung.」
+
+3. What is included with the email?  
+   → (D) **A performance report**  
+   ✉️ 郵件中提到：「Please review the attached document for individual performance results.」
+
+4. Who should employees contact with questions?  
+   → (C) **Their manager**  
+   ✉️ 文中寫：「If you have any questions, feel free to contact your manager.」
+
+5. What is the tone of this message?  
+   → (C) **Encouraging**  
+   ✉️ 這封信充滿感謝與讚揚，例如「congratulate everyone」、「Special thanks」、「hard work and dedication」，整體語氣非常正面鼓勵。
 
 ---
 
@@ -2121,10 +2215,24 @@ Sales Director
 ## ✅ 練習題：填入適當的關係代名詞（who, whom, whose, which, that）
 
 1. The woman ________ answered the phone was very polite.  
+   → The woman **who** answered the phone was very polite.  
+   *(主格，指人)*
+
 2. This is the report ________ you requested.  
+   → This is the report **that** you requested.  
+   *(受格，指事物，也可用 which)*
+
 3. The employee ________ we hired last week is very efficient.  
+   → The employee **whom** we hired last week is very efficient.  
+   *(受格，正式用 whom，口語中也可用 who 或省略)*
+
 4. He’s the manager ________ office is on the 5th floor.  
-5. The system ________ crashed yesterday has been restored.
+   → He’s the manager **whose** office is on the 5th floor.  
+   *(所有格，指人的事物)*
+
+5. The system ________ crashed yesterday has been restored.  
+   → The system **that** crashed yesterday has been restored.  
+   *(主格，指事物，也可用 which)*
 
 ---
 
@@ -2162,11 +2270,17 @@ Operations Manager
    (C) To request a budget increase  
    (D) To promote a new product line  
 
+   → (B) **To announce a change in office supply procedures**  
+   ✉️ 一開始就說明：「we will implement a new policy regarding the ordering of office supplies」
+
 2. Who will be responsible for submitting supply orders?  
    (A) Each employee  
    (B) Purchasing department staff  
    (C) One assigned person per department  
    (D) The operations manager  
+
+   → (C) **One assigned person per department**  
+   ✉️ 明確指出：「Each department must assign one person to handle supply requests」
 
 3. What will no longer be allowed?  
    (A) Ordering supplies online  
@@ -2174,17 +2288,26 @@ Operations Manager
    (C) Using paper request forms  
    (D) Receiving supplies from outside vendors  
 
+   → (B) **Buying supplies directly by employees**  
+   ✉️ 文中寫：「employees will no longer be allowed to purchase supplies directly」
+
 4. Why is this new policy being implemented?  
    (A) To improve employee morale  
    (B) To expand the purchasing team  
    (C) To reduce costs and improve efficiency  
    (D) To shorten delivery times  
 
+   → (C) **To reduce costs and improve efficiency**  
+   ✉️ 理由是：「part of a cost-saving initiative and will help streamline our procurement process」
+
 5. Who should employees contact with questions?  
    (A) Kevin Huang  
    (B) Their team leaders  
    (C) Lydia Wu  
-   (D) Human Resources
+   (D) Human Resources  
+
+   → (C) **Lydia Wu**  
+   ✉️ 文末指示：「please contact Ms. Lydia Wu in the purchasing department」
 
 ---
 
@@ -2244,10 +2367,24 @@ Operations Manager
 ## ✅ 練習題：判斷條件句類型並填空
 
 1. If she studies hard, she ______ (pass) the exam.  
+   → If she studies hard, she **will pass** the exam.  
+   ✏️ 第一類條件句（可能實現）
+
 2. If I ______ (be) rich, I would travel the world.  
+   → If I **were** rich, I would travel the world.  
+   ✏️ 第二類條件句（與現在事實相反，使用虛擬語氣）
+
 3. If they had prepared better, they ______ (win) the competition.  
+   → If they had prepared better, they **would have won** the competition.  
+   ✏️ 第三類條件句（與過去事實相反）
+
 4. I would call her if I ______ (have) her number.  
-5. If it ______ (rain) tomorrow, we will stay inside.
+   → I would call her if I **had** her number.  
+   ✏️ 第二類條件句（假設現在沒有電話）
+
+5. If it ______ (rain) tomorrow, we will stay inside.  
+   → If it **rains** tomorrow, we will stay inside.  
+   ✏️ 第一類條件句（關於未來的可能事件）
 
 ---
 
@@ -2280,11 +2417,17 @@ IT Support Team
    (C) To request feedback from staff  
    (D) To distribute new company software  
 
+   → (B) **To inform about system maintenance**  
+   ✉️ 開頭明確寫道：「our IT department will conduct system maintenance」
+
 2. When will the system maintenance take place?  
    (A) May 16, 2025  
    (B) Friday night  
    (C) May 17, 2025  
    (D) The whole week  
+
+   → (C) **May 17, 2025**  
+   ✉️ 郵件中提及：「on Saturday, May 17, 2025, from 8:00 AM to 4:00 PM」
 
 3. What should employees do if they need weekend files?  
    (A) Email IT support  
@@ -2292,17 +2435,26 @@ IT Support Team
    (C) Wait until Monday  
    (D) Access files remotely  
 
+   → (B) **Download files before Friday**  
+   ✉️ 郵件提醒：「please download them by Friday evening」
+
 4. What services will be affected?  
    (A) Internet and phones  
    (B) Only email  
    (C) Shared drives and applications  
    (D) Computers will be offline completely  
 
+   → (C) **Shared drives and applications**  
+   ✉️ 明確說明：「access to email, shared drives, and company applications will be temporarily unavailable」
+
 5. Who is responsible for the maintenance?  
    (A) All staff  
    (B) The security team  
    (C) The IT department  
-   (D) External contractors
+   (D) External contractors  
+
+   → (C) **The IT department**  
+   ✉️ 一開始就寫到：「our IT department will conduct system maintenance」
 
 ---
 
@@ -2380,10 +2532,19 @@ IT Support Team
 ## ✅ 練習題：改寫為被動語態
 
 1. They deliver the goods every Friday.  
+   → The goods **are delivered** every Friday.
+
 2. The manager will sign the contract tomorrow.  
+   → The contract **will be signed** by the manager tomorrow.
+
 3. Someone has stolen my laptop.  
+   → My laptop **has been stolen**.
+
 4. She mailed the documents last night.  
-5. They are updating the website now.
+   → The documents **were mailed** last night.
+
+5. They are updating the website now.  
+   → The website **is being updated** now.
 
 ---
 
@@ -2417,11 +2578,17 @@ Facilities Manager
    (C) Office renovation  
    (D) Job reassignments  
 
+   → (C) **Office renovation**  
+   ✉️ 郵件主題與開頭明確表示：「the office renovation will begin on June 3」
+
 2. When will the renovation start?  
    (A) June 1  
    (B) June 3  
    (C) July 15  
    (D) This week  
+
+   → (B) **June 3**  
+   ✉️ 郵件寫道：「the office renovation will begin on June 3」
 
 3. What should employees do before June 1?  
    (A) Request new desks  
@@ -2429,17 +2596,26 @@ Facilities Manager
    (C) Take away personal items  
    (D) Contact the IT staff  
 
+   → (C) **Take away personal items**  
+   ✉️ 指示：「Please remove all personal items from your desks by June 1」
+
 4. Who will help move computer equipment?  
    (A) Cleaning crew  
    (B) Managers  
    (C) IT staff  
    (D) Contractors  
 
+   → (C) **IT staff**  
+   ✉️ 文中寫道：「IT staff will assist with relocating computer equipment」
+
 5. How does the sender describe the renovation impact?  
    (A) Time-saving  
    (B) Expensive  
    (C) Unnecessary  
-   (D) Inconvenient
+   (D) Inconvenient  
+
+   → (D) **Inconvenient**  
+   ✉️ 結尾提到：「We apologize for any inconvenience」
 
 ---
 
@@ -2526,36 +2702,28 @@ Facilities Manager
 ## ✅ 練習題：選擇適當的不定詞或動名詞填空
 
 1. I forgot _______ the meeting. (to attend / attending)  
+   → I forgot **to attend** the meeting.  
+   ✏️ "forget to V" 表示「忘記去做某事」（尚未執行）
+
 2. He enjoys _______ with new clients. (to talk / talking)  
+   → He enjoys **talking** with new clients.  
+   ✏️ "enjoy" 後面要接動名詞（V-ing）
+
 3. We plan _______ the system next week. (to update / updating)  
+   → We plan **to update** the system next week.  
+   ✏️ "plan to V" 是固定用法
+
 4. She suggested _______ early to avoid traffic. (to leave / leaving)  
-5. I hope _______ a raise next year. (getting / to get)
+   → She suggested **leaving** early to avoid traffic.  
+   ✏️ "suggest" 後面接動名詞（V-ing）
+
+5. I hope _______ a raise next year. (getting / to get)  
+   → I hope **to get** a raise next year.  
+   ✏️ "hope to V" 是常見用法，表示期待發生某事
 
 ---
 
 ## 📚 多益閱讀練習：簡短公告與活動通知
-
-### 🔹 閱讀通知
-
-```
-TO: All Employees  
-FROM: HR Department  
-DATE: May 1, 2025  
-SUBJECT: Health and Wellness Seminar
-
-We are pleased to invite you to a company-sponsored Health and Wellness Seminar. The seminar will take place on Thursday, May 8, from 2:00 PM to 4:30 PM in Conference Room A. 
-
-Topics include:
-- Stress management
-- Healthy work habits
-- Office ergonomics
-
-The seminar is optional but strongly recommended for all staff members. Refreshments will be provided.
-
-Please RSVP by May 5 to hr@company.com.
-```
-
----
 
 ### 🔹 閱讀理解題
 
@@ -2565,11 +2733,17 @@ Please RSVP by May 5 to hr@company.com.
    (C) To invite employees to a seminar  
    (D) To report a schedule change  
 
+   → (C) **To invite employees to a seminar**  
+   ✉️ 一開始明確寫道：「We are pleased to invite you to a company-sponsored Health and Wellness Seminar」
+
 2. When will the seminar take place?  
    (A) May 1  
    (B) May 5  
    (C) May 8  
    (D) May 10  
+
+   → (C) **May 8**  
+   ✉️ 郵件中清楚指出：「The seminar will take place on Thursday, May 8」
 
 3. What topic is NOT mentioned as part of the seminar?  
    (A) Office ergonomics  
@@ -2577,16 +2751,25 @@ Please RSVP by May 5 to hr@company.com.
    (C) Stress management  
    (D) Healthy habits  
 
+   → (B) **Mental health**  
+   ✉️ 所列主題為：「Stress management, Healthy work habits, Office ergonomics」，未提及 mental health
+
 4. What should employees do by May 5?  
    (A) Submit a report  
    (B) Request leave  
    (C) RSVP for the seminar  
    (D) Attend a team meeting  
 
+   → (C) **RSVP for the seminar**  
+   ✉️ 文末寫道：「Please RSVP by May 5 to hr@company.com」
+
 5. What does the word “optional” in this context mean?  
    (A) Mandatory  
    (B) Recommended  
    (C) Not required  
-   (D) Paid
+   (D) Paid  
+
+   → (C) **Not required**  
+   ✉️ 雖然是 strongly recommended，但明確說明「The seminar is optional」，意思是**非強制性**
 
 ---

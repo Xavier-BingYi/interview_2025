@@ -186,11 +186,20 @@ We apologize for any inconvenience and appreciate your understanding.
 
 ## ✅ 練習題：填入正確的連接詞或受詞子句內容
 
-1. I believe ______ he can do it.  
-2. She said ______ she would be late.  
-3. We know ______ the office is closed today.  
-4. He told me ______ he got the job.  
-5. They think ______ the plan needs more work.
+1. I believe he can do it.  
+   → I believe **that** he can do it.
+
+2. She said she would be late.  
+   → She said **that** she would be late.
+
+3. We know the office is closed today.  
+   → We know **that** the office is closed today.
+
+4. He told me he got the job.  
+   → He told me **that** he got the job.
+
+5. They think the plan needs more work.  
+   → They think **that** the plan needs more work.
 
 ---
 
@@ -224,11 +233,17 @@ Project Manager
    (C) Friday at 3:00 PM  
    (D) Monday at 2:00 PM  
 
+   → (B) **Friday at 2:00 PM**  
+   ✉️ 郵件中明確提到：「scheduled for this Friday at 2:00 PM in Conference Room B」
+
 2. What will be discussed in the meeting?  
    (A) Budget and salaries  
    (B) Team training plans  
    (C) Current projects and next month’s goals  
    (D) Marketing strategies only  
+
+   → (C) **Current projects and next month’s goals**  
+   ✉️ 郵件說明：「We will review our current projects and discuss next month’s goals」
 
 3. What should employees bring to the meeting?  
    (A) Marketing reports  
@@ -236,17 +251,26 @@ Project Manager
    (C) Project updates and suggestions  
    (D) Lunch and drinks  
 
+   → (C) **Project updates and suggestions**  
+   ✉️ 郵件中提醒：「come prepared with your project updates and any suggestions for improvement」
+
 4. What should employees do if they can’t attend?  
    (A) Join by video call  
    (B) Ask a colleague to join  
    (C) Inform their manager  
    (D) Skip the meeting  
 
+   → (C) **Inform their manager**  
+   ✉️ 郵件中寫道：「please inform your manager in advance」
+
 5. Who sent this email?  
    (A) Jessica’s assistant  
    (B) The HR department  
    (C) Jessica Lin  
    (D) A team leader  
+
+   → (C) **Jessica Lin**  
+   ✉️ 信件簽名為「Jessica Lin – Project Manager」
 
 ---
 
@@ -306,13 +330,22 @@ Project Manager
 
 ---
 
-## ✅ 練習題：填入適當動詞形式
+## ✅ 練習題：改寫為被動語態
 
-1. If we (lower) _______ the price, more customers will buy it.  
-2. If I (have) _______ more free time, I would travel more.  
-3. If they (finish) _______ the report, the manager will approve it.  
-4. If I (be) _______ the CEO, I would hire more staff.  
-5. If we (not/improve) _______ efficiency, we will lose customers.
+1. The team submitted the report.  
+   → The report **was submitted** by the team.
+
+2. The company will launch a new product.  
+   → A new product **will be launched** by the company.
+
+3. They are designing a new logo.  
+   → A new logo **is being designed** by them.
+
+4. The HR department has approved the policy.  
+   → The policy **has been approved** by the HR department.
+
+5. The technician repaired the computer.  
+   → The computer **was repaired** by the technician.
 
 ---
 
@@ -343,11 +376,17 @@ If you have any questions, feel free to contact the HR Department.
    (C) To launch a wellness program  
    (D) To schedule a meeting  
 
+   → (C) **To launch a wellness program**  
+   ✉️ 開頭說明：「We are pleased to announce the launch of our new Staff Wellness Program」
+
 2. When does the program begin?  
    (A) May 10  
    (B) June 1  
    (C) Next week  
    (D) July 1  
+
+   → (B) **June 1**  
+   ✉️ 文中明確寫道：「beginning on June 1」
 
 3. What will be included in the wellness program?  
    (A) Travel incentives  
@@ -355,17 +394,26 @@ If you have any questions, feel free to contact the HR Department.
    (C) Fitness classes and healthy meals  
    (D) Sales training  
 
+   → (C) **Fitness classes and healthy meals**  
+   ✉️ 詳細說明內容包括：「weekly fitness classes, mental health workshops, and access to healthy meals」
+
 4. Is participation mandatory?  
    (A) Yes, for all employees  
    (B) No, but highly encouraged  
    (C) Only for new staff  
    (D) Yes, for HR staff  
 
+   → (B) **No, but highly encouraged**  
+   ✉️ 信中說明：「Participation is voluntary but highly encouraged」
+
 5. Who should employees contact for questions?  
    (A) Nancy Wu  
    (B) Operations Department  
    (C) Their manager  
-   (D) HR Department
+   (D) HR Department  
+
+   → (D) **HR Department**  
+   ✉️ 最後一句說明：「feel free to contact the HR Department」
 
 ---
 
@@ -435,19 +483,19 @@ If you have any questions, feel free to contact the HR Department.
 ## ✅ 練習題：改寫為被動語態
 
 1. The team submitted the report.  
-→ _______________________________________
+   → The report **was submitted** by the team.
 
 2. The company will launch a new product.  
-→ _______________________________________
+   → A new product **will be launched** by the company.
 
 3. They are designing a new logo.  
-→ _______________________________________
+   → A new logo **is being designed** by them.
 
 4. The HR department has approved the policy.  
-→ _______________________________________
+   → The policy **has been approved** by the HR department.
 
 5. The technician repaired the computer.  
-→ _______________________________________
+   → The computer **was repaired** by the technician.
 
 ---
 
@@ -479,11 +527,17 @@ Project Coordinator
    (C) To remind about document submission  
    (D) To introduce a new project coordinator  
 
+   → (C) **To remind about document submission**  
+   ✉️ 一開頭就寫道：「This is a friendly reminder that all project reports must be submitted...」
+
 2. What is the deadline for submitting reports?  
    (A) May 1, 2025  
    (B) May 3, 2025, at 5 PM  
    (C) May 5, 2025, at 9 AM  
    (D) May 2, 2025  
+
+   → (B) **May 3, 2025, at 5 PM**  
+   ✉️ 郵件中明確寫出：「by Friday, May 3, 2025, at 5:00 PM」
 
 3. Where should the documents be submitted?  
    (A) To HR  
@@ -491,16 +545,25 @@ Project Coordinator
    (C) To the shared drive  
    (D) On paper  
 
+   → (C) **To the shared drive**  
+   ✉️ 郵件中指示：「Please upload your documents to the shared drive」
+
 4. What should you do after submitting your report?  
    (A) Wait for confirmation  
    (B) Call the manager  
    (C) Notify your project lead  
    (D) Resend the email  
 
+   → (C) **Notify your project lead**  
+   ✉️ 郵件提到：「notify your project lead once submitted」
+
 5. Who should be contacted in case of technical problems?  
    (A) David Lin  
    (B) HR  
    (C) The project lead  
-   (D) IT support
+   (D) IT support  
+
+   → (D) **IT support**  
+   ✉️ 郵件中寫道：「If you encounter any technical issues, contact IT support before the deadline」
 
 ---

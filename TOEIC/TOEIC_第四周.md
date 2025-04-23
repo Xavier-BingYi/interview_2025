@@ -57,10 +57,19 @@
 ## ✅ 練習題：填入正確的比較級或最高級
 
 1. This laptop is ______ than the older model. (fast)  
+   → This laptop is **faster** than the older model. *(比較級)*
+
 2. She is the ______ person on the team. (experienced)  
+   → She is the **most experienced** person on the team. *(最高級)*
+
 3. Today is ______ than yesterday. (hot)  
+   → Today is **hotter** than yesterday. *(比較級，注意雙寫 t)*
+
 4. That was the ______ presentation I’ve ever seen. (bad)  
-5. Our new policy is ______ than the old one. (effective)
+   → That was the **worst** presentation I’ve ever seen. *(最高級，不規則變化)*
+
+5. Our new policy is ______ than the old one. (effective)  
+   → Our new policy is **more effective** than the old one. *(比較級，多音節詞加 more)*
 
 ---
 
@@ -115,6 +124,28 @@ Sales Director
    (B) Disappointed  
    (C) Encouraging  
    (D) Demanding
+
+### 🔹 閱讀理解題答案
+
+1. What is the main purpose of this email?  
+   → (C) **To celebrate sales achievement**  
+   ✉️ 郵件開頭提到：「congratulate everyone」以及「we achieved the highest sales growth」，明顯是表揚成果。
+
+2. Which branches performed the best?  
+   → (B) **Kaohsiung and Taichung**  
+   ✉️ 文中寫道：「Our top-performing branches were Taichung and Kaohsiung.」
+
+3. What is included with the email?  
+   → (D) **A performance report**  
+   ✉️ 郵件中提到：「Please review the attached document for individual performance results.」
+
+4. Who should employees contact with questions?  
+   → (C) **Their manager**  
+   ✉️ 文中寫：「If you have any questions, feel free to contact your manager.」
+
+5. What is the tone of this message?  
+   → (C) **Encouraging**  
+   ✉️ 這封信充滿感謝與讚揚，例如「congratulate everyone」、「Special thanks」、「hard work and dedication」，整體語氣非常正面鼓勵。
 
 ---
 
@@ -175,10 +206,24 @@ Sales Director
 ## ✅ 練習題：填入適當的關係代名詞（who, whom, whose, which, that）
 
 1. The woman ________ answered the phone was very polite.  
+   → The woman **who** answered the phone was very polite.  
+   *(主格，指人)*
+
 2. This is the report ________ you requested.  
+   → This is the report **that** you requested.  
+   *(受格，指事物，也可用 which)*
+
 3. The employee ________ we hired last week is very efficient.  
+   → The employee **whom** we hired last week is very efficient.  
+   *(受格，正式用 whom，口語中也可用 who 或省略)*
+
 4. He’s the manager ________ office is on the 5th floor.  
-5. The system ________ crashed yesterday has been restored.
+   → He’s the manager **whose** office is on the 5th floor.  
+   *(所有格，指人的事物)*
+
+5. The system ________ crashed yesterday has been restored.  
+   → The system **that** crashed yesterday has been restored.  
+   *(主格，指事物，也可用 which)*
 
 ---
 
@@ -216,11 +261,17 @@ Operations Manager
    (C) To request a budget increase  
    (D) To promote a new product line  
 
+   → (B) **To announce a change in office supply procedures**  
+   ✉️ 一開始就說明：「we will implement a new policy regarding the ordering of office supplies」
+
 2. Who will be responsible for submitting supply orders?  
    (A) Each employee  
    (B) Purchasing department staff  
    (C) One assigned person per department  
    (D) The operations manager  
+
+   → (C) **One assigned person per department**  
+   ✉️ 明確指出：「Each department must assign one person to handle supply requests」
 
 3. What will no longer be allowed?  
    (A) Ordering supplies online  
@@ -228,17 +279,26 @@ Operations Manager
    (C) Using paper request forms  
    (D) Receiving supplies from outside vendors  
 
+   → (B) **Buying supplies directly by employees**  
+   ✉️ 文中寫：「employees will no longer be allowed to purchase supplies directly」
+
 4. Why is this new policy being implemented?  
    (A) To improve employee morale  
    (B) To expand the purchasing team  
    (C) To reduce costs and improve efficiency  
    (D) To shorten delivery times  
 
+   → (C) **To reduce costs and improve efficiency**  
+   ✉️ 理由是：「part of a cost-saving initiative and will help streamline our procurement process」
+
 5. Who should employees contact with questions?  
    (A) Kevin Huang  
    (B) Their team leaders  
    (C) Lydia Wu  
-   (D) Human Resources
+   (D) Human Resources  
+
+   → (C) **Lydia Wu**  
+   ✉️ 文末指示：「please contact Ms. Lydia Wu in the purchasing department」
 
 ---
 
@@ -298,10 +358,24 @@ Operations Manager
 ## ✅ 練習題：判斷條件句類型並填空
 
 1. If she studies hard, she ______ (pass) the exam.  
+   → If she studies hard, she **will pass** the exam.  
+   ✏️ 第一類條件句（可能實現）
+
 2. If I ______ (be) rich, I would travel the world.  
+   → If I **were** rich, I would travel the world.  
+   ✏️ 第二類條件句（與現在事實相反，使用虛擬語氣）
+
 3. If they had prepared better, they ______ (win) the competition.  
+   → If they had prepared better, they **would have won** the competition.  
+   ✏️ 第三類條件句（與過去事實相反）
+
 4. I would call her if I ______ (have) her number.  
-5. If it ______ (rain) tomorrow, we will stay inside.
+   → I would call her if I **had** her number.  
+   ✏️ 第二類條件句（假設現在沒有電話）
+
+5. If it ______ (rain) tomorrow, we will stay inside.  
+   → If it **rains** tomorrow, we will stay inside.  
+   ✏️ 第一類條件句（關於未來的可能事件）
 
 ---
 
@@ -334,11 +408,17 @@ IT Support Team
    (C) To request feedback from staff  
    (D) To distribute new company software  
 
+   → (B) **To inform about system maintenance**  
+   ✉️ 開頭明確寫道：「our IT department will conduct system maintenance」
+
 2. When will the system maintenance take place?  
    (A) May 16, 2025  
    (B) Friday night  
    (C) May 17, 2025  
    (D) The whole week  
+
+   → (C) **May 17, 2025**  
+   ✉️ 郵件中提及：「on Saturday, May 17, 2025, from 8:00 AM to 4:00 PM」
 
 3. What should employees do if they need weekend files?  
    (A) Email IT support  
@@ -346,17 +426,26 @@ IT Support Team
    (C) Wait until Monday  
    (D) Access files remotely  
 
+   → (B) **Download files before Friday**  
+   ✉️ 郵件提醒：「please download them by Friday evening」
+
 4. What services will be affected?  
    (A) Internet and phones  
    (B) Only email  
    (C) Shared drives and applications  
    (D) Computers will be offline completely  
 
+   → (C) **Shared drives and applications**  
+   ✉️ 明確說明：「access to email, shared drives, and company applications will be temporarily unavailable」
+
 5. Who is responsible for the maintenance?  
    (A) All staff  
    (B) The security team  
    (C) The IT department  
-   (D) External contractors
+   (D) External contractors  
+
+   → (C) **The IT department**  
+   ✉️ 一開始就寫到：「our IT department will conduct system maintenance」
 
 ---
 
@@ -434,10 +523,19 @@ IT Support Team
 ## ✅ 練習題：改寫為被動語態
 
 1. They deliver the goods every Friday.  
+   → The goods **are delivered** every Friday.
+
 2. The manager will sign the contract tomorrow.  
+   → The contract **will be signed** by the manager tomorrow.
+
 3. Someone has stolen my laptop.  
+   → My laptop **has been stolen**.
+
 4. She mailed the documents last night.  
-5. They are updating the website now.
+   → The documents **were mailed** last night.
+
+5. They are updating the website now.  
+   → The website **is being updated** now.
 
 ---
 
@@ -471,11 +569,17 @@ Facilities Manager
    (C) Office renovation  
    (D) Job reassignments  
 
+   → (C) **Office renovation**  
+   ✉️ 郵件主題與開頭明確表示：「the office renovation will begin on June 3」
+
 2. When will the renovation start?  
    (A) June 1  
    (B) June 3  
    (C) July 15  
    (D) This week  
+
+   → (B) **June 3**  
+   ✉️ 郵件寫道：「the office renovation will begin on June 3」
 
 3. What should employees do before June 1?  
    (A) Request new desks  
@@ -483,17 +587,25 @@ Facilities Manager
    (C) Take away personal items  
    (D) Contact the IT staff  
 
+   → (C) **Take away personal items**  
+   ✉️ 指示：「Please remove all personal items from your desks by June 1」
+
 4. Who will help move computer equipment?  
    (A) Cleaning crew  
    (B) Managers  
    (C) IT staff  
    (D) Contractors  
 
+   → (C) **IT staff**  
+   ✉️ 文中寫道：「IT staff will assist with relocating computer equipment」
+
 5. How does the sender describe the renovation impact?  
    (A) Time-saving  
    (B) Expensive  
    (C) Unnecessary  
-   (D) Inconvenient
+   (D) Inconvenient  
+
+   → (D) **Inconvenient**  
+   ✉️ 結尾提到：「We apologize for any inconvenience」
 
 ---
-
