@@ -1769,22 +1769,13 @@ Project Manager
 
 ---
 
-## ✅ 練習題：改寫為被動語態
+## ✅ 練習題：填入適當動詞形式
 
-1. The team submitted the report.  
-   → The report **was submitted** by the team.
-
-2. The company will launch a new product.  
-   → A new product **will be launched** by the company.
-
-3. They are designing a new logo.  
-   → A new logo **is being designed** by them.
-
-4. The HR department has approved the policy.  
-   → The policy **has been approved** by the HR department.
-
-5. The technician repaired the computer.  
-   → The computer **was repaired** by the technician.
+1. If we (lower) _______ the price, more customers will buy it.  
+2. If I (have) _______ more free time, I would travel more.  
+3. If they (finish) _______ the report, the manager will approve it.  
+4. If I (be) _______ the CEO, I would hire more staff.  
+5. If we (not/improve) _______ efficiency, we will lose customers.
 
 ---
 
@@ -2063,22 +2054,22 @@ Project Coordinator
 
 ---
 
-## ✅ 練習題：填入正確的比較級或最高級
+## ✅ 練習題：填入適當動詞形式
 
-1. This laptop is ______ than the older model. (fast)  
-   → This laptop is **faster** than the older model. *(比較級)*
+1. If we (lower) _______ the price, more customers will buy it.  
+   → If we **lower** the price, more customers will buy it. *(第一類條件句)*
 
-2. She is the ______ person on the team. (experienced)  
-   → She is the **most experienced** person on the team. *(最高級)*
+2. If I (have) _______ more free time, I would travel more.  
+   → If I **had** more free time, I would travel more. *(第二類條件句)*
 
-3. Today is ______ than yesterday. (hot)  
-   → Today is **hotter** than yesterday. *(比較級，注意雙寫 t)*
+3. If they (finish) _______ the report, the manager will approve it.  
+   → If they **finish** the report, the manager will approve it. *(第一類條件句)*
 
-4. That was the ______ presentation I’ve ever seen. (bad)  
-   → That was the **worst** presentation I’ve ever seen. *(最高級，不規則變化)*
+4. If I (be) _______ the CEO, I would hire more staff.  
+   → If I **were** the CEO, I would hire more staff. *(第二類條件句，be 動詞用 were)*
 
-5. Our new policy is ______ than the old one. (effective)  
-   → Our new policy is **more effective** than the old one. *(比較級，多音節詞加 more)*
+5. If we (not/improve) _______ efficiency, we will lose customers.  
+   → If we **don’t improve** efficiency, we will lose customers. *(第一類條件句，否定句型)*
 
 ---
 

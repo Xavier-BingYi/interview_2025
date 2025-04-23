@@ -330,22 +330,22 @@ Project Manager
 
 ---
 
-## ✅ 練習題：改寫為被動語態
+## ✅ 練習題：填入適當動詞形式
 
-1. The team submitted the report.  
-   → The report **was submitted** by the team.
+1. If we (lower) _______ the price, more customers will buy it.  
+   → If we **lower** the price, more customers will buy it. *(第一類條件句)*
 
-2. The company will launch a new product.  
-   → A new product **will be launched** by the company.
+2. If I (have) _______ more free time, I would travel more.  
+   → If I **had** more free time, I would travel more. *(第二類條件句)*
 
-3. They are designing a new logo.  
-   → A new logo **is being designed** by them.
+3. If they (finish) _______ the report, the manager will approve it.  
+   → If they **finish** the report, the manager will approve it. *(第一類條件句)*
 
-4. The HR department has approved the policy.  
-   → The policy **has been approved** by the HR department.
+4. If I (be) _______ the CEO, I would hire more staff.  
+   → If I **were** the CEO, I would hire more staff. *(第二類條件句，be 動詞用 were)*
 
-5. The technician repaired the computer.  
-   → The computer **was repaired** by the technician.
+5. If we (not/improve) _______ efficiency, we will lose customers.  
+   → If we **don’t improve** efficiency, we will lose customers. *(第一類條件句，否定句型)*
 
 ---
 
