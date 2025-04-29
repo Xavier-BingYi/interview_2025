@@ -190,11 +190,141 @@
 
 ---
 
-## 2. 電腦系統組織
+## 2. 電腦系統組織（Computer-System Organization）
 
 ---
 
-## 3. 硬體保護（Hardware Protection）
+### 2.1 電腦系統基本架構與作業系統角色
+
+#### ▸ 電腦系統的基本組成
+- 由一個或多個 CPU、裝置控制器（device controllers）與共用記憶體（shared memory）組成，並以匯流排（bus）互連。
+- 採用 von Neumann 架構，CPU、Memory、I/O Devices 串接成一個完整運作系統。
+
+#### ▸ 系統運作目標
+- 實現 CPU 與各裝置的**並行執行（concurrent execution）**。
+- 需要 OS **控制**與**協調**多個程序和裝置對記憶體的競爭。
+
+#### ▸ OS 的控制與協調
+- OS 負責管理硬體資源存取，防止程序之間互相干擾或破壞記憶體資料。
+- 確保程式間**正確共享記憶體**與**資源獨立性**。
+
+---
+
+### 2.2 I/O 操作流程與忙碌等待問題
+
+#### ▸ 裝置控制器（Device Controller）結構
+- 每個 controller 負責一種特定裝置，並有本地 buffer。
+- 控制器設有 **Status Register** 和 **Data Register**：
+  - Status Register：顯示裝置當前狀態（如 idle 或 busy）。
+  - Data Register：小型緩衝區，暫存傳輸資料。
+
+#### ▸ 資料交換流程
+- **Device ↔ Controller Buffer**：由控制器直接處理。
+- **Buffer ↔ Memory**：由 CPU 發出指令搬移。
+
+#### ▸ 忙碌等待（Busy-Waiting）
+- 最簡單的 I/O 方式：CPU 不斷輪詢裝置是否就緒。
+- 例：將字串一個字元一個字元寫入資料暫存器，並在每次傳送後 busy wait 等待裝置就緒。
+
+#### ▸ Busy Waiting 的缺點
+- CPU 必須空等，無法執行其他工作，導致效率極低。
+- 無法支援多工（multitasking），系統效能嚴重受限。
+
+---
+
+### 2.3 中斷驅動 I/O 機制（Interrupt-Driven I/O）
+
+#### ▸ 中斷機制概述
+- 中斷（Interrupt）允許裝置主動通知 CPU，而不是由 CPU 主動輪詢。
+- 改善 busy waiting 的缺點，使 CPU 可進行其他計算，提升系統效率。
+
+#### ▸ 中斷處理流程
+1. Device driver 透過 system call 啟動 I/O。
+2. Controller 執行實際資料傳輸。
+3. 傳輸完成後，controller 發送 interrupt signal。
+4. CPU 接收中斷並切換至 Interrupt Handler。
+5. Interrupt Handler 處理完成後，返回原本程式。
+
+#### ▸ 硬體中斷與軟體中斷
+- **Hardware Interrupt**：裝置事件（如滑鼠移動、鍵盤輸入）觸發。
+- **Software Interrupt（Trap）**：程式主動呼叫 system call 或產生錯誤（如 division by zero）。
+
+#### ▸ 中斷向量表（Interrupt Vector）
+- 系統維護中斷向量（array of function pointers），每個中斷對應一個 Handler。
+- 安裝驅動程式時，更新中斷向量以指向新的中斷處理程序。
+
+---
+
+### 2.4 中斷處理細節與系統同步
+
+#### ▸ Resident Monitor 與 Service Routine
+- Resident Monitor 常駐記憶體，負責中斷控制與管理。
+- 當中斷發生時，查詢 interrupt vector 找到對應 service routine 執行。
+
+#### ▸ 軟體中斷處理流程
+- User program 呼叫 system call（如 read、write）→ 系統產生 software interrupt。
+- OS 根據 call number 進行 switch-case，找到對應的服務例程執行，完成後回到 user 程式。
+
+#### ▸ 中斷的同步與保護機制
+- 當中斷處理進行中時，會暫時 disable 其他低優先權的中斷（interrupt masking）。
+- 確保高優先權中斷能即時處理，避免 lost interrupt 和系統狀態混亂。
+- 必須保存中斷發生時的 register、program counter（PC）、memory state，確保能正確 resume。
+
+---
+
+### 2.5 Interrupt 與 Trap 的差異與效能考量
+
+#### ▸ Interrupt 與 Trap 比較
+- **Interrupt**：來自外部裝置（硬體中斷）。
+- **Trap**：由使用者程式內部事件（錯誤或 system call）主動觸發。
+
+#### ▸ 中斷處理開銷
+- 中斷發生時需要儲存大量上下文（context saving），會帶來額外負擔（overhead）。
+- 太頻繁的中斷會降低整體系統效能。
+
+#### ▸ 系統效能最佳化
+- 使用 Assembly Code 撰寫中斷服務程序，確保極速處理。
+- 嚴格區分高、低優先權中斷，必要時 mask 掉低優先權中斷以提升效率。
+
+---
+
+## 3. 儲存系統結構與快取管理（Storage System Architecture and Caching）
+
+---
+
+### 3.1 儲存層級概念
+
+---
+
+### 3.2 主記憶體與次級儲存裝置
+
+---
+
+### 3.3 磁碟結構與效能
+
+---
+
+### 3.4 快取機制與一致性問題
+
+---
+
+## 4. 系統硬體保護機制（Hardware Protection Mechanisms）
+
+---
+
+### 4.1 雙模式操作與特權指令
+
+---
+
+### 4.2 I/O 裝置保護
+
+---
+
+### 4.3 記憶體保護機制
+
+---
+
+### 4.4 CPU 保護與計時器機制
 
 ---
 

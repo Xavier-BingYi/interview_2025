@@ -567,3 +567,201 @@ Project Coordinator
    ✉️ 郵件中寫道：「If you encounter any technical issues, contact IT support before the deadline」
 
 ---
+
+# 📘 TOEIC 第三週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. We must ______ the risks before making a decision.  
+   (A) enroll (B) assess (C) finalize (D) promote  
+
+2. Please ______ the new employee to the project team.  
+   (A) assign (B) expand (C) offer (D) hire  
+
+3. We received a ______ about the canceled order.  
+   (A) checklist (B) backup (C) cancellation (D) precaution  
+
+4. The ______ report shows an increase in sales.  
+   (A) forecast (B) incident (C) attachment (D) bonus  
+
+5. Employees must be ______ of safety procedures.  
+   (A) aware (B) efficient (C) flexible (D) defective  
+
+6. He will ______ the important files to the email.  
+   (A) authorize (B) attach (C) monitor (D) export  
+
+7. We expect a big ______ in the Asian market.  
+   (A) disruption (B) expansion (C) exposure (D) access  
+
+8. She was ______ as the new manager yesterday.  
+   (A) appointed (B) dismissed (C) informed (D) enrolled  
+
+9. If the machine is ______, please report it.  
+   (A) flexible (B) defective (C) efficient (D) flexible  
+
+10. Please ______ your attendance by Wednesday.  
+    (A) inform (B) inspect (C) confirm (D) maintain  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. The documents ______ by the assistant.  
+    (A) prepare (B) prepared (C) were prepared (D) are prepare  
+
+12. The machine ______ every month.  
+    (A) is checked (B) checked (C) will checking (D) checking  
+
+13. If it rains, we ______ the meeting.  
+    (A) cancel (B) will cancel (C) canceled (D) canceling  
+
+14. She said that she ______ the meeting.  
+    (A) attend (B) attending (C) will attend (D) would attend  
+
+15. The new software ______ installed yesterday.  
+    (A) was (B) were (C) is (D) be  
+
+16. Please make sure the lights ______ off before leaving.  
+    (A) turn (B) turned (C) are turned (D) turning  
+
+17. He ______ the new employee how to use the machine.  
+    (A) told (B) say (C) saying (D) telling  
+
+18. They ______ the documents to the client tomorrow.  
+    (A) sending (B) sends (C) will send (D) was send  
+
+19. The files must ______ before 5 PM.  
+    (A) upload (B) uploaded (C) uploading (D) be uploaded  
+
+20. We need someone who can ______ customer problems quickly.  
+    (A) handles (B) handle (C) handled (D) handling  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+Subject: Office Closure Notification
+
+Dear Staff,
+
+Please note that our office will be closed on Monday, June 10, due to a public holiday. Normal operations will resume on Tuesday, June 11.
+
+If you have urgent matters, please send an email to your department manager.
+
+Thank you for your attention.
+
+Sincerely,  
+HR Department
+```
+
+---
+
+21. Why will the office be closed?  
+    (A) Staff training  
+    (B) Public holiday  
+    (C) Maintenance work  
+    (D) Moving to a new office  
+
+22. When will the office open again?  
+    (A) June 9  
+    (B) June 10  
+    (C) June 11  
+    (D) June 12  
+
+23. What should staff do if they have urgent issues?  
+    (A) Call the manager  
+    (B) Visit the office  
+    (C) Send an email  
+    (D) Wait until next week  
+
+24. Who sent this email?  
+    (A) IT department  
+    (B) HR department  
+    (C) Sales team  
+    (D) Finance team  
+
+25. What is the main idea of this notice?  
+    (A) To announce an office closure  
+    (B) To change work rules  
+    (C) To introduce a new product  
+    (D) To request staff feedback  
+
+---
+
+## 📘 TOEIC 第三週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | B    |
+| 2    | A    |
+| 3    | C    |
+| 4    | A    |
+| 5    | A    |
+| 6    | B    |
+| 7    | B    |
+| 8    | A    |
+| 9    | B    |
+| 10   | C    |
+| 11   | C    |
+| 12   | A    |
+| 13   | B    |
+| 14   | D    |
+| 15   | A    |
+| 16   | C    |
+| 17   | A    |
+| 18   | C    |
+| 19   | D    |
+| 20   | B    |
+| 21   | B    |
+| 22   | C    |
+| 23   | C    |
+| 24   | B    |
+| 25   | A    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **assess**：做決定前需要「評估」風險，選 (B)。  
+2. **assign**：要把新員工「指派」到專案團隊，選 (A)。  
+3. **cancellation**：收到關於取消訂單的「通知」，選 (C)。  
+4. **forecast**：銷售「預測」報告顯示銷量增加，選 (A)。  
+5. **aware**：員工必須「知道」安全規定，選 (A)。  
+6. **attach**：將重要檔案「附加」到 email 中，選 (B)。  
+7. **expansion**：預期亞洲市場會有「擴張」，選 (B)。  
+8. **appointed**：昨天被「指派」為新經理，選 (A)。  
+9. **defective**：機器如果「有缺陷」，要通報，選 (B)。  
+10. **confirm**：請在星期三前「確認」出席，選 (C)。
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **were prepared**：文件是助理「準備的」，被動語態，選 (C)。  
+12. **is checked**：機器「每月被檢查」，用被動現在簡單式，選 (A)。  
+13. **will cancel**：如果下雨，我們「會取消」會議，用未來式，選 (B)。  
+14. **would attend**：她說她「會參加」會議，過去表未來，用 would，選 (D)。  
+15. **was**：新軟體昨天「被安裝」，用 was，選 (A)。  
+16. **are turned**：離開前要「關燈」，燈是被關的，被動語態，選 (C)。  
+17. **told**：他「告訴」新員工如何使用機器，選 (A)。  
+18. **will send**：他們「明天會寄」文件，用未來式，選 (C)。  
+19. **be uploaded**：文件「必須在五點前上傳」，被動語態，選 (D)。  
+20. **handle**：需要可以「處理」客戶問題的人，選 (B)。
+
+---
+
+### 三、閱讀理解（Reading）
+
+> **Email Notice**  
+> Office will be closed on June 10 due to a public holiday. Operations resume June 11. Urgent issues → email department manager.
+
+21. **Public holiday**：因為公共假期休息，選 (B)。  
+22. **June 11**：6月11日恢復上班，選 (C)。  
+23. **Send an email**：有急事要「發email」，選 (C)。  
+24. **HR department**：寄件人是 HR 部門，選 (B)。  
+25. **Announce an office closure**：主要是「通知休假」，選 (A)。
