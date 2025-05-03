@@ -10,6 +10,8 @@
 
 # 第一天
 
+---
+
 ## 📝 單字學習 (25 個)
 | 單字 | 詞性 | 中文意思 | 例句 |
 |------|------|--------|------|
@@ -87,6 +89,8 @@
 
 # 第二天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字 | 詞性 | 中文意思 | 例句 |
@@ -162,6 +166,8 @@
 ---
 
 # 第三天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -302,6 +308,8 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
 
 # 第四天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字        | 詞性   | 中文意思           | 例句                                           |
@@ -370,6 +378,8 @@ ABC Corporation announced yesterday that it will open a new branch in Singapore 
 ---
 
 # 第五天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -559,6 +569,8 @@ s.johnson@techcorp.com
 ---
 
 # 第六天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -845,6 +857,8 @@ TechGlobal Inc. is an equal opportunity employer.
 
 # 第七天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字        | 詞性   | 中文意思           | 例句                                           |
@@ -1128,6 +1142,8 @@ TechGlobal Inc. is an equal opportunity employer.
 ---
 
 # 第八天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -1439,6 +1455,8 @@ Implementation of these recommendations could potentially increase market share 
 
 # 第九天
 
+--- 
+
 ## 📝 單字學習 (25 個)
 
 | 單字        | 詞性   | 中文意思       | 例句                                      |
@@ -1571,6 +1589,8 @@ We apologize for any inconvenience and appreciate your understanding.
 ---
 
 # 第十天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -1715,6 +1735,8 @@ Project Manager
 
 # 第十一天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字         | 詞性   | 中文意思         | 例句                                                |
@@ -1848,6 +1870,8 @@ If you have any questions, feel free to contact the HR Department.
 ---
 
 # 第十二天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -2000,6 +2024,8 @@ Project Coordinator
 
 # 第十三天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字         | 詞性   | 中文意思             | 例句                                                      |
@@ -2150,6 +2176,8 @@ Sales Director
 ---
 
 # 第十四天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -2304,6 +2332,8 @@ Operations Manager
 
 # 第十五天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字         | 詞性   | 中文意思         | 例句                                                   |
@@ -2450,6 +2480,8 @@ IT Support Team
 ---
 
 # 第十六天
+
+---
 
 ## 📝 單字學習 (25 個)
 
@@ -2612,6 +2644,8 @@ Facilities Manager
 
 # 第十七天
 
+---
+
 ## 📝 單字學習 (25 個)
 
 | 單字          | 詞性   | 中文意思             | 例句                                                   |
@@ -2762,5 +2796,451 @@ Facilities Manager
 
    → (C) **Not required**  
    ✉️ 雖然是 strongly recommended，但明確說明「The seminar is optional」，意思是**非強制性**
+
+---
+
+# 第 十八 天
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思             | 例句                                                    |
+|--------------|--------|----------------------|---------------------------------------------------------|
+| amend        | v.     | 修改，修正           | We need to amend the contract.                          |
+| anticipate   | v.     | 預期，期待           | We anticipate strong sales this year.                   |
+| appliance    | n.     | 家電，器具           | This appliance is energy-efficient.                     |
+| applicant    | n.     | 申請人               | Every applicant must complete an interview.             |
+| approach     | v./n.  | 接近，方法           | We need a new approach to solve this problem.            |
+| approval     | n.     | 批准，同意           | We are waiting for the manager’s approval.               |
+| assignment   | n.     | 任務，指派           | She completed the assignment on time.                    |
+| assumption   | n.     | 假設                 | Your plan is based on wrong assumptions.                 |
+| attendee     | n.     | 出席者               | There were over 100 attendees at the conference.         |
+| attribute    | v./n.  | 歸因於；特性         | She attributes her success to hard work.                 |
+| audit        | v./n.  | 審核；查帳           | The financial report will be audited tomorrow.           |
+| awareness    | n.     | 意識                 | Health awareness has risen in recent years.              |
+| backup       | n.     | 備份；支援           | Always keep a backup of important files.                 |
+| barrier      | n.     | 障礙                 | Language is often a barrier in international business.   |
+| bid          | v./n.  | 投標；出價           | The company bid for the new project.                     |
+| blueprint    | n.     | 藍圖，計畫           | The architect showed us the blueprint of the building.   |
+| bonus        | n.     | 獎金                 | All staff received a bonus at the end of the year.        |
+| boost        | v./n.  | 提高，促進           | New ads helped boost the company’s image.                |
+| brochure     | n.     | 小冊子               | Please read the brochure before signing up.              |
+| candidate    | n.     | 候選人               | She is a strong candidate for the position.              |
+| capability   | n.     | 能力，性能           | The machine’s capability was improved.                  |
+| carrier      | n.     | 承運人；運輸公司     | The goods will be delivered by a local carrier.          |
+| category     | n.     | 類別                 | Please choose a category for your product.               |
+| caution      | n.     | 小心；警告           | Use caution when handling fragile goods.                 |
+| certification| n.     | 證書；認證           | He received a certification in project management.       |
+
+---
+
+## 📖 基礎語法：形容詞子句（Adjective Clauses）
+
+### 🔹 定義
+- 形容詞子句修飾名詞，讓句子更清楚。
+- 常由 **關係代名詞** who, whom, whose, which, that 引導。
+
+---
+
+### 🔹 基本結構
+
+| 關係代名詞 | 用法           | 例句                                        |
+|------------|----------------|---------------------------------------------|
+| who        | 指人，當主詞    | The manager who gave the speech is famous.   |
+| whom       | 指人，當受詞    | The man whom you met is our new client.      |
+| which      | 指物，當主/受詞 | The report which you wrote is excellent.     |
+| that       | 指人或物        | The book that you recommended was helpful.   |
+
+---
+
+### 🔹 注意事項
+- 當關係代名詞是受詞，可以省略：
+  > The book (that) I bought is new.
+
+---
+
+## ✅ 練習題：選擇正確的關係代名詞填空
+
+1. The woman ______ helped me is very kind.  
+   → The woman **who** helped me is very kind.  
+   ✏️ 關係代名詞 who 用來指人且當主詞。
+
+2. This is the laptop ______ I want to buy.  
+   → This is the laptop **which** I want to buy.  
+   ✏️ 關係代名詞 which 用來指物，且作受詞。
+
+3. The employee ______ office is next to mine is very friendly.  
+   → The employee **whose** office is next to mine is very friendly.  
+   ✏️ 關係代名詞 whose 表示所有關係，修飾 office。
+
+4. The person ______ you should contact is Mr. Lee.  
+   → The person **whom** you should contact is Mr. Lee.  
+   ✏️ 關係代名詞 whom 用來指人且當受詞（也可省略，但正式用 whom）。
+
+5. The package ______ was sent yesterday has arrived.  
+   → The package **which** was sent yesterday has arrived.  
+   ✏️ 指物且作主詞，用 which。
+
+---
+
+## 📚 多益閱讀練習：會議通知信
+
+### 🔹 閱讀短文
+
+```
+Subject: Project Kick-off Meeting
+
+Dear Team,
+
+We are excited to announce the kick-off meeting for our new project. The meeting will be held on Monday, June 24 at 10:00 AM in Conference Room B.
+
+All team members are required to attend. Please review the project overview document before the meeting. 
+
+If you have any questions, feel free to contact your project manager.
+
+Best regards,  
+Project Management Office
+```
+
+---
+
+### 🔹 閱讀理解題
+
+1. What is the purpose of this meeting?  
+   (A) To end a project  
+   (B) To begin a new project  
+   (C) To discuss staff benefits  
+   (D) To update office rules  
+
+   → (B) **To begin a new project**  
+   ✉️ 郵件開頭明確表示是新專案的 kick-off meeting（啟動會議）。
+
+2. When is the meeting scheduled?  
+   (A) June 22  
+   (B) June 24  
+   (C) June 26  
+   (D) June 28  
+
+   → (B) **June 24**  
+   ✉️ 郵件內容寫到：「The meeting will be held on Monday, June 24」。
+
+3. Where will the meeting be held?  
+   (A) Conference Room A  
+   (B) Conference Room B  
+   (C) Conference Room C  
+   (D) Main Office  
+
+   → (B) **Conference Room B**  
+   ✉️ 地點明確標示是 Conference Room B。
+
+4. What should employees do before the meeting?  
+   (A) Contact the HR department  
+   (B) Submit a report  
+   (C) Review the project document  
+   (D) Update their schedules  
+
+   → (C) **Review the project document**  
+   ✉️ 郵件中指示員工要先看「project overview document」。
+
+5. Who can employees contact for questions?  
+   (A) HR department  
+   (B) Their team leader  
+   (C) The project manager  
+   (D) The general manager  
+
+   → (C) **The project manager**  
+   ✉️ 文末清楚寫：「feel free to contact your project manager」。
+
+---
+
+# 第十九天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性    | 中文意思          | 例句 |
+|----------------|---------|-------------------|------------------------------------------------|
+| abundant       | adj.    | 豐富的            | There are abundant opportunities in this field. |
+| accommodate    | v.      | 容納；提供住宿    | The hotel can accommodate 300 guests. |
+| accumulate     | v.      | 累積              | He accumulated a lot of experience over the years. |
+| adapt          | v.      | 適應              | You must adapt to new environments quickly. |
+| admission      | n.      | 入場；入學許可    | Admission is free for all employees. |
+| agenda         | n.      | 議程              | Let's discuss the first item on the agenda. |
+| allocate       | v.      | 分配              | The manager allocated tasks to the team. |
+| ambassador     | n.      | 大使；代表        | She is an ambassador for the brand. |
+| anticipate     | v.      | 預期；期待        | We anticipate high demand for the product. |
+| appointment    | n.      | 約會；任命        | I have a dentist appointment tomorrow. |
+| aspect         | n.      | 方面              | This is an important aspect of the project. |
+| assemble       | v.      | 集合；組裝        | The workers assembled the parts quickly. |
+| assign         | v.      | 分配；指派        | He assigned the project to me. |
+| assist         | v.      | 協助              | The staff will assist you during your stay. |
+| assume         | v.      | 假設；承擔        | I assume he will come to the meeting. |
+| assure         | v.      | 保證；確保        | I assure you that everything will be ready. |
+| attain         | v.      | 達到              | She attained her sales goal last month. |
+| attribute      | v.      | 歸因於            | He attributes his success to hard work. |
+| aware          | adj.    | 意識到的          | Be aware of the company policies. |
+| backup         | n.      | 備份              | Always make a backup of important files. |
+| banquet        | n.      | 宴會              | They held a banquet for the new employees. |
+| bargain        | n./v.   | 討價還價；便宜貨  | She got a great bargain on her new laptop. |
+| baseline       | n.      | 基線；基準        | This report provides a baseline for future studies. |
+| behalf         | n.      | 代表              | I'm speaking on behalf of the entire team. |
+| benefit        | n./v.   | 好處；受益        | Employees benefit from flexible schedules. |
+
+---
+
+## 📖 基礎語法：副詞 (Adverbs)
+
+### 🔹 副詞的功能
+- 修飾動詞、形容詞、其他副詞或整個句子。
+
+### 🔹 副詞的種類
+| 類型    | 用途              | 例子 |
+|---------|-------------------|------|
+| 方法副詞 | 描述動作的方式     | She speaks **quickly**. |
+| 頻率副詞 | 表示動作的頻率     | They **always** arrive early. |
+| 程度副詞 | 表示程度強弱       | He is **very** tired. |
+| 時間副詞 | 說明發生時間       | We met **yesterday**. |
+| 地點副詞 | 說明發生地點       | She lives **nearby**. |
+
+### 🔹 常見副詞的位置
+- 在動詞後：He runs **fast**.
+- 在 be 動詞後或助動詞後：She **is always** polite.
+- 在句首或句尾：**Usually**, I go to bed at 11 PM.
+
+---
+
+## ✅ 練習題：選擇正確的副詞填空
+
+1. He finished the task _______. (quick / quickly)
+   → He finished the task **quickly**.
+   ✏️ 副詞修飾動詞，描述「完成」的方式。
+
+2. They _______ meet on Fridays. (usual / usually)
+   → They **usually** meet on Fridays.
+   ✏️ 頻率副詞 usually，修飾動詞 meet。
+
+3. She is _______ happy with the results. (complete / completely)
+   → She is **completely** happy with the results.
+   ✏️ 程度副詞 completely，修飾形容詞 happy。
+
+4. We arrived _______ at the airport. (early / earlier)
+   → We arrived **early** at the airport.
+   ✏️ 副詞 early 表達動作發生的時間。
+
+5. I will call you _______. (soon / sooner)
+   → I will call you **soon**.
+   ✏️ 時間副詞 soon，修飾動詞 call。
+
+---
+
+## 📚 多益閱讀練習：活動邀請通知
+
+### 🔹 閱讀短文
+
+```
+Subject: Invitation to Annual Company Picnic
+
+Dear Employees,
+
+You are invited to our Annual Company Picnic, which will be held on Saturday, September 20, at Sunny Park. The event will start at 10:00 AM and end at 4:00 PM.
+
+There will be games, food, music, and a raffle draw with exciting prizes. Family members are welcome to join. Please RSVP by September 10.
+
+We look forward to seeing you there!
+
+Best regards,
+HR Department
+```
+
+### 🔹 閱讀理解題
+
+1. What is the purpose of this notice?
+   (A) To announce a company meeting  
+   (B) To invite employees to a picnic  
+   (C) To inform about a new project  
+   (D) To report the company’s performance  
+
+   → (B) **To invite employees to a picnic**  
+   ✏️ 開頭明確說明是邀請大家參加野餐活動。
+
+2. Where will the picnic take place?
+   (A) Green Park
+   (B) Central Park
+   (C) Sunny Park
+   (D) River Park
+
+   → (C) **Sunny Park**  
+   ✏️ 內容中寫明地點是 Sunny Park。
+
+3. By when should employees RSVP?
+   (A) September 5
+   (B) September 10
+   (C) September 15
+   (D) September 20
+
+   → (B) **September 10**  
+   ✏️ 文中要求在 9 月 10 日前回覆。
+
+4. What time does the event start?
+   (A) 9:00 AM
+   (B) 10:00 AM
+   (C) 11:00 AM
+   (D) 12:00 PM
+
+   → (B) **10:00 AM**  
+   ✏️ 文中寫明活動從 10:00 AM 開始。
+
+5. Who can join the event besides employees?
+   (A) Only managers
+   (B) Business partners
+   (C) Family members
+   (D) Clients
+
+   → (C) **Family members**  
+   ✏️ 邀請信中提到可以帶家人參加。
+
+---
+
+# 第二十天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性    | 中文意思          | 例句 |
+|----------------|---------|-------------------|------------------------------------------------|
+| audit          | v./n.   | 審核，查帳        | The company will audit its financial records. |
+| benchmark      | n.      | 基準點，標準      | This report serves as a benchmark for success. |
+| brokerage      | n.      | 經紀業務，佣金     | The brokerage fee is 2% of the transaction. |
+| circulate      | v.      | 傳遞，流通        | The memo will circulate among all departments. |
+| clarify        | v.      | 澄清              | Could you clarify your last statement? |
+| compliance     | n.      | 遵守              | Safety compliance is required by law. |
+| consolidation  | n.      | 合併，統整        | The company is planning a market consolidation. |
+| contingency    | n.      | 意外狀況，備案     | We need a contingency plan for emergencies. |
+| deduction      | n.      | 扣除              | Tax deductions are listed in the report. |
+| discrepancy    | n.      | 差異，不一致      | There is a discrepancy between the reports. |
+| disruption     | n.      | 中斷，擾亂        | The power outage caused a disruption. |
+| diversification| n.      | 多樣化            | Product diversification improves resilience. |
+| enforce        | v.      | 執行，實施        | The company will enforce the new policy. |
+| exempt         | adj.    | 被免除的           | Managers are exempt from overtime rules. |
+| fiscal         | adj.    | 財政的            | The fiscal year ends in December. |
+| fluctuation    | n.      | 波動              | Market price fluctuation is expected. |
+| fraud          | n.      | 詐騙              | The accountant was charged with fraud. |
+| incentive      | n.      | 獎勵，誘因        | Bonuses are used as employee incentives. |
+| inquiry        | n.      | 詢問，調查        | We received an inquiry about the product. |
+| invoice        | n.      | 發票，帳單        | Please send the invoice by email. |
+| liability      | n.      | 負債，責任        | The company has no liability in this matter. |
+| margin         | n.      | 利潤，邊緣        | Our profit margin increased this quarter. |
+| offset         | v.      | 抵銷，補償        | The losses were offset by strong sales. |
+| surplus        | n.      | 盈餘，過剩        | We had a surplus in last month’s budget. |
+| transaction    | n.      | 交易              | The bank records every transaction. |
+
+---
+
+## 📖 基礎語法：片語動詞（Phrasal Verbs）
+
+### 🔹 定義
+- 片語動詞由「動詞 + 介系詞 / 副詞」組成，意思常與原動詞不同。
+
+### 🔹 常見片語動詞
+| 片語動詞     | 中文意思        | 例句 |
+|--------------|-----------------|------|
+| look into     | 調查            | We will look into the issue. |
+| call off      | 取消            | They called off the meeting. |
+| carry out     | 執行，實施      | The team carried out the task. |
+| find out      | 發現，查明      | I found out the cause. |
+| figure out    | 想出，理解      | Can you figure out the solution? |
+
+---
+
+## ✅ 練習題：選擇正確的片語動詞填空
+
+1. We need to ______ the cause of the error. (call off / find out)
+   → We need to **find out** the cause of the error.  
+   ✏️ find out = 查明、發現。
+
+2. They decided to ______ the meeting due to bad weather. (carry out / call off)
+   → They decided to **call off** the meeting.  
+   ✏️ call off = 取消。
+
+3. The researcher will ______ the experiment tomorrow. (carry out / figure out)
+   → The researcher will **carry out** the experiment tomorrow.  
+   ✏️ carry out = 執行。
+
+4. We are trying to ______ what went wrong. (look into / call off)
+   → We are trying to **look into** what went wrong.  
+   ✏️ look into = 調查。
+
+5. He couldn't ______ how to solve the issue. (figure out / carry out)
+   → He couldn't **figure out** how to solve the issue.  
+   ✏️ figure out = 想出。
+
+---
+
+## 📚 多益閱讀練習：財務公告
+
+### 🔹 閱讀短文
+
+```
+Subject: Quarterly Financial Summary
+
+Dear Shareholders,
+
+We are pleased to present the financial results for Q2. Total revenue increased by 12%, and the company reported a net profit margin of 8%.
+
+Operating expenses were reduced due to improved efficiency and cost control measures. However, currency fluctuations had a minor impact on international sales.
+
+We remain confident in our long-term strategy and appreciate your continued support.
+
+Finance Department
+```
+
+### 🔹 閱讀理解題
+
+1. What is the purpose of this message?
+   (A) To announce a new hiring policy  
+   (B) To summarize financial performance  
+   (C) To introduce a new department  
+   (D) To report legal issues  
+
+   → (B) **To summarize financial performance**  
+   ✏️ 一開始即說明是財務報告摘要。
+
+2. What happened to total revenue?
+   (A) It decreased  
+   (B) It stayed the same  
+   (C) It increased  
+   (D) It disappeared  
+
+   → (C) **It increased**  
+   ✏️ 報告指出營收增加了 12%。
+
+3. What helped reduce operating expenses?
+   (A) Fewer employees  
+   (B) Better cost control  
+   (C) Product discounts  
+   (D) Advertising cuts  
+
+   → (B) **Better cost control**  
+   ✏️ 提到「improved efficiency and cost control」。
+
+4. What was a minor negative factor?
+   (A) Staff turnover  
+   (B) Currency fluctuation  
+   (C) Lower demand  
+   (D) Tax increases  
+
+   → (B) **Currency fluctuation**  
+   ✏️ 文中明確說 currency fluctuations had a minor impact。
+
+5. How does the company feel about the future?
+   (A) Uncertain  
+   (B) Confused  
+   (C) Confident  
+   (D) Disappointed  
+
+   → (C) **Confident**  
+   ✏️ 結尾說明 they remain confident in their strategy。
 
 ---

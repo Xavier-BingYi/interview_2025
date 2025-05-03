@@ -609,3 +609,195 @@ Facilities Manager
    ✉️ 結尾提到：「We apologize for any inconvenience」
 
 ---
+
+# 📘 TOEIC 第四週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The sales team was praised for their outstanding ______ this quarter.  
+   (A) consequence (B) performance (C) assignment (D) appointment  
+
+2. The CEO will ______ the new policy next week.  
+   (A) collapse (B) announce (C) adapt (D) assign  
+
+3. Please send a copy of the ______ to the client.  
+   (A) benefit (B) invoice (C) certificate (D) commodity  
+
+4. Our branch will ______ operations until the renovation is done.  
+   (A) resume (B) collapse (C) suspend (D) comply  
+
+5. She is the most suitable ______ for the position.  
+   (A) closure (B) candidate (C) consumer (D) competitor  
+
+6. This product is no longer available due to a supply chain ______.  
+   (A) delay (B) collapse (C) conference (D) asset  
+
+7. Employees are expected to ______ with safety standards.  
+   (A) comply (B) complain (C) complete (D) compile  
+
+8. A full ______ of the company’s assets was completed.  
+   (A) assignment (B) audit (C) authorization (D) agenda  
+
+9. The ______ of poor planning can be severe.  
+   (A) certificate (B) compliance (C) consequence (D) carrier  
+
+10. He received a 10% ______ on all sales.  
+    (A) commission (B) forecast (C) bonus (D) amendment  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. If I ______ more time, I would take a vacation.  
+    (A) had (B) have (C) has (D) will have  
+
+12. The new product was developed by engineers ______ work in Taiwan.  
+    (A) whom (B) whose (C) which (D) who  
+
+13. The meeting ______ by the manager last Friday.  
+    (A) holds (B) was held (C) held (D) has held  
+
+14. If she had known about the delay, she ______ have called us.  
+    (A) will (B) would (C) would have (D) had  
+
+15. The document ______ was sent yesterday is missing.  
+    (A) who (B) where (C) which (D) what  
+
+16. All personal items must ______ by June 1.  
+    (A) be remove (B) removed (C) remove (D) be removed  
+
+17. I don’t know ______ he approved the plan.  
+    (A) when (B) that (C) if (D) what  
+
+18. She is ______ employee in the department.  
+    (A) the most efficient (B) more efficient (C) efficiently (D) most efficiently  
+
+19. He ______ the file before leaving the office.  
+    (A) will submit (B) submitted (C) submits (D) submitting  
+
+20. The goods ______ by air tomorrow.  
+    (A) deliver (B) are delivered (C) will be delivered (D) delivered  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+Subject: Remote Work Policy Update
+
+Dear Team,
+
+Starting next month, all employees will be allowed to work remotely two days per week. This new policy applies to all departments.
+
+Each department manager is responsible for creating a weekly work-from-home schedule. Please submit your preferred remote workdays by next Friday.
+
+If you have any questions, contact the HR department.
+
+Thank you,  
+Melissa Cheng  
+HR Director
+```
+
+21. What is the purpose of the email?  
+    (A) To announce new job openings  
+    (B) To update the company’s remote work policy  
+    (C) To reduce employee benefits  
+    (D) To remind staff about holidays  
+
+22. How many days per week can employees work remotely?  
+    (A) One  
+    (B) Two  
+    (C) Three  
+    (D) Five  
+
+23. Who creates the remote work schedule?  
+    (A) Each employee  
+    (B) HR department  
+    (C) Department managers  
+    (D) IT support  
+
+24. When should employees submit their preferred work-from-home days?  
+    (A) Today  
+    (B) Next Friday  
+    (C) Next month  
+    (D) This weekend  
+
+25. Whom should employees contact for questions?  
+    (A) Melissa Cheng  
+    (B) Their manager  
+    (C) The IT department  
+    (D) The marketing team  
+
+---
+
+## 📘 TOEIC 第四週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | B    |
+| 2    | B    |
+| 3    | C    |
+| 4    | C    |
+| 5    | B    |
+| 6    | B    |
+| 7    | A    |
+| 8    | B    |
+| 9    | C    |
+| 10   | A    |
+| 11   | A    |
+| 12   | D    |
+| 13   | B    |
+| 14   | C    |
+| 15   | C    |
+| 16   | D    |
+| 17   | C    |
+| 18   | A    |
+| 19   | B    |
+| 20   | C    |
+| 21   | B    |
+| 22   | B    |
+| 23   | C    |
+| 24   | B    |
+| 25   | A    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **performance**：表現，符合語境，選 (B)。
+2. **announce**：宣布政策，選 (B)。
+3. **certificate**：發給客戶的正式文件，選 (C)。
+4. **suspend**：暫停營運，選 (C)。
+5. **candidate**：應徵職位的人，選 (B)。
+6. **collapse**：供應鏈崩潰，選 (B)。
+7. **comply**：遵守標準，選 (A)。
+8. **audit**：資產審計，選 (B)。
+9. **consequence**：負面後果，選 (C)。
+10. **commission**：業績抽成，選 (A)。
+
+### 二、文法選擇（Grammar）
+
+11. **had**：第二類條件句與現在事實相反，選 (A)。
+12. **who**：關係代名詞，指人作主詞，選 (D)。
+13. **was held**：被動語態，過去式，選 (B)。
+14. **would have**：第三類條件句與過去事實相反，選 (C)。
+15. **which**：引導關係子句指文件，選 (C)。
+16. **be removed**：must + be + Vpp 被動語態，選 (D)。
+17. **if**：受詞子句表示是否，選 (C)。
+18. **the most efficient**：最高級表對比，選 (A)。
+19. **submitted**：描述過去完成的動作，選 (B)。
+20. **will be delivered**：未來式被動語態，選 (C)。
+
+### 三、閱讀理解（Reading）
+
+21. **To update the company’s remote work policy**：標題與開頭皆說明是政策更新，選 (B)。
+22. **Two**：明確寫出每週可遠端兩天，選 (B)。
+23. **Department managers**：由部門主管負責排班，選 (C)。
+24. **Next Friday**：需在下週五前提交，選 (B)。
+25. **Melissa Cheng**：有問題請聯絡 HR，簽名為她，選 (A)。
+
+---
