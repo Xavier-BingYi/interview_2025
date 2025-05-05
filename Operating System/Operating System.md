@@ -288,43 +288,158 @@
 
 ---
 
-## 3. 儲存系統結構與快取管理（Storage System Architecture and Caching）
+## 3. 儲存階層與快取管理（Storage Hierarchy and Cache Management）
 
 ---
 
-### 3.1 儲存層級概念
+### 3.1 儲存設備層級與設計原則
+
+#### ▸ 儲存階層的基本架構
+- 資料儲存採用 **分層式架構（hierarchical architecture）**，上層裝置速度快、容量小、價格高，下層裝置相反。
+- 常見層級包括：**register → cache → main memory → SSD → disk → tape**。
+- 層級設計平衡了**成本、容量與存取速度**，提供最佳效能與彈性。
+
+#### ▸ 主要與次級儲存裝置
+- **Main Memory** 是唯一能被 CPU 直接存取的大型儲存裝置（如 DRAM）。
+- **Secondary Storage**（如 HDD、SSD）無法直接由 CPU 存取，資料需搬到主記憶體後才能使用。
+- 擴展性大，具備 **non-volatile**（斷電不遺失）特性，適合儲存長期資料。
 
 ---
 
-### 3.2 主記憶體與次級儲存裝置
+### 3.2 RAM 類型與存取特性
+
+#### ▸ DRAM（Dynamic RAM）
+- 使用單一電晶體儲存每個 bit，體積小、成本低、耗電少，但速度較慢。
+- 必須定期刷新（refresh），常用於主記憶體（main memory）。
+
+#### ▸ SRAM（Static RAM）
+- 每個 bit 使用六個電晶體，速度快但體積大、成本高、耗電高。
+- 適用於 cache 記憶體，提供更快速的暫存能力。
+
+#### ▸ 隨機存取特性（Random Access）
+- RAM 屬於 **random access memory**，無論存取哪個位置，延遲一致。
+- 有助於系統預測效能表現，與硬碟等非隨機存取裝置不同。
 
 ---
 
-### 3.3 磁碟結構與效能
+### 3.3 磁碟機運作與效能影響
+
+#### ▸ 磁碟存取時間組成
+- 存取時間 = **Positioning Time**（包含 seek time + rotational latency）+ **Transfer Time**
+- 傳統磁碟速度慢、非 uniform access，不適合即時系統使用。
+
+#### ▸ SSD 與硬碟比較
+- SSD 無機械結構，無 seek time，存取速度快，屬於非揮發性。
+- 若為大量、連續存取情況，SSD 與 HDD 差距反而變小（transfer time 為主）。
 
 ---
 
-### 3.4 快取機制與一致性問題
+### 3.4 快取記憶體與效能提升
+
+#### ▸ Cache 概念與原理
+- 快取是一種**暫存常用資料**的高速儲存空間，提升存取效率。
+- 資料會從慢速儲存層級暫存到較快層級（如 CPU cache）。
+
+#### ▸ Cache Hit 與 Miss
+- 若資料存在 cache → **cache hit**，可快速讀取。
+- 若資料不存在 → **cache miss**，需逐層向下尋找，花費更多時間。
+
+#### ▸ 區域性（Locality）特性
+- 多數程式存取具有 **temporal（時間）與 spatial（空間）區域性**，提高 cache 命中率。
+- 若資料不重複使用（如 big data scan），cache 效益反而下降。
 
 ---
 
-## 4. 系統硬體保護機制（Hardware Protection Mechanisms）
+### 3.5 一致性問題與分散式挑戰
+
+#### ▸ Cache Coherency 問題
+- 多層快取存在同一份資料的 copy，若修改未同步會產生不一致（coherency issue）。
+- 特別在 **multi-core processor** 中，每個核心都有獨立 cache，更易發生此問題。
+- 需使用 **cache coherence protocol**（如 MESI）來確保一致性。
+
+#### ▸ Consistency in Multi-thread & Distributed System
+- 在多執行緒（multi-thread）與分散式系統（distributed system）中，資料共享與同步更為複雜。
+- 系統需設計一致性協定與同步機制，以保障使用者程式讀到的資料為正確版本。
+- 例如 Google 等大型系統，有時會**犧牲一致性（consistency）來換取效能與擴充性（scalability）**。
 
 ---
 
-### 4.1 雙模式操作與特權指令
+## 4. 硬體保護與執行模式（Hardware Protection and Execution Modes）
 
 ---
 
-### 4.2 I/O 裝置保護
+### 4.1 系統保護的概念與需求
+
+#### ▸ 為什麼需要保護機制
+- Protection 並非指安全性（security），而是避免多個程式或使用者同時使用電腦時，彼此干擾或破壞系統。
+- 例如：某使用者的程式 crash，不應影響其他程式或導致整台系統關機。
+
+#### ▸ 作業系統如何實現保護
+- OS 必須能夠控管對 I/O、記憶體、CPU 等硬體資源的存取，並保證各程序間獨立運作。
+- 實現保護機制的基礎在於硬體支援，例如模式切換與指令限制。
 
 ---
 
-### 4.3 記憶體保護機制
+### 4.2 雙模式操作（Dual-Mode Operation）
+
+#### ▸ 執行模式的區分
+- 現代系統透過 mode bit 將執行模式分為：
+  - **User Mode**：執行使用者程式。
+  - **Kernel Mode（Monitor Mode）**：執行作業系統內部程式。
+
+#### ▸ 模式切換與中斷
+- 當 system call 或 interrupt 發生時，系統自動將 mode bit 從 1 切換為 0，進入 Kernel Mode。
+- OS 處理完成後，再將 mode bit 切回 1，回到 User Mode。
+
+#### ▸ 特權指令（Privileged Instructions）
+- 僅能在 Kernel Mode 執行，如 I/O 操作、改寫中斷向量、變更記憶體設定等。
+- 若在 User Mode 嘗試執行，會觸發中斷並由 OS 處理（通常終止程式）。
 
 ---
 
-### 4.4 CPU 保護與計時器機制
+### 4.3 I/O 保護與惡意操作防範
+
+#### ▸ 為何需要 I/O 保護
+- I/O 裝置（如鍵盤、滑鼠、硬碟）為共享資源，若使用者能自由控制，將可能造成資料衝突或系統崩潰。
+- 因此，**所有 I/O 指令皆為特權指令**，只能由 OS 控制與調度。
+
+#### ▸ 潛在風險與攻擊方式
+- 若未限制記憶體權限，惡意程式可改寫 OS 的中斷向量，讓硬體中斷執行惡意程式碼。
+- 類似攻擊包含：改寫驅動程式、變更中斷處理流程、任意傳送資料等。
+
+---
+
+### 4.4 記憶體保護（Memory Protection）
+
+#### ▸ 保護哪些內容
+- 重要結構：中斷向量表（interrupt vector）、中斷服務程式（ISR）、OS 資料區。
+- 避免程式存取、改寫不屬於自身的記憶體空間。
+
+#### ▸ 硬體支援機制
+- 使用兩個 register：
+  - **Base register**：記憶體起始位置。
+  - **Limit register**：可存取的記憶體範圍。
+- 每次存取都會比對是否落在合法範圍，否則觸發錯誤（如 segmentation fault）。
+
+#### ▸ 保護的實際效果
+- 每個程式只能操作自己的記憶體，避免讀取他人資料或干擾系統結構。
+- 所有記憶體管理操作須經過 OS 核可。
+
+---
+
+### 4.5 CPU 保護與 Timer 機制
+
+#### ▸ 為什麼需要 CPU 保護
+- 若單一程式無限制佔用 CPU，其他程式將無法執行，造成資源壟斷與死當風險。
+- 保護機制能強制程式交出 CPU 控制權，確保系統公平運作。
+
+#### ▸ Timer 機制的應用
+- 作業系統設置 **計時器（timer）**，每經過固定時間產生一次中斷。
+- 當中斷發生，CPU 會跳出目前程式，由 OS 根據排程策略（scheduling）選擇下一個程式執行。
+
+#### ▸ 中斷與程序切換
+- Timer 中斷是 context switch 的契機。
+- 可實現 time-sharing、確保每個程序公平執行並預防無限迴圈霸佔 CPU。
 
 ---
 

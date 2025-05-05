@@ -3244,3 +3244,1147 @@ Finance Department
    ✏️ 結尾說明 they remain confident in their strategy。
 
 ---
+
+# 第二十一天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性    | 中文意思          | 例句 |
+|----------------|---------|-------------------|------------------------------------------------|
+| allocate       | v.      | 分配，配置        | The manager will allocate tasks to each member. |
+| appraisal      | n.      | 評估，考核        | The annual appraisal is scheduled for May. |
+| authorize      | v.      | 授權              | The director authorized the payment. |
+| beneficiary    | n.      | 受益人            | She is the sole beneficiary of the will. |
+| commence       | v.      | 開始，著手        | The event will commence at 9 a.m. |
+| delegate       | v.      | 委派              | She delegated the responsibility to John. |
+| drawback       | n.      | 缺點，不利條件    | The only drawback is the high cost. |
+| enroll         | v.      | 報名，註冊        | You must enroll before the deadline. |
+| exemption      | n.      | 免除              | He received a tax exemption. |
+| franchise      | n.      | 加盟，經銷權      | They bought a fast-food franchise. |
+| guideline      | n.      | 指導方針，守則    | Please follow the safety guidelines. |
+| implication    | n.      | 含意，可能的影響  | The new rule has serious implications. |
+| intermission   | n.      | 中場休息          | The play has a 15-minute intermission. |
+| mandatory      | adj.    | 強制的，義務的    | Attendance is mandatory for all staff. |
+| mentor         | n.      | 指導者，良師      | He served as my mentor during training. |
+| outreach       | n.      | 外展活動          | The charity launched a new outreach program. |
+| probation      | n.      | 試用期，緩刑      | New hires are subject to a 3-month probation. |
+| quota          | n.      | 配額，限額        | Each team has a sales quota to reach. |
+| reimbursement  | n.      | 報銷，補償        | Submit receipts for reimbursement. |
+| screening      | n.      | 篩選，審查        | The job screening will begin next week. |
+| subsidiary     | n.      | 子公司            | The company owns several subsidiaries. |
+| turnover       | n.      | 員工流動率；營業額| The turnover rate is decreasing. |
+| verify         | v.      | 驗證，確認        | Please verify your account information. |
+| waive          | v.      | 放棄（權利）      | He waived his right to a refund. |
+| workload       | n.      | 工作量            | She has a heavy workload this month. |
+
+---
+
+## 📖 基礎語法：連接詞用法（Conjunctions）
+
+### 🔹 定義
+- 連接詞用於連結句子、片語或子句，形成邏輯關係。
+
+### 🔹 常見連接詞類型
+| 類型     | 連接詞           | 中文意思            | 例句 |
+|----------|------------------|---------------------|------|
+| 對等連接 | and, but, or     | 和、但是、或        | She is smart but careless. |
+| 因果     | because, since   | 因為                | We canceled the trip because of the storm. |
+| 讓步     | although, though | 雖然                | Although he was tired, he kept working. |
+| 條件     | if, unless       | 如果，除非          | If it rains, we will stay inside. |
+| 時間     | when, while      | 當…的時候           | He was reading while waiting. |
+
+---
+
+## ✅ 練習題：選擇正確的連接詞填空
+
+1. I’ll call you ______ I arrive at the station. (unless / when)
+   → I’ll call you **when** I arrive at the station.  
+   ✏️ when = 表示「當…時」。
+
+2. ______ it was expensive, they decided to buy it. (Although / Because)
+   → **Although** it was expensive, they decided to buy it.  
+   ✏️ although = 表讓步。
+
+3. She won't pass the test ______ she studies harder. (unless / while)
+   → She won't pass the test **unless** she studies harder.  
+   ✏️ unless = 除非。
+
+4. He took a nap ______ waiting for the flight. (when / while)
+   → He took a nap **while** waiting for the flight.  
+   ✏️ while = 表「同時進行」。
+
+5. We will cancel the event ______ it rains. (if / and)
+   → We will cancel the event **if** it rains.  
+   ✏️ if = 條件句。
+
+---
+
+## 📚 多益閱讀練習：員工通知信
+
+### 🔹 閱讀短文
+
+```
+Subject: New Attendance Policy
+
+Dear Staff,
+
+Starting next month, a new attendance tracking system will be introduced. All employees must check in using their ID cards at the main entrance. Any failure to comply may result in a written warning.
+
+Lunch breaks will also be recorded, and employees are expected to return within the allotted time.
+
+We appreciate your cooperation.
+
+HR Department
+```
+
+### 🔹 閱讀理解題
+
+1. What is the main purpose of this email?
+   (A) To introduce new staff benefits  
+   (B) To explain the lunch menu  
+   (C) To announce an attendance policy  
+   (D) To extend office hours  
+
+   → (C) **To announce an attendance policy**  
+   ✏️ 開頭提到會引入新打卡制度。
+
+2. What are employees required to use when checking in?
+   (A) Fingerprint scanner  
+   (B) ID card  
+   (C) Username and password  
+   (D) Facial recognition  
+
+   → (B) **ID card**  
+   ✏️ 明確寫出需用 ID cards。
+
+3. What may happen if someone does not comply?
+   (A) Salary reduction  
+   (B) Promotion delay  
+   (C) Written warning  
+   (D) Extra tasks  
+
+   → (C) **Written warning**  
+   ✏️ 會被書面警告。
+
+4. What will be recorded besides attendance?
+   (A) Overtime hours  
+   (B) Email logs  
+   (C) Lunch breaks  
+   (D) Meeting minutes  
+
+   → (C) **Lunch breaks**  
+   ✏️ 第二段有提及 lunch breaks will also be recorded。
+
+5. How does the company end the message?
+   (A) With a warning  
+   (B) With gratitude  
+   (C) With a joke  
+   (D) With a reminder  
+
+   → (B) **With gratitude**  
+   ✏️ 最後一句為「We appreciate your cooperation.」
+
+---
+
+# 第二十二天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性    | 中文意思              | 例句 |
+|----------------|---------|-----------------------|------------------------------------------------|
+| acquisition     | n.      | 收購，獲得           | The acquisition of the startup was announced. |
+| amendment       | n.      | 修正案                | The contract includes an amendment clause. |
+| appraisal       | n.      | 評估，鑑定           | The annual appraisal will be held next week. |
+| asset           | n.      | 資產，有用的人事物   | Her communication skills are a valuable asset. |
+| bankruptcy      | n.      | 破產                 | The company filed for bankruptcy last year. |
+| capital         | n.      | 資本，資金           | The company raised capital from investors. |
+| consortium      | n.      | 聯盟，財團           | A consortium of banks agreed to the deal. |
+| depreciation    | n.      | 貶值，折舊           | Asset depreciation was accounted for. |
+| equity          | n.      | 股權，公平           | He owns 15% equity in the company. |
+| expenditure     | n.      | 支出，花費           | We need to reduce unnecessary expenditure. |
+| forecast        | v./n.   | 預測，預報           | The sales forecast shows growth. |
+| hedge           | v./n.   | 對沖，防範措施       | They hedge against currency risk. |
+| inventory       | n.      | 存貨，庫存清單       | The store checks its inventory monthly. |
+| lease           | n./v.   | 租約，租用           | They signed a 3-year lease for the office. |
+| liquidity       | n.      | 流動性               | The firm maintains strong liquidity. |
+| maturity        | n.      | 到期，成熟           | The bond reaches maturity next year. |
+| obligation      | n.      | 義務，責任           | He fulfilled his financial obligations. |
+| portfolio       | n.      | 投資組合，作品集     | She manages a diverse investment portfolio. |
+| principal       | n.      | 本金，主要的         | The interest is 5% on the principal amount. |
+| proceeds        | n.      | 收益，收入           | All proceeds will go to charity. |
+| reconciliation  | n.      | 對帳，和解           | Monthly bank reconciliation is required. |
+| redemption      | n.      | 贖回，\u償還           | Early redemption of bonds is allowed. |
+| reimbursement   | n.      | 報銷，補償           | Please submit your expense reimbursement. |
+| trustee         | n.      | 信託人，管理人       | The assets are managed by a trustee. |
+| valuation       | n.      | 估價，評價           | The property valuation was too high. |
+
+---
+
+## 📖 基礎語法：限定用法與非限定用法的形容詞子句 (Adjective Clauses)
+
+### 🔹 定義
+- 形容詞子句用來修飾名詞，可分為限定用法（必要資訊）與非限定用法（附加資訊，用逗號隔開）。
+
+### 🔹 比較
+
+| 用法     | 說明           | 例句 |
+|----------|----------------|------|
+| 限定用法 | 不可省略的資訊 | The employee **who joined last month** is excellent. |
+| 非限定用法 | 可省略的附加資訊，用逗號 | Mr. Lin, **who is our CFO**, will attend the meeting. |
+
+---
+
+## ✅ 練習題：選擇正確的形容詞子句填空
+
+1. The woman ______ works in accounting is on vacation.  
+   (who / whom)  
+   → The woman **who** works in accounting is on vacation.  
+   ✏️ who = 主詞，用來說明「誰」在做什麼事。
+
+2. The report, ______ was submitted late, caused confusion.  
+   (that / which)  
+   → The report, **which** was submitted late, caused confusion.  
+   ✏️ 非限定用法，用逗號 + which 表附加說明。
+
+3. The manager ______ I met yesterday was very helpful.  
+   (whom / whose)  
+   → The manager **whom** I met yesterday was very helpful.  
+   ✏️ whom = 受詞（可省略，但保留正式度）。
+
+4. We hired an assistant ______ skills impressed everyone.  
+   (whose / who's)  
+   → We hired an assistant **whose** skills impressed everyone.  
+   ✏️ whose = 所有格，用來表「誰的東西」。
+
+5. The team, ______ project was delayed, found a solution.  
+   (who / whose)  
+   → The team, **whose** project was delayed, found a solution.  
+   ✏️ 非限定用法，也可用所有格。
+
+---
+
+## 📚 多盈閱讀練習：部門公告
+
+### 🔹 閱讀短文
+
+```
+Subject: Reimbursement Policy Update
+
+Dear Employees,
+
+Starting next month, all reimbursement claims must be submitted within 14 days of the expense. Claims submitted after this period will not be processed.
+
+Please include valid receipts and approval forms. Claims without proper documentation will be denied.
+
+For questions, contact the finance department.
+
+Sincerely,  
+Finance Office
+```
+
+### 🔹 閱讀理解題
+
+1. What is this email mainly about?  
+   (A) Salary increase notice  
+   (B) Updated reimbursement rules  
+   (C) New product launch  
+   (D) Office renovation  
+
+   → (B) **Updated reimbursement rules**  
+   ✏️ 主旨為報銷政策更新。
+
+2. What is the new time limit for submitting claims?  
+   (A) 7 days  
+   (B) 14 days  
+   (C) 30 days  
+   (D) 60 days  
+
+   → (B) **14 days**  
+   ✏️ 文中說明需在 14 天內提交。
+
+3. What must be attached to reimbursement claims?  
+   (A) Tax returns  
+   (B) Performance reviews  
+   (C) Receipts and approval forms  
+   (D) Meeting minutes  
+
+   → (C) **Receipts and approval forms**  
+   ✏️ 指定附上收據與批准文件。
+
+4. What will happen to late submissions?  
+   (A) They will be delayed  
+   (B) They will be returned  
+   (C) They will be processed  
+   (D) They will be rejected  
+
+   → (D) **They will be rejected**  
+   ✏️ 明確指出過期不處理。
+
+5. Whom should employees contact with questions?  
+   (A) Their manager  
+   (B) HR department  
+   (C) IT support  
+   (D) Finance office  
+
+   → (D) **Finance office**  
+   ✏️ 結尾簽署為 Finance Office。
+
+---
+
+# 第二十三天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性    | 中文意思            | 例句 |
+|----------------|---------|---------------------|------------------------------------------------|
+| acquisition    | n.      | 收購，取得          | The company announced a major acquisition yesterday. |
+| allocate       | v.      | 分配，配置          | Funds will be allocated to each department. |
+| amendment      | n.      | 修正案              | They made an amendment to the original contract. |
+| appraisal      | n.      | 評估，估價          | She received a positive performance appraisal. |
+| authenticate   | v.      | 驗證，證實          | You need to authenticate your identity. |
+| backlog        | n.      | 積壓的工作/訂單     | We have a backlog of orders to process. |
+| benchmark      | n.      | 基準                | This performance sets a new benchmark. |
+| breach         | n./v.   | 違反，破壞          | The company was sued for breach of contract. |
+| circulate      | v.      | 流通，傳播          | The memo circulated quickly among staff. |
+| confiscate     | v.      | 沒收，充公          | Customs officers confiscated the goods. |
+| conversion     | n.      | 轉換，變更          | The file conversion took a few minutes. |
+| deficit        | n.      | 赤字，不足額        | The government is facing a budget deficit. |
+| disclosure     | n.      | 揭露，公開          | Full disclosure is required by law. |
+| exemption      | n.      | 賠免，免稅額        | He received a tax exemption. |
+| forecast       | v./n.   | 預測                | Sales are forecast to rise by 10%. |
+| installment    | n.      | 分期付款            | He paid for the TV in monthly installments. |
+| inventory      | n.      | 庫存                | Our inventory is currently very low. |
+| overdue        | adj.    | 過期的              | The payment is now two weeks overdue. |
+| outsource      | v.      | 外包                | They decided to outsource customer support. |
+| procurement    | n.      | 採購                | The procurement team will handle the order. |
+| reimbursement  | n.      | 報銷                | She submitted a reimbursement form. |
+| retain         | v.      | 保留，維持          | We need to retain key employees. |
+| streamline     | v.      | 簡化，使效率化      | The process was streamlined to save time. |
+| threshold      | n.      | 門段，至端點        | He crossed the income threshold for tax. |
+| turnover       | n.      | 營業額，離職率      | The company had high staff turnover last year. |
+
+---
+
+## 📖 基礎語法：比較等級 (Comparatives & Superlatives)
+
+### 🔹 用法總約
+
+| 結構         | 說明               | 例句 |
+|--------------|--------------------|------|
+| 比較級 + than | 用來比較兩者       | This product is cheaper than that one. |
+| the + 最高級 | 表示三者以上最高程度 | He is the most experienced engineer. |
+
+### 🔹 規則變化
+
+- 單音節字詞加 er/est：fast → faster → fastest  
+- 以 y 結尾變 ier/iest：happy → happier → happiest  
+- 多音節加 more/most：efficient → more efficient → most efficient
+
+---
+
+## ✅ 練習題：選擇正確的比較級或最高級
+
+1. This model is ______ than the old one. (cheaper / cheapest)  
+   → This model is **cheaper** than the old one.  
+   ✏️ 用比較級，因為是兩者相比。
+
+2. He is the ______ manager in the company. (experienced / most experienced)  
+   → He is the **most experienced** manager.  
+   ✏️ three or more people → 用最高級。
+
+3. This computer is ______ than mine. (fast / faster)  
+   → This computer is **faster** than mine.  
+   ✏️ faster 是正確的比較級形式。
+
+4. She is the ______ of all the candidates. (qualified / most qualified)  
+   → She is the **most qualified** of all.  
+   ✏️ 表示最高程度，用 most qualified。
+
+5. My job is ______ than yours. (stressful / more stressful)  
+   → My job is **more stressful** than yours.  
+   ✏️ 多音節形容詞用 more 比較級。
+
+---
+
+## 📚 多盈閱讀練習：採購通知
+
+### 🔹 閱讀短文
+
+```
+Subject: Procurement Policy Update
+
+Dear Team,
+
+Starting July 1, all equipment purchases must go through the procurement department. Personal orders will no longer be reimbursed unless previously approved. 
+
+This policy aims to streamline operations and reduce unnecessary expenses. If you have questions, please contact the procurement officer.
+
+Thank you,  
+Procurement Office
+```
+
+### 🔹 閱讀理解題
+
+1. What is the main purpose of this email?  
+   (A) To request personal purchases  
+   (B) To announce a vacation policy  
+   (C) To update the equipment procurement process  
+   (D) To request department transfers  
+
+   → (C) **To update the equipment procurement process**  
+   ✏️ 開頭明確提及 policy update 與購買流程。
+
+2. When does the new policy take effect?  
+   (A) June 15  
+   (B) July 1  
+   (C) Immediately  
+   (D) Next year  
+
+   → (B) **July 1**  
+   ✏️ 文中指出 Starting July 1。
+
+3. Will personal orders be reimbursed?  
+   (A) Never  
+   (B) Always  
+   (C) Only if pre-approved  
+   (D) After delivery  
+
+   → (C) **Only if pre-approved**  
+   ✏️ 文中寫明「unless previously approved」。
+
+4. Why was the new policy created?  
+   (A) To improve security  
+   (B) To reduce travel time  
+   (C) To streamline operations and save costs  
+   (D) To encourage personal spending  
+
+   → (C) **To streamline operations and save costs**  
+   ✏️ 文中說明目的是簡化作業並降低成本。
+
+5. Who should employees contact with questions?  
+   (A) CEO  
+   (B) Finance Officer  
+   (C) IT Department  
+   (D) Procurement Officer  
+
+   → (D) **Procurement Officer**  
+   ✏️ 最後一段有寫明聯絡人。
+
+---
+
+# 第二十四天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性     | 中文意思              | 例句 |
+|----------------|----------|-----------------------|--------------------------------------------------|
+| absorb         | (v.)     | 吸收，吸取            | The material absorbs water quickly. |
+| agenda         | (n.)     | 議程                  | What’s on the agenda for today’s meeting? |
+| blueprint      | (n.)     | 藍圖，計畫            | The architect showed us the blueprint. |
+| bulletin       | (n.)     | 公告，簡訊            | A bulletin was posted on the board. |
+| cater          | (v.)     | 承辦餐飲；迎合        | We cater lunch for corporate events. |
+| consolidate    | (v.)     | 合併，鞏固            | The company plans to consolidate its offices. |
+| deduct         | (v.)     | 扣除，減除            | We will deduct the cost from your paycheck. |
+| diagnose       | (v.)     | 診斷                  | The technician diagnosed the problem quickly. |
+| disposal       | (n.)     | 處理，清除            | Proper waste disposal is important. |
+| escort         | (v./n.)  | 陪同，引導            | A staff member will escort you to the room. |
+| exempt         | (adj.)   | 免除的                | He is exempt from the training. |
+| fluctuate      | (v.)     | 波動，變動            | Prices tend to fluctuate during the season. |
+| hinder         | (v.)     | 阻礙，妨礙            | Traffic may hinder delivery times. |
+| intact         | (adj.)   | 完整無缺的            | The package arrived intact. |
+| lease          | (v./n.)  | 租賃，租約            | They leased a warehouse for one year. |
+| mandatory      | (adj.)   | 強制的，必須的        | Safety training is mandatory for all staff. |
+| mutual         | (adj.)   | 共同的，相互的        | We reached a mutual agreement. |
+| overdue        | (adj.)   | 逾期的                | The payment is now overdue. |
+| preliminary    | (adj.)   | 初步的，預備的        | These are the preliminary results. |
+| quota          | (n.)     | 配額，限額            | The team met their monthly sales quota. |
+| refine         | (v.)     | 改進，提煉            | We need to refine our approach. |
+| retain         | (v.)     | 保留，維持            | The company wants to retain top talent. |
+| surplus        | (n.)     | 剩餘，過剩            | There is a surplus of office supplies. |
+| trademark      | (n.)     | 商標                  | That logo is a registered trademark. |
+| waive          | (v.)     | 放棄（權利、費用等）  | They waived the shipping fee. |
+
+---
+
+## 📖 基礎語法：形容詞子句（Adjective Clauses）
+
+### 🔹 定義與用法
+形容詞子句是用來修飾名詞的子句，通常由關係代名詞引導。分為限定用法（不可省略）與非限定用法（可省略、逗號隔開）。
+
+| 關係代名詞 | 用法             | 範例 |
+|------------|------------------|------|
+| who        | 人的主詞         | The employee **who joined** last week is diligent. |
+| whom       | 人的受詞         | The client **whom I met** was kind. |
+| whose      | 所有格（人的）   | The intern **whose report** was excellent got hired. |
+| which      | 事物             | The laptop **which I bought** is defective. |
+| that       | 人／物皆可       | The project **that failed** is under review. |
+
+---
+
+## ✅ 練習題：選擇正確的形容詞子句填空並附詳解
+
+1. The assistant _______ answered the phone was very polite.  
+   (A) who (B) which (C) where  
+   → **(A) who**  
+   ✏️ 修飾人作主詞，應使用 who。
+
+2. This is the document _______ needs to be signed.  
+   (A) whom (B) which (C) where  
+   → **(B) which**  
+   ✏️ 修飾物作主詞，使用 which。
+
+3. The client _______ project was delayed asked for compensation.  
+   (A) whom (B) whose (C) which  
+   → **(B) whose**  
+   ✏️ whose 表所有格，意為「客戶的專案」。
+
+4. The laptop _______ you ordered is out of stock.  
+   (A) who (B) which (C) whom  
+   → **(B) which**  
+   ✏️ 修飾物作受詞，使用 which。
+
+5. The intern _______ we interviewed yesterday is very capable.  
+   (A) whose (B) who (C) whom  
+   → **(C) whom**  
+   ✏️ 被動受訪者，作受詞，使用 whom（正式寫法）。
+
+---
+
+## 📚 多益閱讀測驗練習：公司內部備忘錄
+
+### 🔹 閱讀短文
+
+```
+To: All Staff  
+From: Facilities Management  
+Subject: Office Renovation Notice
+
+Please be informed that office renovation work will begin on July 10 and continue through July 20. During this period, employees on the 3rd floor will be relocated to temporary workspaces on the 5th floor.
+
+Noise and dust may be present during this time, so please plan accordingly. We apologize for any inconvenience this may cause.
+
+Thank you for your understanding.
+```
+
+### 🔹 閱讀理解題與詳解
+
+1. What is the purpose of this memo?  
+   (A) To hire new staff  
+   (B) To announce office renovation  
+   (C) To update salary policies  
+   (D) To request vacation leave  
+   → **(B)**  
+   ✏️ 主旨標題與開頭都說明是「renovation notice」。
+
+2. When will the renovation begin?  
+   (A) July 1  
+   (B) July 5  
+   (C) July 10  
+   (D) July 20  
+   → **(C)**  
+   ✏️ 文中明確提及 July 10。
+
+3. Which floor will be relocated?  
+   (A) 1st floor  
+   (B) 3rd floor  
+   (C) 4th floor  
+   (D) 5th floor  
+   → **(B)**  
+   ✏️ 文中說明 3rd floor 員工將被遷移。
+
+4. What inconvenience might occur?  
+   (A) Delayed salaries  
+   (B) Security issues  
+   (C) Dust and noise  
+   (D) Internet problems  
+   → **(C)**  
+   ✏️ 明確提到「Noise and dust may be present」。
+
+5. Who wrote this memo?  
+   (A) HR department  
+   (B) IT support  
+   (C) Facilities Management  
+   (D) CEO  
+   → **(C)**  
+   ✏️ 開頭 From 欄位顯示是由 Facilities Management 發送。
+
+---
+
+# 第二十五天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字          | 詞性     | 中文意思             | 例句 |
+|---------------|----------|----------------------|------------------------------------------------|
+| abide         | v.       | 遵守                 | Employees must abide by the company policies. |
+| abruptly      | adv.     | 突然地               | The meeting ended abruptly. |
+| abundant      | adj.     | 大量的，豐富的       | The region has abundant natural resources. |
+| accelerate    | v.       | 加速                 | We need to accelerate the production process. |
+| accommodate   | v.       | 容納，配合           | The room can accommodate up to 50 people. |
+| accomplishment| n.       | 成就，完成           | Winning the award was a major accomplishment. |
+| adjacent      | adj.     | 鄰近的               | The warehouse is adjacent to the factory. |
+| adopt         | v.       | 採用，收養           | The company adopted a new strategy. |
+| adverse       | adj.     | 不利的，負面的       | Adverse weather affected delivery schedules. |
+| advocate      | v./n.    | 提倡，擁護           | He advocates for environmental protection. |
+| amend         | v.       | 修改，修訂           | They amended the contract terms. |
+| anonymous     | adj.     | 匿名的               | The survey results will remain anonymous. |
+| apparent      | adj.     | 明顯的               | It was apparent that he was upset. |
+| appoint       | v.       | 指派，任命           | She was appointed as the new supervisor. |
+| attain        | v.       | 達到，獲得           | He attained his goals through hard work. |
+| authorize     | v.       | 授權                 | Only managers are authorized to sign checks. |
+| benchmark     | n.       | 基準，標竿           | This product sets a new benchmark for quality. |
+| bid           | n./v.    | 投標，出價           | The company placed a bid for the project. |
+| circulation   | n.       | 流通，發行量         | Newspaper circulation has dropped recently. |
+| compatible    | adj.     | 相容的               | This software is compatible with Mac systems. |
+| comply        | v.       | 遵從                 | All staff must comply with safety guidelines. |
+| concise       | adj.     | 簡潔的               | Please write a concise summary. |
+| consecutive   | adj.     | 連續的               | Sales have increased for five consecutive months. |
+| constraint    | n.       | 限制，約束           | Budget constraints limited our options. |
+| contractor    | n.       | 承包商               | The building contractor was late again. |
+
+---
+
+## 📖 基礎語法：條件句（Conditional Sentences）
+
+條件句用來描述在某條件下會發生的事，分為三種常見型態：
+
+### 🔹 第一類條件句：真實、可能發生
+- 結構：If + 現在簡單式，will + 原形動詞  
+- 例句：If it rains, we **will cancel** the event.（如果下雨，我們會取消活動）
+
+### 🔹 第二類條件句：與現在相反的假設
+- 結構：If + 過去簡單式，would + 原形動詞  
+- 例句：If I had more time, I **would travel**.（如果我有更多時間，我會去旅行）
+
+### 🔹 第三類條件句：與過去事實相反的假設
+- 結構：If + had + p.p.，would have + p.p.  
+- 例句：If she had studied, she **would have passed**.（如果她有讀書，她本來會及格）
+
+---
+
+## ✅ 練習題：條件句選擇題 + 詳解
+
+1. If we ______ the deadline, the client will be unhappy.  
+   (A) miss (B) missed (C) had missed  
+   → **(A) miss**  
+   ✏️ 第一類條件句，用現在式搭配 will 結果句。
+
+2. If I ______ more experience, I would apply for the job.  
+   (A) have (B) had (C) will have  
+   → **(B) had**  
+   ✏️ 第二類假設句，用過去式假設現在。
+
+3. We would have arrived earlier if we ______ a taxi.  
+   (A) took (B) take (C) had taken  
+   → **(C) had taken**  
+   ✏️ 第三類假設句，過去錯過的情況。
+
+4. If she ______ harder, she could pass the test.  
+   (A) studied (B) studies (C) had studied  
+   → **(A) studied**  
+   ✏️ 第二類，現在不努力 → 與現在事實相反。
+
+5. If the printer is out of paper, it ______ a warning.  
+   (A) gives (B) gave (C) would give  
+   → **(A) gives**  
+   ✏️ 第一類，真實條件句（現在情況 + 未來結果）。
+
+---
+
+## 📚 多益閱讀練習：內部通知
+
+### 🔹 閱讀短文
+
+```
+Subject: Reminder – Annual Safety Inspection
+
+Dear Team,
+
+Please be reminded that our annual workplace safety inspection will be conducted next Friday, May 12. All department heads must ensure that safety protocols are followed and all equipment is in proper working condition.
+
+Inspections will begin at 9:00 AM and will cover office spaces, storage areas, and emergency exits.
+
+If any issues are identified before the inspection, please report them to the facilities team no later than May 10.
+
+Your cooperation is greatly appreciated.
+
+Sincerely,  
+Safety Compliance Office
+```
+
+### 🔹 閱讀理解題 + 詳解
+
+1. What is the purpose of this email?  
+   (A) To announce a holiday  
+   (B) To schedule a team meeting  
+   (C) To remind about a safety inspection  
+   (D) To introduce new staff  
+   → **(C)**  
+   ✏️ 開頭與主題行明確提及 safety inspection。
+
+2. When will the inspection take place?  
+   (A) May 10  
+   (B) May 12  
+   (C) Next Monday  
+   (D) Next Saturday  
+   → **(B)**  
+   ✏️ 內文中提到 "next Friday, May 12"。
+
+3. Who is responsible for ensuring compliance?  
+   (A) All employees  
+   (B) The safety office  
+   (C) Department heads  
+   (D) Facilities team  
+   → **(C)**  
+   ✏️ 指定 "department heads must ensure..."
+
+4. What areas will be inspected?  
+   (A) Conference rooms only  
+   (B) Parking lots  
+   (C) All public areas  
+   (D) Offices, storage, emergency exits  
+   → **(D)**  
+   ✏️ 中段明確列出三個區域。
+
+5. When should issues be reported by?  
+   (A) Before May 12  
+   (B) On May 12  
+   (C) After the inspection  
+   (D) No deadline given  
+   → **(A)**  
+   ✏️ 文中寫明 "no later than May 10"。
+
+---
+
+# 第二十六天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性     | 中文意思             | 例句 |
+|----------------|----------|----------------------|------------------------------------------------|
+| clarify        | v.       | 澄清，說明           | Please clarify your last statement. |
+| collaborate    | v.       | 合作，協作           | The two departments will collaborate on the project. |
+| comply         | v.       | 遵守，符合           | All employees must comply with the safety rules. |
+| consent        | n./v.    | 同意，准許           | They gave written consent for data usage. |
+| credible       | adj.     | 可信的，可靠的       | The report is from a credible source. |
+| designate      | v.       | 指定，指派           | She was designated as the team leader. |
+| diagnose       | v.       | 診斷，判斷           | The doctor diagnosed him with the flu. |
+| discard        | v.       | 丟棄，拋棄           | Please discard old files regularly. |
+| distract       | v.       | 分心，干擾           | The noise distracted him from his work. |
+| enroll         | v.       | 報名，註冊           | I enrolled in an English course. |
+| exceed         | v.       | 超過，超出           | Sales this quarter exceeded expectations. |
+| feasible       | adj.     | 可行的，行得通的     | The plan is not feasible in the short term. |
+| generate       | v.       | 產生，引起           | The campaign generated a lot of interest. |
+| hesitate       | v.       | 猶豫                 | Don’t hesitate to ask questions. |
+| implement      | v.       | 執行，實施           | We will implement the new policy next month. |
+| inquire        | v.       | 詢問                 | I would like to inquire about the shipment. |
+| negotiate      | v.       | 談判，協商           | They negotiated a new contract. |
+| omit           | v.       | 省略，遺漏           | Please do not omit important details. |
+| prohibit       | v.       | 禁止                 | Smoking is prohibited in this area. |
+| recall         | v.       | 回想；召回           | He recalls seeing her at the event. |
+| relocate       | v.       | 搬遷，重新安置       | The company relocated to a larger office. |
+| simplify       | v.       | 簡化，使簡單         | We need to simplify the procedure. |
+| specify        | v.       | 指明，詳細說明       | Please specify the delivery date. |
+| tolerate       | v.       | 忍受，容忍           | We cannot tolerate this behavior. |
+| verify         | v.       | 核實，證實           | Can you verify this information? |
+
+---
+
+## 📖 基礎語法：使役動詞（Causative Verbs）
+
+### 🔹 說明
+使役動詞表示「讓某人做某事」，常見用法有：**make / let / have / get / help**
+
+### 🔹 結構比較
+
+| 動詞   | 結構                          | 例句 |
+|--------|-------------------------------|------|
+| make   | make + 受詞 + 原形動詞        | The boss made her redo the task. |
+| let    | let + 受詞 + 原形動詞         | Let me explain it again. |
+| have   | have + 受詞 + 原形動詞        | I had the assistant book the tickets. |
+| get    | get + 受詞 + to + 原形動詞    | We got him to join the meeting. |
+| help   | help + 受詞 + (to) 原形動詞   | She helped me (to) carry the box. |
+
+---
+
+## ✅ 練習題：選擇正確的使役動詞結構
+
+1. The teacher ______ the students clean the classroom.  
+   (made / had / let)  
+   → **made**  
+   ✏️ make + 受詞 + 原形動詞：強迫或要求做某事。
+
+2. I will ______ him check the documents again.  
+   (have / get / help)  
+   → **have**  
+   ✏️ have + 受詞 + 原形動詞。
+
+3. We couldn’t ______ her change her mind.  
+   (make / let / get)  
+   → **get**  
+   ✏️ get + 受詞 + to + 原形動詞。
+
+4. They ______ us use the conference room.  
+   (let / help / make)  
+   → **let**  
+   ✏️ let + 受詞 + 原形動詞：允許。
+
+5. He ______ me (to) prepare the report.  
+   (helped / had / made)  
+   → **helped**  
+   ✏️ help + 受詞 + (to) 原形動詞皆可。
+
+---
+
+## 📚 多益閱讀練習：內部電子郵件
+
+### 🔹 閱讀短文
+
+```
+Subject: Policy Update on Overtime Work
+
+Dear Team,
+
+Starting next month, all overtime work must be pre-approved by your supervisor. Hours worked without prior approval will not be compensated.
+
+Please submit overtime requests at least one day in advance. This policy ensures proper planning and fair compensation.
+
+Thank you for your cooperation.
+
+Sincerely,  
+HR Department
+```
+
+### 🔹 閱讀理解題
+
+1. What is the main purpose of this email?  
+   (A) To announce a new holiday  
+   (B) To promote a training session  
+   (C) To update overtime policy  
+   (D) To assign new roles  
+   → **(C)**  
+   ✏️ 開頭明確說明為加班政策更新。
+
+2. What must employees do before working overtime?  
+   (A) Submit their timecard  
+   (B) Get supervisor approval  
+   (C) Work a full shift  
+   (D) Inform their teammates  
+   → **(B)**  
+   ✏️ 文中指出須事先經主管批准。
+
+3. Will unapproved overtime be paid?  
+   (A) Yes, if explained later  
+   (B) Yes, if within 1 hour  
+   (C) No  
+   (D) Only on weekends  
+   → **(C)**  
+   ✏️ 明確寫出「will not be compensated」。
+
+4. When should overtime requests be submitted?  
+   (A) On the same day  
+   (B) A week ahead  
+   (C) The day after  
+   (D) At least one day before  
+   → **(D)**  
+   ✏️ 文中寫明需「at least one day in advance」。
+
+5. Who issued this notice?  
+   (A) IT Department  
+   (B) CEO  
+   (C) Finance Team  
+   (D) HR Department  
+   → **(D)**  
+   ✏️ 結尾簽署是 HR Department。
+
+---
+
+# 第二十七天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字          | 詞性    | 中文意思            | 例句 |
+|---------------|---------|---------------------|-----------------------------------------------------|
+| absentee      | n.      | 缺席者              | The meeting had several absentees. |
+| adjacent      | adj.    | 邊鄰的，鄰近的      | The two buildings are adjacent to each other. |
+| ailment       | n.      | 小病，輕微疾病      | He suffers from a common stomach ailment. |
+| anonymous     | adj.    | 匿名的              | The donation was made by an anonymous person. |
+| aptitude      | n.      | 才能，資質          | She has an aptitude for languages. |
+| authorize     | v.      | 授權，批准          | Only the manager can authorize this payment. |
+| benchmark     | v.      | 以…為標準           | We benchmark our results against industry leaders. |
+| bilateral     | adj.    | 雙邊的              | The countries signed a bilateral agreement. |
+| coincide      | v.      | 同時發生            | The two events coincided unexpectedly. |
+| concise       | adj.    | 簡潔的              | His speech was clear and concise. |
+| congestion    | n.      | 擁塞                | Traffic congestion is common during rush hour. |
+| deteriorate   | v.      | 惡化                | The equipment began to deteriorate. |
+| diversify     | v.      | 多元化              | The company plans to diversify its investments. |
+| drawback      | n.      | 缺點                | The only drawback of this plan is its cost. |
+| emission      | n.      | 排放（氣體、污染） | The factory reduced its carbon emissions. |
+| facilitate    | v.      | 促進，使便利        | The moderator facilitated the discussion. |
+| halt          | v./n.   | 停止                | Production came to a sudden halt. |
+| hygiene       | n.      | 衛生                | Good hygiene is essential in hospitals. |
+| incur         | v.      | 招致，帶來（損失）  | He incurred a heavy fine. |
+| itinerary     | n.      | 行程表              | I’ve sent you the itinerary for our trip. |
+| liaison       | n.      | 聯絡人，聯繫        | He is the company’s liaison with the media. |
+| obsolete      | adj.    | 過時的              | This software is now obsolete. |
+| payroll       | n.      | 薪資名單            | She handles the payroll every month. |
+| revenue       | n.      | 收益                | Last quarter's revenue exceeded expectations. |
+| scrutinize    | v.      | 仔細檢查            | Please scrutinize the contract before signing. |
+
+---
+
+## 📖 基礎語法：主動語態與被動語態（Active vs. Passive Voice）
+
+### 🔹 定義與比較
+
+| 類型       | 結構                      | 例句 |
+|------------|---------------------------|------|
+| 主動語態   | 主詞 + 動詞 + 受詞        | The manager **approved** the request. |
+| 被動語態   | 受詞 + be + 過去分詞 (+ by ...) | The request **was approved** by the manager. |
+
+### 🔹 適用情境
+- 被動語態常用於不知道執行者或強調動作的對象。
+
+---
+
+## ✅ 練習題：選擇正確的語態填空
+
+1. The documents _______ by the assistant. (prepared / were prepared)  
+   → **were prepared**  
+   ✏️ 被動語態，主詞是文件。
+
+2. Our team _______ the proposal last week. (submitted / was submitted)  
+   → **submitted**  
+   ✏️ 主詞是執行動作者，用主動語態。
+
+3. The product _______ in many countries. (sells / is sold)  
+   → **is sold**  
+   ✏️ 被動語態，表示廣泛販售的狀態。
+
+4. An error _______ during the installation. (occurred / was occurred)  
+   → **occurred**  
+   ✏️ 發生是主動動作，不用被動。
+
+5. The message _______ by email. (sent / was sent)  
+   → **was sent**  
+   ✏️ 被動語態，主詞為被傳送者。
+
+---
+
+## 📚 多益閱讀練習：辦公室搬遷通知
+
+### 🔹 閱讀短文
+
+```
+Subject: Office Relocation Announcement
+
+Dear Employees,
+
+We are pleased to announce that our office will be relocating to a new address on May 15. The new facility is larger and more accessible.
+
+Please note that all departments must complete packing by May 10. Additional instructions will be provided by your team leaders.
+
+Thank you for your cooperation.
+
+Sincerely,  
+Administration Department
+```
+
+### 🔹 閱讀理解題
+
+1. What is the main purpose of this message?  
+   (A) To announce a promotion  
+   (B) To notify about a relocation  
+   (C) To confirm a job transfer  
+   (D) To introduce a new product  
+   → **(B) To notify about a relocation**  
+   ✏️ 文章開頭明確說明將搬遷辦公室。
+
+2. When will the relocation happen?  
+   (A) May 1  
+   (B) May 10  
+   (C) May 15  
+   (D) June 1  
+   → **(C) May 15**  
+   ✏️ 指出遷移日期為 May 15。
+
+3. What must departments do before May 10?  
+   (A) Move furniture  
+   (B) Submit reports  
+   (C) Complete packing  
+   (D) Hire movers  
+   → **(C) Complete packing**  
+   ✏️ 明確說明所有部門必須在 5/10 前完成打包。
+
+4. Who will give further instructions?  
+   (A) Receptionist  
+   (B) HR staff  
+   (C) CEO  
+   (D) Team leaders  
+   → **(D) Team leaders**  
+   ✏️ 由 team leaders 提供額外說明。
+
+5. Where will this message most likely be posted?  
+   (A) Social media  
+   (B) Company website  
+   (C) Internal announcement  
+   (D) Customer newsletter  
+   → **(C) Internal announcement**  
+   ✏️ 內部通知的語氣與內容設定。
+
+---
+
+# 第二十八天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思           | 例句 |
+|--------------|--------|--------------------|------|
+| arise        | v.     | 發生；產生         | Problems may arise during the project. |
+| bulk         | n.     | 大量               | We buy office supplies in bulk. |
+| concise      | adj.   | 簡潔的             | Please keep your summary concise. |
+| delegate     | v.     | 委派               | The manager delegated the task to Tom. |
+| enforce      | v.     | 執行；實施         | The policy will be strictly enforced. |
+| fleet        | n.     | 車隊；機隊         | Our company owns a fleet of delivery vans. |
+| glance       | v./n.  | 瞥一眼；瀏覽       | He glanced at the schedule. |
+| halt         | v./n.  | 停止               | The production was halted due to safety issues. |
+| implement    | v.     | 實施               | We will implement the new system next week. |
+| jeopardize   | v.     | 危及；損害         | Budget cuts could jeopardize the project. |
+| kiosk        | n.     | 小亭；自助機       | You can check in at the kiosk. |
+| lease        | n./v.  | 租約；租用         | They signed a two-year lease for the office. |
+| mandatory    | adj.   | 強制的             | Attending the training is mandatory. |
+| notify       | v.     | 通知               | Please notify us of any changes. |
+| outreach     | n.     | 推廣；外展活動     | The outreach program helps local businesses. |
+| pending      | adj.   | 待定的；未決的     | The decision is still pending. |
+| quota        | n.     | 配額；限額         | Each salesperson has a monthly quota. |
+| rebate       | n.     | 折扣；退還款       | You can claim a rebate on this product. |
+| screening    | n.     | 篩選；檢查         | Job screening will begin next week. |
+| trainee      | n.     | 實習生；受訓者     | The trainees will attend a workshop. |
+| unveil       | v.     | 公布；揭露         | The company unveiled its new logo. |
+| venue        | n.     | 場地；會場         | The seminar will be held at an external venue. |
+| waive        | v.     | 放棄；免除         | The fee will be waived this time. |
+| yield        | v./n.  | 產生；產量         | The investment yielded good returns. |
+| blueprint    | n.     | 藍圖；詳細計畫     | They presented a blueprint for development. |
+
+---
+
+## 📖 文法學習：名詞子句（Noun Clauses）
+
+### 🔹 說明
+
+名詞子句可擔任主詞、受詞或補語。常由以下連接詞引導：**that, if, whether, what, when, where, why, who, how**。
+
+### 🔹 用法範例
+
+- **主詞**：*What she said* was surprising.  
+- **受詞**：I don’t know *where he went*.  
+- **補語**：The problem is *that he’s late*.
+
+### 🔹 注意事項
+
+- 名詞子句中不倒裝：
+  - ✅ I know *what he wants*.  
+  - ❌ I know *what does he want*.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. I don’t know _______ he is available tomorrow.  
+   (A) that (B) whether (C) what  
+   **答案：B**
+
+2. _______ she said surprised the team.  
+   (A) That (B) What (C) Whether  
+   **答案：B**
+
+3. The report explains _______ the issue happened.  
+   (A) how (B) that (C) what  
+   **答案：A**
+
+4. It is important _______ we follow the instructions.  
+   (A) whether (B) that (C) what  
+   **答案：B**
+
+5. He asked _______ I had finished the task.  
+   (A) if (B) how (C) where  
+   **答案：A**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+MEMO
+
+TO: All Employees  
+FROM: Administration Department  
+SUBJECT: Safety Drill Notice
+
+A mandatory safety drill will take place on Friday, May 10 at 3:00 PM. All employees must participate. Please proceed to the nearest emergency exit when the alarm sounds.
+
+The drill is expected to last 15 minutes. Attendance will be recorded by supervisors. Please do not use the elevators during the drill.
+
+Thank you for your cooperation.
+```
+
+---
+
+### 問題：
+
+1. When is the safety drill scheduled?  
+   (A) May 9 at 3:00 PM  
+   (B) May 10 at 3:00 PM  
+   (C) May 10 at 5:00 PM  
+   (D) May 11 at 3:00 PM  
+   **答案：B**
+
+2. What must employees do during the drill?  
+   (A) Stay at their desks  
+   (B) Go to the cafeteria  
+   (C) Use the elevators  
+   (D) Proceed to an emergency exit  
+   **答案：D**
+
+3. How long will the drill last?  
+   (A) 30 minutes  
+   (B) 10 minutes  
+   (C) 15 minutes  
+   (D) 1 hour  
+   **答案：C**
+
+4. Who will record attendance?  
+   (A) HR department  
+   (B) Security team  
+   (C) Supervisors  
+   (D) Receptionists  
+   **答案：C**
+
+5. What is the memo mainly about?  
+   (A) A team-building activity  
+   (B) An office renovation  
+   (C) A fire alarm inspection  
+   (D) A scheduled safety drill  
+   **答案：D**
+
+---
