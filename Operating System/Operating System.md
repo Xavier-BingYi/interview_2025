@@ -1,142 +1,537 @@
-# Chap 0：Operating System
+# 目錄
+
+## Ch0：Operating System
+1. [大型主機系統演進與多工系統](#1-大型主機系統演進與多工系統)
+   - [1.1 大型主機系統與歷史演進](#11-大型主機系統與歷史演進)
+   - [1.2 批次系統（Batch System）](#12-批次系統batch-system)
+   - [1.3 多重程式系統（Multi-programming System）](#13-多重程式系統multi-programming-system)
+   - [1.4 分時系統（Time-Sharing System）](#14-分時系統time-sharing-system)
+   - [1.5 系統比較總結](#15-系統比較總結)
+2. [電腦系統架構與運算模型](#2-電腦系統架構與運算模型)
+   - [2.1 架構類型概觀](#21-電腦系統架構類型概觀)
+   - [2.2 平行系統](#22-平行系統parallel-systems)
+   - [2.3 記憶體存取架構](#23-記憶體存取架構memory-access-architectures)
+   - [2.4 分散式系統架構](#24-分散式系統架構distributed-systems)
+   - [2.5 叢集系統（Clustered Systems）](#25-clustered-systems叢集系統)
+3. [特殊應用系統架構](#3-特殊應用系統架構)
+   - [3.1 即時系統](#31-即時系統real-time-systems)
+   - [3.2 多媒體系統](#32-多媒體系統multimedia-systems)
+   - [3.3 手持與嵌入式系統](#33-手持與嵌入式系統handheld-and-embedded-systems)
+   - [3.4 系統選擇與設計思維](#34-系統選擇與設計思維)
+4. [作業系統基本概念練習題](#4-作業系統基本概念練習題)
+   - [4.1 選擇題](#41-選擇題共-25-題)
+   - [4.2 申論題](#42-申論題共-10-題)
+
+## Ch1：Introduction
+5. [作業系統基本定義與功能](#1-作業系統基本定義與功能)
+   - [1.1 OS 是什麼](#11-os-是什麼)
+   - [1.2 OS 的核心功能與運作方式](#12-os-的核心功能與運作方式)
+   - [1.3 OS 的設計目標與重要性](#13-os-的設計目標與重要性)
+6. [電腦系統組織](#2-電腦系統組織computer-system-organization)
+   - [2.1 基本架構與 OS 角色](#21-電腦系統基本架構與作業系統角色)
+   - [2.2 I/O 與忙碌等待](#22-io-操作流程與忙碌等待問題)
+   - [2.3 中斷驅動 I/O](#23-中斷驅動-io-機制interrupt-driven-io)
+   - [2.4 中斷處理與同步](#24-中斷處理細節與系統同步)
+   - [2.5 Interrupt vs Trap](#25-interrupt-與-trap-的差異與效能考量)
+7. [儲存階層與快取管理](#3-儲存階層與快取管理storage-hierarchy-and-cache-management)
+   - [3.1 儲存設備與階層設計](#31-儲存設備層級與設計原則)
+   - [3.2 RAM 類型](#32-ram-類型與存取特性)
+   - [3.3 磁碟效能](#33-磁碟機運作與效能影響)
+   - [3.4 Cache 機制](#34-快取記憶體與效能提升)
+   - [3.5 Cache 一致性問題](#35-一致性問題與分散式挑戰)
+8. [硬體保護與執行模式](#4-硬體保護與執行模式hardware-protection-and-execution-modes)
+   - [4.1 系統保護需求](#41-系統保護的概念與需求)
+   - [4.2 Dual-Mode 操作](#42-雙模式操作dual-mode-operation)
+   - [4.3 I/O 保護與防範](#43-io-保護與惡意操作防範)
+   - [4.4 記憶體保護](#44-記憶體保護memory-protection)
+   - [4.5 CPU 保護與 Timer](#45-cpu-保護與-timer-機制)
+9. [作業系統導論練習題](#5-作業系統導論練習題)
+   - [5.1 選擇題](#51-選擇題共-20-題)
+   - [5.2 申論題](#52-申論題共-8-題)
+
+---
+
+# Ch0：Operating System
 
 > **主題：系統架構與使用者導向的電腦系統分類**
 
 ---
 
-## 1. 從系統架構的角度
-
-### 1.1 Mainframe Systems
-
-#### ▸ Batch System
-- 最早的電腦系統之一，一次處理一個 Job，無法互動。
-- 使用者將程式、資料與控制卡提交給 operator 排程。
-- 作業系統負責 job 間的控制轉移（transfer control），無需人為干預。
-- 缺點：
-  - 無互動性（non-interactive）
-  - 一次僅能執行一個 Job（single job）
-  - CPU 常處於 idle 狀態，效率低
-
-#### ▸ Multi-programming System
-- 多個程式同時駐留在主記憶體中，透過 CPU scheduling 輪流執行。
-- 透過 I/O 與運算的重疊（overlapping），提高資源利用率。
-- 使用 **Spooling** 技術：I/O 可不經 CPU，僅在完成時通知 CPU。
-- OS 核心職責：
-  - Memory management（記憶體分配）
-  - CPU scheduling（處理器分配）
-  - I/O system（裝置管理）
-
-#### ▸ Time-sharing System（= Multi-tasking）
-- 支援多使用者互動，使用者可立即看到結果（response time < 1s）。
-- 透過時間切片（time slice）方式在多個程序間快速切換。
-- 常見裝置：鍵盤、螢幕。
-- 作業系統額外職責：
-  - Virtual memory（虛擬記憶體管理）
-  - File system & Disk management（檔案與磁碟管理）
-  - Process synchronization & Deadlock handling（同步與死結處理）
+## 1. 大型主機系統演進與多工系統（Mainframe and Multiprogramming Systems）
 
 ---
 
-### 1.2 系統架構概述（Computer-System Architecture）
+### 1.1 大型主機系統與歷史演進
 
-#### ▸ Desktop Systems
-- 單人使用，常見 OS：Windows, macOS, Linux。
-- 支援 GUI，注重便利性與反應速度。
-- 缺點：較缺乏安全機制，易受病毒攻擊。
+#### ▸ 系統分類與主機系統角色
+- 主機系統（Mainframe Systems）為最早的電腦架構，起初設計僅能處理單一工作（Job）。
+- 主要應用於需要高可靠性與安全性的領域，如醫院、銀行、大型資料處理中心。
 
-#### ▸ Parallel Systems（Tightly Coupled Systems）
-- 多個 CPU 核心共享主記憶體與裝置，效能佳。
-- 分為：
-  - **SMP（Symmetric Multiprocessor）**：每個 CPU 狀態對等，需同步資料一致性。
-  - **AMP（Asymmetric Multiprocessor）**：一顆 Master CPU 負責分配任務，適用大型系統。
-- 優點：
-  - 提升 throughput（運算吞吐量）
-  - 成本較低（資源共享）
-  - 可靠性高（部分 CPU 故障時系統可持續運作）
-
-#### ▸ Multi-core vs. Many-core
-- Multi-core：單一 CPU 上整合多個核心（2~8），常見於一般 PC。
-- Many-core：核心數超過 10，甚至數十、數百，常見於 GPU、高效能運算。
-- GPU 採 SIMD（Single Instruction Multiple Data）架構，適合資料平行處理（data parallelism）。
-
-#### ▸ Memory Access Architecture
-| 架構 | UMA | NUMA |
-|------|-----|------|
-| 記憶體存取時間 | 相同 | 不同 |
-| 結構 | 所有 CPU 接到同一記憶體 | 系統分為多個 nodes，各有 local memory |
-| 特性 | 效能一致、簡單設計 | 跨 node 存取速度較慢，需考慮 locality |
+#### ▸ 主機系統的三個發展階段
+1. **Batch System（批次系統）**
+2. **Multi-programming System（多重程式系統）**
+3. **Time-sharing System（分時系統）**
 
 ---
 
-### 1.3 Distributed Systems（Loosely Coupled）
+### 1.2 批次系統（Batch System）
 
-#### ▸ 架構與特性
-- 多台電腦透過網路（I/O bus、LAN）互相連接。
-- 每台電腦擁有自己的 local memory，不共享記憶體。
-- 資料交換須透過網路進行。
-- 易於擴充，可靠性高（單台故障不影響整體系統）。
+#### ▸ 執行流程
+- 使用者將程式、資料與控制卡提交給系統操作員（operator）。
+- 操作員依照資源需求將 Job 分類，並儲存至磁帶，送入主機依序處理。
+- OS 僅負責將控制權從一個 Job 轉移至下一個，無需互動與決策。
 
-#### ▸ 使用目的
-- Resource sharing
-- Load balancing / Load sharing
-- Reliability / Fault-tolerance
+#### ▸ 特徵與限制
+- 無使用者互動，無法即時控制。
+- 一次僅能處理一個 Job，CPU 常因 I/O 等待而閒置。
+- CPU 利用率低，I/O 與 CPU 速度差異極大（1:1000）。
+
+---
+
+### 1.3 多重程式系統（Multi-programming System）
+
+#### ▸ 系統特性
+- 允許數個程式同時存在於主記憶體中，CPU 在程式之間切換以減少 idle time。
+- 同時處理運算與 I/O，提升資源使用率。
+
+#### ▸ Spooling 技術（Simultaneous Peripheral Operation On-Line）
+- I/O 操作由系統代為處理，CPU 僅需在 I/O 完成時接收通知。
+- 減少 CPU 對 I/O 的等待時間。
+
+#### ▸ 作業系統任務
+- **記憶體管理（Memory Management）**：分配記憶體空間給多個程式。
+- **CPU 排程（CPU Scheduling）**：決定哪個程式獲得 CPU。
+- **I/O 系統管理**：統一處理所有輸入輸出資源與例程。
+
+---
+
+### 1.4 分時系統（Time-Sharing System）
+
+#### ▸ 系統特性
+- 又稱為 Multi-tasking System，允許多名使用者同時與系統互動。
+- CPU 透過高速切換提供類似即時的回應效果（response time < 1s）。
+- 常見輸入裝置為鍵盤，輸出為螢幕。
+
+#### ▸ 程式切換時機
+- 程式結束、等待 I/O、或達到時間片上限（Time Quantum）時觸發切換。
+
+#### ▸ 作業系統任務
+- **虛擬記憶體管理（Virtual Memory）**：允許工作在記憶體與磁碟間切換，降低主記憶體壓力。
+- **檔案與磁碟管理（File & Disk Management）**：處理使用者資料儲存與存取。
+- **程序同步與死結管理（Synchronization & Deadlock）**：保障多個程序能安全同步執行。
+
+---
+
+### 1.5 系統比較總結
+
+#### ▸ 三種系統比較表
+
+| 系統類型         | 執行模式           | 系統目標         | OS 功能涵蓋                             |
+|------------------|--------------------|------------------|----------------------------------------|
+| Batch            | 單一使用者、單一工作 | 簡化控制流程     | 無明確 OS 功能                         |
+| Multi-programming | 多個程式           | 資源利用率最大化 | 記憶體管理、CPU 排程、I/O 系統        |
+| Time-sharing     | 多使用者、多程式   | 提升即時回應     | 加入虛擬記憶體、檔案系統、同步與死結處理 |
+
+---
+
+## 2. 電腦系統架構與運算模型（Computer System Architectures and Models）
+
+---
+
+### 2.1 電腦系統架構類型概觀
+
+#### ▸ 三大系統類別
+- **Desktop Systems（桌上型系統）**：單使用者導向，強調互動性與操作便利性。
+- **Parallel Systems（平行系統）**：多核心或多處理器，強調運算效能與可靠性。
+- **Distributed Systems（分散式系統）**：由多台電腦透過網路互聯而成，具備高度擴展性與容錯性。
+
+---
+
+### 2.2 平行系統（Parallel Systems）
+
+#### ▸ 多處理器架構（Multiprocessor Systems）
+- 又稱為 **Tightly Coupled Systems**，具備兩個以上 CPU，彼此透過共享記憶體通訊。
+- 優點：**高吞吐量（throughput）**、**成本效益（economical）**、**可靠性高（reliability）**。
 
 #### ▸ 架構類型
-- **Client-Server**：
-  - 類似 Master-Slave 模式，server 負責分派與協調。
-  - 缺點是 server 容易成為效能瓶頸（bottleneck）。
-  - 可透過分散式伺服器與 backup server 提升可靠性。
-- **Peer-to-Peer**：
-  - 所有節點地位平等，依靠 protocols 或 rules 溝通。
-  - 無單一故障點（no single point of failure）
-  - 系統彈性高、可靠性強（如 Internet）
+- **Symmetric Multiprocessor (SMP)**：每顆 CPU 地位相同，執行同一個 OS，需同步機制保護資料一致性。
+- **Asymmetric Multiprocessor (AMP)**：主從式架構，Master CPU 管理工作分派，其餘 CPU 執行子任務，擴充性佳但資源浪費風險較高。
+
+#### ▸ 多核心處理器（Multi-Core Processor）
+- 單一 CPU 晶片內含多個核心（cores），可同時執行多個任務。
+- On-chip 通訊速度快、省電、熱耗低。
+- 每個核心有獨立的 register 與 L1 cache，可能共用 L2/L3 cache。
+
+#### ▸ Many-Core 與 GPU 計算
+- Many-Core：10 核心以上處理器，常見於 HPC 與 AI 運算。
+- GPU 採用 **SIMD 架構（Single Instruction, Multiple Data）**，擅長資料平行處理，適用於矩陣、圖像處理等場景。
 
 ---
 
-### 1.4 Clustered Systems
+### 2.3 記憶體存取架構（Memory Access Architectures）
 
-- 屬於分散式系統的特殊類型。
-- 多台電腦透過高速 LAN（如 Infiniband）連線，部署在同一地區。
-- 效能高、延遲低，常用於資料中心或高效能需求場景。
-- 分為：
-  - **Asymmetric clustering**：一台主機執行，其他待命。
-  - **Symmetric clustering**：多台主機同時執行並互相監控。
+#### ▸ UMA（Uniform Memory Access）
+- 常見於 **SMP 系統**，所有 CPU 對主記憶體擁有相同存取時間。
+- 優點：系統設計簡單，任務可自由分派給任一 CPU。
 
----
-
-## 2. 使用者導向的系統分類
-
-### 2.1 Real-Time Systems
-
-- 強調「準時完成」，而非「立即反應」。
-- 任務必須在使用者定義的 deadline 前完成。
-- Scheduler 必須保證任務能在期限內完成。
-
-#### ▸ 類型
-- **Hard Real-Time**：若錯過 deadline，系統將發生嚴重失敗（如飛彈控制）。
-  - 通常不使用 secondary storage，只依賴記憶體。
-- **Soft Real-Time**：盡量在期限內完成，錯過會影響品質但不致崩潰。
-  - 常見於多媒體系統（如串流播放）
+#### ▸ NUMA（Non-Uniform Memory Access）
+- 將系統分成多個節點（node），每個節點包含 CPU 與本地記憶體。
+- 跨節點存取需透過連接通道，速度較慢，造成記憶體存取時間不一致。
 
 ---
 
-### 2.2 Multimedia Systems
+### 2.4 分散式系統架構（Distributed Systems）
 
-- 處理音訊與視訊（例如直播、串流播放）
-- 需處理時間同步與資料壓縮問題（30 fps 等）
-- 常用 on-demand 技術與壓縮格式降低傳輸量
+#### ▸ 定義與特色
+- 又稱為 **Loosely Coupled Systems**，每台電腦有獨立 CPU 和 local memory，透過網路通訊。
+- 擴展性高（可達數萬台節點）、具備高容錯能力與負載平衡。
+
+#### ▸ 分散式系統的用途
+- **Resource Sharing**：共享資源與服務。
+- **Load Sharing**：動態分配工作量。
+- **Reliability**：系統部分故障不會影響整體運作。
+
+#### ▸ 架構分類
+- **Client-Server 架構**：Server 管理資源並提供服務，Client 提出請求。
+  - 優點：集中管理容易。
+  - 缺點：Server 成為效能瓶頸與單點失效風險。
+- **Peer-to-Peer 架構**：所有節點地位平等，無中央控制。
+  - 優點：無單一故障點，可靠性高，動態彈性佳。
+  - 例子：BitTorrent、Internet。
 
 ---
 
-### 2.3 Handheld / Embedded Systems
+### 2.5 Clustered Systems（叢集系統）
 
-- 例：PDA、手機、嵌入式裝置
-- 特性：記憶體小、處理器慢、電池壽命短、螢幕小
-- 使用專門的作業系統（specialized OS）
+#### ▸ 定義與結構
+- 多台電腦透過 **區域網路（LAN）** 或高速互連架構（如 InfiniBand）緊密連結，並共用儲存裝置。
+- 類似分散式系統，但傳輸延遲更低、通訊速度更快。
+
+#### ▸ 架構類型
+- **Asymmetric Clustering**：一台主機執行服務，其它主機待命備援。
+- **Symmetric Clustering**：多台主機同時運作並互相監控。
 
 ---
 
-# Chap 1：Introduction
+## 3. 特殊應用系統架構（Special-Purpose System Architectures）
+
+---
+
+### 3.1 即時系統（Real-Time Systems）
+
+#### ▸ 系統定義與目標
+- Real-Time 並不代表「執行速度快」，而是**在預期的時間內完成任務**（符合 deadline）。
+- 系統需保證在固定時間內作出反應，常應用於工業控制、醫療影像、科學實驗、武器系統等。
+
+#### ▸ 系統分類
+- **Hard Real-Time**：
+  - 違反 deadline 將導致嚴重系統錯誤（如核能控制系統）。
+  - 常不使用 secondary storage（如硬碟），資料儲存在 ROM 或 memory。
+- **Soft Real-Time**：
+  - 違反 deadline 可容忍，但會影響系統品質（如多媒體串流）。
+  - 以 priority 控制排程，確保關鍵任務優先完成。
+
+#### ▸ 系統設計挑戰
+- 設計需考慮：
+  - **Scheduling Algorithm**（排程演算法）
+  - **資源配置與儲存限制**（無硬碟時的資料管理）
+- 最常見的排程方式：**Earliest Deadline First (EDF)**。
+
+---
+
+### 3.2 多媒體系統（Multimedia Systems）
+
+#### ▸ 系統特性
+- 處理大量音訊與影像資料（如線上直播、ppStream、影音平台等）。
+- 有即時處理需求，如 24~30fps 畫面播放。
+
+#### ▸ 技術挑戰
+- **時間限制（Timing Constraints）**：需在固定時間內傳送或解碼資料。
+- **即時串流（Live Streaming）與隨選播放（On-demand）**：
+  - 媒體資料不儲存於本地，只播放不儲存。
+- **壓縮（Compression）技術**：
+  - 降低傳輸壓力與儲存需求。
+
+---
+
+### 3.3 手持與嵌入式系統（Handheld and Embedded Systems）
+
+#### ▸ 系統範例
+- 手機、PDA（個人數位助理）、智慧裝置、嵌入式控制器等。
+- 系統通常內建於硬體內，具備專用用途。
+
+#### ▸ 設計限制
+- **記憶體容量小**
+- **處理器效能低**
+- **電池壽命限制**
+- **螢幕尺寸小**
+- 作業系統需特別設計以符合這些硬體限制。
+
+---
+
+### 3.4 系統選擇與設計思維
+
+#### ▸ 系統設計依用途選擇
+- 不同應用目的對 OS 設計有不同取捨：
+  - 嵌入式系統強調效率與小體積。
+  - 多媒體系統強調即時處理。
+  - 即時系統重視可預測性與穩定排程。
+  
+#### ▸ 系統類型對比
+
+| 系統類型             | 特性關鍵字                         | 應用案例                      |
+|----------------------|------------------------------------|-------------------------------|
+| Real-Time            | Hard/Soft Deadline、Scheduler     | 醫療、工控、武器系統          |
+| Multimedia           | 音影同步、壓縮、直播               | YouTube、串流平台             |
+| Embedded / Handheld  | 小型、低功耗、專用用途             | 手機、智慧家電、車用電腦等    |
+
+---
+
+## 4. 作業系統基本概念練習題
+
+---
+
+### 4.1 選擇題（共 25 題）
+> ✅ 單選題形式，幫助複習 Ch0 核心概念與面試常見題型。
+
+1. 哪一種作業系統主要透過批次方式執行工作，無需使用者即時互動？  
+   A. Time-sharing 系統  
+   B. Batch 系統  
+   C. Multi-programming 系統  
+   D. Distributed 系統  
+
+2. Multi-programming 系統的主要目的是什麼？  
+   A. 提升系統安全性  
+   B. 減少記憶體使用  
+   C. 減少 CPU idle time  
+   D. 增加硬碟空間  
+
+3. 下列何者屬於 Time-sharing 系統的特徵？  
+   A. 每次只能執行一個程式  
+   B. 無需 CPU scheduling  
+   C. 使用者可即時互動  
+   D. 無需記憶體管理  
+
+4. 在 Symmetric multiprocessing (SMP) 系統中，哪一項正確？  
+   A. 每顆 CPU 執行不同 OS  
+   B. 主從結構明確  
+   C. 各處理器共享相同作業系統  
+   D. 僅適用於大型機系統  
+
+5. Distributed system 的主要優點為何？  
+   A. 資料集中存取  
+   B. 單點失敗風險低  
+   C. 無需網路連接  
+   D. CPU 不需排程  
+
+6. 在 UMA 架構中，哪一項敘述正確？  
+   A. 各 CPU 存取記憶體速度不一致  
+   B. 所有 CPU 有均等存取主記憶體的時間  
+   C. 僅主 CPU 可存取記憶體  
+   D. 各 CPU 擁有獨立記憶體  
+
+7. 下列何者屬於 Hard Real-Time 系統的應用範例？  
+   A. 音樂串流  
+   B. 網頁瀏覽器  
+   C. 核電廠控制系統  
+   D. 網路影片播放  
+
+8. Peer-to-Peer 系統的優點是？  
+   A. 集中式管理  
+   B. 高可靠性  
+   C. 效能瓶頸集中  
+   D. 依賴主伺服器  
+
+9. 下列何者通常與 SIMD 架構有關？  
+   A. GPU  
+   B. HDD  
+   C. CPU Cache  
+   D. BIOS  
+
+10. NUMA 架構與 UMA 最大差異為？  
+    A. 使用單核心處理器  
+    B. 記憶體存取速度一致  
+    C. 跨節點存取速度較慢  
+    D. 僅有一台主機  
+
+11. 在 Client-Server 架構中，常見缺點是什麼？  
+    A. 管理困難  
+    B. 多點失敗風險  
+    C. Server 成為效能瓶頸  
+    D. 所有節點無法溝通  
+
+12. Multi-core processor 的優點之一是？  
+    A. 增加耗電量  
+    B. 降低傳輸速度  
+    C. 降低功耗並提升溝通效率  
+    D. 不需要作業系統支援  
+
+13. GPU 屬於哪一種平行運算架構？  
+    A. SISD  
+    B. SIMD  
+    C. MISD  
+    D. MIMD  
+
+14. 下列何者屬於 loosely coupled 架構？  
+    A. SMP 系統  
+    B. Parallel 系統  
+    C. Distributed 系統  
+    D. Multi-core 系統  
+
+15. 在硬即時系統中，missing deadline 的結果是什麼？  
+    A. 稍微降低系統效能  
+    B. 提醒使用者稍後執行  
+    C. 系統可能產生嚴重錯誤或崩潰  
+    D. 啟動後備系統  
+
+16. Multimedia 系統面臨的主要挑戰之一是？  
+    A. 繪圖晶片成本  
+    B. 實時解壓與傳輸的需求  
+    C. 硬體不相容問題  
+    D. 使用者權限控管  
+
+17. 下列何者為軟即時系統（Soft Real-Time）的特徵？  
+    A. 不能錯過任何 deadline  
+    B. 延遲會導致災難性後果  
+    C. 任務能夠根據優先權排程  
+    D. 沒有任何排程需求  
+
+18. 哪種系統架構最適合用於數百個節點的大規模運算？  
+    A. SMP  
+    B. Multi-core  
+    C. Distributed  
+    D. Batch  
+
+19. 在 Clustered Systems 中，對稱叢集的特徵是？  
+    A. 一台主機執行應用程式，其餘為備援  
+    B. 所有主機均執行應用程式並互相監控  
+    C. 主伺服器負責所有排程  
+    D. 所有主機彼此獨立無連線  
+
+20. 下列哪一項不是作業系統的基本功能？  
+    A. 資料庫管理  
+    B. 記憶體管理  
+    C. 處理程序排程  
+    D. 檔案系統管理  
+
+21. 哪種技術可用來讓 I/O 與 CPU 同時運作？  
+    A. Paging  
+    B. Pipelining  
+    C. Spooling  
+    D. Polling  
+
+22. Desktop 系統的最常見特徵是什麼？  
+    A. 執行即時應用  
+    B. 支援多用戶同步執行  
+    C. 提供 GUI 與人機互動介面  
+    D. 高延遲處理能力  
+
+23. 在多處理器系統中，哪一項屬於非對稱架構？  
+    A. 多核心處理器  
+    B. SMP  
+    C. Master-slave 模式  
+    D. Peer-to-peer 模式  
+
+24. TILE64 是什麼樣的處理架構？  
+    A. 單核心高頻率  
+    B. 多層快取記憶體  
+    C. 網格型多核心處理器  
+    D. 雙系統混合設計  
+
+25. 在作業系統中，哪一項功能與 Deadlock 處理最有關？  
+    A. 處理器切換  
+    B. 虛擬記憶體  
+    C. 同步機制  
+    D. 網路傳輸  
+
+---
+
+#### 參考答案
+
+> ✅ 選擇題解析區，快速對照與自我檢討。
+
+1. **B**：Batch 系統無需使用者互動，按順序執行作業。
+2. **C**：Multi-programming 讓 CPU 不因 I/O 阻塞而閒置。  
+3. **C**：Time-sharing 系統允許多位使用者即時互動。  
+4. **C**：SMP 架構下，所有 CPU 執行同一作業系統。  
+5. **B**：分散式系統不依賴單一伺服器，容錯性高。  
+6. **B**：UMA 架構中 CPU 存取記憶體時間一致。  
+7. **C**：硬即時系統需保證準時完成任務，如核電控制器。  
+8. **B**：P2P 結構節點平等，具有高可靠性。  
+9. **A**：GPU 使用 SIMD 運算，適合大規模資料並行處理。  
+10. **C**：NUMA 架構中跨節點存取記憶體較慢。  
+11. **C**：Client-Server 結構常出現 Server 效能瓶頸問題。  
+12. **C**：多核心處理器在同一晶片中降低能耗並提升效能。  
+13. **B**：GPU 採用 SIMD 架構進行資料平行運算。  
+14. **C**：Distributed systems 是 loosely coupled 架構代表。  
+15. **C**：硬即時系統若錯過 deadline，可能導致系統失敗。  
+16. **B**：Multimedia 系統需處理即時壓縮與播放的挑戰。  
+17. **C**：Soft Real-Time 系統允許延遲，但會根據優先權調度。  
+18. **C**：分散式系統適合大規模多節點的運算環境。  
+19. **B**：對稱叢集中的多台主機彼此監控、共同執行。  
+20. **A**：資料庫管理並非作業系統的核心功能。  
+21. **C**：Spooling 可讓 I/O 與 CPU 並行作業，提升效率。  
+22. **C**：Desktop 系統著重於人機互動與 GUI 介面。  
+23. **C**：Master-slave 是非對稱多處理架構的代表。  
+24. **C**：TILE64 是一種網格型（mesh）多核心處理器設計。  
+25. **C**：同步機制可避免或處理系統資源競爭造成的 Deadlock。 
+
+---
+
+### 4.2 申論題（共 10 題）
+> ✅ 深論式問題，強化理解並訓練敘述能力，可應用於開放式面試題。
+
+1. 請說明 Batch 系統的工作流程與其主要缺點。  
+2. Multi-programming 系統如何提升 CPU 使用效率？請說明其原理並舉例。  
+3. 試比較 Multi-programming 與 Time-sharing 系統在使用者互動上的差異。  
+4. 說明 Spooling 技術的概念，並解釋它為何可以提升 I/O 效率。  
+5. 請比較 UMA 與 NUMA 的架構差異，並說明其對記憶體存取速度的影響。  
+6. 試分析 SMP（對稱多處理器）與 AMP（非對稱多處理器）的運作差異與應用情境。  
+7. 請說明 Distributed System 的架構特性，以及其在 fault tolerance 上的優勢。  
+8. 在 Client-Server 與 Peer-to-Peer 架構中，哪一種更適合用於高可用性系統？請說明理由。  
+9. 解釋 Real-Time 系統中的 Hard 與 Soft Real-Time 的差異，並舉出各自的應用實例。  
+10. 請說明 Multimedia 系統在作業系統設計上的挑戰，並指出至少兩項關鍵技術。
+
+---
+
+#### 參考答案
+
+> ✅ 申論題參考解析，可用於自我檢查與面試答題練習。
+
+1. **Batch 系統的工作流程與缺點**
+   使用者提交一批作業（程式、資料與控制指令），由作業員分類並依序放入磁帶，再由系統依序執行。主要缺點包括：無即時互動、一次只能執行一個作業、CPU 經常閒置。
+
+2. **Multi-programming 提升 CPU 使用率的方式**  
+   可同時將多個程式放入記憶體，當某程式等待 I/O 時，CPU 可切換執行其他程式，達成資源重疊使用，降低 idle time。例如一程式執行磁碟讀取時，另一程式可進行運算。
+
+3. **Multi-programming vs. Time-sharing 在互動性上的比較**  
+   Multi-programming 著重於 CPU 資源使用率，無法提供即時互動；Time-sharing 透過快速切換與分時機制，讓多位使用者感受像是獨占系統，提供即時反應。
+
+4. **Spooling 技術與 I/O 效率**  
+   Spooling 將 I/O 作業寫入暫存區（如磁碟）而非直接與裝置溝通，避免 CPU 等待 I/O 完成，提升效率。例：列印作業先寫入磁碟，等印表機空閒時再逐一處理。
+
+5. **UMA vs. NUMA 架構差異**  
+   UMA（Uniform Memory Access）中所有 CPU 存取記憶體時間相同；NUMA（Non-Uniform Memory Access）中，CPU 存取本地記憶體快，跨節點存取慢。NUMA 適合大規模系統，需考慮資料配置以避免效能瓶頸。
+
+6. **SMP vs. AMP 的比較**  
+   SMP（Symmetric Multiprocessing）：所有處理器共享作業系統與記憶體，彼此平等；AMP（Asymmetric Multiprocessing）：Master CPU 控制其他 Slave CPU，適用於大型系統，彈性較差但易管理。
+
+7. **Distributed System 架構與容錯能力**  
+   每台機器有獨立記憶體與處理能力，透過網路溝通。具去中心化特性，若某台機器故障，其他節點仍能持續運作，提升系統可靠性與擴充性。
+
+8. **Client-Server vs. P2P 在高可用性系統中的選擇**  
+   P2P 架構無中心節點，每台節點角色平等，避免單點失效，更具高可用性。Client-Server 雖管理簡單，但 Server 容易成為 bottleneck 或 failure point。
+
+9. **Hard vs. Soft Real-Time 的差異與應用**  
+   Hard Real-Time：若超過 deadline 即為系統失敗（如飛彈控制、核電系統）；Soft Real-Time：延遲容許但不佳（如串流影音）。Hard 更嚴謹，Soft 則彈性高。
+
+10. **Multimedia 系統的挑戰與關鍵技術**  
+   挑戰包括即時處理需求、資料量大、壓縮需求與資源配置。關鍵技術如壓縮技術（codec）、時序控制（streaming buffer）、即時排程機制等。
+
+
+---
+
+# Ch1：Introduction
 
 > **主題：作業系統的基本概念與硬體保護機制**
 
@@ -443,328 +838,271 @@
 
 ---
 
-# Chap 2：OS Structure
-
-> **主題：作業系統的服務、應用介面與架構設計**
+以下是根據您提供的 Chap1\_Introduction.pdf 製作的練習題內容，已完整依照您指定的 Markdown 格式排版（含選擇題與申論題）：
 
 ---
 
-## 一、作業系統提供的服務（OS Services）
-
-### 1. 核心服務項目
-- **User interface**（使用者介面）
-- **Program execution**（程式執行）
-- **I/O operations**（I/O 操作）
-- **File-system manipulation**（檔案系統管理）
-- **Communication**（溝通：如 IPC）
-- **Error detection**（錯誤偵測）
-- **Resource allocation**（資源分配）
-- **Accounting**（資源使用統計）
-- **Protection and security**（保護與安全）
-
-這些功能確保整個系統能高效並正確運作。
+## 5. 作業系統導論練習題
 
 ---
 
-### 2. User Interface（使用者介面）
+### 5.1 選擇題（共 20 題）
 
-- **CLI（Command Line Interface）**：
-  - 使用者輸入文字指令，Shell 負責解析與執行（如 BASH, CSHELL）
-- **GUI（Graphical User Interface）**：
-  - 透過滑鼠與圖示操作，如檔案拖曳與點選
-- 現代系統通常同時提供 CLI 與 GUI。
+> ✅ 單選題形式，涵蓋 Ch1 重點與常見考題。
 
----
+1. 下列何者不是作業系統的主要目標？
+   A. 提供便利的操作介面
+   B. 管理硬體資源
+   C. 提高使用者成本
+   D. 增進系統效率
 
-### 3. Communication Models（溝通模型）
+2. 作業系統中所謂的「resource allocator」是指？
+   A. 使用者帳號管理
+   B. 系統啟動流程
+   C. 資源的分配與管理者
+   D. 網路流量監控
 
-- **Message Passing**：透過訊息互相溝通（適合分散式系統）
-- **Shared Memory**：彼此存取同一記憶體區域（適合多執行緒）
+3. 哪一項功能是作業系統提供給使用者的「便利性功能」？
+   A. 磁碟格式化
+   B. 命令行介面與 GUI
+   C. 虛擬記憶體
+   D. 中斷處理機制
 
----
+4. 下列何者不屬於作業系統的功能？
+   A. 硬體抽象
+   B. 資源分配
+   C. 使用者程式開發
+   D. 系統保護
 
-## 二、應用程式與作業系統的介面（API & System Call）
+5. 在作業系統中，作業（job）與程式（program）的主要差異為何？
+   A. Job 必定為圖形介面程式
+   B. Job 由使用者控制，program 不會執行
+   C. Job 為執行中的 program，與資源結合
+   D. Program 是執行緒的一部分
 
-### 1. System Calls（系統呼叫）
+6. 一個作業系統若能同時支援多位使用者，應具備何種能力？
+   A. Time-sharing
+   B. Single-tasking
+   C. Instruction pipelining
+   D. None of the above
 
-- 應用程式透過 **System Call** 向作業系統請求服務。
-- 常見類型：
-  - **Process Control**：建立、終止程序、記憶體配置
-  - **File Management**：開啟、關閉、建立、刪除檔案
-  - **Device Management**：讀寫裝置
-  - **Information Maintenance**：查詢系統時間等
-  - **Communication**：傳送與接收訊息
+7. 為了讓應用程式不需直接接觸硬體，作業系統提供了什麼？
+   A. 硬體驅動程式
+   B. System calls
+   C. Command prompt
+   D. Memory cache
 
----
+8. 下列何者屬於 system call 的用途？
+   A. 啟動瀏覽器
+   B. 建立或刪除檔案
+   C. 設定網頁內容
+   D. 儲存資料庫紀錄
 
-### 2. API 與 System Call 的關係
+9. 在雙模（Dual-Mode）作業系統中，兩種模式是？
+   A. Idle Mode 與 Busy Mode
+   B. User Mode 與 Kernel Mode
+   C. CPU Mode 與 IO Mode
+   D. Interactive 與 Batch
 
-- 使用者通常透過 **API（Application Programming Interface）** 來間接使用系統呼叫。
-- API 由程式語言庫實作，如 **C Library (libc)**。
-- 範例：
-  - `malloc()` / `free()` → 底層使用 `brk()` 系統呼叫
-  - `abs()` → 不需使用系統呼叫
+10. 為何需要特權指令（privileged instruction）？
+    A. 簡化程式語法
+    B. 提升使用者效能
+    C. 保護系統資源安全
+    D. 節省磁碟空間
 
----
+11. 哪一項不是屬於 system call 的類型？
+    A. Process control
+    B. File manipulation
+    C. HTML rendering
+    D. Communication
 
-### 3. 三大常見 API 類型
+12. 作業系統的哪一個角色與保護（protection）機制最相關？
+    A. UI 設計者
+    B. Scheduler
+    C. Resource allocator
+    D. 系統管理員
 
-| 類型 | 平台 |
-|------|------|
-| **Win32 API** | Windows |
-| **POSIX API** | Unix/Linux/macOS |
-| **Java API** | JVM 平台 |
+13. 為什麼作業系統會提供虛擬機器（Virtual Machine）功能？
+    A. 減少系統耗電
+    B. 模擬不同平台運作
+    C. 儲存多個 BIOS 設定
+    D. 提升滑鼠操作體驗
 
----
+14. 使用者程式（User programs）與作業系統核心（Kernel）主要差別為？
+    A. 使用者程式需有管理權限
+    B. 核心無法使用 system call
+    C. 核心可執行特權指令
+    D. 使用者程式可直接操作硬體
 
-### 4. 為什麼使用 API 而不是直接用 System Call？
+15. 作業系統的哪些設計目標是互相衝突的？
+    A. 效率與成本
+    B. 使用性與效能
+    C. 安全性與排程
+    D. GUI 與 CLI
 
-- **簡潔性（Simplicity）**：API 更適合開發者使用
-- **可攜性（Portability）**：跨平台統一介面
-- **效率（Efficiency）**：非所有功能都需進入核心層（Kernel）
+16. 當程式欲執行需存取硬體之操作，需透過何種方式實作？
+    A. Compiler 呼叫 BIOS
+    B. User-mode 呼叫 shell
+    C. 呼叫 system call 進入 kernel mode
+    D. 將執行權限交給硬碟控制器
 
----
+17. 哪一項不是 system program 的範例？
+    A. Text editor
+    B. Command interpreter
+    C. File management 工具
+    D. Microsoft Excel
 
-### 5. System Call 的參數傳遞方式
+18. 為何需要 Dual-Mode 操作模式？
+    A. 減少記憶體消耗
+    B. 節省輸出裝置時間
+    C. 分隔使用者程式與作業系統操作權限
+    D. 加快使用者登入速度
 
-1. 利用暫存器傳遞
-2. 使用記憶體中的參數表（表格位址放在暫存器中）
-3. 使用堆疊（Stack）
+19. 作業系統中使用 interrupt 的主要目的為何？
+    A. 提供備份支援
+    B. 減少網路頻寬
+    C. 讓 CPU 能處理突發事件
+    D. 儲存使用者指令紀錄
 
----
-
-## 三、作業系統的架構設計（OS Structures）
-
-### 1. 設計目標
-
-- **User Goals**：易用、安全、快速
-- **System Goals**：易開發、易維護、穩定與有效率
-
----
-
-### 2. OS 架構類型
-
-| 架構類型 | 特性 | 優缺點 |
-|----------|------|--------|
-| **Simple OS** | 單層或兩層架構（如 MS-DOS） | 不安全、難擴充 |
-| **Layered OS** | 分層結構（如 Layer 0 ~ N） | 易除錯維護，但效率較低 |
-| **Microkernel** | 把大部分功能移到使用者空間，採用訊息傳遞 | 易擴充與移植，效能略低 |
-| **Modular OS** | 使用模組化設計，各元件獨立、可動態載入 | 彈性高（如 Solaris） |
-
----
-
-### 3. Virtual Machine（虛擬機器）
-
-- VM 將實體硬體與作業系統都視為可被模擬的對象。
-- 每個程序都像擁有自己一台電腦。
-- 優點：
-  - 完整資源隔離與保護
-  - 提高資源使用率（如雲端）
-  - 支援系統相容性與 OS 開發測試
-
----
-
-### 4. 常見虛擬化技術
-
-| 類型 | 特性 |
-|------|------|
-| **Full Virtualization（VMware）** | 客戶系統無需修改，如同執行在實體硬體上 |
-| **Para-virtualization（Xen）** | 客戶系統需修改，效率較高 |
-| **Java Virtual Machine（JVM）** | 執行跨平台的 bytecode，具備 class loader、interpreter、JIT 編譯器 |
-
----
-
-# Chap 3：Processes Concept
-
-> **主題：程序（Process）與行程控制概念**
-
----
-
-## 一、Process 基本概念
-
-### 1. Program vs. Process
-- **Program**：靜態的執行碼（存在於磁碟中）。
-- **Process**：執行中的程式，是一個活躍的實體。
-- 一個 process 包含：
-  - Code（程式碼區）
-  - Data（全域變數區）
-  - Stack（暫存資料：參數、回傳位址、區域變數）
-  - Heap（動態配置記憶體）
-  - Program Counter、Registers
-  - 相關資源（如已開啟檔案）
+20. Kernel mode 與 user mode 的主要區別是什麼？
+    A. Kernel mode 無法執行應用程式
+    B. User mode 擁有全部控制權限
+    C. Kernel mode 可存取所有系統資源與硬體
+    D. User mode 可切換中斷
 
 ---
 
-### 2. Threads（執行緒）
-- 又稱 **輕量級程序（Lightweight Process）**。
-- 一個 Process 可包含多個 Threads。
-- 同一 Process 的 Threads：
-  - **共享**：程式碼區、資料區、開啟的檔案等。
-  - **獨立**：Program Counter、Register、Stack。
+#### 參考答案
+
+> ✅ 選擇題解析區，快速對照與自我檢討。
+
+1. **C**：作業系統的目標是提升效率與便利性，不是提高成本。  
+2. **C**：作業系統會扮演資源管理者，負責公平有效率地分配硬體資源。  
+3. **B**：命令列與圖形介面屬於便利性功能，協助使用者與系統互動。  
+4. **C**：作業系統不會主動提供應用程式開發，僅提供執行環境。  
+5. **C**：作業為執行中的程式，並結合必要的系統資源。  
+6. **A**：Time-sharing 系統可允許多使用者同時登入並交替使用系統。  
+7. **B**：System call 是應用程式進入核心模式的方式，用來執行底層操作。  
+8. **B**：像是開檔案、刪檔案這些都屬於 system call 的操作範疇。  
+9. **B**：Dual Mode 是 User Mode 與 Kernel Mode，保障系統安全性與穩定性。  
+10. **C**：特權指令涉及硬體與系統核心操作，應受限制以防止濫用。  
+11. **C**：HTML rendering 與 system call 無關，屬於應用程式層級的行為。  
+12. **C**：作業系統核心作為資源管理者，需負責系統的保護與安全。  
+13. **B**：虛擬機器模擬不同平台，有助於跨平台開發與隔離運行環境。  
+14. **C**：Kernel 可執行特權指令，直接操作硬體；User 程式無此權限。  
+15. **B**：追求使用便利性與系統效能常需在設計上取捨平衡。  
+16. **C**：需透過 system call 轉入 kernel mode 才能進行硬體相關操作。  
+17. **D**：Excel 屬於應用層軟體，非 system program。  
+18. **C**：Dual Mode 可保護作業系統不受使用者程式干擾。  
+19. **C**：Interrupt 可讓 CPU 中斷正常流程，處理外部事件。  
+20. **C**：Kernel mode 擁有存取所有資源與裝置的權限。
 
 ---
 
-### 3. Process 狀態
+### 5.2 申論題（共 8 題）
 
-| 狀態      | 說明                                 |
-|-----------|--------------------------------------|
-| New       | 正在建立中的程序                      |
-| Ready     | 等待 CPU 的程序                      |
-| Running   | 正在由 CPU 執行                      |
-| Waiting   | 等待 I/O 或事件發生                  |
-| Terminated| 執行結束                             |
+> ✅ 深論題型，用以強化理解作業系統基本原理與設計理念。
 
----
-
-### 4. Process Control Block（PCB）
-- 作業系統用來追蹤每個 Process 的資料結構。
-- 包含：
-  - 狀態（State）、程式計數器（PC）
-  - CPU 註冊、記憶體管理資訊（Base/Limit）
-  - 開啟的 I/O 狀態、帳務資訊
-- 所有 PCB 組成 queue：如 Ready Queue、Waiting Queue。
+1. 請簡述作業系統的三大目標，並分別說明其重要性。
+2. 說明為何需要 Dual-Mode Operation，並舉例解釋特權指令與保護機制之間的關聯。
+3. 請比較 System Call 與 System Program 的差異與用途。
+4. 請解釋作業系統中 Resource Allocator 的功能，並舉例說明其管理的資源種類。
+5. 請簡述虛擬機器（Virtual Machine）的概念，並說明其優缺點。
+6. 說明 Interrupt 的概念與用途，並舉出三種常見中斷來源。
+7. 請說明作業系統為何需要提供 user mode 與 kernel mode 的區分，並說明對系統安全性的影響。
+8. 請分析作業與程式的差異，並解釋「作業是一個程式的執行」的意涵。
 
 ---
 
-### 5. Context Switch（上下文切換）
-- 系統將目前程序狀態存入 PCB，並載入下一個程序狀態。
-- **Switch 過程為 Overhead**，應盡量減少發生頻率。
-- 影響因素：記憶體速度、暫存器數量、硬體支援。
+#### 參考答案
+
+> ✅ 申論題參考解析，可用於自我檢查與面試答題練習。
+
+1. **作業系統三大目標：**（1）操作便利性：讓使用者能簡單操作；（2）效率提升：有效管理 CPU、記憶體等資源；（3）資源共享與保護：讓多使用者或程式安全共享系統。  
+
+2. **Dual-Mode Operation 與特權指令關係：** 系統分為 User Mode 與 Kernel Mode。特權指令只能在 Kernel Mode 下執行，以防止使用者程式任意操作硬體。例如：I/O 操作、設定中斷等。  
+
+3. **System Call vs. System Program：** System Call 是作業系統提供的 API，用於進入核心執行底層操作；System Program 是一般系統工具（如編輯器、shell），建構在 system call 之上。  
+
+4. **Resource Allocator 功能：** 管理 CPU、記憶體、I/O 等資源分配，避免資源衝突與浪費。例如：排程器決定哪個 process 使用 CPU。  
+
+5. **虛擬機器（VM）概念與優缺點：** VM 提供模擬硬體平台，讓多個作業系統同時運作。優點：隔離性高、易於測試；缺點：效率較低、需耗費資源。  
+
+6. **Interrupt 功能與來源：** Interrupt 是系統用來處理異常事件的機制。常見來源：鍵盤輸入、硬碟 I/O 完成、系統計時器。  
+
+7. **User Mode 與 Kernel Mode 區分：** 有助於防止使用者程式誤用硬體或操作系統資源，提升系統安全性與穩定性。  
+
+8. **作業 vs. 程式差異：** 程式是靜態指令集合，作業是執行中的程式，結合了程式碼、資料與資源（如暫存器、開啟檔案等），是動態的運行單元。
 
 ---
 
-## 二、Process 排程（Scheduling）
+# Ch2：OS Structure
 
-### 1. Scheduling 目的
-- 提高 CPU 使用率（Multiprogramming）。
-- 提供互動性（Time-Sharing）。
+> **主題：作業系統的服務功能、應用介面與系統結構設計**
 
----
+## 1. 作業系統服務功能（OS Services）
 
-### 2. 常見排程器類型
+### 使用者介面：CLI 與 GUI  
+### 程式執行與 I/O 操作  
+### 檔案系統操作與通訊機制  
+### 錯誤偵測、資源分配與帳務管理  
+### 保護與安全機制（Protection & Security）
 
-| 類型               | 說明                                     |
-|--------------------|------------------------------------------|
-| Long-term Scheduler| 控制系統內同時存在的 process 數量。          |
-| Short-term Scheduler| 決定哪個 ready process 執行（CPU scheduler）。|
-| Medium-term Scheduler| 負責 swap in/out process（如中斷式切換）。     |
+## 2. 應用程式介面與系統呼叫（OS-Application Interface）
 
----
+### 系統呼叫與 API 基礎  
+### 常見系統呼叫分類（Process, File, Device, Info, Communication）  
+### System Call vs API vs Library  
+### System Call 的範例與使用方式  
+### 系統呼叫參數傳遞方式（Registers / Table / Stack）
 
-### 3. Process Queues（程序排程隊列）
-- **Job Queue**：所有進入系統的程序。
-- **Ready Queue**：在主記憶體中等待執行的程序。
-- **Device Queue**：等待特定 I/O 裝置的程序。
+## 3. 作業系統結構設計（OS Structure）
 
----
-
-### 4. Process 之間的關係與操作
-
-- 每個 process 由一個 Parent 建立（如 UNIX 的 fork()）。
-- Process 結構形成一棵樹。
-- 常見系統呼叫：
-  - `fork()`：建立子程序。
-  - `exec()`：將記憶體替換為新程式。
-  - `wait()`：等待子程序結束。
-  - `exit()`：結束程序，釋放資源。
+### 使用者目標與系統目標  
+### 系統架構類型總覽  
+### 單層架構（Simple OS）與階層式架構（Layered）  
+### 微核心架構（Microkernel）與模組化架構（Modular）  
+### 虛擬機架構（Virtual Machine, JVM）  
+### 模擬器與虛擬化應用（Full/Para-Virtualization）
 
 ---
 
-### 5. Address Space 複製方式
+# Ch3：Processes
 
-| 類型 | 說明 |
-|------|------|
-| Duplicate | 完整複製 parent 的記憶體內容（傳統方式） |
-| Copy-on-Write | 子程序僅在寫入時才複製記憶體，節省資源 |
+> **主題：程序的基本概念、排程、操作與程序間通訊（IPC）**
 
----
+## 1. 程序基本概念（Process Concept）
 
-## 三、程序間通訊（IPC）
+### 程式與程序的區別  
+### 程序的記憶體結構（Code, Stack, Heap, Data）  
+### Threads 與 CPU 使用單位  
+### 程序狀態（New, Ready, Running, Waiting, Terminated）  
+### 程序控制區塊（Process Control Block, PCB）  
+### Context Switch（上下文切換）
 
-### 1. IPC 定義與目的
-- 多個程序或執行緒之間的資料交換機制。
-- 分為：
-  - **Independent Processes**：互不影響。
-  - **Cooperating Processes**：需要通訊。
+## 2. 程序排程（Process Scheduling）
 
----
+### 排程概念與多工模式（Multiprogramming / Time-Sharing）  
+### 排程隊列：Job Queue、Ready Queue、Device Queue  
+### 三種 Scheduler：Long-Term、Short-Term、Medium-Term  
+### Ready/Wait 狀態切換與排程動機
 
-### 2. 通訊方式比較
+## 3. 程序操作（Operations on Processes）
 
-| 方法           | 特性                                   |
-|----------------|----------------------------------------|
-| Shared Memory  | 快速、需額外同步處理。多用於同一系統內通訊。 |
-| Message Passing| 較慢但同步性好。可用於不同系統之間通訊。   |
+### 程序建立（fork、exec、wait）  
+### 記憶體複製與 Copy-on-Write  
+### 程序終止與 Parent-Child 關係  
+### UNIX/Linux 的程序控制範例  
+### Process Tree 與 PID 配置
 
----
+## 4. 程序間通訊（Interprocess Communication, IPC）
 
-### 3. Shared Memory 概念
-- 程式需明確建立共享區域。
-- 負責決定資料格式與存取控制。
-- 常見問題：**同步處理、資料一致性**
+### IPC 目的與分類：獨立 vs 協作程序  
+### 溝通方式：Shared Memory vs Message Passing  
+### Message Passing 類型：Direct / Indirect  
+### Synchronization（阻塞與非阻塞）  
+### Socket 與 RPC（遠端程序呼叫）  
+### 管道（Pipes）：Ordinary Pipes 與 Named Pipes  
+### RMI（Remote Method Invocation）與分散式物件
 
----
 
-### 4. Producer-Consumer 問題（共享記憶體範例）
-- 使用 buffer 作為雙向通訊介面。
-- 必須處理：
-  - Buffer 滿/空
-  - 同步機制（避免 race condition）
-
----
-
-### 5. Message Passing 方法
-
-- 系統呼叫：
-  - `send(destination, msg)`
-  - `receive(source, msg)`
-- **Direct Communication**：明確指定對象。
-- **Indirect Communication**：使用 mailbox（信箱）。
-
----
-
-### 6. 同步 vs 非同步
-
-| 類型          | 說明                          |
-|---------------|-------------------------------|
-| Blocking Send | 傳送者等待接收者收到訊息。     |
-| Non-blocking Send | 傳送者立即繼續執行。        |
-| Blocking Receive | 接收者等待訊息可用。         |
-| Non-blocking Receive | 沒有訊息則傳回 null。   |
-
----
-
-### 7. Socket & RPC（遠端通訊）
-
-#### Socket
-- 低階網路通訊工具，由 IP + Port 組成。
-- 雙方透過 `socket()`、`bind()`、`connect()` 等建立通訊。
-
-#### RPC（Remote Procedure Call）
-- 模擬 function call 跨網路。
-- 使用 **Stub & Skeleton** 封裝資料與回傳值。
-- 常見問題：
-  - 資料格式（XDR）
-  - 指標不可傳遞
-  - 通訊失敗或重複執行（須處理 ACK、重送）
-
----
-
-## 四、補充系統機制
-
-### 1. Pipe（管道）
-
-| 類型       | 特性                               |
-|------------|------------------------------------|
-| Ordinary Pipe | 需 parent-child 關係，只限本機溝通，單向 |
-| Named Pipe    | 不需親子關係，多程序共用，支援雙向溝通 |
-
----
-
-### 2. Java RMI（Remote Method Invocation）
-- Java 實作的 RPC。
-- 支援動態呼叫、分散物件、跨平台。
-
----
-
-#
