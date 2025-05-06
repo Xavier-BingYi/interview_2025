@@ -292,157 +292,128 @@
 ---
 
 ### 4.1 選擇題（共 25 題）
-> ✅ 單選題形式，幫助複習 Ch0 核心概念與面試常見題型。
 
-1. 哪一種作業系統主要透過批次方式執行工作，無需使用者即時互動？  
-   A. Time-sharing 系統  
-   B. Batch 系統  
-   C. Multi-programming 系統  
-   D. Distributed 系統  
+> ✅ 單選題形式，涵蓋 OS 架構、系統類型與核心設計概念。
 
-2. Multi-programming 系統的主要目的是什麼？  
-   A. 提升系統安全性  
-   B. 減少記憶體使用  
-   C. 減少 CPU idle time  
-   D. 增加硬碟空間  
+1. 下列何者為 Batch System 的主要缺點？  
+   A. 多工效率過高  
+   B. 需大量使用者互動  
+   C. 無法有效使用 CPU  
+   D. 無法使用外部裝置  
 
-3. 下列何者屬於 Time-sharing 系統的特徵？  
-   A. 每次只能執行一個程式  
-   B. 無需 CPU scheduling  
-   C. 使用者可即時互動  
-   D. 無需記憶體管理  
+2. Multi-programming 技術的主要目的是？  
+   A. 改善網路傳輸速度  
+   B. 增加記憶體容量  
+   C. 提高 CPU 使用率  
+   D. 加快螢幕更新頻率  
 
-4. 在 Symmetric multiprocessing (SMP) 系統中，哪一項正確？  
-   A. 每顆 CPU 執行不同 OS  
-   B. 主從結構明確  
-   C. 各處理器共享相同作業系統  
-   D. 僅適用於大型機系統  
+3. Time-sharing 系統與 Multi-programming 最大差異為？  
+   A. 能即時互動  
+   B. 僅限單一使用者  
+   C. 不支援磁碟存取  
+   D. 無法同時排程多作業  
 
-5. Distributed system 的主要優點為何？  
-   A. 資料集中存取  
-   B. 單點失敗風險低  
-   C. 無需網路連接  
-   D. CPU 不需排程  
+4. 在 Multi-programming 系統中，Spooling 的主要用途是？  
+   A. 儲存使用者設定檔  
+   B. 同步多處理器排程  
+   C. 提高 I/O 裝置使用效率  
+   D. 加速 CPU 資料預取  
 
-6. 在 UMA 架構中，哪一項敘述正確？  
-   A. 各 CPU 存取記憶體速度不一致  
-   B. 所有 CPU 有均等存取主記憶體的時間  
-   C. 僅主 CPU 可存取記憶體  
-   D. 各 CPU 擁有獨立記憶體  
+5. 下列何者最能描述 SMP 架構？  
+   A. 每顆 CPU 有獨立作業系統  
+   B. 各 CPU 執行不同應用程式，互不干涉  
+   C. 所有 CPU 平等共享 OS 與資源  
+   D. 僅限單核系統適用  
 
-7. 下列何者屬於 Hard Real-Time 系統的應用範例？  
-   A. 音樂串流  
-   B. 網頁瀏覽器  
-   C. 核電廠控制系統  
-   D. 網路影片播放  
+6. NUMA 架構中，最大挑戰為何？  
+   A. 每個核心效能不一  
+   B. 記憶體存取時間不一致  
+   C. CPU 不支援虛擬化  
+   D. 無法存取外部硬體  
 
-8. Peer-to-Peer 系統的優點是？  
-   A. 集中式管理  
-   B. 高可靠性  
-   C. 效能瓶頸集中  
-   D. 依賴主伺服器  
+7. 下列何者屬於 UMA 架構特性？  
+   A. CPU 與 RAM 階層式連接  
+   B. 記憶體存取延遲隨地點變化  
+   C. 所有處理器存取時間相等  
+   D. 僅支援雙核心處理器  
 
-9. 下列何者通常與 SIMD 架構有關？  
-   A. GPU  
-   B. HDD  
-   C. CPU Cache  
-   D. BIOS  
+8. 哪一個描述為 GPU 的 SIMD 架構優勢？  
+   A. 能同時執行不同指令  
+   B. 善於處理大量資料平行運算  
+   C. 可直接操作主機記憶體  
+   D. 適合高邏輯跳躍程式  
 
-10. NUMA 架構與 UMA 最大差異為？  
-    A. 使用單核心處理器  
-    B. 記憶體存取速度一致  
-    C. 跨節點存取速度較慢  
-    D. 僅有一台主機  
+9. 在下列何種應用中，GPU 表現會較差？  
+   A. AI 推論模型  
+   B. 圖像批次處理  
+   C. 條件分歧頻繁的邏輯流程  
+   D. 影音濾鏡運算  
 
-11. 在 Client-Server 架構中，常見缺點是什麼？  
-    A. 管理困難  
-    B. 多點失敗風險  
-    C. Server 成為效能瓶頸  
-    D. 所有節點無法溝通  
+10. 若作業系統需要保證每個任務都能在固定時間內完成，應使用？  
+    A. Batch OS  
+    B. General-purpose OS  
+    C. Soft Real-Time OS  
+    D. Hard Real-Time OS  
 
-12. Multi-core processor 的優點之一是？  
-    A. 增加耗電量  
-    B. 降低傳輸速度  
-    C. 降低功耗並提升溝通效率  
-    D. 不需要作業系統支援  
+11. 哪一項最能區分 Hard 與 Soft Real-Time 系統？  
+    A. 是否支援圖形介面  
+    B. 達成 deadline 的可容忍程度  
+    C. 作業系統類型不同  
+    D. 記憶體大小不同  
 
-13. GPU 屬於哪一種平行運算架構？  
-    A. SISD  
-    B. SIMD  
-    C. MISD  
-    D. MIMD  
+12. Distributed System 的主要特性為？  
+    A. 所有裝置集中處理資料  
+    B. 節點彼此獨立並透過網路溝通  
+    C. 作業僅能在中央伺服器上執行  
+    D. 不支援網路共享資源  
 
-14. 下列何者屬於 loosely coupled 架構？  
-    A. SMP 系統  
-    B. Parallel 系統  
-    C. Distributed 系統  
-    D. Multi-core 系統  
+13. Peer-to-Peer 架構的優點為？  
+    A. 單一節點管理全部資料  
+    B. 單點故障不會癱瘓整體系統  
+    C. 易於監控與集中管理  
+    D. 必須具備高階硬體  
 
-15. 在硬即時系統中，missing deadline 的結果是什麼？  
-    A. 稍微降低系統效能  
-    B. 提醒使用者稍後執行  
-    C. 系統可能產生嚴重錯誤或崩潰  
-    D. 啟動後備系統  
+14. 在 Client-Server 架構中，Server 最大的弱點是？  
+    A. 可同時接收多個請求  
+    B. 無法管理硬體裝置  
+    C. 成為效能瓶頸與單點故障來源  
+    D. 執行效率過高導致過熱  
 
-16. Multimedia 系統面臨的主要挑戰之一是？  
-    A. 繪圖晶片成本  
-    B. 實時解壓與傳輸的需求  
-    C. 硬體不相容問題  
-    D. 使用者權限控管  
+15. Clustered System 的典型網路連線方式為？  
+    A. 衛星網路  
+    B. 無線區域網路  
+    C. 高速區域網路（如 InfiniBand）  
+    D. 電話撥接網路  
 
-17. 下列何者為軟即時系統（Soft Real-Time）的特徵？  
-    A. 不能錯過任何 deadline  
-    B. 延遲會導致災難性後果  
-    C. 任務能夠根據優先權排程  
-    D. 沒有任何排程需求  
+16. 為何需要系統中的虛擬記憶體機制？  
+    A. 將所有資料儲存在 ROM  
+    B. 支援硬體中斷處理  
+    C. 提供更多邏輯記憶體空間  
+    D. 增加作業系統開機速度  
 
-18. 哪種系統架構最適合用於數百個節點的大規模運算？  
-    A. SMP  
-    B. Multi-core  
-    C. Distributed  
-    D. Batch  
+17. Desktop System 相較於 Mainframe 最大差異為？  
+    A. 僅能執行 Linux  
+    B. 通常為單一使用者專用  
+    C. 無支援鍵盤滑鼠  
+    D. 執行速度一定較慢  
 
-19. 在 Clustered Systems 中，對稱叢集的特徵是？  
-    A. 一台主機執行應用程式，其餘為備援  
-    B. 所有主機均執行應用程式並互相監控  
-    C. 主伺服器負責所有排程  
-    D. 所有主機彼此獨立無連線  
+18. 多核心處理器的優勢在於？  
+    A. 各核心記憶體獨立互不干涉  
+    B. 通訊速度比多顆單核心慢  
+    C. 功耗與成本皆低於多顆單核心  
+    D. 不需要系統同步機制  
 
-20. 下列哪一項不是作業系統的基本功能？  
-    A. 資料庫管理  
-    B. 記憶體管理  
-    C. 處理程序排程  
-    D. 檔案系統管理  
+19. 在 OS 設計中，哪一系統最需要即時排程演算法如 EDF？  
+    A. 多人線上遊戲伺服器  
+    B. 飛彈導航控制系統  
+    C. 電子郵件應用程式  
+    D. 桌面文字編輯器  
 
-21. 哪種技術可用來讓 I/O 與 CPU 同時運作？  
-    A. Paging  
-    B. Pipelining  
-    C. Spooling  
-    D. Polling  
-
-22. Desktop 系統的最常見特徵是什麼？  
-    A. 執行即時應用  
-    B. 支援多用戶同步執行  
-    C. 提供 GUI 與人機互動介面  
-    D. 高延遲處理能力  
-
-23. 在多處理器系統中，哪一項屬於非對稱架構？  
-    A. 多核心處理器  
-    B. SMP  
-    C. Master-slave 模式  
-    D. Peer-to-peer 模式  
-
-24. TILE64 是什麼樣的處理架構？  
-    A. 單核心高頻率  
-    B. 多層快取記憶體  
-    C. 網格型多核心處理器  
-    D. 雙系統混合設計  
-
-25. 在作業系統中，哪一項功能與 Deadlock 處理最有關？  
-    A. 處理器切換  
-    B. 虛擬記憶體  
-    C. 同步機制  
-    D. 網路傳輸  
+20. 下列何者不是 Mainframe 系統的常見用途？  
+    A. 銀行帳務系統  
+    B. 高速 3D 遊戲運算  
+    C. 醫院資料處理  
+    D. 批次交易計算任務  
 
 ---
 
@@ -450,47 +421,39 @@
 
 > ✅ 選擇題解析區，快速對照與自我檢討。
 
-1. **B**：Batch 系統無需使用者互動，按順序執行作業。
-2. **C**：Multi-programming 讓 CPU 不因 I/O 阻塞而閒置。  
-3. **C**：Time-sharing 系統允許多位使用者即時互動。  
-4. **C**：SMP 架構下，所有 CPU 執行同一作業系統。  
-5. **B**：分散式系統不依賴單一伺服器，容錯性高。  
-6. **B**：UMA 架構中 CPU 存取記憶體時間一致。  
-7. **C**：硬即時系統需保證準時完成任務，如核電控制器。  
-8. **B**：P2P 結構節點平等，具有高可靠性。  
-9. **A**：GPU 使用 SIMD 運算，適合大規模資料並行處理。  
-10. **C**：NUMA 架構中跨節點存取記憶體較慢。  
-11. **C**：Client-Server 結構常出現 Server 效能瓶頸問題。  
-12. **C**：多核心處理器在同一晶片中降低能耗並提升效能。  
-13. **B**：GPU 採用 SIMD 架構進行資料平行運算。  
-14. **C**：Distributed systems 是 loosely coupled 架構代表。  
-15. **C**：硬即時系統若錯過 deadline，可能導致系統失敗。  
-16. **B**：Multimedia 系統需處理即時壓縮與播放的挑戰。  
-17. **C**：Soft Real-Time 系統允許延遲，但會根據優先權調度。  
-18. **C**：分散式系統適合大規模多節點的運算環境。  
-19. **B**：對稱叢集中的多台主機彼此監控、共同執行。  
-20. **A**：資料庫管理並非作業系統的核心功能。  
-21. **C**：Spooling 可讓 I/O 與 CPU 並行作業，提升效率。  
-22. **C**：Desktop 系統著重於人機互動與 GUI 介面。  
-23. **C**：Master-slave 是非對稱多處理架構的代表。  
-24. **C**：TILE64 是一種網格型（mesh）多核心處理器設計。  
-25. **C**：同步機制可避免或處理系統資源競爭造成的 Deadlock。 
+1. **C**：Batch 系統 CPU 經常 idle，效率低。  
+2. **C**：Multi-programming 目的是讓 CPU 不空閒。  
+3. **A**：Time-sharing 提供即時互動，Multi-programming 不行。  
+4. **C**：Spooling 提高 I/O 裝置使用率，減少 CPU 等待。  
+5. **C**：SMP 所有 CPU 平等運作，並共享記憶體與 OS。  
+6. **B**：NUMA 的存取延遲不一致，需要 OS 特別管理。  
+7. **C**：UMA 的存取時間一致，簡化排程設計。  
+8. **B**：SIMD 適合大規模資料平行運算。  
+9. **C**：GPU 不擅長處理分支條件複雜的程式。  
+10. **D**：Hard Real-Time 需嚴格滿足 deadline。  
+11. **B**：Soft RT 可容錯；Hard RT 無法容忍逾時。  
+12. **B**：Distributed System 節點獨立運作。  
+13. **B**：P2P 架構天生具備高容錯與分散性。  
+14. **C**：所有請求集中於 Server 容易成為瓶頸。  
+15. **C**：Cluster 系統用高速 LAN 提高資料傳輸效率。  
+16. **C**：虛擬記憶體擴大邏輯空間，支援記憶體不足。  
+17. **B**：Desktop 通常設計給單一使用者操作。  
+18. **C**：單顆多核心節能且成本較低。  
+19. **B**：飛彈控制需確保每任務即時完成。  
+20. **B**：Mainframe 不適合即時圖形密集運算。
 
 ---
 
-### 4.2 申論題（共 10 題）
-> ✅ 深論式問題，強化理解並訓練敘述能力，可應用於開放式面試題。
+### 4.2 申論題（共 6 題）
 
-1. 請說明 Batch 系統的工作流程與其主要缺點。  
-2. Multi-programming 系統如何提升 CPU 使用效率？請說明其原理並舉例。  
-3. 試比較 Multi-programming 與 Time-sharing 系統在使用者互動上的差異。  
-4. 說明 Spooling 技術的概念，並解釋它為何可以提升 I/O 效率。  
-5. 請比較 UMA 與 NUMA 的架構差異，並說明其對記憶體存取速度的影響。  
-6. 試分析 SMP（對稱多處理器）與 AMP（非對稱多處理器）的運作差異與應用情境。  
-7. 請說明 Distributed System 的架構特性，以及其在 fault tolerance 上的優勢。  
-8. 在 Client-Server 與 Peer-to-Peer 架構中，哪一種更適合用於高可用性系統？請說明理由。  
-9. 解釋 Real-Time 系統中的 Hard 與 Soft Real-Time 的差異，並舉出各自的應用實例。  
-10. 請說明 Multimedia 系統在作業系統設計上的挑戰，並指出至少兩項關鍵技術。
+> ✅ 深論題型，用以評估作業系統與韌體層級設計的理解與實務能力。
+
+1. 請說明 Batch System、Multi-programming 與 Time-sharing 系統的主要差異，以及它們對 CPU 使用率與使用者體驗的影響。  
+2. 請比較 Symmetric 與 Asymmetric Multi-processor 架構，並說明在 NUMA 與 UMA 環境下，OS 在 CPU scheduling 與 memory management 上可能遇到的挑戰。  
+3. 請說明 Client-Server 與 Peer-to-Peer 架構的差異，並就一個實際應用（例如：影音串流或 IoT）說明你會如何選擇。  
+4. 請解釋 Hard Real-Time 與 Soft Real-Time 系統的差別，並說明在設計醫療裝置或車用控制系統時會如何選擇。  
+5. 針對嵌入式系統的設計限制（如無硬碟、記憶體小、功耗限制），請說明作業系統在資源管理上的關鍵考量與應對策略。  
+6. 請解釋 GPU 採用 SIMD 架構的優勢與限制，並說明它適合處理哪些類型的運算任務。
 
 ---
 
@@ -498,35 +461,23 @@
 
 > ✅ 申論題參考解析，可用於自我檢查與面試答題練習。
 
-1. **Batch 系統的工作流程與缺點**
-   使用者提交一批作業（程式、資料與控制指令），由作業員分類並依序放入磁帶，再由系統依序執行。主要缺點包括：無即時互動、一次只能執行一個作業、CPU 經常閒置。
+1. **Batch 系統、Multi-programming、Time-sharing 的差異**  
+   Batch 系統無互動性、一次只能處理一個作業，CPU 經常閒置；Multi-programming 可同時載入多個作業，提升 CPU 使用率；Time-sharing 則強化即時性，透過快速切換讓使用者感覺自己獨占 CPU，提供良好的互動體驗。
 
-2. **Multi-programming 提升 CPU 使用率的方式**  
-   可同時將多個程式放入記憶體，當某程式等待 I/O 時，CPU 可切換執行其他程式，達成資源重疊使用，降低 idle time。例如一程式執行磁碟讀取時，另一程式可進行運算。
+2. **SMP 與 AMP 架構比較；NUMA 與 UMA 下的資源管理挑戰**  
+   SMP 所有 CPU 地位平等，共享 OS 與記憶體；AMP 則由 Master 控制 Slave，適用於分工明確的大型系統。NUMA 中不同 CPU 存取記憶體延遲不同，需避免跨節點存取導致效能下降；UMA 所有 CPU 存取延遲一致，排程較簡單但擴充性有限。
 
-3. **Multi-programming vs. Time-sharing 在互動性上的比較**  
-   Multi-programming 著重於 CPU 資源使用率，無法提供即時互動；Time-sharing 透過快速切換與分時機制，讓多位使用者感受像是獨占系統，提供即時反應。
+3. **Client-Server 與 Peer-to-Peer 架構比較與應用選擇**  
+   Client-Server 架構中心化、管理簡單但有單點失效風險；P2P 架構節點平等，具備高可用性與良好擴展性。例：影音串流通常採用 Client-Server 架構；而 IoT 裝置間協作可用 P2P 減少延遲與集中壓力。
 
-4. **Spooling 技術與 I/O 效率**  
-   Spooling 將 I/O 作業寫入暫存區（如磁碟）而非直接與裝置溝通，避免 CPU 等待 I/O 完成，提升效率。例：列印作業先寫入磁碟，等印表機空閒時再逐一處理。
+4. **Hard Real-Time 與 Soft Real-Time 的差異與系統選型**  
+   Hard Real-Time 系統中，錯過 deadline 將導致系統失效，適用於車載控制、醫療裝置等關鍵應用；Soft Real-Time 容許偶爾延遲，如影片串流。若系統需確保即時反應與高安全性，應選 Hard Real-Time OS。
 
-5. **UMA vs. NUMA 架構差異**  
-   UMA（Uniform Memory Access）中所有 CPU 存取記憶體時間相同；NUMA（Non-Uniform Memory Access）中，CPU 存取本地記憶體快，跨節點存取慢。NUMA 適合大規模系統，需考慮資料配置以避免效能瓶頸。
+5. **嵌入式系統下的資源限制與設計策略**  
+   面對無硬碟、小記憶體與低功耗需求，嵌入式系統應使用 RTOS，採靜態記憶體配置、任務優先等級明確、最小核心設計與中斷驅動的 I/O 機制，確保反應快且穩定。
 
-6. **SMP vs. AMP 的比較**  
-   SMP（Symmetric Multiprocessing）：所有處理器共享作業系統與記憶體，彼此平等；AMP（Asymmetric Multiprocessing）：Master CPU 控制其他 Slave CPU，適用於大型系統，彈性較差但易管理。
-
-7. **Distributed System 架構與容錯能力**  
-   每台機器有獨立記憶體與處理能力，透過網路溝通。具去中心化特性，若某台機器故障，其他節點仍能持續運作，提升系統可靠性與擴充性。
-
-8. **Client-Server vs. P2P 在高可用性系統中的選擇**  
-   P2P 架構無中心節點，每台節點角色平等，避免單點失效，更具高可用性。Client-Server 雖管理簡單，但 Server 容易成為 bottleneck 或 failure point。
-
-9. **Hard vs. Soft Real-Time 的差異與應用**  
-   Hard Real-Time：若超過 deadline 即為系統失敗（如飛彈控制、核電系統）；Soft Real-Time：延遲容許但不佳（如串流影音）。Hard 更嚴謹，Soft 則彈性高。
-
-10. **Multimedia 系統的挑戰與關鍵技術**  
-   挑戰包括即時處理需求、資料量大、壓縮需求與資源配置。關鍵技術如壓縮技術（codec）、時序控制（streaming buffer）、即時排程機制等。
+6. **GPU SIMD 架構的特性與應用**  
+   SIMD 架構可對大量資料同時執行相同指令，適用於矩陣運算、影像處理、AI 推論等資料平行運算場景。但不適合有高度條件跳躍或流程分歧的運算，否則會降低處理效率。
 
 
 ---
@@ -1106,3 +1057,151 @@
 ### RMI（Remote Method Invocation）與分散式物件
 
 
+#  作業
+
+## 🧠 OS 作業一：NACHOS 架構與實作指引  
+> 對應教材：周志遠《作業系統》 Ch2 - OS Structure (A)
+
+> **作業主題：實作並理解 NACHOS 系統架構、System Call 流程、Interrupt 機制與虛擬機模擬原理**
+
+---
+
+### 1️⃣ 作業目的與概念
+
+- ✅ 練習 trace 作業系統執行流程
+- ✅ 實作 System Call 與理解中斷（Interrupt）流程
+- ✅ 理解 NACHOS 作為虛擬作業系統的架構與運作方式  
+- ⏰ 作業期限：兩週內完成
+
+---
+
+### 2️⃣ NACHOS 是什麼？
+
+- NACHOS 是一個 **模擬作業系統**，不是跑在硬體上，而是跑在 Linux（或 macOS）上。
+- 本質上是建立一個 **Virtual Machine**，模擬 **MIPS 架構的 CPU** 與作業系統。
+
+---
+
+### 3️⃣ Virtual Machine 架構運作說明
+
+```text
+你的程式碼（C++） 
+    ↓ 編譯成 MIPS 指令
+    ↓
+Nachos Machine Simulation
+    ↓
+轉譯為 x86 指令
+    ↓
+Linux 真實 CPU 執行
+```
+
+- NACHOS 包含 MIPS Instruction 的模擬器 ➝ 轉成 x86 ➝ 由 Linux 執行
+- 讓你「以為」MIPS 程式真的執行起來了
+
+---
+
+### 4️⃣ 作業內容與操作事項
+
+- ✏️ 加入兩個 System Call：
+  - `PrintInt()`（輸出整數）
+  - `Open()` / `Close()`（模擬開啟與關閉檔案）
+
+- 📂 需理解 syscall、interrupt 流程，並修改以下模組：
+  - `machine/`（硬體模擬層）
+  - `userprog/`（系統呼叫處理）
+  - `threads/`（整體執行流程控制）
+  - `test/`（user 程式放置區）
+
+---
+
+### 5️⃣ NACHOS 專案結構總覽
+
+| 資料夾      | 說明 |
+|------------|------|
+| `lib/`     | 工具函式庫，不需理會 |
+| `machine/` | 模擬 CPU / 記憶體（作業一要修改） |
+| `threads/` | 控制作業系統執行方式 |
+| `userprog/`| 處理 system call |
+| `test/`    | 放置 user 程式 |
+| `filesys/` | 作業四用到的真實檔案系統 |
+| `network/` | 網路模擬，不用處理 |
+
+---
+
+### 6️⃣ System Call 實作流程
+
+```text
+user.c 程式呼叫 PrintInt() 
+    ↓
+include syscall.h
+    ↓
+呼叫 Nachos Kernel 中的 Handler
+    ↓
+觸發 Interrupt ➝ 進入對應處理函式
+    ↓
+執行 PrintInt、Open、Close 等
+```
+
+- System Call 是你與 OS 溝通的橋樑
+- 所有呼叫都經由 `syscall.h` 定義與中介層
+- 你只需要「接起來」，大部分程式已寫好
+
+---
+
+### 7️⃣ 組語 `.s` 檔案處理
+
+- 為什麼會看到組語（`.s`）？
+  - 因為 System Call 切換需要用 Assembly 實作
+- 實際只需填入幾行程式
+- 通常是 copy/paste 替換即可完成
+
+---
+
+### 8️⃣ 編譯與執行注意事項
+
+```bash
+make clean   # 清掉舊的編譯檔
+make         # 使用 Nachos 的 Makefile 編譯
+nachos -x test_program # 執行 user program
+```
+
+- 不可使用 GCC 編譯 user 程式，必須使用 Nachos 指令流程
+- Output 會與 Linux 混在一起 → 用 Counter 確認是否是 Nachos 執行的
+
+---
+
+### 9️⃣ File System 的「假的實作」
+
+- Nachos 並沒有完整實作 File System
+- 前幾次作業中，檔案操作（open/close）其實是 **轉交給 Linux 處理**
+- 作業四才會實作部分的真正 FS
+
+---
+
+### 🔟 Debug / Trace 建議
+
+- **不要盲目 trace！** 需先理解整體架構再開始
+- 建議流程：
+  1. 從 `main()` 或 `start()` 開始
+  2. 找到 system call 的觸發點
+  3. 跟著中斷處理流程走
+  4. 接回你新增的功能（如 PrintInt）
+
+---
+
+### 🛠️ 額外建議與工具
+
+- 編輯器建議使用 `vim`
+  - 可直接在 Linux 上撰寫與編譯
+  - 學會基本指令即可
+- 每次修改請務必使用 `make clean`，避免使用到舊版本檔案
+- 有範例與 FAQ 請參考助教與課程網頁
+
+---
+
+### ✅ 作業一總結
+
+- 加入 System Call（PrintInt、Open、Close）
+- Trace System Call 與 Interrupt 流程
+- 學會在 Nachos 結構中定位、修改、執行程式
+- 記得使用 `counter` 確認是否是 Nachos 執行成功\
