@@ -23,31 +23,52 @@
    - [4.2 申論題](#42-申論題共-10-題)
 
 ## Ch1：Introduction
-5. [作業系統基本定義與功能](#1-作業系統基本定義與功能)
+1. [作業系統基本定義與功能](#1-作業系統基本定義與功能)
    - [1.1 OS 是什麼](#11-os-是什麼)
    - [1.2 OS 的核心功能與運作方式](#12-os-的核心功能與運作方式)
    - [1.3 OS 的設計目標與重要性](#13-os-的設計目標與重要性)
-6. [電腦系統組織](#2-電腦系統組織computer-system-organization)
+2. [電腦系統組織](#2-電腦系統組織computer-system-organization)
    - [2.1 基本架構與 OS 角色](#21-電腦系統基本架構與作業系統角色)
    - [2.2 I/O 與忙碌等待](#22-io-操作流程與忙碌等待問題)
    - [2.3 中斷驅動 I/O](#23-中斷驅動-io-機制interrupt-driven-io)
    - [2.4 中斷處理與同步](#24-中斷處理細節與系統同步)
    - [2.5 Interrupt vs Trap](#25-interrupt-與-trap-的差異與效能考量)
-7. [儲存階層與快取管理](#3-儲存階層與快取管理storage-hierarchy-and-cache-management)
+3. [儲存階層與快取管理](#3-儲存階層與快取管理storage-hierarchy-and-cache-management)
    - [3.1 儲存設備與階層設計](#31-儲存設備層級與設計原則)
    - [3.2 RAM 類型](#32-ram-類型與存取特性)
    - [3.3 磁碟效能](#33-磁碟機運作與效能影響)
    - [3.4 Cache 機制](#34-快取記憶體與效能提升)
    - [3.5 Cache 一致性問題](#35-一致性問題與分散式挑戰)
-8. [硬體保護與執行模式](#4-硬體保護與執行模式hardware-protection-and-execution-modes)
+4. [硬體保護與執行模式](#4-硬體保護與執行模式hardware-protection-and-execution-modes)
    - [4.1 系統保護需求](#41-系統保護的概念與需求)
    - [4.2 Dual-Mode 操作](#42-雙模式操作dual-mode-operation)
    - [4.3 I/O 保護與防範](#43-io-保護與惡意操作防範)
    - [4.4 記憶體保護](#44-記憶體保護memory-protection)
    - [4.5 CPU 保護與 Timer](#45-cpu-保護與-timer-機制)
-9. [作業系統導論練習題](#5-作業系統導論練習題)
+5. [作業系統導論練習題](#5-作業系統導論練習題)
    - [5.1 選擇題](#51-選擇題共-20-題)
    - [5.2 申論題](#52-申論題共-8-題)
+
+## Ch2：OS Structure
+
+1. [作業系統服務功能](#1-作業系統服務功能os-services)
+   - [1.1 使用者導向的核心服務](#11-使用者導向的核心服務)
+   - [1.2 系統導向的管理服務](#12-系統導向的管理服務)
+   - [1.3 使用者介面](#13-user-interface使用者介面)
+   - [1.4 通訊模式](#14-communication通訊模式)
+2. [系統呼叫與 API](#2-應用程式介面與系統呼叫os-application-interface)
+3. [作業系統結構設計](#3-作業系統結構設計os-structure)
+
+## Ch3：Processes
+
+1. [程序基本概念](#1-程序基本概念process-concept)
+2. [程序排程](#2-程序排程process-scheduling)
+3. [程序操作](#3-程序操作operations-on-processes)
+4. [程序間通訊（IPC）](#4-程序間通訊interprocess-communication-ipc)
+
+## 作業
+
+1. [OS 作業一：NACHOS 架構與實作指引](#os-作業一nachos-架構與實作指引)
 
 ---
 
@@ -486,7 +507,11 @@
 
 > **主題：作業系統的基本概念與硬體保護機制**
 
+---
+
 ## 1. 作業系統基本定義與功能
+
+---
 
 ### 1.1 OS 是什麼
 
@@ -991,13 +1016,95 @@
 
 > **主題：作業系統的服務功能、應用介面與系統結構設計**
 
+> OS 是系統中唯一的 API 與資源管理者，所有應用程式都需透過 System Call 執行任務。本章探討：
+> - OS 所提供的各項 Services（服務功能）
+> - API 與 System Call 的差異與關係
+> - 常見的 OS 架構設計方法（如 Layered、Microkernel、Virtual Machine）
+
+---
+
 ## 1. 作業系統服務功能（OS Services）
 
-### 使用者介面：CLI 與 GUI  
-### 程式執行與 I/O 操作  
-### 檔案系統操作與通訊機制  
-### 錯誤偵測、資源分配與帳務管理  
-### 保護與安全機制（Protection & Security）
+作業系統提供各式服務（Services），主要目的是協助應用程式順利執行各項任務，並確保系統整體的安全性與效率。這些服務通常透過 System Call 實作，也稱為 Service Routine 或 Interrupt Routine。
+
+---
+
+### 1.1 使用者導向的核心服務
+
+1. **User Interface（使用者介面）**：
+   - 提供使用者與系統互動的方式，分為：
+     - **CLI（Command Line Interface）**：文字介面，功能完整，適合進階操作與系統開發。
+     - **GUI（Graphical User Interface）**：圖形介面，較直覺，但彈性與效能較低。
+
+2. **Program Execution**：負責程式的建立、載入與執行。
+
+3. **I/O Operations**：處理輸入/輸出設備的操作請求（如鍵盤、螢幕、磁碟等）。
+
+4. **File-System Manipulation（檔案操作）**：
+   - 提供檔案建立、開啟、關閉、寫入、刪除等操作。
+   - 作業系統負責管理檔案結構與存取權限，保障資料一致性與安全性。
+
+5. **Communication（程序間通訊）**：
+   - 支援 Process 間的資料交換。
+   - 可跨機（如 TCP/IP）或在本機內進行（Thread 間或 Process 間）。
+   - 兩種模型：
+     - **Message Passing**：經由 OS 管理的記憶體複製機制傳遞資料。
+     - **Shared Memory**：透過共用記憶體區塊直接溝通，效率較高但需同步機制。
+
+6. **Error Detection（錯誤偵測）**：
+   - 偵測執行過程中的錯誤與異常，屬於系統維護的一部分。
+   - 包括硬體錯誤、程式錯誤與資源管理錯誤。
+
+---
+
+### 1.2 系統導向的管理服務
+
+7. **Resource Allocation（資源分配）**：
+   - 包含 CPU 時間、記憶體、I/O 裝置與檔案的分配。
+   - 如：CPU Scheduling、Memory Allocation、Open File Limits 等。
+
+8. **Accounting（資源記錄）**：
+   - 監控系統中各 Process 的資源使用狀況。
+   - 可用於統計分析或設定使用限制，必要時由系統管理者調整。
+
+9. **Protection and Security（保護與安全性）**：
+   - 預防惡意使用與存取，確保資料與系統安全。
+   - 基本機制如登入驗證（帳號密碼）、資源存取控制（Access Control）。
+
+這三項屬於系統內部管理功能，雖然與一般使用者關聯較少，卻對系統穩定性與效率至關重要。
+
+---
+
+### 1.3 User Interface（使用者介面）
+
+- **CLI（Command Line Interface）**：以文字指令與系統互動，功能完整，透過 Shell（如 Bash、CShell）解析指令並轉交 OS。
+- **GUI（Graphic User Interface）**：以圖形操作為主，較直覺易用，但功能彈性與效率不如 CLI。
+- 多數系統同時支援 CLI 與 GUI，但 CLI 更適合進行大型系統建構或自動化流程。
+
+> 📌 Shell 是介於 CLI 與 OS 間的中介程式，可自訂別名與外觀設定，如使用 `alias` 設定個人化指令。
+
+---
+
+### 1.4 Communication（通訊模式）
+
+作業系統提供兩種主要的 Process 間溝通模式：
+
+- **Message Passing（訊息傳遞）**：
+  - 透過 System Call 實作資料的送出與接收
+  - 資料需多次複製（memory copy），安全但效能較低
+  - 適用於跨機器的網路溝通，如 Socket Programming
+
+- **Shared Memory（共享記憶體）**：
+  - 程式共享特定記憶體區塊直接交換資料
+  - 效能較高，但需透過 OS 分配記憶體並進行權限管理
+  - 多執行緒（Thread）之間預設共用部分記憶體
+  - 易導致 Synchronization 問題或 Deadlock（後續章節說明）
+
+> 📌 系統記憶體劃分為：
+> - User Space：應用程式使用區
+> - Kernel Space：OS 核心專用區，僅允許在 Kernel Mode 執行的程式存取
+
+---
 
 ## 2. 應用程式介面與系統呼叫（OS-Application Interface）
 
@@ -1059,14 +1166,14 @@
 
 #  作業
 
-## 🧠 OS 作業一：NACHOS 架構與實作指引  
+## OS 作業一：NACHOS 架構與實作指引  
 > 對應教材：周志遠《作業系統》 Ch2 - OS Structure (A)
 
 > **作業主題：實作並理解 NACHOS 系統架構、System Call 流程、Interrupt 機制與虛擬機模擬原理**
 
 ---
 
-### 1️⃣ 作業目的與概念
+### 1. 作業目的與概念
 
 - ✅ 練習 trace 作業系統執行流程
 - ✅ 實作 System Call 與理解中斷（Interrupt）流程
@@ -1075,14 +1182,14 @@
 
 ---
 
-### 2️⃣ NACHOS 是什麼？
+### 2. NACHOS 是什麼？
 
 - NACHOS 是一個 **模擬作業系統**，不是跑在硬體上，而是跑在 Linux（或 macOS）上。
 - 本質上是建立一個 **Virtual Machine**，模擬 **MIPS 架構的 CPU** 與作業系統。
 
 ---
 
-### 3️⃣ Virtual Machine 架構運作說明
+### 3. Virtual Machine 架構運作說明
 
 ```text
 你的程式碼（C++） 
@@ -1100,7 +1207,7 @@ Linux 真實 CPU 執行
 
 ---
 
-### 4️⃣ 作業內容與操作事項
+### 4. 作業內容與操作事項
 
 - ✏️ 加入兩個 System Call：
   - `PrintInt()`（輸出整數）
@@ -1114,7 +1221,7 @@ Linux 真實 CPU 執行
 
 ---
 
-### 5️⃣ NACHOS 專案結構總覽
+### 5. NACHOS 專案結構總覽
 
 | 資料夾      | 說明 |
 |------------|------|
@@ -1128,7 +1235,7 @@ Linux 真實 CPU 執行
 
 ---
 
-### 6️⃣ System Call 實作流程
+### 6. System Call 實作流程
 
 ```text
 user.c 程式呼叫 PrintInt() 
@@ -1148,7 +1255,7 @@ include syscall.h
 
 ---
 
-### 7️⃣ 組語 `.s` 檔案處理
+### 7. 組語 `.s` 檔案處理
 
 - 為什麼會看到組語（`.s`）？
   - 因為 System Call 切換需要用 Assembly 實作
@@ -1157,7 +1264,7 @@ include syscall.h
 
 ---
 
-### 8️⃣ 編譯與執行注意事項
+### 8. 編譯與執行注意事項
 
 ```bash
 make clean   # 清掉舊的編譯檔
@@ -1170,7 +1277,7 @@ nachos -x test_program # 執行 user program
 
 ---
 
-### 9️⃣ File System 的「假的實作」
+### 9. File System 的「假的實作」
 
 - Nachos 並沒有完整實作 File System
 - 前幾次作業中，檔案操作（open/close）其實是 **轉交給 Linux 處理**
@@ -1178,7 +1285,7 @@ nachos -x test_program # 執行 user program
 
 ---
 
-### 🔟 Debug / Trace 建議
+### 10. Debug / Trace 建議
 
 - **不要盲目 trace！** 需先理解整體架構再開始
 - 建議流程：
@@ -1189,7 +1296,7 @@ nachos -x test_program # 執行 user program
 
 ---
 
-### 🛠️ 額外建議與工具
+### 額外建議與工具
 
 - 編輯器建議使用 `vim`
   - 可直接在 Linux 上撰寫與編譯
@@ -1199,7 +1306,7 @@ nachos -x test_program # 執行 user program
 
 ---
 
-### ✅ 作業一總結
+### 作業一總結
 
 - 加入 System Call（PrintInt、Open、Close）
 - Trace System Call 與 Interrupt 流程
