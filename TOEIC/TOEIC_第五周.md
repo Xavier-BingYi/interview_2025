@@ -600,3 +600,237 @@ Finance Department
    ✏️ 結尾說明 they remain confident in their strategy。
 
 ---
+
+# 📘 TOEIC 第五週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The company will ______ all employee records next week.  
+   (A) dismiss (B) clarify (C) audit (D) assume
+
+2. We need to find a better ______ to solve the issue.  
+   (A) approach (B) assignment (C) barrier (D) brochure
+
+3. She received a ______ for completing the training.  
+   (A) certificate (B) benefit (C) certification (D) capability
+
+4. The manager decided to ______ the meeting due to the storm.  
+   (A) call off (B) look into (C) carry out (D) put on
+
+5. Please ______ your preferred schedule before Friday.  
+   (A) notify (B) submit (C) assume (D) assign
+
+6. The engineer explained the product’s main ______.  
+   (A) advantage (B) feature (C) assumption (D) applicant
+
+7. We need to back up all files in case of a system ______.  
+   (A) barrier (B) outage (C) defect (D) failure
+
+8. She is the ______ for the open position.  
+   (A) category (B) candidate (C) courier (D) device
+
+9. The ______ plan includes strategies for emergencies.  
+   (A) contingency (B) consistency (C) assumption (D) amendment
+
+10. These tools help improve team ______.  
+    (A) consumption (B) communication (C) cooperation (D) competition
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. He hopes ______ a promotion next month.  
+    (A) get (B) getting (C) to get (D) got
+
+12. I enjoy ______ English podcasts in the morning.  
+    (A) to listen (B) listening to (C) listen (D) to listening
+
+13. She is the employee ______ always arrives early.  
+    (A) which (B) who (C) whom (D) whose
+
+14. The report ______ yesterday needs to be revised.  
+    (A) was sent (B) sent (C) which sent (D) that sending
+
+15. They suggested ______ the meeting to next week.  
+    (A) move (B) moving (C) to move (D) moved
+
+16. The man ______ you met yesterday is my supervisor.  
+    (A) which (B) who (C) whom (D) whose
+
+17. ______ hard makes success possible.  
+    (A) Work (B) Working (C) Worked (D) To working
+
+18. He forgot ______ the lights before leaving.  
+    (A) turn off (B) turning off (C) turned off (D) to turn off
+
+19. We plan ______ the new software soon.  
+    (A) launch (B) launching (C) to launch (D) launched
+
+20. That’s the folder ______ contains last month’s data.  
+    (A) which (B) what (C) whom (D) whose
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+Subject: System Maintenance Notice
+
+Dear Employees,
+
+Please be advised that a system maintenance will occur on Saturday, July 15, from 1:00 AM to 5:00 AM. During this time, access to email, shared drives, and internal software will be unavailable.
+
+We recommend saving all important work before Friday evening. If you have any questions, contact the IT department.
+
+Thank you for your cooperation.
+
+IT Support Team
+```
+
+21. What is this notice about?  
+    (A) A training session  
+    (B) A software update  
+    (C) A system maintenance  
+    (D) A holiday schedule
+
+22. When will the maintenance take place?  
+    (A) July 14 morning  
+    (B) July 15 afternoon  
+    (C) July 15 early morning  
+    (D) July 16 morning
+
+23. What should employees do before the maintenance?  
+    (A) Update the system  
+    (B) Send an email to IT  
+    (C) Save their work  
+    (D) Attend a meeting
+
+24. What services will NOT be available during maintenance?  
+    (A) Printers  
+    (B) Email and internal systems  
+    (C) Office lights  
+    (D) Personal phones
+
+25. Who should employees contact if they have questions?  
+    (A) HR department  
+    (B) Their manager  
+    (C) IT department  
+    (D) Marketing team
+
+---
+
+## 📘 TOEIC 第五週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | C    |
+| 2    | A    |
+| 3    | C    |
+| 4    | A    |
+| 5    | B    |
+| 6    | B    |
+| 7    | D    |
+| 8    | B    |
+| 9    | A    |
+| 10   | C    |
+| 11   | C    |
+| 12   | B    |
+| 13   | B    |
+| 14   | B    |
+| 15   | B    |
+| 16   | C    |
+| 17   | B    |
+| 18   | D    |
+| 19   | C    |
+| 20   | A    |
+| 21   | C    |
+| 22   | C    |
+| 23   | C    |
+| 24   | B    |
+| 25   | C    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **audit**：審核紀錄，符合語境，選 (C)。  
+   ➤ The company will **audit** all employee records next week.
+
+2. **approach**：處理方法，符合 solve 的語意，選 (A)。  
+   ➤ We need a better **approach** to solve the issue.
+
+3. **certification**：證書，為完成訓練後取得，選 (C)。  
+   ➤ She received a **certification** for completing the training.
+
+4. **call off**：取消會議，選 (A)。  
+   ➤ The manager decided to **call off** the meeting due to the storm.
+
+5. **submit**：提交時程，選 (B)。  
+   ➤ Please **submit** your preferred schedule before Friday.
+
+6. **feature**：產品特徵，常與 engineer 搭配說明功能，選 (B)。  
+   ➤ The engineer explained the product’s main **feature**.
+
+7. **failure**：系統故障最貼切語意，選 (D)。  
+   ➤ Back up files in case of a system **failure**.
+
+8. **candidate**：候選人，適合職缺，選 (B)。  
+   ➤ She is the **candidate** for the open position.
+
+9. **contingency**：備案、應變計畫，選 (A)。  
+   ➤ The **contingency** plan includes emergency strategies.
+
+10. **cooperation**：團隊合作，選 (C)。  
+   ➤ These tools improve team **cooperation**.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **to get**：hope + to V，是不定詞用法，選 (C)。  
+    ➤ He hopes **to get** a promotion next month.
+
+12. **listening to**：enjoy + V-ing，固定搭配，選 (B)。  
+    ➤ I enjoy **listening to** English podcasts.
+
+13. **who**：主詞關係代名詞，指人，選 (B)。  
+    ➤ She is the employee **who** always arrives early.
+
+14. **sent**：過去分詞作為被動修飾語，選 (B)。  
+    ➤ The report **sent** yesterday needs revision.
+
+15. **moving**：suggest + V-ing，建議類動詞，選 (B)。  
+    ➤ They suggested **moving** the meeting.
+
+16. **whom**：關係代名詞，指人當受詞，選 (C)。  
+    ➤ The man **whom** you met is my supervisor.
+
+17. **Working**：動名詞當主詞，選 (B)。  
+    ➤ **Working** hard makes success possible.
+
+18. **to turn off**：forget + to V = 忘記去做某事，選 (D)。  
+    ➤ He forgot **to turn off** the lights.
+
+19. **to launch**：plan + to V，表示計畫，選 (C)。  
+    ➤ We plan **to launch** the new software.
+
+20. **which**：關係代名詞，指物作主詞，選 (A)。  
+    ➤ That’s the folder **which** contains the data.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：系統維護通知**
+
+21. **(C) A system maintenance**：開頭即提到 "system maintenance will occur"。  
+22. **(C) July 15 early morning**：明確指出時間為 "1:00 AM to 5:00 AM"。  
+23. **(C) Save their work**：建議 Friday 前儲存重要工作。  
+24. **(B) Email and internal systems**：這些服務會暫停，明列於文中。  
+25. **(C) IT department**：聯絡窗口為 IT 部門，文末所示。
+
+---
