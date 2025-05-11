@@ -801,3 +801,425 @@ HR Director
 25. **Melissa Cheng**：有問題請聯絡 HR，簽名為她，選 (A)。
 
 ---
+
+# 📘 TOEIC 第1~16天模擬考（共 50 題）
+
+---
+
+## 一、單字填空（Vocabulary - 20 題）
+
+1. The company will ______ all employee records next week.  
+   (A) dismiss (B) clarify (C) audit (D) assume  
+
+2. We need to find a better ______ to solve the issue.  
+   (A) approach (B) assignment (C) barrier (D) brochure  
+
+3. She received a ______ for completing the training.  
+   (A) certificate (B) benefit (C) certification (D) capability  
+
+4. The manager decided to ______ the meeting due to the storm.  
+   (A) call off (B) look into (C) carry out (D) put on  
+
+5. Please ______ your preferred schedule before Friday.  
+   (A) notify (B) submit (C) assume (D) assign  
+
+6. The engineer explained the product’s main ______.  
+   (A) advantage (B) feature (C) assumption (D) applicant  
+
+7. We need to back up all files in case of a system ______.  
+   (A) barrier (B) outage (C) defect (D) failure  
+
+8. She is the ______ for the open position.  
+   (A) category (B) candidate (C) courier (D) device  
+
+9. The ______ plan includes strategies for emergencies.  
+   (A) contingency (B) consistency (C) assumption (D) amendment  
+
+10. These tools help improve team ______.  
+    (A) consumption (B) communication (C) cooperation (D) competition 
+
+11. Employees must ______ the safety guidelines.  
+    (A) obey (B) refer (C) obtain (D) consider  
+
+12. The team was awarded a bonus for their ______.  
+    (A) solution (B) performance (C) evaluation (D) selection  
+
+13. Please contact the IT department if any problems ______.  
+    (A) appear (B) occur (C) open (D) happen  
+
+14. The new rules will be ______ starting next month.  
+    (A) effective (B) expensive (C) efficient (D) exclusive  
+
+15. We offer a wide ______ of software services.  
+    (A) variety (B) value (C) version (D) vocabulary  
+
+16. You must ______ your password regularly.  
+    (A) change (B) charge (C) check (D) choose  
+
+17. The job requires strong communication ______.  
+    (A) solutions (B) strategies (C) skills (D) situations  
+
+18. The order was shipped without any ______.  
+    (A) defect (B) delay (C) demand (D) decline  
+
+19. We signed a two-year ______ for the office space.  
+    (A) label (B) lease (C) link (D) list  
+
+20. There was a system ______ during the update.  
+    (A) failure (B) feature (C) folder (D) feedback  
+
+---
+
+## 二、文法選擇（Grammar - 20 題）
+
+21. If I ______ earlier, I wouldn’t have missed the meeting.  
+   (A) leave (B) left (C) had left (D) would leave  
+
+22. She usually ______ to work by bus.  
+   (A) goes (B) go (C) going (D) gone  
+
+23. The project ______ by the team last week.  
+   (A) was completed (B) is completed (C) completes (D) has complete  
+
+24. I don’t know ______ she will attend the meeting.  
+   (A) what (B) why (C) if (D) how many  
+
+25. The report must ______ before Friday.  
+   (A) submit (B) be submitted (C) submitting (D) submitted  
+
+26. He is the employee ______ suggested the idea.  
+   (A) whom (B) which (C) who (D) whose  
+
+27. They suggested ______ a new strategy.  
+   (A) adopt (B) adopting (C) to adopt (D) adoption  
+
+28. While I ______ the email, the phone rang.  
+   (A) write (B) wrote (C) was writing (D) writing  
+
+29. We will wait until the guests ______.  
+   (A) arrive (B) will arrive (C) arrived (D) arriving  
+
+30. She has been working here ______ 2019.  
+   (A) since (B) for (C) from (D) during  
+
+31. He ______ lunch when I called him.  
+   (A) is eating (B) was eating (C) eats (D) ate  
+
+32. If he ______ earlier, he could catch the train.  
+   (A) leaves (B) left (C) had left (D) has left  
+
+33. She ______ to the manager yesterday.  
+   (A) spoke (B) speak (C) speaking (D) spoken  
+
+34. The documents ______ by the time we arrived.  
+   (A) prepared (B) had been prepared (C) have prepared (D) were preparing  
+
+35. That’s the man ______ car was stolen.  
+   (A) whom (B) which (C) whose (D) who  
+
+36. Each of the students ______ a locker.  
+   (A) have (B) has (C) having (D) had  
+
+37. There ______ a few errors in the report.  
+   (A) is (B) are (C) was (D) be  
+
+38. He asked me where I ______ from.  
+   (A) am (B) was (C) be (D) will be  
+
+39. Neither the manager nor the staff ______ aware of the change.  
+   (A) is (B) are (C) be (D) were  
+
+40. The items must ______ before shipment.  
+   (A) checked (B) check (C) be checked (D) being checked  
+---
+
+## 三、閱讀理解（Reading - 10 題）
+
+### 閱讀短文一
+```
+Subject: New Office Hours
+
+Starting next Monday, the new office hours will be from 8:30 AM to 5:30 PM, Monday through Friday. Lunch breaks remain from 12:00 PM to 1:00 PM.
+
+All employees are expected to follow the new schedule. Please speak with your supervisor if you have questions.
+```
+
+41. What is the main purpose of the message?  
+   (A) To introduce new lunch menus  
+   (B) To announce office hour changes  
+   (C) To promote a new product  
+   (D) To cancel a meeting  
+
+42. What time will work end under the new schedule?  
+   (A) 5:00 PM  
+   (B) 5:30 PM  
+   (C) 6:00 PM  
+   (D) 6:30 PM  
+
+43. How long is the lunch break?  
+   (A) 30 minutes  
+   (B) 45 minutes  
+   (C) 1 hour  
+   (D) 2 hours  
+
+44. When does the change take effect?  
+   (A) Today  
+   (B) Tomorrow  
+   (C) Next Monday  
+   (D) Next Friday  
+
+45. Who should employees contact with questions?  
+   (A) HR  
+   (B) CEO  
+   (C) Supervisor  
+   (D) IT  
+
+---
+
+### 閱讀短文二
+```
+Subject: Company Event Invitation
+
+You are invited to attend our annual team-building event on Saturday, May 20. The event will be held at Lakeside Park from 10:00 AM to 3:00 PM. Lunch and activities will be provided.
+
+Please RSVP by May 15.
+```
+
+46. What kind of event is mentioned?  
+   (A) A business meeting  
+   (B) A training seminar  
+   (C) A team-building event  
+   (D) A charity fair  
+
+47. Where will the event take place?  
+   (A) City Hall  
+   (B) Company lobby  
+   (C) Lakeside Park  
+   (D) Downtown hotel  
+
+48. How long will the event last?  
+   (A) 3 hours  
+   (B) 4 hours  
+   (C) 5 hours  
+   (D) 6 hours  
+
+49. What will be provided at the event?  
+   (A) Only lunch  
+   (B) Transportation  
+   (C) Lunch and activities  
+   (D) Conference materials  
+
+50. What should employees do before May 15?  
+   (A) Request leave  
+   (B) RSVP  
+   (C) Submit receipts  
+   (D) Pick up tickets  
+
+---
+
+## 📘 TOEIC 第1~16天模擬考題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | C    |
+| 2    | A    |
+| 3    | C    |
+| 4    | A    |
+| 5    | B    |
+| 6    | B    |
+| 7    | D    |
+| 8    | B    |
+| 9    | A    |
+| 10   | C    |
+| 11   | A    |
+| 12   | B    |
+| 13   | B    |
+| 14   | A    |
+| 15   | A    |
+| 16   | A    |
+| 17   | A    |
+| 18   | D    |
+| 19   | D    |
+| 20   | A    |
+| 21   | C    |
+| 22   | A    |
+| 23   | A    |
+| 24   | C    |
+| 25   | B    |
+| 26   | C    |
+| 27   | B    |
+| 28   | C    |
+| 29   | A    |
+| 30   | A    |
+| 31   | B    |
+| 32   | B    |
+| 33   | A    |
+| 34   | B    |
+| 35   | C    |
+| 36   | B    |
+| 37   | B    |
+| 38   | B    |
+| 39   | A    |
+| 40   | C    |
+| 41   | B    |
+| 42   | B    |
+| 43   | C    |
+| 44   | C    |
+| 45   | C    |
+| 46   | C    |
+| 47   | C    |
+| 48   | C    |
+| 49   | C    |
+| 50   | B    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **audit**：審核紀錄，符合語境，選 (C)。  
+   ➤ The company will **audit** all employee records next week.
+
+2. **approach**：處理方法，符合 solve 的語意，選 (A)。  
+   ➤ We need a better **approach** to solve the issue.
+
+3. **certification**：證書，為完成訓練後取得，選 (C)。  
+   ➤ She received a **certification** for completing the training.
+
+4. **call off**：取消會議，選 (A)。  
+   ➤ The manager decided to **call off** the meeting due to the storm.
+
+5. **submit**：提交時程，選 (B)。  
+   ➤ Please **submit** your preferred schedule before Friday.
+
+6. **feature**：產品特徵，常與 engineer 搭配說明功能，選 (B)。  
+   ➤ The engineer explained the product’s main **feature**.
+
+7. **failure**：系統故障最貼切語意，選 (D)。  
+   ➤ Back up files in case of a system **failure**.
+
+8. **candidate**：候選人，適合職缺，選 (B)。  
+   ➤ She is the **candidate** for the open position.
+
+9. **contingency**：備案、應變計畫，選 (A)。  
+   ➤ The **contingency** plan includes emergency strategies.
+
+10. **cooperation**：團隊合作，選 (C)。  
+   ➤ These tools improve team **cooperation**.
+
+11. **obey**：遵守規範，選 (A)。  
+   ➤ Employees must **obey** the safety guidelines.
+
+12. **performance**：表現，選 (B)。  
+   ➤ The team was awarded a bonus for their **performance**.
+
+13. **occur**：發生，問題發生時的常用動詞，選 (B)。  
+   ➤ Contact IT if problems **occur**.
+
+14. **effective**：生效中的新規定，選 (A)。  
+   ➤ The new rules will be **effective** starting next month.
+
+15. **variety**：多樣性、各種，選 (A)。  
+   ➤ We offer a wide **variety** of software services.
+
+16. **change**：更改密碼，選 (A)。  
+   ➤ You must **change** your password regularly.
+
+17. **skills**：能力、技巧，搭配 communication，選 (C)。  
+   ➤ Strong communication **skills** are required.
+
+18. **delay**：延遲，選 (B)。  
+   ➤ The order was shipped without any **delay**.
+
+19. **lease**：租約，選 (B)。  
+   ➤ We signed a two-year **lease**.
+
+20. **failure**：系統更新時出現故障，選 (A)。  
+   ➤ There was a system **failure** during the update.
+
+---
+
+### 二、文法選擇（Grammar）
+
+21. **had left**：第三類條件句，與過去事實相反，選 (C)。  
+   ➤ If I **had left** earlier, I wouldn’t have missed the meeting.
+
+22. **goes**：主詞為 she，第三人稱單數，選 (A)。  
+   ➤ She usually **goes** to work by bus.
+
+23. **was completed**：過去被動語態，選 (A)。  
+   ➤ The project **was completed** last week.
+
+24. **if**：名詞子句 whether/if 表示是否，選 (C)。  
+   ➤ I don’t know **if** she will attend the meeting.
+
+25. **be submitted**：must + be + Vpp 被動語態，選 (B)。  
+   ➤ The report must **be submitted** before Friday.
+
+26. **who**：關代主格，指人當主詞，選 (C)。  
+   ➤ He is the employee **who** suggested the idea.
+
+27. **adopting**：suggest + V-ing，選 (B)。  
+   ➤ They suggested **adopting** a new strategy.
+
+28. **was writing**：主句過去式，從句用過去進行，選 (C)。  
+   ➤ While I **was writing** the email, the phone rang.
+
+29. **arrive**：時間副詞子句中用現在式表未來，選 (A)。  
+   ➤ Wait until the guests **arrive**.
+
+30. **since**：與現在完成式連用，選 (A)。  
+   ➤ She has been working here **since** 2019.
+
+31. **was eating**：主句是過去式，搭配過去進行，選 (B)。  
+   ➤ He **was eating** lunch when I called.
+
+32. **left**：第二類條件句與現在事實相反，選 (B)。  
+   ➤ If he **left** earlier, he could catch the train.
+
+33. **spoke**：過去式，yesterday 是時間提示語，選 (A)。  
+   ➤ She **spoke** to the manager yesterday.
+
+34. **had been prepared**：過去完成被動，選 (B)。  
+   ➤ The documents **had been prepared** before we arrived.
+
+35. **whose**：關代所有格，表示「某人的」，選 (C)。  
+   ➤ That’s the man **whose** car was stolen.
+
+36. **has**：each 為單數主詞，選 (B)。  
+   ➤ Each of the students **has** a locker.
+
+37. **are**：errors 為複數，選 (B)。  
+   ➤ There **are** a few errors in the report.
+
+38. **was**：問句中間使用過去式，選 (B)。  
+   ➤ He asked me where I **was** from.
+
+39. **is**：主詞為靠近動詞的 staff，為不可數名詞，選 (A)。  
+   ➤ Neither the manager nor the staff **is** aware.
+
+40. **be checked**：must + be + Vpp 被動語態，選 (C)。  
+   ➤ The items must **be checked** before shipment.
+
+---
+
+### 三、閱讀理解（Reading）
+
+📩 短文一：New Office Hours
+
+41. **(B)**：標題與開頭明確說明改變上班時間。  
+42. **(B)**：新時間是「5:30 PM」下班。  
+43. **(C)**：午休時間為「1 hour」。  
+44. **(C)**：時間點是「Next Monday」。  
+45. **(C)**：詢問請聯絡「supervisor」。
+
+📩 短文二：Company Event Invitation
+
+46. **(C)**：主題為「team-building event」。  
+47. **(C)**：地點為「Lakeside Park」。  
+48. **(C)**：從 10:00 到 3:00 共 5 小時。  
+49. **(C)**：提供「lunch and activities」。  
+50. **(B)**：RSVP 截止日為 May 15。
+
+---
