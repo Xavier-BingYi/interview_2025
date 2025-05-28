@@ -56,15 +56,49 @@
    - [1.2 系統導向的管理服務](#12-系統導向的管理服務)
    - [1.3 使用者介面](#13-user-interface使用者介面)
    - [1.4 通訊模式](#14-communication通訊模式)
-2. [系統呼叫與 API](#2-應用程式介面與系統呼叫os-application-interface)
+2. [應用程式介面與系統呼叫（OS-Application Interface）](#2-應用程式介面與系統呼叫os-application-interface)
+   - [2.1 System Call 與 OS 的介面](#21-system-call-與-os-的介面)
+   - [2.2 API：應用程式介面與函式庫](#22-api應用程式介面與函式庫)
+   - [2.3 API 標準與虛擬機支援](#23-api-標準與虛擬機支援)
+   - [2.4 使用 API 的三大好處](#24-使用-api-的三大好處)
+   - [2.5 System Call 的參數傳遞方式](#25-system-call-的參數傳遞方式)
 3. [作業系統結構設計](#3-作業系統結構設計os-structure)
+   - [3.1 系統設計目標與思維差異](#31-系統設計目標與思維差異)
+   - [3.2 作業系統的四種典型架構](#32-作業系統的四種典型架構)
+   - [3.3 虛擬機設計與執行方式](#33-虛擬機設計與執行方式)
+4. [作業系統結構練習題](#4-作業系統結構練習題)
+   - [4.1 選擇題](#41-選擇題共-20-題)
+   - [4.2 申論題](#42-申論題共-8-題)
 
 ## Ch3：Processes
 
-1. [程序基本概念](#1-程序基本概念process-concept)
-2. [程序排程](#2-程序排程process-scheduling)
-3. [程序操作](#3-程序操作operations-on-processes)
-4. [程序間通訊（IPC）](#4-程序間通訊interprocess-communication-ipc)
+1. [程序基本概念（Process Concept）](#1-程序基本概念process-concept)
+   - [1.1 程序的定義與組成](#11-程序的定義與組成)
+   - [1.2 作業的狀態與生命週期](#12-作業的狀態與生命週期)
+   - [1.3 Process Control Block（PCB）](#13-process-control-blockpcb)
+   - [1.4 Process 表示與 Context Switch](#14-process-表示與-context-switch)
+   - [1.5 程序創建與終止](#15-程序創建與終止)
+2. [程序排程（Process Scheduling）](#2-程序排程process-scheduling)
+   - [2.1 排程時機與分類](#21-排程時機與分類)
+   - [2.2 Dispatcher（派遣器）](#22-dispatcher派遣器)
+   - [2.3 排程準則（Scheduling Criteria）](#23-排程準則scheduling-criteria)
+   - [2.4 排程演算法（Scheduling Algorithms）](#24-排程演算法scheduling-algorithms)
+   - [2.5 排程演算法比較（Scheduling Comparison）](#25-排程演算法比較scheduling-comparison)
+3. [程序操作（Operations on Processes）](#3-程序操作operations-on-processes)
+   - [3.1 Process Creation（程序建立）](#31-process-creation程序建立)
+   - [3.2 Process Termination（程序終止）](#32-process-termination程序終止)
+   - [3.3 程序間的關係模型](#33-程序間的關係模型)
+   - [3.4 程序識別與控制](#34-程序識別與控制)
+4. [程序間通訊（Interprocess Communication, IPC）](#4-程序間通訊interprocess-communication-ipc)
+   - [4.1 IPC 的基本概念與目的](#41-ipc-的基本概念與目的)
+   - [4.2 IPC 的主要模型](#42-ipc-的主要模型)
+   - [4.3 Direct 與 Indirect Communication](#43-direct-與-indirect-communication)
+   - [4.4 Synchronization（同步）與 Buffering（緩衝區）](#44-synchronization同步與-buffering緩衝區)
+   - [4.5 IPC 實務範例：Linux 中的 IPC](#45-ipc-實務範例linux-中的-ipc)
+   - [4.6 典型使用場景比較](#46-典型使用場景比較)
+5. [程序與通訊練習題](#5-程序與通訊練習題)
+   - [5.1 選擇題（共 20 題）](#51-選擇題共-20-題)
+   - [5.2 申論題（共 8 題）](#52-申論題共-8-題)
 
 ## 作業
 
@@ -314,8 +348,6 @@
 
 ### 4.1 選擇題（共 25 題）
 
-> ✅ 單選題形式，涵蓋 OS 架構、系統類型與核心設計概念。
-
 1. 下列何者為 Batch System 的主要缺點？  
    A. 多工效率過高  
    B. 需大量使用者互動  
@@ -479,8 +511,6 @@
 ---
 
 #### 參考答案
-
-> ✅ 申論題參考解析，可用於自我檢查與面試答題練習。
 
 1. **Batch 系統、Multi-programming、Time-sharing 的差異**  
    Batch 系統無互動性、一次只能處理一個作業，CPU 經常閒置；Multi-programming 可同時載入多個作業，提升 CPU 使用率；Time-sharing 則強化即時性，透過快速切換讓使用者感覺自己獨占 CPU，提供良好的互動體驗。
@@ -950,8 +980,6 @@
 
 #### 參考答案
 
-> ✅ 選擇題解析區，快速對照與自我檢討。
-
 1. **C**：作業系統的目標是提升效率與便利性，不是提高成本。  
 2. **C**：作業系統會扮演資源管理者，負責公平有效率地分配硬體資源。  
 3. **B**：命令列與圖形介面屬於便利性功能，協助使用者與系統互動。  
@@ -991,8 +1019,6 @@
 ---
 
 #### 參考答案
-
-> ✅ 申論題參考解析，可用於自我檢查與面試答題練習。
 
 1. **作業系統三大目標：**（1）操作便利性：讓使用者能簡單操作；（2）效率提升：有效管理 CPU、記憶體等資源；（3）資源共享與保護：讓多使用者或程式安全共享系統。  
 
@@ -1108,20 +1134,408 @@
 
 ## 2. 應用程式介面與系統呼叫（OS-Application Interface）
 
-### 系統呼叫與 API 基礎  
-### 常見系統呼叫分類（Process, File, Device, Info, Communication）  
-### System Call vs API vs Library  
-### System Call 的範例與使用方式  
-### 系統呼叫參數傳遞方式（Registers / Table / Stack）
+作業系統提供的系統呼叫（System Call）是應用程式與核心溝通的唯一管道，而應用程式介面（API）則是開發者與作業系統之間的橋樑。本節將探討兩者的關係與角色差異，並說明參數傳遞方式與實務設計細節。
+
+---
+
+### 2.1 System Call 與 OS 的介面
+
+#### ▸ System Call 的角色
+- System Call 是應用程式向作業系統請求服務的正式方式。
+- 本質是一種 **Software Interrupt**，觸發時 CPU 從 User Mode 切換至 Kernel Mode。
+- 常見的呼叫類型包括：
+  - Process control：`fork()`、`exit()`、`wait()`
+  - File management：`open()`、`read()`、`write()`
+  - Device management：`ioctl()`、`read()`、`write()`
+  - Info maintenance：`getpid()`、`alarm()`、`time()`
+  - Communication：`send()`、`recv()`、`pipe()`、`shmget()`
+
+#### ▸ 與 CLI / GUI 的關係
+- CLI / GUI 是**使用者對 OS 的介面**，而程式則透過 function call（如 API、System Call）與 OS 溝通。
+- 每項系統功能通常會有一個或多個函式（或中斷處理程式）來支援。
+
+---
+
+### 2.2 API：應用程式介面與函式庫
+
+#### ▸ API 與 System Call 的關係
+- System Call 為 OS 的底層介面，而 API 是開發者的高階介面。
+- API 多由 **C Library（如 glibc）** 或 Java Library 提供，進一步封裝或組合多個 System Call。
+- 並非所有 API 都會觸發 System Call，例如：
+  - `abs()` 僅做數學計算，不需進入核心
+  - `malloc()` 會觸發 `brk()` 等 System Call
+
+#### ▸ 執行流程示意
+1. 程式呼叫 `printf()` ➝
+2. 進入 C Library ➝
+3. 呼叫 `write()` 的 System Call ➝
+4. 產生 Software Interrupt ➝ 進入 Kernel ➝
+5. OS 執行對應 Service ➝ 回傳結果
+
+#### ▸ Library 的實作多樣性
+以 `exp2(x, y)` 為例，Library 可能有多種實作：
+- `for` 迴圈版本（重複乘法）
+- 位元位移版本（`x << y`）
+- 硬體指令版本（`HW_EXP()`）
+
+> 📌 API 僅定義介面格式（function signature），而實作由 Library 決定。
+
+---
+
+### 2.3 API 標準與虛擬機支援
+
+#### ▸ 常見 API 標準
+
+- **Win32 API**：提供 Windows 系統下的檔案、網路、UI 控制等操作，常見於桌面應用開發。
+- **POSIX API**：廣泛應用於 Unix/Linux/macOS 等系統，強調 API 介面一致性與程式可攜性（Portability）。
+- **Java API**：定義在 JVM 虛擬機中執行的標準函式介面，具有高度抽象與跨平台能力。
+
+#### ▸ POSIX API 補充（重點）
+
+- POSIX（Portable Operating System Interface for Unix）是一套統一的 API 標準，用來整合不同 Unix-like 系統的開發介面。
+- 儘管各作業系統的 System Call 與底層實作可能不同，但只要遵循 POSIX API 定義，就能讓應用程式在多平台上執行。
+- 實現方式為：程式碼不變，僅需針對目標系統重新編譯即可，如 Linux ↔ macOS。
+- POSIX API 的存在，讓開發者可編寫一次、部署多平台，降低開發與維護成本。
+- 例：Pthread（POSIX Thread Library）是符合 POSIX 標準的多執行緒函式庫，如 `pthread_create()`、`pthread_join()`。
+
+> 📌 POSIX 的設計目的不僅是標準化，更是為了解決早期 UNIX 系統分裂問題，實現「一致的開發介面」與「程式可攜性」。
+
+#### ▸ JVM 的運作邏輯
+
+- Java 程式會編譯為 Bytecode，並於 JVM 中執行。
+- JVM 負責將 Bytecode 轉譯成實體硬體平台的指令（如 x86、ARM）。
+- Java 程式不直接使用作業系統 API，而是透過 Java API 操作虛擬機內的抽象資源。
+
+> 📌 JVM 提供平台獨立性，但會引入執行期轉譯成本。JVM 的跨平台優勢來自對每個目標系統量身打造的 JVM 實作，而非單一可執行檔。
+
+---
+
+### 2.4 使用 API 的三大好處
+
+#### ▸ Simplicity（簡化）
+- 提供統一且直觀的介面，減少開發者進入核心的需求。
+- 使用者可專注撰寫應用程式邏輯，不必處理中斷與暫存器。
+
+#### ▸ Portability（可攜性）
+- 只要符合 API 標準（如 POSIX），即可跨平台重編譯使用。
+- 程式碼不依賴特定系統實作，提高可移植性。
+
+#### ▸ Efficiency（效率）
+- 系統會優化 API 的實作，避免不必要的系統切換。
+- 善用使用者層（User Space）即可完成的操作，不進入 OS 核心。
+
+---
+
+### 2.5 System Call 的參數傳遞方式
+
+#### ▸ 常見三種方式
+
+1. **Register 傳遞**：  
+   直接將參數寫入暫存器（如 EAX、EBX…），速度快但數量有限。
+
+2. **Memory Table**：  
+   使用者程式將參數寫入記憶體中的資料結構，並將其位址（pointer）傳給作業系統。作業系統擁有存取該記憶體區域的權限，能依此位址讀取整個參數內容並完成對應處理。
+
+3. **Stack 傳遞**：  
+   透過堆疊（Stack）將參數依序推入與彈出，傳遞方式與一般函式呼叫機制相同，具有良好可讀性與延伸性。
+
+---
 
 ## 3. 作業系統結構設計（OS Structure）
 
-### 使用者目標與系統目標  
-### 系統架構類型總覽  
-### 單層架構（Simple OS）與階層式架構（Layered）  
-### 微核心架構（Microkernel）與模組化架構（Modular）  
-### 虛擬機架構（Virtual Machine, JVM）  
-### 模擬器與虛擬化應用（Full/Para-Virtualization）
+作業系統並非一體成形，而是可依照不同需求與系統目標進行架構設計。從早期的簡易結構，到現代主流的模組化設計與虛擬機技術，各種架構各有特色與優劣，亦反映了不同時代在安全性、維護性、效能與擴充性之間的取捨。
+
+---
+
+### 3.1 系統設計目標與思維差異
+
+#### ▸ 使用者目標（User Goals）
+- 易於操作、可靠、安全、效率高（以互動回應為主）
+- 如 GUI 介面直覺、程式不當機、資料不遺失等
+
+#### ▸ 系統設計者目標（System Goals）
+- 易於設計、實作與維護，穩定且效率高（以資源管理為主）
+- 強調模組清楚、容易除錯、可擴充
+
+> 📌 結論：雙方的「效率」定義不同 ➝ 使用者重互動即時性，設計者重整體資源使用
+
+---
+
+### 3.2 作業系統的四種典型架構
+
+#### ▸ Simple Structure（簡易架構）
+- 代表系統：MS-DOS、早期 UNIX。
+- 沒有明確模組劃分，功能混合寫在核心中。
+- 修改其中一處程式碼可能導致整體系統錯誤。
+- 易於實作，但難以維護與擴充。
+- 缺乏保護與控制機制，不適用於大型多任務系統。
+
+---
+
+#### ▸ Layered Architecture（層次架構）
+- 將 OS 切分為多層，每層只可呼叫下一層。
+- 上層介面依賴下層提供的功能。
+- 優點：
+  - 層次結構清楚、模組間耦合性低。
+  - 易於除錯與管理，每層可以獨立測試。
+- 缺點：
+  - 劃分層次不易。
+  - 若某些功能橫跨多層，可能產生效能瓶頸。
+
+---
+
+#### ▸ Microkernel 架構
+- 核心功能極小化：只包含 Process 管理、Memory 管理與基本 IPC。
+- 其他模組如檔案系統、驅動程式等皆移至 User Mode。
+- 使用訊息傳遞（Message Passing）與核心互動。
+- 優點：
+  - 系統穩定性高，模組故障不會癱瘓整體系統。
+  - 易於更新與移植。
+- 缺點：
+  - 過多訊息交換可能造成效能降低。
+  - 系統設計更複雜。
+
+---
+
+#### ▸ Modular OS（模組化架構）
+- 範例：現代 Linux 採用。
+- OS 提供模組化框架，允許在執行時動態載入/移除模組（如驅動程式）。
+- 模組間透過定義良好的介面溝通。
+- 優點：
+  - 易於維護、彈性高，提升模組重用性。
+  - 系統不需重新編譯即可擴充功能。
+- 所有模組仍運行於 Kernel Space，避免 Microkernel 的通訊負擔。
+
+---
+
+### 3.3 虛擬機設計與執行方式
+
+#### ▸ Virtual Machine（虛擬機架構）
+- 在既有系統上再建立抽象層，模擬整個硬體系統
+- 每個 VM 拿到一份「看似獨立的硬體環境」
+
+#### ▸ 運作概念
+- 每個 Guest OS 執行在 Host OS 上的 user space 中
+- 當 Guest OS 嘗試執行特權指令 ➝ 被中斷並由 Host 處理
+- 若 CPU 支援 VM Mode，可直接由硬體協助攔截/模擬
+
+> 📌 若指令為 Critical Instruction（無法攔截），則必須透過特殊轉譯或硬體支援
+
+#### ▸ 優點與應用場景
+- **隔離性強**：VM 間彼此獨立，適用資安與教學
+- **相容性好**：舊系統可在 VM 中執行
+- **研發環境**：可安全測試不穩定程式（如 kernel 修改）
+- **雲端共享**：資源共享與分配利器（Cloud / SaaS）
+
+#### ▸ 虛擬化技術類型
+1. **Full Virtualization（完全虛擬化）**：
+   - Guest OS 無需修改即可運作（例：VMware）
+   - 模擬完整硬體，實作複雜、效率稍低
+
+2. **Para-Virtualization（半虛擬化）**：
+   - Guest OS 須經修改才能相容（例：Xen）
+   - 效能較佳，較能進行全域最佳化資源管理
+
+3. **JVM（Java Virtual Machine）**：
+   - 編譯為 bytecode 於 JVM 執行，不與硬體直接對應
+   - 利用 JIT（Just-In-Time Compiler）進行即時翻譯加速執行
+   - 提供安全、封裝良好的執行環境，適合網路應用與跨平台需求
+
+> 📌 Java 的 JVM 本質上就是一種虛擬機設計概念的實例，與 Nachos 類似但更進階完整
+
+---
+
+## 4. 作業系統結構練習題
+
+---
+
+### 4.1 選擇題（共 20 題）
+
+1. 作業系統中的 System Call 主要功能為何？  
+   A. 儲存資料至磁碟  
+   B. 提供應用程式與核心之間的溝通介面  
+   C. 顯示應用程式圖形畫面  
+   D. 執行 CLI 指令  
+
+2. 關於 Microkernel 架構，下列敘述何者正確？  
+   A. 所有模組皆在 Kernel Space 執行  
+   B. 所有模組皆可直接控制硬體  
+   C. 只保留核心功能在 Kernel，其他模組執行於 User Space  
+   D. 無需透過訊息傳遞機制進行模組溝通  
+
+3. POSIX API 的主要優勢為何？  
+   A. 提供 Windows GUI 支援  
+   B. 執行效能高於 Java API  
+   C. 提供統一標準以利跨平台移植  
+   D. 專為微控制器環境設計  
+
+4. 關於 System Call 的參數傳遞方式，下列何者描述正確？  
+   A. Register 傳遞可容納大量參數  
+   B. Stack 傳遞無法應用於 System Call  
+   C. Memory Table 可透過指標傳遞多個參數  
+   D. 所有參數皆需先轉換成 JSON  
+
+5. 下列哪一項最符合 Modular OS 的特性？  
+   A. 系統啟動前須載入所有模組  
+   B. 所有元件皆執行於 User Space  
+   C. 模組可於執行中動態載入或移除  
+   D. 每個模組皆需單獨編譯成核心  
+
+6. 關於 API 與 System Call 的關係，下列敘述何者正確？  
+   A. 所有 API 均為 System Call 的別名  
+   B. API 會觸發 GUI 顯示  
+   C. API 是封裝 System Call 的開發者介面  
+   D. System Call 為 C Library 的封裝  
+
+7. 作業系統提供 Shared Memory 的目的為何？  
+   A. 增加記憶體空間  
+   B. 降低中斷次數  
+   C. 讓 Process 間直接共享資料區域  
+   D. 快速存取核心資料  
+
+8. Layered OS 架構的優點為何？  
+   A. 效能最佳  
+   B. 可交叉呼叫所有模組  
+   C. 結構清楚、模組獨立  
+   D. 適合用於嵌入式系統  
+
+9. CLI 相對於 GUI 的優勢為何？  
+   A. 執行速度慢但視覺友善  
+   B. 不適合程式開發  
+   C. 功能完整且可自動化操作  
+   D. 僅適用於 Linux  
+
+10. JVM 提供跨平台能力的原因是？  
+    A. JVM 支援所有硬體架構  
+    B. Bytecode 可直接於所有 OS 執行  
+    C. JVM 將 Bytecode 轉譯為當前平台指令  
+    D. Java 可轉換成 POSIX API  
+
+11. Modular OS 架構中，為何可動態載入模組？  
+    A. 核心支援即時重編譯  
+    B. 模組以獨立進程運作  
+    C. 核心提供模組化介面並支援熱插拔  
+    D. 每個模組皆由作業系統重新載入  
+
+12. 為什麼 Microkernel 較適用於嵌入式系統？  
+    A. 資源使用率高  
+    B. 架構簡單  
+    C. 可重編核心程式碼  
+    D. 模組獨立且易於移植  
+
+13. 當程式呼叫 `printf()` 時，會觸發哪種作業系統服務？  
+    A. Process Control  
+    B. File Management  
+    C. Device Management  
+    D. Communication  
+
+14. 哪種架構強調將作業系統分層，以降低模組耦合？  
+    A. Monolithic  
+    B. Modular  
+    C. Layered  
+    D. Hybrid  
+
+15. 為何許多程式設計者不需直接接觸 System Call？  
+    A. System Call 由 OS 自動產生  
+    B. API 封裝底層複雜操作  
+    C. System Call 屬於 GUI 的一部分  
+    D. 所有作業系統皆禁用 System Call  
+
+16. 下列哪一種溝通方式最可能導致 Synchronization 問題？  
+    A. Message Passing  
+    B. Shared Memory  
+    C. POSIX Pipe  
+    D. Socket 通訊  
+
+17. 記憶體表格傳參數（Memory Table）的優點是什麼？  
+    A. 參數可加密處理  
+    B. 適合少量簡單參數  
+    C. 可集中管理並一次傳遞多個參數  
+    D. 無需 kernel 存取記憶體  
+
+18. 作業系統結構中，哪一種方式可提高模組重用性？  
+    A. Simple Structure  
+    B. Layered  
+    C. Microkernel  
+    D. Modular  
+
+19. 哪種 API 標準支援 Unix-like 系統的一致介面？  
+    A. Win32 API  
+    B. Java API  
+    C. POSIX API  
+    D. .NET API  
+
+20. 為何在設計 System Call 時需考慮參數傳遞效率？  
+    A. 頻繁切換 GUI 對效能影響大  
+    B. 大部分參數需轉為 JSON  
+    C. System Call 進入 Kernel 需上下文切換  
+    D. API 設計語法複雜
+
+---
+
+#### 參考答案
+
+1. **B**：System Call 是應用程式與作業系統核心之間的主要溝通橋樑，用於請求系統服務。  
+2. **C**：Microkernel 架構僅保留最核心功能，其他服務如驅動與檔案系統皆在 User Space 執行。  
+3. **C**：POSIX 提供一致的 API 標準，使程式可在不同 Unix-like 系統間移植。  
+4. **C**：Memory Table 將參數結構放入記憶體，並傳遞指標給 OS，適合參數較多的情境。  
+5. **C**：Modular OS 允許在系統執行中動態載入或移除模組，是現代作業系統的重要特性。  
+6. **C**：API 為開發者提供易用介面，底層可能呼叫多個 System Call，達成高階功能。  
+7. **C**：Shared Memory 允許多個 Process 共用一塊記憶體區，用於快速交換資料。  
+8. **C**：Layered 架構將系統功能分層，提升模組獨立性與可維護性。  
+9. **C**：CLI 支援腳本、自動化與複雜指令操作，是系統開發與管理的首選。  
+10. **C**：JVM 將平台中立的 Bytecode 轉譯成特定平台指令，使 Java 程式具備跨平台能力。  
+11. **C**：Modular OS 提供核心模組管理機制，支援熱插拔與模組動態維護。  
+12. **D**：Microkernel 架構模組化程度高、元件獨立，利於嵌入式系統的穩定與擴充。  
+13. **C**：`printf()` 實際會透過 C Library 封裝的 `write()` System Call 執行裝置輸出。  
+14. **C**：Layered OS 將系統功能劃分為清楚層次，強化模組間隔離與解耦合。  
+15. **B**：開發者透過高階 API 編程即可間接使用 System Call，無需手動進入核心。  
+16. **B**：Shared Memory 因多方同時存取，易導致競爭條件與同步問題。  
+17. **C**：Memory Table 可一次傳遞多個參數並集中管理，適用於複雜系統呼叫。  
+18. **D**：Modular 架構支援模組化與動態管理，提升模組重用性與系統彈性。  
+19. **C**：POSIX API 是 Unix-like 系統共通介面，提供程式設計者一致的呼叫標準。  
+20. **C**：System Call 需進入 Kernel Mode，伴隨上下文切換與效能考量，因此需設計有效的參數傳遞機制。
+
+---
+
+### 4.2 申論題（共 8 題）
+
+1. 請說明 System Call 的基本概念與其在作業系統中的角色。
+2. 請比較 API 與 System Call 的差異與聯繫，並說明兩者各自的使用時機。
+3. 為何現代作業系統多採用 Modular OS 架構？請列出其優點並舉例說明。
+4. 說明 Layered OS 與 Microkernel 架構在系統設計上的主要差異與優劣。
+5. Java 程式如何透過 JVM 跨平台執行？JVM 的設計如何影響效能？
+6. 為何 POSIX API 在系統設計中被廣泛採用？其對軟體開發者有何影響？
+7. 請說明 Shared Memory 與 Message Passing 的通訊機制差異與使用場景。
+8. 在設計系統呼叫時，應如何考量參數傳遞方式以兼顧效能與安全性？
+
+---
+
+#### 參考答案
+
+1. **System Call 的角色與概念：**  
+   System Call 是應用程式與作業系統溝通的橋樑，允許使用者程式執行核心層級的功能，如檔案存取、行程控制與裝置操作。其本質是一種軟體中斷，能將系統由 User Mode 切換至 Kernel Mode。
+
+2. **API 與 System Call 差異與關聯：**  
+   API 是應用程式可見的高階函式介面，通常由函式庫（如 glibc）實作，內部可能會呼叫一個或多個 System Call。API 提供封裝與抽象，使用更直覺，而 System Call 為進入作業系統核心的具體機制。
+
+3. **Modular OS 架構的優點與應用：**  
+   Modular OS 支援模組動態載入與卸除，讓每個子系統獨立開發與維護，提高可擴充性與除錯效率。此架構廣泛應用於 Linux 核心，可針對需求安裝特定驅動或監控模組，效能與彈性兼具。
+
+4. **Layered OS 與 Microkernel 架構比較：**  
+   Layered OS 以層次區分功能，每層僅與相鄰層互動，強調清晰結構；Microkernel 則將大多數服務移至 User Space，僅保留最基本功能於核心，提高穩定性與模組化，但可能犧牲效能。
+
+5. **JVM 的平台中立性與效能影響：**  
+   Java 程式先編譯為 Bytecode，在 JVM 虛擬機中執行，使其不依賴實體平台，實現一次撰寫、多處執行。但此架構須額外轉譯與抽象操作，可能導致效能低於原生執行。
+
+6. **POSIX API 的作用與優勢：**  
+   POSIX 提供統一的作業系統 API 標準，使程式可在不同 Unix-like 系統間無需重寫程式邏輯，只需重新編譯。對開發者而言，可提升程式的可攜性與系統間一致性。
+
+7. **Shared Memory vs. Message Passing：**  
+   Shared Memory 讓多個 Process 共用記憶體區塊，溝通速度快但需管理同步；Message Passing 則透過 OS 協助的資料複製與封包傳遞，雖效能較低但具備更高的安全性與隔離性。
+
+8. **System Call 參數傳遞考量：**  
+   系統呼叫可透過 Register、Memory Table 或 Stack 傳遞參數。需依參數數量與資料結構選擇適當方式，兼顧速度（如 register）與彈性（如記憶體指標），同時確保系統安全與效率。
 
 ---
 
@@ -1131,38 +1545,647 @@
 
 ## 1. 程序基本概念（Process Concept）
 
-### 程式與程序的區別  
-### 程序的記憶體結構（Code, Stack, Heap, Data）  
-### Threads 與 CPU 使用單位  
-### 程序狀態（New, Ready, Running, Waiting, Terminated）  
-### 程序控制區塊（Process Control Block, PCB）  
-### Context Switch（上下文切換）
+程序（Process）是系統執行中最基本的單位。理解程序的定義、生命週期與其組成，是後續學習排程、同步與溝通等主題的基礎。
+
+---
+
+### 1.1 程序的定義與組成
+
+#### ▸ 程式與程序差異
+- **程式（Program）** 是靜態的指令集合（例如 C 程式碼檔案）。
+- **程序（Process）** 是程式執行後的動態實體，包含程式碼、資料、堆疊與其他中介資訊。
+
+> 📌 同一份程式可同時啟動多個程序，每個程序彼此獨立。
+
+#### ▸ 程序組成項目（Process Components）
+1. **程式碼區（Code）**：程式本體的指令區。
+2. **資料區（Data）**：全域變數、靜態資料等。
+3. **堆疊區（Stack）**：暫存函式參數、區域變數與返回位址。
+4. **堆區（Heap）**：動態配置記憶體使用（如 `malloc()`）。
+
+---
+
+### 1.2 作業的狀態與生命週期
+
+#### ▸ 常見五種程序狀態
+1. **New**：程式初啟動，尚未排入執行序列。
+2. **Ready**：已完成初始化，等待 CPU 分配。
+3. **Running**：正在使用 CPU 執行中。
+4. **Waiting**：等待某事件完成（如 I/O）。
+5. **Terminated**：程序執行結束或被強制終止。
+
+> ✅ 這些狀態形成一個有限狀態機（Finite State Machine），程序會在其間來回轉換。
+
+#### ▸ 狀態轉移常見情境
+- **Ready ➝ Running**：由排程器選中。
+- **Running ➝ Waiting**：等待 I/O 或資源。
+- **Running ➝ Ready**：時間片用完，被強制中斷。
+- **Waiting ➝ Ready**：等待事件完成。
+- **Running ➝ Terminated**：程式正常結束或錯誤終止。
+
+---
+
+### 1.3 Process Control Block（PCB）
+
+PCB 是作業系統用來追蹤每個程序狀態的資料結構，每個程序都有一個對應的 PCB。
+
+#### ▸ PCB 包含資訊
+- Process ID（PID）：程序編號。
+- 程式計數器（PC）：下一條執行指令的位置。
+- CPU 暫存器內容：中斷時需儲存的狀態。
+- 排程資訊：優先權、排程隊列等。
+- 記憶體管理資訊：程式碼與資料在記憶體的位置。
+- 帳務資訊：執行時間、資源使用量。
+- I/O 狀態資訊：開啟檔案、裝置清單。
+
+> 📌 PCB 是 CPU 切換程序（Context Switch）時必須儲存與載入的核心結構。
+
+---
+
+### 1.4 Process 表示與 Context Switch
+
+#### ▸ Process Table
+- 系統會建立一張「Process Table」，紀錄所有正在執行的程序之 PCB。
+
+#### ▸ Context Switch（上下文切換）
+- CPU 需要將一個程序的執行狀態儲存，再載入另一程序的狀態。
+- 通常發生在：
+  - 時間片結束
+  - I/O 等待
+  - 系統中斷或高優先程序抵達
+
+> 📌 Context Switch 開銷高（涉及大量暫存器與記憶體操作），頻繁切換會影響效能。
+
+---
+
+### 1.5 程序創建與終止
+
+#### ▸ 程序建立方式
+- **UNIX/Linux**：常用 `fork()` 產生新程序，子程序複製父程序記憶體內容。
+- **exec()**：用來替換目前程序的記憶體內容並執行新程式。
+
+#### ▸ 程序終止方式
+- 自動結束：程式執行結束時觸發 `exit()`。
+- 系統強制：OS 或其他程序（如父程序）呼叫 `kill()` 終止其執行。
+- 錯誤終止：例外狀況導致崩潰（如 segmentation fault）。
+
+以下是依照你指定格式、並根據 PDF p.13\~p.21 所整理的筆記內容：
+
+---
 
 ## 2. 程序排程（Process Scheduling）
 
-### 排程概念與多工模式（Multiprogramming / Time-Sharing）  
-### 排程隊列：Job Queue、Ready Queue、Device Queue  
-### 三種 Scheduler：Long-Term、Short-Term、Medium-Term  
-### Ready/Wait 狀態切換與排程動機
+作業系統的核心職責之一就是在多個程序之間分配 CPU。程序排程（Scheduling）策略會影響系統的效能、回應時間與資源使用效率。本節將說明基本觀念、排程時機與各種常見演算法。
+
+---
+
+### 2.1 排程時機與分類
+
+#### ▸ 排程發生時機
+
+* **Process 進入 Ready Queue 時**：程序準備好執行，進入等候區。
+* **Process 結束或 Blocked**：CPU 釋出，需重新分配。
+* **I/O 完成後回到 Ready Queue 時**：等待排程執行。
+
+#### ▸ Scheduling 類型
+
+1. **Long-term（長期排程）**：
+
+   * 控制系統中進入的 process 數量（jobs ➝ processes）。
+   * 通常在 batch 系統中較常見。
+
+2. **Short-term（短期排程）**：
+
+   * 又稱 CPU scheduler，負責挑選 Ready Queue 中的下一個 process。
+   * 發生頻繁，是核心中的關鍵元件。
+
+3. **Medium-term（中期排程）**：
+
+   * 暫時將 process 移出記憶體（swapping out），以節省資源。
+   * 稍後再將其換回執行（swapping in）。
+
+> 📌 Real-time 系統的 scheduler 必須保證 deadline，否則會造成嚴重後果。
+
+---
+
+### 2.2 Dispatcher（派遣器）
+
+* Dispatcher 負責實際切換到 CPU 上的選定 process。
+* 操作包括：
+
+  * 切換上下文（Context Switch）
+  * 切換至使用者模式（User Mode）
+  * 跳至 process 執行點（程式計數器）
+
+> 📌 Dispatcher Delay：從排定一個 process 到實際執行間的時間，影響系統即時性。
+
+---
+
+### 2.3 排程準則（Scheduling Criteria）
+
+不同系統根據目標選擇不同的衡量標準：
+
+* **CPU Utilization**：CPU 使用率，越高越有效。
+* **Throughput**：每單位時間內完成的 process 數量。
+* **Turnaround Time**：一個 process 從提交到完成所需的時間。
+* **Waiting Time**：在 Ready Queue 中等待的總時間。
+* **Response Time**：系統對使用者輸入的回應延遲。
+
+> 📌 Interactive 系統重視 Response Time；Batch 系統重視 Throughput 和 CPU Utilization。
+
+---
+
+### 2.4 排程演算法（Scheduling Algorithms）
+
+#### ▸ FCFS（First-Come First-Served）
+
+* 非搶佔式，依照抵達順序執行。
+* 簡單但容易產生 **Convoy Effect**（慢程序拖住快程序）。
+
+#### ▸ SJF（Shortest Job First）
+
+* 執行時間最短者優先。
+* 最佳平均等待時間。
+* 缺點：預測執行時間困難；非搶佔式會餓死長作業。
+
+#### ▸ SRTF（Shortest Remaining Time First）
+
+* SJF 的搶佔式版本，根據剩餘時間決定排程。
+* 需準確估計剩餘執行時間。
+
+#### ▸ Priority Scheduling
+
+* 指定權重，優先執行高優先權程序。
+* 可為搶佔式或非搶佔式。
+* 易產生 **Starvation（飢餓）** 問題 ➝ 可用 Aging 解決。
+
+#### ▸ RR（Round Robin）
+
+* 每個 process 依序取得固定時間片（time quantum）。
+* 公平性佳，適用於 time-sharing 系統。
+* 時間片太短 ➝ context switch overhead 高；太長 ➝ 回應差。
+
+#### ▸ Multilevel Queue Scheduling
+
+* 將 process 分類放入不同 Queue（如 Foreground / Background）。
+* 每層使用不同演算法，且層級間優先順序不同。
+* 無法跨 Queue 移動。
+
+#### ▸ Multilevel Feedback Queue
+
+* 與 Multilevel Queue 類似，但允許 process 根據行為跨 Queue 移動。
+* 新 process 通常優先（放在高階 Queue）。
+* 常用於 Interactive 系統，兼顧反應速度與資源效率。
+
+> 📌 Feedback Queue ➝ 若 process 常用 CPU ➝ 降級至較低 Queue。
+
+---
+
+### 2.5 排程演算法比較（Scheduling Comparison）
+
+| 演算法            | 類型       | 是否搶佔  | 平均等待時間   | 優點               | 缺點                 |
+| -------------- | -------- | ----- | -------- | ---------------- | ------------------ |
+| FCFS           | 非搶佔      | 否     | 中等       | 實作簡單             | 容易產生 convoy effect |
+| SJF            | 非搶佔      | 否     | 最低       | 最佳平均等待時間         | 需預測執行時間、會餓死長作業     |
+| SRTF           | 搶佔       | 是     | 很低       | 優化反應時間           | 開銷大、需準確估算執行時間      |
+| Priority       | 搶佔 / 非搶佔 | 是 / 否 | 視優先權設定而異 | 可靈活控制任務順序        | 易餓死低優先權程序          |
+| Round Robin    | 搶佔       | 是     | 適中       | 公平性佳             | 時間片設計困難            |
+| Multi-Queue    | 搶佔 / 非搶佔 | 視設定   | 中等       | 各類型 process 分層處理 | 無法跨 Queue          |
+| Feedback Queue | 搶佔       | 是     | 彈性       | 動態調整、適應性強        | 複雜、需調參             |
+
+---
+
+以下是依照 PDF 第三章（p.22\~p.30）內容整理的筆記，並符合你要求的 **Markdown (.md)** 格式，將其歸於章節：
+
+---
 
 ## 3. 程序操作（Operations on Processes）
 
-### 程序建立（fork、exec、wait）  
-### 記憶體複製與 Copy-on-Write  
-### 程序終止與 Parent-Child 關係  
-### UNIX/Linux 的程序控制範例  
-### Process Tree 與 PID 配置
+作業系統不僅要負責程序的建立與排程，也需處理程序間的關係與同步問題。本章介紹父子程序的產生方式、程序終止的處理機制，以及常見的程序間關係模型。
+
+---
+
+### 3.1 Process Creation（程序建立）
+
+#### ▸ 常見建立方式
+
+* 程序可透過 **System Call `fork()`** 產生子程序（child process）。
+* 子程序可透過 **`exec()`** 系列呼叫載入新程式（常見於 shell）。
+
+#### ▸ 程序的繼承特性
+
+* 子程序會複製父程序的記憶體區塊與狀態（資料段、堆疊、開啟檔案等）。
+* 可選擇：繼續父程序的程式（複製）、或載入新程式（取代）。
+
+> 📌 Linux 預設 `fork()` + `exec()` 搭配使用，形成新程序並執行指定程式。
+
+---
+
+### 3.2 Process Termination（程序終止）
+
+#### ▸ 正常與異常終止
+
+* **正常終止**：程式執行完畢、資源釋放（`exit()`）。
+* **異常終止**：由其他程序或 OS 終止（如 `abort()` 或錯誤事件）。
+
+#### ▸ 終止方式與行為
+
+* 父程序可主動終止子程序：
+
+  * 子程序出錯
+  * 子程序不再需要
+  * 父程序終止時，OS 通常也會同步終止其所有子程序（遞迴終止）
+
+> 📌 Unix 系統提供 `wait()` 與 `waitpid()` 讓父程序等待子程序結束，避免殭屍程序（Zombie）。
+
+---
+
+### 3.3 程序間的關係模型
+
+#### ▸ Independent Process（獨立程序）
+
+* 程序之間沒有互相影響，不共享資料，也不需同步。
+* 適合處理彼此無交集的任務（如：文字編輯器與音樂播放程式）。
+
+#### ▸ Cooperating Process（合作程序）
+
+* 程序間可共享資料或透過 IPC（Inter-Process Communication）同步行為。
+* 使用場景：
+
+  * 多個 Process 操作同一資料結構（如：佇列）
+  * Producer-Consumer 模型：生產與消費資料之間需有順序性與同步性
+
+> 📌 合作程序需要同步與互斥機制（如 Semaphore、Mutex 等）以避免競爭條件（Race Condition）。
+
+---
+
+### 3.4 程序識別與控制
+
+#### ▸ Process ID（PID）
+
+* 每個程序都有唯一的識別碼，由作業系統配置。
+* 系統呼叫如 `getpid()`、`getppid()` 可取得自己的 PID 與父程序 PID。
+
+#### ▸ 程序控制相關 System Calls
+
+* `fork()`：產生新程序
+* `exec()`：載入新程式
+* `wait()`：父程序等待子程序終止
+* `exit()`：結束當前程序
+* `kill(pid, sig)`：傳送訊號給指定程序，可用於終止
+
+> 📌 程序控制是多工環境中的基本建構要素，後續章節將結合程序溝通與同步進行進一步探討。
+
+---
+
+以下是依據 PDF 檔案（p.31–p.52）的內容與順序，所整理的第四章節筆記，格式與前幾章一致，並以 Markdown 呈現：
+
+---
 
 ## 4. 程序間通訊（Interprocess Communication, IPC）
 
-### IPC 目的與分類：獨立 vs 協作程序  
-### 溝通方式：Shared Memory vs Message Passing  
-### Message Passing 類型：Direct / Indirect  
-### Synchronization（阻塞與非阻塞）  
-### Socket 與 RPC（遠端程序呼叫）  
-### 管道（Pipes）：Ordinary Pipes 與 Named Pipes  
-### RMI（Remote Method Invocation）與分散式物件
+程序間通訊（IPC）是多程序系統中不可或缺的一環。程序之間可能需要交換資料、共享資源，或同步作業。IPC 的設計方式會影響整體系統的效率與可靠性。
 
+---
+
+### 4.1 IPC 的基本概念與目的
+
+#### ▸ 為何需要 IPC？
+
+* 單一程序往往無法完成所有任務。
+* 程序間需協調彼此行為與資料交換，例如：
+
+  * 前處理 ➝ 處理 ➝ 後處理（典型工作流程）
+  * 使用者程式與作業系統或服務程式互動
+* 提升模組化、可維護性與效率。
+
+#### ▸ IPC 的設計重點
+
+* 提供有效率的資料傳遞與同步方式。
+* 保證正確性、安全性、與執行順序。
+
+---
+
+### 4.2 IPC 的主要模型
+
+#### ▸ Message Passing（訊息傳遞）
+
+* **概念**：資料透過訊息在程序間傳遞。
+* **特性**：
+
+  * 程序間 **無共享記憶體**。
+  * 使用 OS 提供的 API，如 `send()` / `receive()`。
+* **同步方式**：
+
+  * **Blocking（同步）**：sender / receiver 會等待對方完成動作。
+  * **Non-Blocking（非同步）**：不等待，先送出或收資料後繼續執行。
+
+#### ▸ Shared Memory（共享記憶體）
+
+* **概念**：多個程序共同存取一塊記憶體。
+* **特性**：
+
+  * 執行效率高，無須經過 OS 核心多次複製資料。
+  * 須自行管理同步（如使用 semaphore）。
+* **應用**：
+
+  * 適合頻繁交換大量資料的場景。
+
+---
+
+### 4.3 Direct 與 Indirect Communication
+
+#### ▸ Direct Communication（直接命名）
+
+* Sender 與 Receiver 須明確指明對方名稱。
+* 系統提供簡單 API（e.g., `send(P1, msg)`）。
+* 須管理誰能與誰通訊（雙向 vs 單向）。
+
+#### ▸ Indirect Communication（間接命名）
+
+* 利用 **Mailbox（信箱）或 Port（通訊端口）** 作為中介。
+* 程序傳送 / 接收皆針對 mailbox 操作，不指定對方名稱。
+* 較具彈性，可實作多對一或一對多通訊。
+
+---
+
+### 4.4 Synchronization（同步）與 Buffering（緩衝區）
+
+#### ▸ 同步（Synchronization）
+
+* 通訊的兩端是否需等候對方？
+
+  * **Blocking Send**：Sender 等待 Receiver 接收完訊息。
+  * **Blocking Receive**：Receiver 等待訊息出現。
+  * **Non-blocking**：雙方皆可獨立執行，不需等待。
+
+#### ▸ 緩衝策略（Buffering）
+
+* 用於儲存送出但尚未被接收的訊息。
+* **三種常見策略**：
+
+  1. **Zero Capacity**：無緩衝空間，Sender 必須等 Receiver。
+  2. **Bounded Capacity**：固定大小，Sender 若滿則需等待。
+  3. **Unbounded Capacity**：理論上無上限，Sender 不需等待。
+
+---
+
+### 4.5 IPC 實務範例：Linux 中的 IPC
+
+#### ▸ IPC 機制
+
+* **Pipe（管道）**：單向傳輸，父子程序之間溝通。
+* **FIFO（命名管道）**：具名稱，可在無親屬關係程序間使用。
+* **Message Queue**：OS 提供訊息佇列管理功能。
+* **Shared Memory + Semaphore**：高效交換資料並進行同步。
+* **Socket**：支援網路上的 IPC，跨主機程序也能通訊。
+
+> 📌 在 Linux 中可使用 `ipcs` 指令查看 IPC 資源，如 Message Queue、Shared Memory、Semaphore。
+
+---
+
+### 4.6 典型使用場景比較
+
+| 機制            | 特點          | 優點           | 缺點       |
+| ------------- | ----------- | ------------ | -------- |
+| Pipe          | 單向、匿名、暫態    | 簡單、低成本       | 限於親屬程序   |
+| FIFO          | 單向、具名稱      | 支援無關程序通訊     | 較不彈性     |
+| Message Queue | 系統管理、有訊息格式  | 結構清楚、支援優先權   | 較複雜      |
+| Shared Memory | 記憶體共用、需自行同步 | 效率高、適合大量資料傳輸 | 同步困難     |
+| Socket        | 支援本地/遠端程序通訊 | 跨機器、跨平台      | 建置與使用較繁瑣 |
+
+> 📌 IPC 的選擇取決於通訊模式、資料量、效率要求與系統支援能力。
+
+---
+
+## 5. 程序與通訊練習題
+
+本章節針對「程序概念、排程策略、程序操作與程序間通訊」進行重點回顧。
+
+---
+
+### 5.1 選擇題（共 20 題）
+
+1. 作業系統中負責管理程序生命週期的主要結構是？
+   - (A) Memory Map
+   - (B) File Descriptor Table
+   - (C) Process Control Block (PCB)
+   - (D) Interrupt Vector
+
+2. 在下列哪一種程序狀態轉換中會觸發 context switch？
+   - (A) Ready → Running
+   - (B) Waiting → Ready
+   - (C) Running → Waiting
+   - (D) Running → Terminated
+
+3. 若系統使用 Preemptive Scheduling，表示：
+   - (A) 程序會持續執行直到完成
+   - (B) 每個程序都同時執行
+   - (C) CPU 可強制切換執行中的程序
+   - (D) 所有程序需手動釋放 CPU
+
+4. 下列哪個系統呼叫可用來建立子程序？
+   - (A) exec()
+   - (B) fork()
+   - (C) wait()
+   - (D) exit()
+
+5. 在 Unix 系統中，`fork()` 之後子程序與父程序的差異為何？
+   - (A) 子程序擁有獨立的 PID
+   - (B) 子程序與父程序共用記憶體空間
+   - (C) 子程序會立即終止
+   - (D) 子程序會執行不同程式碼段
+
+6. 若使用 `exec()` 取代原本的程式：
+   - (A) 會產生新的程序
+   - (B) 原本程式被中斷暫存
+   - (C) 原程序映像被替換
+   - (D) 執行緒仍然保留
+
+7. 下列哪一種 IPC 模式可跨系統實作？
+   - (A) Shared Memory
+   - (B) Message Queue
+   - (C) Pipe
+   - (D) TCP Socket
+
+8. 若要在同一台電腦上兩程序共享記憶體，以下哪個為佳？
+   - (A) TCP
+   - (B) Pipe
+   - (C) Shared Memory
+   - (D) Semaphore
+
+9. 下列哪一項不是 PCB 所紀錄的資訊？
+   - (A) 程序狀態
+   - (B) 開啟檔案表
+   - (C) 中斷向量表
+   - (D) CPU 暫存器內容
+
+10. IPC 中的 Message Passing 模式主要依賴：
+    - (A) Semaphore
+    - (B) Signal
+    - (C) 中斷觸發
+    - (D) 系統呼叫與複製記憶體
+
+11. 下列何者不屬於 Process 的特徵？
+   A. 有獨立記憶體空間  
+   B. 擁有程序識別碼（PID）  
+   C. 可以同時存在於多個 CPU 上  
+   D. 包含暫存器與程式計數器等上下文資訊  
+
+12. 哪一個排程策略最有可能導致「飢餓」現象？
+   A. Round Robin  
+   B. Shortest Job First  
+   C. First-Come, First-Served  
+   D. Multilevel Queue  
+
+13. 下列關於 Context Switch 的敘述，何者正確？
+   A. Context Switch 僅發生在 User Mode  
+   B. Context Switch 不需要儲存程序狀態  
+   C. Context Switch 將增加排程的延遲  
+   D. Context Switch 是系統內建的自動儲存機制  
+
+14. 呼叫 `fork()` 後若父子程序都呼叫 `exec()`，結果為何？
+   A. 父子程序會互相同步  
+   B. 系統會中止其中一個程序  
+   C. 各自的程式記憶體空間被新的程式覆蓋  
+   D. 兩者將共享新的程式內容  
+
+15. 下列何者不是 IPC（Inter-Process Communication）常見方法？
+   A. Memory Mapping  
+   B. Message Queue  
+   C. Pipe  
+   D. Signal Mask  
+
+16. 使用 Message Passing 模型時，為確保傳遞資料的正確性與順序性，常需：
+   A. 使用系統呼叫一次傳完所有資料  
+   B. 採用同步式傳送與接收  
+   C. 改用共享記憶體方式傳輸  
+   D. 讓程序進入 idle 模式等資料  
+
+17. 一個程序呼叫 `wait()` 的用途是：
+   A. 等待鍵盤輸入  
+   B. 等待所有 Thread 結束  
+   C. 等待子程序終止  
+   D. 等待排程器喚醒  
+
+18. 在 Shared Memory 模型中，下列何者屬於開發者的責任？
+   A. 管理共享記憶體區域權限  
+   B. 建立中斷處理程序  
+   C. 控制 CPU 指派邏輯  
+   D. 提供資料一致性與同步  
+
+19. 在 Unix/Linux 中，下列哪一個 IPC 方法最適合小型且暫時性資料交換？
+   A. Message Queue  
+   B. Pipe  
+   C. Shared Memory  
+   D. TCP Socket  
+
+20. 如果一個程序正在被其他程序等待（如 `wait()`），其狀態會被標記為？
+   A. Running  
+   B. Ready  
+   C. Blocked  
+   D. Zombie  
+
+---
+
+#### 參考答案
+
+1. **C**：Process Control Block（PCB）是作業系統用來管理程序的主要資料結構，包含程序狀態、ID、暫存器內容等資訊。
+2. **C**：Preemptive Scheduling 允許 OS 在必要時中斷執行中的程序（Running → Ready），因此會觸發 context switch。
+3. **C**：Preemptive（搶佔式）排程允許系統主動中斷執行中程序以分配 CPU 給其他程序。
+4. **B**：`fork()` 是用來建立子程序的 System Call，產生一個與父程序幾乎相同的新程序。
+5. **A**：`fork()` 後父子程序會有不同的 PID，程式碼相同但為獨立程序。
+6. **C**：`exec()` 不會產生新程序，而是用新的程式內容覆蓋當前程序映像。
+7. **D**：TCP Socket 是唯一可以跨系統進行程序間通訊的方式。
+8. **C**：在同一台電腦上使用 Shared Memory 可達到最快的資料交換效率。
+9. **C**：中斷向量表是與硬體設備相關的結構，不屬於單一程序（PCB）擁有。
+10. **D**：Message Passing 模式主要透過系統呼叫（send/recv）及資料複製來完成程序間通訊。
+11. **C**：一個程序無法「同時」存在於多個 CPU 上，這屬於多核心排程機制，非單一 Process 特徵。  
+12. **B**：Shortest Job First 可能長期忽略執行時間長的作業，導致飢餓（Starvation）。  
+13. **C**：Context Switch 是排程器切換程序時必經程序，會引入延遲，因為需要儲存與載入上下文資訊。  
+14. **C**：`exec()` 會用新程式覆蓋原本記憶體內容，父子程序會執行不同程式，但各自獨立空間。  
+15. **D**：Signal Mask 是用於訊號管理，不屬於 IPC 方法；IPC 主要包括 Shared Memory、Pipe、Message Queue 等。  
+16. **B**：為避免資料錯亂或遺失，Message Passing 常採用同步傳送與接收機制（Blocking Send/Receive）。  
+17. **C**：`wait()` 會讓父程序等待子程序結束並回收其資源，否則子程序會變成 Zombie。  
+18. **D**：Shared Memory 需要使用者自行實作同步（如 Lock、Semaphore）來避免資料不一致問題。  
+19. **B**：Pipe 是適合小型、短暫的資料傳輸（如父子程序之間），速度快但功能有限。  
+20. **C**：當程序等待某事件完成（如 I/O、子程序結束），其狀態為 Blocked，等待系統通知再進入 Ready。
+
+---
+
+### 5.2 申論題（共 8 題）
+
+1. 請說明 Process Control Block（PCB）的角色與其包含的重要欄位。
+2. 試比較 Preemptive 與 Non-preemptive Scheduling 在效能與公平性上的差異。
+3. 說明程序五種典型狀態與可能發生的狀態轉移。
+4. 描述 `fork()` 與 `exec()` 系統呼叫的差異與典型應用場景。
+5. 何謂 Context Switch？此動作會帶來哪些效能影響？
+6. 程序間通訊常見方式為何？比較 Message Passing 與 Shared Memory 的優缺點。
+7. 在父子程序間進行同步與等待時，可使用哪些機制？請舉例說明。
+8. 多個程序競爭同一資源時可能產生哪些問題？作業系統如何防止？
+
+---
+
+#### 參考答案
+
+1. **Process Control Block（PCB）的角色與欄位：**  
+   PCB 是 OS 中用來儲存程序資訊的資料結構。每當產生一個新程序時，系統會建立對應的 PCB。  
+   常見欄位包含：  
+   - Process ID（PID）  
+   - 程序狀態（Running, Ready, Blocked...）  
+   - Program Counter（目前執行位置）  
+   - CPU Register（暫存器內容）  
+   - Memory 管理資訊（程式碼區、堆疊區、資料區）  
+   - Scheduling 資訊（優先權、排程佇列）  
+   - I/O 狀態與開啟的檔案資訊  
+
+2. **Preemptive vs. Non-preemptive Scheduling 差異：**  
+   - **Preemptive（可搶佔）：** 系統可強制中斷當前程序，將 CPU 分配給其他程序。  
+     - 優點：提高反應速度與公平性。  
+     - 缺點：Context Switch 次數增加，可能降低整體效能。  
+   - **Non-preemptive（不可搶佔）：** 一旦程序佔用 CPU，直到主動釋放才可切換。  
+     - 優點：Context Switch 少，實作簡單。  
+     - 缺點：若程序執行過久，其他程序需長時間等待，降低互動性。
+
+3. **程序五種典型狀態與轉移：**  
+   - **New**：程序剛建立尚未執行。  
+   - **Ready**：等待 CPU 執行。  
+   - **Running**：正在執行中。  
+   - **Waiting（Blocked）**：等待 I/O 或事件完成。  
+   - **Terminated**：執行結束，準備釋放資源。  
+   - 常見轉移：New → Ready → Running → Waiting → Ready → Running → Terminated。
+
+4. **`fork()` vs. `exec()` 差異與應用：**  
+   - `fork()`：建立與原程序幾乎相同的新程序（子程序），兩者共用程式碼但有獨立記憶體空間。常用於程式分岔、背景處理。  
+   - `exec()`：用其他程式取代目前程序內容，常搭配 `fork()` 使用，以執行不同程式。
+
+5. **Context Switch 定義與效能影響：**  
+   Context Switch 是指 OS 在多工系統中切換不同程序所需進行的作業，需儲存當前程序狀態並載入新程序狀態。  
+   - 效能影響：每次切換需耗費時間與資源（如記憶體快取失效），過多切換會降低 CPU 整體效率。
+
+6. **Message Passing vs. Shared Memory：**  
+   - **Message Passing：**  
+     - 優點：簡單、安全、易同步。  
+     - 缺點：資料需複製、效能較低。  
+   - **Shared Memory：**  
+     - 優點：速度快、資料共享效率高。  
+     - 缺點：需自行處理同步與競爭問題。  
+   - 應用選擇：不同系統與資料交換量需求會決定採用哪一方式。
+
+7. **父子程序的同步與等待機制：**  
+   - 常見方法：  
+     - `wait()`：父程序等待子程序結束。  
+     - Signal、Semaphore、Pipe 等 IPC 機制。  
+   - 範例：父程序使用 `wait()` 確保子程序執行完成後才釋放資源。
+
+8. **資源競爭問題與 OS 解法：**  
+   - 問題：如 Deadlock、Starvation、Race Condition。  
+   - 預防方式：  
+     - 使用 Semaphore 或 Mutex 做同步控制。  
+     - 避免循環等待條件。  
+     - 實作 Deadlock Avoidance 或 Detection 演算法。
+
+---
 
 #  作業
 
