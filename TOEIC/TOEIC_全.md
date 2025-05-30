@@ -1,10 +1,8 @@
-我目前的多益成績是 280 分，計劃透過每天 30 分鐘、持續 90 天的學習計劃來提升成績。我會每日記錄學習進度，並將進度以 VS Code 檔案的形式發送給你，以確保學習內容的同步。例如，當我完成第 5 天的學習後，我會希望你提供第 6 天的學習計劃；同樣的，當我完成第 12 天的學習內容，也請提供第 13 天的學習計劃。
+我目前的多益成績約為400分，計劃透過每天30分鐘、持續90天的學習計畫來進一步提升分數。我會每日記錄學習進度，並將進度以VS Code的Markdown檔案形式傳送給你，以確保學習內容能保持同步，例如當我完成第5天的學習後，我會希望你提供第6天的學習計畫，同樣地，完成第12天後，也請提供第13天的內容。我的目標是在90天內掌握2,500個核心單字，並加強語法與閱讀理解能力，專注於閱讀測驗與答題技巧，不進行聽力練習，期望能在閱讀部分取得顯著進步。
 
-我的目標是在 90 天內掌握 2500 個核心單字，並加強語法與詞彙的能力，從而提升多益的閱讀測驗分數。我決定專注於閱讀理解和答題技巧部分，並放棄聽力學習，力求在閱讀測驗部分取得更高分數。
+由於目前前36天的學習內容已涵蓋初級至接近中級的文法與單字，因此從第37天起，請進入中級轉換期教學，內容包含單字難度提升、文法進階（包括假設語氣、動名詞與不定詞、關係子句、被動語態與倒裝句型）、閱讀篇章拉長至200至300字並附三至五題推論與細節理解題、以及文意邏輯題練習（例如句子連貫性與主旨判斷）。
 
-目前我的英文程度約為台灣國中生的水準，從國中畢業後幾乎未再接觸英文，許多國中時學過的單字也已經遺忘，因此需要從最基礎的部分重新開始學習。我希望你能夠循序漸進地協助我學習，並根據我的進度調整教學內容，確保我能夠穩步進步。
-
-接下來，我會將我的 MD 檔案傳送給你，請特別注意每次學習的單字不要重複，以確保學習的多樣性與效率，並且要保持教學內容版面的一致性。
+接下來我會持續傳送學習檔案，請特別注意每次學習的單字不得重複，以確保多樣性與效率，並保持教學內容版面格式的一致性以利記錄與複習。
 
 ---
 
@@ -4386,5 +4384,1666 @@ Thank you for your cooperation.
    (C) A fire alarm inspection  
    (D) A scheduled safety drill  
    **答案：D**
+
+---
+
+# 第二十九天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思             | 例句 |
+|--------------|--------|----------------------|------|
+| abandon      | v.     | 放棄；遺棄           | He decided to abandon the project halfway. |
+| bargain      | n.     | 交易；划算的買賣     | This coat was a real bargain at that price. |
+| cautious     | adj.   | 謹慎的               | Be cautious when signing legal documents. |
+| deceive      | v.     | 欺騙；誤導           | He tried to deceive customers with false ads. |
+| economical   | adj.   | 節省的；經濟實惠的   | This car is more economical than the old one. |
+| forecast     | n./v.  | 預測；預報           | The weather forecast predicts heavy rain. |
+| generous     | adj.   | 慷慨的               | She is generous with both her time and money. |
+| hesitate     | v.     | 猶豫；遲疑           | Don’t hesitate to ask questions. |
+| illustrate   | v.     | 說明；圖解           | This graph illustrates the sales growth. |
+| justice      | n.     | 正義；司法           | They are fighting for justice. |
+| kneel        | v.     | 跪下                 | He knelt down to tie his shoe. |
+| launch       | v.     | 發表；啟動           | The company will launch a new app. |
+| maintain     | v.     | 維持；保養           | It’s important to maintain your car regularly. |
+| negotiate    | v.     | 談判；協商           | They negotiated a better contract. |
+| obey         | v.     | 服從；遵守           | All staff must obey the safety rules. |
+| peer         | n.     | 同儕；同輩           | She is respected by her peers. |
+| quote        | v./n.  | 引述；報價           | He quoted a price for the repair. |
+| relief       | n.     | 寬慰；減輕           | I felt relief after hearing the news. |
+| sincere      | adj.   | 真誠的               | Please accept my sincere apology. |
+| task         | n.     | 任務；工作           | My task is to update the database. |
+| undergo      | v.     | 經歷；接受           | The building will undergo renovations. |
+| vanish       | v.     | 消失                 | The files suddenly vanished. |
+| withdraw     | v.     | 提款；撤回           | She withdrew money from the ATM. |
+| yield        | v./n.  | 產出；屈服；讓出     | This land yields good crops. |
+| zone         | n.     | 地區；區域           | This is a no-parking zone. |
+
+---
+
+## 📖 文法學習：形容詞子句（Adjective Clauses）
+
+### 🔹 說明
+
+形容詞子句修飾名詞，常由關係代名詞引導（who, whom, whose, which, that）。
+
+### 🔹 用法範例
+
+- The employee **who works in HR** is friendly.  
+- This is the book **that I mentioned**.  
+- The man **whose car was stolen** is reporting it.
+
+### 🔹 注意事項
+
+- 關係代名詞可省略（若在子句中為受詞）：  
+  - ✅ The report (that) you sent is useful.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. The woman ______ helped me is my supervisor.  
+   (A) who (B) which (C) what  
+   **答案：A**
+
+2. That’s the file ______ you asked for.  
+   (A) whose (B) who (C) that  
+   **答案：C**
+
+3. The client ______ order was delayed is upset.  
+   (A) who (B) whose (C) which  
+   **答案：B**
+
+4. He is the manager ______ office is on the top floor.  
+   (A) who (B) whom (C) whose  
+   **答案：C**
+
+5. The tool ______ we used is broken.  
+   (A) that (B) where (C) who  
+   **答案：A**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+TO: All Employees  
+FROM: Facilities Department  
+SUBJECT: Elevator Maintenance
+
+Please be advised that the elevators in Building B will be under maintenance on Thursday, June 15, from 9:00 AM to 1:00 PM. During this time, please use the stairs or the elevators in Building A.
+
+We apologize for the inconvenience and appreciate your cooperation.
+```
+
+---
+
+### 問題：
+
+1. What is the purpose of the notice?  
+   (A) To announce a staff meeting  
+   (B) To notify about elevator maintenance  
+   (C) To promote building A  
+   (D) To schedule new elevator installations  
+   **答案：B**
+
+2. When will the maintenance happen?  
+   (A) June 14  
+   (B) June 15, 1:00 PM to 5:00 PM  
+   (C) June 15, 9:00 AM to 1:00 PM  
+   (D) June 16  
+   **答案：C**
+
+3. Which building’s elevators will be under maintenance?  
+   (A) Building A  
+   (B) Building C  
+   (C) Building B  
+   (D) Main Building  
+   **答案：C**
+
+4. What are employees advised to do?  
+   (A) Take the day off  
+   (B) Use Building B’s elevators  
+   (C) Use stairs or Building A’s elevators  
+   (D) Delay all meetings  
+   **答案：C**
+
+5. Who sent this notice?  
+   (A) IT Department  
+   (B) Human Resources  
+   (C) Facilities Department  
+   (D) Security Office  
+   **答案：C**
+
+---
+
+# 第三十天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思             | 例句 |
+|--------------|--------|----------------------|------|
+| accelerate   | v.     | 加速                 | The company wants to accelerate product development. |
+| allocate     | v.     | 分配                 | Funds were allocated to each department. |
+| banner       | n.     | 橫幅                 | The banner displayed the company's logo. |
+| closure      | n.     | 關閉；終止           | The store announced its permanent closure. |
+| endorse      | v.     | 支持；代言           | The actor endorsed the new brand of shoes. |
+| exempt       | adj.   | 免除的               | Some items are exempt from tax. |
+| fluctuate    | v.     | 波動                 | Prices tend to fluctuate during holidays. |
+| grant        | v./n.  | 授予；補助金         | He was granted access to confidential data. |
+| hesitant     | adj.   | 猶豫的               | She was hesitant to share her opinion. |
+| initiate     | v.     | 開始                 | They initiated the project in early June. |
+| jurisdiction | n.     | 管轄權               | This case falls under federal jurisdiction. |
+| landlord     | n.     | 房東                 | The landlord increased the rent last month. |
+| morale       | n.     | 士氣                 | Employee morale improved after the changes. |
+| nominate     | v.     | 提名                 | He was nominated for best employee of the year. |
+| oblige       | v.     | 迫使；使感激         | We are obliged to follow company rules. |
+| patron       | n.     | 顧客；贊助者         | The patrons praised the restaurant’s service. |
+| quarterly    | adj./adv.| 每季的；每季地     | We hold quarterly financial reviews. |
+| redeem       | v.     | 兌換；補救           | You can redeem the coupon at checkout. |
+| safeguard    | v.     | 保護                 | Measures were taken to safeguard data. |
+| terminal     | n./adj.| 航廈；終端的         | The flight departs from Terminal 1. |
+| unpaid       | adj.   | 未支付的             | He has several unpaid invoices. |
+| vacant       | adj.   | 空的；空缺的         | There are two vacant positions in our team. |
+| warranty     | n.     | 保固                 | The product comes with a one-year warranty. |
+| yield        | v./n.  | 讓出；產生           | He yielded the right of way to the ambulance. |
+| zone         | n.     | 區域                 | This is a high-security zone. |
+
+---
+
+## 📖 文法學習：副詞子句（Adverb Clauses）
+
+### 🔹 說明
+
+副詞子句修飾動詞、形容詞或整句，說明時間、原因、條件、讓步等。常見連接詞包括：**because, although, if, when, while, since, as soon as**。
+
+### 🔹 用法範例
+
+- **時間**：Call me *when you arrive*.  
+- **原因**：We canceled the trip *because it rained*.  
+- **條件**：You can go *if you finish your work*.  
+- **讓步**：*Although he was tired*, he kept working.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. We stayed home ______ it was raining.  
+   (A) although (B) because (C) if  
+   **答案：B**
+
+2. ______ she studied hard, she didn’t pass the exam.  
+   (A) Because (B) Although (C) When  
+   **答案：B**
+
+3. I’ll email you ______ I receive the file.  
+   (A) because (B) although (C) as soon as  
+   **答案：C**
+
+4. ______ he is busy, he always answers calls.  
+   (A) If (B) Even though (C) While  
+   **答案：B**
+
+5. ______ the alarm sounds, evacuate the building.  
+   (A) When (B) Because (C) Although  
+   **答案：A**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Staff  
+From: Facilities Management  
+Subject: Power Shutdown on Saturday
+
+Due to maintenance, there will be a complete power shutdown this Saturday, from 7:00 AM to 1:00 PM. Please save your work and turn off all electronic devices before leaving on Friday. Access to the building will be restricted during the shutdown.
+
+Thank you for your cooperation.
+```
+
+---
+
+### 問題：
+
+1. What is the purpose of the notice?  
+   (A) To schedule staff meetings  
+   (B) To announce a power shutdown  
+   (C) To report power failure  
+   (D) To update office hours  
+   **答案：B**
+
+2. When will the power shutdown occur?  
+   (A) Friday morning  
+   (B) Friday afternoon  
+   (C) Saturday morning  
+   (D) Saturday evening  
+   **答案：C**
+
+3. What are employees asked to do before leaving?  
+   (A) Lock their desks  
+   (B) Save work and turn off devices  
+   (C) Clean the office  
+   (D) Submit reports  
+   **答案：B**
+
+4. Who sent the notice?  
+   (A) IT department  
+   (B) Security team  
+   (C) Facilities Management  
+   (D) Human Resources  
+   **答案：C**
+
+5. What will happen to building access during the shutdown?  
+   (A) It will be limited  
+   (B) It will be open  
+   (C) It will be monitored  
+   (D) It will be upgraded  
+   **答案：A**
+
+---
+
+# 第三十一天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思               | 例句 |
+|--------------|--------|------------------------|------|
+| adjacent     | adj.   | 鄰近的                 | The conference room is adjacent to the lobby. |
+| benchmark    | n.     | 基準；指標             | This report serves as a benchmark for future analysis. |
+| collaborate  | v.     | 合作                   | The two teams collaborated on the design project. |
+| disperse     | v.     | 分散；驅散             | The crowd dispersed after the speech ended. |
+| eligible     | adj.   | 有資格的               | You are eligible to apply for the scholarship. |
+| fluctuate    | v.     | 波動                   | Stock prices fluctuate daily. |
+| glossary     | n.     | 詞彙表；術語彙編       | Refer to the glossary at the back of the book. |
+| hygiene      | n.     | 衛生                   | Good hygiene is essential in food preparation. |
+| initiate     | v.     | 開始；發起             | The company initiated a new recycling policy. |
+| joint        | adj.   | 共同的；聯合的         | They signed a joint agreement last week. |
+| keen         | adj.   | 渴望的；敏銳的         | She is very keen to learn new skills. |
+| leverage     | v./n.  | 善用；槓桿作用         | He leveraged his network to get the job. |
+| mutual       | adj.   | 互相的；共同的         | Mutual respect is important in teamwork. |
+| notify       | v.     | 通知                   | Please notify the manager in advance. |
+| outage       | n.     | 停電；中斷             | There was a brief power outage last night. |
+| precaution   | n.     | 預防措施               | Always take precautions when using chemicals. |
+| quota        | n.     | 配額                   | The company set a sales quota for each team. |
+| redundant    | adj.   | 多餘的；被裁員的       | His position was made redundant. |
+| sanitation   | n.     | 公共衛生               | Proper sanitation helps prevent disease. |
+| thrive       | v.     | 繁榮；興旺             | Small businesses can thrive with government support. |
+| unanimous    | adj.   | 一致同意的             | The board gave unanimous approval. |
+| vendor       | n.     | 供應商；攤販           | We found a reliable vendor for office supplies. |
+| workload     | n.     | 工作量                 | She has a heavy workload this week. |
+| yearn        | v.     | 渴望；嚮往             | He yearns for a chance to travel. |
+| zone         | n.     | 區域                   | This is a restricted zone. |
+
+---
+
+## 📖 文法學習：形容詞子句（Adjective Clauses）
+
+### 🔹 說明
+
+形容詞子句修飾名詞，常由 **who, whom, which, that, whose, where, when** 等引導。
+
+### 🔹 用法範例
+
+- The employee **who works in HR** is very helpful.  
+- The folder **that you gave me** is missing.  
+- We visited the town **where she was born**.
+
+### 🔹 注意事項
+
+- 當形容詞子句修飾受詞且關係代名詞為 that 或 whom 時，可省略：  
+  - ✅ The book **that I borrowed** is great.  
+  - ✅ The person **you met** is my friend.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. The woman ______ called you is my supervisor.  
+   (A) who (B) whom (C) which  
+   **答案：A**
+
+2. This is the file ______ you requested.  
+   (A) who (B) where (C) that  
+   **答案：C**
+
+3. The company hired an engineer ______ ideas impressed the panel.  
+   (A) who (B) whose (C) that  
+   **答案：B**
+
+4. That’s the shop ______ I bought the notebook.  
+   (A) where (B) which (C) what  
+   **答案：A**
+
+5. The report ______ was submitted yesterday needs a revision.  
+   (A) who (B) which (C) where  
+   **答案：B**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Staff  
+From: Office Management  
+Subject: New Coffee Machine Instructions
+
+We’ve installed a new coffee machine in the break room. To use it, select your preferred drink, place your cup correctly, and press the start button.
+
+Please read the instruction sheet posted next to the machine before using it. If you experience any issues, contact facility support at extension 301.
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of this notice?  
+   (A) To announce new employee benefits  
+   (B) To explain how to use a new appliance  
+   (C) To assign cleaning duties  
+   (D) To invite staff to an event  
+   **答案：B**
+
+2. Where is the coffee machine located?  
+   (A) Near the front desk  
+   (B) In the lobby  
+   (C) In the break room  
+   (D) In the meeting room  
+   **答案：C**
+
+3. What should employees do before using the machine?  
+   (A) Call the manager  
+   (B) Read the instruction sheet  
+   (C) Bring their own coffee  
+   (D) Clean the machine  
+   **答案：B**
+
+4. What should employees do if the machine doesn’t work?  
+   (A) Fix it themselves  
+   (B) Move it to another room  
+   (C) Contact facility support  
+   (D) Unplug and restart it  
+   **答案：C**
+
+5. What is the extension number for help?  
+   (A) 300  
+   (B) 301  
+   (C) 103  
+   (D) 310  
+   **答案：B**
+
+---
+
+# 第三十二天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性   | 中文意思             | 例句 |
+|----------------|--------|----------------------|------|
+| adapt          | v.     | 適應                 | Employees must adapt to new technologies. |
+| benchmark      | n.     | 基準；標竿           | Sales figures are compared to last year’s benchmark. |
+| courier        | n.     | 快遞員；信差         | The courier delivered the documents on time. |
+| disposal       | n.     | 處理；處置           | Proper waste disposal is required by law. |
+| ethics         | n.     | 道德；倫理           | The company values workplace ethics. |
+| fiscal         | adj.   | 財政的；會計的       | The fiscal year ends in December. |
+| glossary       | n.     | 詞彙表               | Please refer to the glossary for unfamiliar terms. |
+| hinder         | v.     | 妨礙；阻礙           | Bad weather may hinder the delivery. |
+| itinerary      | n.     | 行程表               | The travel agent sent us the final itinerary. |
+| leaseholder    | n.     | 承租人               | The leaseholder is responsible for maintenance. |
+| morale         | n.     | 士氣                 | The new bonus policy improved employee morale. |
+| obsolete       | adj.   | 過時的；淘汰的       | This model is now obsolete. |
+| perk           | n.     | 額外津貼；福利       | Health insurance is a common job perk. |
+| quota          | n.     | 配額；限額           | Each department has a hiring quota. |
+| recipient      | n.     | 收件人               | Please confirm the recipient’s address. |
+| setback        | n.     | 挫折；阻礙           | The fire was a major setback for the project. |
+| transit        | n.     | 運輸；運送過程       | The items are currently in transit. |
+| verify         | v.     | 驗證；證實           | Please verify your account details. |
+| workforce      | n.     | 勞動力               | The factory needs to expand its workforce. |
+| yield          | v./n.  | 產生；收益           | The investment yielded excellent results. |
+| acclaim        | v./n.  | 稱讚；喝采           | The new policy received public acclaim. |
+| bulkhead       | n.     | 隔板；艙壁           | The bulkhead separates the cargo area. |
+| credential     | n.     | 資格證明             | Please submit your teaching credentials. |
+| expedite       | v.     | 加快；促進           | We need to expedite the delivery. |
+| hospitality    | n.     | 款待；服務業         | The hospitality industry is booming. |
+
+---
+
+## 📖 文法學習：使役動詞（Causative Verbs）
+
+### 🔹 說明
+
+使役動詞表示「讓某人做某事」，常見動詞有：**make, have, let, get**。
+
+### 🔹 用法範例
+
+- **make** + 受詞 + 原形動詞：The manager made her redo the report.  
+- **have** + 受詞 + 原形動詞：We had the technician fix the printer.  
+- **let** + 受詞 + 原形動詞：I let him use my laptop.  
+- **get** + 受詞 + to V：She got the intern to submit the file.
+
+### 🔹 注意事項
+
+- 被動語態中，make 要加 to V：He was made **to wait** outside.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. The teacher made us ______ the assignment again.  
+   (A) do (B) to do (C) doing  
+   **答案：A**
+
+2. I had the assistant ______ the documents.  
+   (A) submit (B) to submit (C) submitting  
+   **答案：A**
+
+3. We let the client ______ the prototype.  
+   (A) to test (B) test (C) tested  
+   **答案：B**
+
+4. She got the technician ______ the laptop.  
+   (A) fix (B) to fix (C) fixing  
+   **答案：B**
+
+5. He was made ______ outside the office.  
+   (A) wait (B) waited (C) to wait  
+   **答案：C**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Employees  
+Subject: New Courier Procedure
+
+Starting next Monday, all outgoing mail and packages must be logged into the new courier system located near the front desk. This system helps ensure accurate tracking of company documents.
+
+To send a package, please scan your employee badge and enter the recipient’s information. If you need assistance, contact Mail Services at extension 204.
+
+Thank you for your cooperation.
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of the notice?  
+   (A) To announce a new mail policy  
+   (B) To introduce a new employee  
+   (C) To report a system error  
+   (D) To change the company address  
+   **答案：A**
+
+2. Where is the new courier system?  
+   (A) In the break room  
+   (B) In the HR department  
+   (C) Near the front desk  
+   (D) Next to the elevator  
+   **答案：C**
+
+3. What must employees scan?  
+   (A) The package code  
+   (B) A delivery slip  
+   (C) Their ID card  
+   (D) A barcode reader  
+   **答案：C**
+
+4. What is entered into the system?  
+   (A) Sender’s department  
+   (B) Delivery address  
+   (C) Package weight  
+   (D) Tracking number  
+   **答案：B**
+
+5. Who should employees call for help?  
+   (A) Security office  
+   (B) IT support  
+   (C) Mail Services  
+   (D) Customer service  
+   **答案：C**
+
+---
+
+# 第三十三天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思           | 例句 |
+|--------------|--------|--------------------|------|
+| align        | v.     | 對齊；使一致       | Align the text to the center of the page. |
+| benchmark    | n.     | 基準點；標準       | The results serve as a benchmark for future studies. |
+| clutter      | n./v.  | 混亂；雜亂堆積     | Don’t clutter your desk with papers. |
+| delegate     | n.     | 代表               | Each country sent a delegate to the conference. |
+| endorse      | v.     | 支持；背書         | The manager endorsed the new proposal. |
+| foster       | v.     | 促進；培養         | The program aims to foster innovation. |
+| gadget       | n.     | 小裝置；小工具     | This kitchen gadget is very convenient. |
+| haul         | v.     | 拖拉；搬運         | They hauled the boxes into the warehouse. |
+| intact       | adj.   | 完好無損的         | The package arrived intact. |
+| jurisdiction | n.     | 管轄權             | This case is outside our jurisdiction. |
+| keynote      | n.     | 主旨演講           | She delivered the keynote at the annual summit. |
+| leverage     | v./n.  | 發揮影響；槓桿     | We can leverage our resources for better results. |
+| morale       | n.     | 士氣               | High morale boosts productivity. |
+| obsolete     | adj.   | 廢棄的；過時的     | That software is now obsolete. |
+| perk         | n.     | 額外福利           | Free coffee is one of the office perks. |
+| quota        | n.     | 配額；限額         | Salespeople must meet their monthly quotas. |
+| relay        | v.     | 轉達；轉播         | Please relay the message to your team. |
+| seamless     | adj.   | 無縫的；順暢的     | We aim for a seamless user experience. |
+| thrive       | v.     | 成功；繁榮         | Small businesses thrive in this area. |
+| unanimous    | adj.   | 一致同意的         | The vote was unanimous. |
+| vendor       | n.     | 供應商             | We received quotes from several vendors. |
+| warranty     | n.     | 保固；保證         | The printer comes with a two-year warranty. |
+| yearn        | v.     | 渴望               | She yearned for a chance to travel. |
+| abide        | v.     | 遵守               | Please abide by the safety regulations. |
+| brisk        | adj.   | 活潑的；興旺的     | Business was brisk during the holiday season. |
+
+---
+
+## 📖 文法學習：It + takes + 時間 + to V
+
+### 🔹 說明
+
+這個句型用來表達「花費時間去做某事」。是 TOEIC 常見結構，尤其出現在說明流程或安排。
+
+### 🔹 用法範例
+
+- It takes **about 10 minutes** to walk to the station.  
+- It took **a few days** to complete the setup.  
+- It will take **more time** to finish the report.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. It ______ about three hours to complete the installation.  
+   (A) takes (B) take (C) taking (D) took  
+   **答案：A**
+
+2. It will ______ longer than expected to fix the issue.  
+   (A) taking (B) took (C) takes (D) take  
+   **答案：D**
+
+3. It ______ us two weeks to launch the campaign.  
+   (A) take (B) took (C) takes (D) taking  
+   **答案：B**
+
+4. How long does it ______ to get to the airport?  
+   (A) takes (B) take (C) taking (D) took  
+   **答案：B**
+
+5. It doesn’t ______ long to review the report.  
+   (A) take (B) takes (C) taking (D) took  
+   **答案：A**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Employees  
+From: Office Management  
+Subject: Office Clean-Up Day
+
+This Friday has been designated as Office Clean-Up Day. All staff are requested to organize their personal workspaces and remove unnecessary items. Cleaning supplies will be provided in the break room. Large items can be placed in the designated disposal area near the back exit.
+
+Please complete your cleanup by 4:00 PM. If you need assistance, contact the facilities team at extension 104.
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of the notice?  
+   (A) To plan a meeting  
+   (B) To assign new desks  
+   (C) To announce a clean-up event  
+   (D) To distribute office supplies  
+   **答案：C**
+
+2. Where can employees find cleaning supplies?  
+   (A) At the front desk  
+   (B) In the meeting room  
+   (C) In the break room  
+   (D) Near the exit  
+   **答案：C**
+
+3. What should staff do with large items?  
+   (A) Leave them at their desks  
+   (B) Place them near the back exit  
+   (C) Take them home  
+   (D) Throw them in the kitchen  
+   **答案：B**
+
+4. By what time should the cleanup be completed?  
+   (A) 3:00 PM  
+   (B) 5:00 PM  
+   (C) 6:00 PM  
+   (D) 4:00 PM  
+   **答案：D**
+
+5. Who should staff contact for help?  
+   (A) Their supervisor  
+   (B) Receptionist  
+   (C) Facilities team  
+   (D) IT support  
+   **答案：C**
+
+---
+
+# 第三十四天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思           | 例句 |
+|--------------|--------|--------------------|------|
+| aboard       | adv./prep. | 在（交通工具）上 | All passengers are now aboard the plane. |
+| breach       | n./v.  | 違反；破壞         | The company was fined for a data breach. |
+| coincide     | v.     | 同時發生；一致     | The event coincided with a major holiday. |
+| deduct       | v.     | 扣除               | Taxes will be deducted from your salary. |
+| embargo      | n.     | 禁運               | The government imposed an embargo on oil exports. |
+| foreseeable  | adj.   | 可預見的           | There will be no major changes in the foreseeable future. |
+| gauge        | v./n.  | 測量；判斷         | It's difficult to gauge customer satisfaction. |
+| hesitant     | adj.   | 猶豫的             | She was hesitant to accept the offer. |
+| intact       | adj.   | 完整無缺的         | The package arrived intact despite the rough handling. |
+| leverage     | v./n.  | 利用；槓桿         | He leveraged his experience to win the deal. |
+| maneuver     | v./n.  | 操作；策略         | The driver maneuvered carefully through traffic. |
+| obsolete     | adj.   | 廢棄的；過時的     | Typewriters are now considered obsolete. |
+| parole       | n.     | 假釋               | He was released on parole. |
+| quota        | n.     | 配額；限額         | They met their sales quota for the quarter. |
+| reimburse    | v.     | 核銷；償還         | We will reimburse travel expenses. |
+| solicit      | v.     | 招攬；徵求         | The charity is soliciting donations. |
+| tentative    | adj.   | 暫定的；試探性的   | The meeting date is tentative. |
+| unprecedented | adj. | 前所未有的         | The company saw unprecedented growth last year. |
+| verdict      | n.     | 判決；結論         | The jury delivered a guilty verdict. |
+| withstand    | v.     | 承受；經得起       | This material can withstand high temperatures. |
+| yearn        | v.     | 渴望；嚮往         | She yearned for a better future. |
+| anonymous    | adj.   | 匿名的             | The donor wished to remain anonymous. |
+| benchmark    | n.     | 基準；標準         | Our service sets the benchmark in the industry. |
+| concise      | adj.   | 簡潔的             | Please write a concise summary. |
+| diligence    | n.     | 勤奮               | Her diligence impressed her supervisor. |
+
+---
+
+## 📖 文法學習：比較級與最高級（Comparatives and Superlatives）
+
+### 🔹 說明
+
+比較級（comparative）用來比較兩者，最高級（superlative）用來表達三者以上中的最高程度。
+
+### 🔹 形成規則
+
+- 一般形容詞 + er / est：small → smaller → smallest  
+- 長形容詞使用 more / most：efficient → more efficient → most efficient  
+- 不規則變化：good → better → best；bad → worse → worst
+
+### 🔹 注意事項
+
+- 使用 than 連接比較對象：She is **taller than** her brother.  
+- 最高級前加定冠詞 the：He is **the most experienced** candidate.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. This report is ______ than the previous one.  
+   (A) clearer (B) more clear (C) most clear  
+   **答案：A**
+
+2. He is the ______ speaker in the company.  
+   (A) fluent (B) more fluent (C) most fluent  
+   **答案：C**
+
+3. This model is ______ than the older version.  
+   (A) expensive (B) most expensive (C) more expensive  
+   **答案：C**
+
+4. That was the ______ presentation I've ever seen.  
+   (A) worse (B) worst (C) bad  
+   **答案：B**
+
+5. She is ______ than anyone in the team.  
+   (A) diligent (B) more diligent (C) most diligent  
+   **答案：B**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+We are pleased to introduce a new security badge system that will take effect on Monday. All employees must scan their new ID badges at the entrance gate. The security office will issue badges this Friday.
+
+To obtain your badge, bring a valid photo ID to the security desk between 10:00 AM and 4:00 PM. Please contact the HR department for further assistance.
+
+Thank you for your cooperation.
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of the notice?  
+   (A) To announce a new company policy  
+   (B) To introduce a new security system  
+   (C) To explain building maintenance  
+   (D) To remind employees about ID rules  
+   **答案：B**
+
+2. When will the new badge system start?  
+   (A) Today  
+   (B) Friday  
+   (C) Monday  
+   (D) Next week  
+   **答案：C**
+
+3. When can employees pick up their new badges?  
+   (A) Monday from 8:00 AM to 5:00 PM  
+   (B) Friday from 10:00 AM to 4:00 PM  
+   (C) Thursday from 10:00 AM to 2:00 PM  
+   (D) Friday from 9:00 AM to 5:00 PM  
+   **答案：B**
+
+4. Where should employees go to get their badges?  
+   (A) HR office  
+   (B) Main lobby  
+   (C) Security desk  
+   (D) Reception counter  
+   **答案：C**
+
+5. What do employees need to bring to get their badge?  
+   (A) Employment letter  
+   (B) Badge request form  
+   (C) Old ID card  
+   (D) Valid photo ID  
+   **答案：D**
+
+---
+
+# 第三十五天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思             | 例句 |
+|--------------|--------|----------------------|------|
+| abundant     | adj.   | 大量的；充足的       | We have an abundant supply of raw materials. |
+| clarify      | v.     | 澄清；說明           | Could you clarify your last statement? |
+| disposal     | n.     | 處理；清除           | Proper waste disposal is essential. |
+| eliminate    | v.     | 消除；排除           | We must eliminate unnecessary steps. |
+| fluctuate    | v.     | 波動；起伏           | Prices tend to fluctuate during peak season. |
+| grant        | v.     | 授予；給予           | He was granted access to the database. |
+| hinder       | v.     | 妨礙；阻礙           | Poor communication hinders progress. |
+| initiative   | n.     | 主動行動；倡議       | The new safety initiative was well received. |
+| jurisdiction | n.     | 管轄權；司法權       | The issue falls under federal jurisdiction. |
+| knack        | n.     | 技能；本領           | She has a knack for solving problems. |
+| leasehold    | n.     | 租賃權               | The company renewed its leasehold agreement. |
+| morale       | n.     | 士氣                 | Employee morale has improved lately. |
+| notify       | v.     | 通知                 | Please notify the manager of your absence. |
+| omission     | n.     | 疏漏；遺漏           | The omission of this clause caused confusion. |
+| patron       | n.     | 顧客；贊助人         | The café was full of regular patrons. |
+| quota        | n.     | 配額；限額           | Each team has a sales quota to meet. |
+| redeem       | v.     | 兌換；彌補           | You can redeem this coupon at checkout. |
+| skeptical    | adj.   | 懷疑的               | Some employees are skeptical about the plan. |
+| threshold    | n.     | 門檻；界限           | The bonus is triggered once the sales threshold is met. |
+| upcoming     | adj.   | 即將到來的           | The upcoming event will be held next Friday. |
+| venue        | n.     | 地點；會場           | The venue for the conference is yet to be confirmed. |
+| withstand    | v.     | 承受；抵擋           | The building can withstand strong winds. |
+| yield        | v./n.  | 產生；產量           | The farm yields a large amount of produce. |
+| accelerate   | v.     | 加速；促進           | We need to accelerate the approval process. |
+| batch        | n.     | 一批；一組           | The factory produced a new batch of products. |
+
+---
+
+## 📖 文法學習：名詞所有格（Possessive Nouns）
+
+### 🔹 說明
+
+名詞所有格表示「屬於某人或某物」，常用 `'s` 或 `of` 結構。
+
+### 🔹 用法範例
+
+- 單數：The **manager’s** office is on the second floor.  
+- 複數：The **employees’** lounge was renovated.  
+- 無生命物體：The color **of** the car is red.
+
+### 🔹 注意事項
+
+- 若名詞為複數且結尾是 **s**，只需加 `'`：*students’ books*  
+- 無生命物體通常不使用 `'s`，而用 *of*：*the door of the room*
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. This is _______ laptop.  
+   (A) manager (B) manager’s (C) managers (D) managers’  
+   **答案：B**
+
+2. The _______ salaries were increased last month.  
+   (A) employee (B) employees (C) employees’ (D) employee’s  
+   **答案：C**
+
+3. The color _______ this document is different.  
+   (A) for (B) at (C) of (D) in  
+   **答案：C**
+
+4. That is the _______ decision.  
+   (A) client (B) clients (C) client’s (D) clients’  
+   **答案：C**
+
+5. We checked the condition _______ the equipment.  
+   (A) to (B) on (C) of (D) for  
+   **答案：C**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Employees  
+Subject: Office Renovation
+
+The third-floor conference room will be closed for renovation from June 5 to June 12. During this time, meetings should be held in Room 203 or Room 105. Please update your schedules accordingly. If you have questions, contact Facilities at extension 225.
+
+Thank you for your cooperation.
+```
+
+---
+
+### 問題：
+
+1. What is the purpose of the notice?  
+   (A) To announce a training session  
+   (B) To change work hours  
+   (C) To inform about a room closure  
+   (D) To invite employees to a meeting  
+   **答案：C**
+
+2. When will the renovation take place?  
+   (A) June 1 to June 5  
+   (B) June 5 to June 12  
+   (C) June 10 to June 17  
+   (D) June 3 to June 7  
+   **答案：B**
+
+3. Where should meetings be held during the renovation?  
+   (A) Room 301  
+   (B) The cafeteria  
+   (C) Room 203 or 105  
+   (D) Online  
+   **答案：C**
+
+4. What should employees do?  
+   (A) Postpone all meetings  
+   (B) Contact HR for help  
+   (C) Update their schedules  
+   (D) Use only Room 203  
+   **答案：C**
+
+5. What is the extension number for Facilities?  
+   (A) 225  
+   (B) 202  
+   (C) 125  
+   (D) 105  
+   **答案：A**
+
+---
+
+# 第三十六天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字         | 詞性   | 中文意思               | 例句 |
+|--------------|--------|------------------------|------|
+| abrupt       | adj.   | 突然的；唐突的         | His resignation was very abrupt. |
+| benchmark    | n.     | 基準；指標             | Sales figures serve as a benchmark for success. |
+| collaborate   | v.     | 合作                   | The two companies will collaborate on this project. |
+| defective    | adj.   | 有缺陷的               | We received a shipment of defective products. |
+| expedite     | v.     | 加速；促進             | We need to expedite the delivery process. |
+| fiscal       | adj.   | 財政的                 | The fiscal report will be released tomorrow. |
+| grasp        | v./n.  | 理解；掌握             | He couldn't grasp the complex idea. |
+| halt         | v.     | 停止                   | The machine halted suddenly due to an error. |
+| impose       | v.     | 強加；課徵（稅）        | The government imposed a new tax on imports. |
+| inventory    | n.     | 存貨清單；庫存         | Please check the inventory levels. |
+| jeopardy     | n.     | 危險                   | His mistake put the project in jeopardy. |
+| keen         | adj.   | 熱衷的；敏銳的         | She is a keen learner. |
+| liable       | adj.   | 有責任的               | The company is liable for damages. |
+| mutual       | adj.   | 互相的；共同的         | They reached a mutual agreement. |
+| nominee      | n.     | 被提名人               | He was the nominee for the award. |
+| outage       | n.     | 停電；中斷             | The power outage lasted for two hours. |
+| prospect     | n.     | 前景；可能性           | Job prospects are improving. |
+| quarterly    | adj./adv.| 每季的；每季地        | The quarterly report is due tomorrow. |
+| reluctant    | adj.   | 不情願的；勉強的       | He was reluctant to accept the offer. |
+| surplus      | n./adj.| 過剩；盈餘             | The company has a large surplus of stock. |
+| transaction  | n.     | 交易                   | The transaction was completed successfully. |
+| upcoming     | adj.   | 即將到來的             | We’re preparing for the upcoming conference. |
+| verify       | v.     | 驗證；證實             | Please verify the data before submission. |
+| workforce    | n.     | 勞動力；員工           | The company is expanding its workforce. |
+| yield        | v./n.  | 生產；收益             | The investment yielded high returns. |
+
+---
+
+## 📖 文法學習：現在完成進行式（Present Perfect Continuous）
+
+### 🔹 說明
+
+**現在完成進行式**表示某動作從過去持續到現在，並可能仍在進行。  
+**句型**：主詞 + has/have + been + V-ing
+
+### 🔹 用法範例
+
+- They **have been working** on the project since Monday.
+- She **has been studying** for three hours.
+
+### 🔹 常見搭配詞
+
+- since + 過去時間點（since Monday）
+- for + 一段時間（for 3 hours）
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. We ______ for a new supplier since last month.  
+   (A) look (B) have looked (C) are looking (D) have been looking  
+   **答案：D**
+
+2. She ______ at this company for five years.  
+   (A) is working (B) works (C) has been working (D) worked  
+   **答案：C**
+
+3. I ______ to contact the client all day.  
+   (A) try (B) tried (C) have been trying (D) had tried  
+   **答案：C**
+
+4. They ______ the same issue for a while now.  
+   (A) have been discussing (B) discussed (C) are discussing (D) had discussed  
+   **答案：A**
+
+5. He ______ harder recently to meet the deadline.  
+   (A) is working (B) was working (C) will work (D) has been working  
+   **答案：D**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+NOTICE
+
+To: All Staff  
+From: Office Administration  
+Subject: Air Conditioning Maintenance
+
+Please be advised that maintenance on the air conditioning system will take place this Friday from 8:00 AM to 12:00 PM. During this time, the system will be shut down. 
+
+Staff are encouraged to dress appropriately for warmer temperatures and consider adjusting their working hours if necessary.
+
+We apologize for the inconvenience and appreciate your understanding.
+```
+
+---
+
+### 問題：
+
+1. What is the notice about?  
+   (A) A fire drill schedule  
+   (B) A system upgrade  
+   (C) Air conditioning maintenance  
+   (D) Office relocation  
+   **答案：C**
+
+2. When will the maintenance occur?  
+   (A) Thursday afternoon  
+   (B) Friday morning  
+   (C) Saturday morning  
+   (D) Monday afternoon  
+   **答案：B**
+
+3. What will happen during the maintenance?  
+   (A) The office will be closed  
+   (B) The system will operate as normal  
+   (C) The air conditioning will be off  
+   (D) Employees will be moved to another building  
+   **答案：C**
+
+4. What are employees advised to do?  
+   (A) Bring fans from home  
+   (B) Work from home  
+   (C) Cancel all meetings  
+   (D) Dress for warm weather  
+   **答案：D**
+
+5. What does the office administration express in the last sentence?  
+   (A) Gratitude and apology  
+   (B) Refusal to help  
+   (C) A strict warning  
+   (D) Excitement about upgrades  
+   **答案：A**
+
+---
+
+以下是你根據中級轉換期教學原則所設計的 **Day 37** 學習內容，已排除與前36天重複的單字，並加強文法與閱讀練習難度，符合你目前的需求：
+
+---
+
+# 第三十七天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字          | 詞性     | 中文意思         | 例句 |
+|---------------|----------|------------------|------|
+| amortize      | v.       | 分期攤還         | The company decided to amortize the equipment costs over five years. |
+| arbitration   | n.       | 仲裁             | The dispute was settled through arbitration. |
+| asset         | n.       | 資產             | Intellectual property is considered a valuable asset. |
+| collateral    | n.       | 擔保品           | He used his car as collateral for the loan. |
+| depreciation  | n.       | 折舊             | The accountant calculated the annual depreciation of the machines. |
+| diversify     | v.       | 使多樣化         | The company aims to diversify its product line. |
+| entrepreneur  | n.       | 創業者           | The entrepreneur launched a new tech startup. |
+| equilibrium   | n.       | 平衡             | Market equilibrium is affected by supply and demand. |
+| exacerbate    | v.       | 惡化，加重       | Poor communication may exacerbate the conflict. |
+| fiduciary     | adj./n.  | 信託的 / 受託人  | A fiduciary must act in the client's best interest. |
+| incentivize   | v.       | 激勵             | The company incentivizes employees with bonuses. |
+| leverage      | v./n.    | 利用（槓桿）     | They leveraged their assets to expand the business. |
+| liquidate     | v.       | 清算             | The firm was forced to liquidate its holdings. |
+| logistics     | n.       | 物流             | Efficient logistics are key to supply chain success. |
+| monetary      | adj.     | 貨幣的，金錢的   | The central bank introduced new monetary policies. |
+| negotiate     | v.       | 談判             | They are negotiating a new contract with suppliers. |
+| procurement   | n.       | 採購             | He oversees the procurement of raw materials. |
+| recession     | n.       | 經濟衰退         | The country is recovering from a deep recession. |
+| redundancy    | n.       | 裁員；多餘       | The company announced 200 redundancies. |
+| retention     | n.       | 留任，保留       | Employee retention is a top HR priority. |
+| solvency      | n.       | 償付能力         | The audit confirmed the company’s solvency. |
+| subsidiary    | n.       | 子公司           | ABC Corp. is a wholly owned subsidiary of XYZ Inc. |
+| synergy       | n.       | 協同作用         | Merging the teams created great synergy. |
+| turnover      | n.       | 營業額，離職率   | Staff turnover has decreased since last year. |
+| viable        | adj.     | 可行的           | This is not a viable long-term solution. |
+
+---
+
+## 📖 文法學習：動名詞與不定詞的使用差異（Gerunds vs. Infinitives）
+
+### 🔹 說明
+
+有些動詞後面接動名詞（V-ing），有些接不定詞（to + V），有些兩者皆可，但意思不同。
+
+### 🔹 常見用法
+
+- **動名詞**後常見動詞：enjoy, consider, avoid, suggest, finish  
+- **不定詞**後常見動詞：decide, hope, plan, want, expect  
+- **語意不同**：stop doing（停止正在做的事） vs. stop to do（停下來去做別事）
+
+### 🔹 範例句
+
+- I enjoy **reading** business articles.  
+- They decided **to launch** a new product line.  
+- She stopped **working** to take a call.
+
+---
+
+## ✅ 文法練習
+
+請選出正確答案填入句中：
+
+1. He avoided ______ about the issue.  
+   (A) talk (B) talking (C) to talk (D) talked  
+   **答案：B**
+
+2. The team decided ______ the deadline.  
+   (A) extending (B) extend (C) to extend (D) extended  
+   **答案：C**
+
+3. I forgot ______ the report yesterday.  
+   (A) send (B) sending (C) to send (D) sent  
+   **答案：C**
+
+4. She stopped ______ emails and left the office.  
+   (A) check (B) to check (C) checking (D) checked  
+   **答案：B**
+
+5. We considered ______ another agency.  
+   (A) hire (B) to hire (C) hiring (D) hired  
+   **答案：C**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+Subject: Strategic Partnership Announcement
+
+Dear Stakeholders,
+
+We are pleased to announce that BrightCore Inc. has entered into a strategic partnership with Apex Solutions, a leader in supply chain optimization. This collaboration aims to enhance both companies’ global distribution networks and improve service efficiency for clients in over 20 countries.
+
+The partnership will leverage each firm’s core competencies: BrightCore’s advanced data analytics and Apex’s logistics expertise. Initial integration will begin next quarter, with joint teams deployed to assess operational alignment and conduct feasibility studies.
+
+We believe this partnership positions both organizations for long-term growth and provides significant value to our customers. A detailed implementation roadmap will be shared during next month’s stakeholder webinar.
+
+Sincerely,  
+Management Team
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of this message?  
+   (A) To announce a merger between two companies  
+   (B) To introduce a new logistics service  
+   (C) To present a strategic collaboration  
+   (D) To report quarterly earnings  
+   **答案：C**
+
+2. What is BrightCore’s strength according to the message?  
+   (A) Market research  
+   (B) Logistics expertise  
+   (C) Financial investment  
+   (D) Data analytics  
+   **答案：D**
+
+3. What will happen in the next quarter?  
+   (A) Companies will release a new product  
+   (B) Teams will analyze operational compatibility  
+   (C) A new competitor will enter the market  
+   (D) Clients will receive rebates  
+   **答案：B**
+
+4. What does the sender imply by “positions both organizations for long-term growth”?  
+   (A) The companies will reduce their operations  
+   (B) Their focus will shift to short-term profits  
+   (C) The collaboration will support sustainable development  
+   (D) Stakeholders will leave the partnership  
+   **答案：C**
+
+5. Where will more information be shared?  
+   (A) In next quarter’s press release  
+   (B) In a customer feedback survey  
+   (C) During a stakeholder webinar  
+   (D) On the new logistics platform  
+   **答案：C**
+
+---
+
+# 第三十八天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字           | 詞性     | 中文意思         | 例句 |
+|----------------|----------|------------------|------|
+| allocate        | v.       | 分派；撥出         | The project manager allocated resources to each team. |
+| appraisal       | n.       | 評估；鑑定         | She received a positive performance appraisal. |
+| attrition       | n.       | 人員流失           | The company is experiencing high employee attrition. |
+| benchmarking    | n.       | 標竿管理           | Benchmarking helps improve operational efficiency. |
+| compliance      | n.       | 遵從               | They were fined for lack of compliance with safety regulations. |
+| consortium      | n.       | 聯合企業           | The project is backed by an international consortium. |
+| curtail         | v.       | 縮減；限制         | Budget issues forced them to curtail the expansion. |
+| discrepancy     | n.       | 差異；不一致       | There’s a discrepancy between the two reports. |
+| downsizing      | n.       | 裁員；縮編         | The firm announced a major downsizing initiative. |
+| endorse         | v.       | 背書；支持         | The board endorsed the new strategic plan. |
+| entail          | v.       | 需要；牽涉         | The job entails frequent travel. |
+| facilitate      | v.       | 促進；使便利       | The software facilitates communication between teams. |
+| forecasting     | n.       | 預測作業           | Accurate forecasting is critical in budgeting. |
+| incumbent       | adj./n.  | 現任的；在職者     | The incumbent CEO will step down next year. |
+| infrastructure  | n.       | 基礎建設           | They invested heavily in infrastructure improvements. |
+| integrate       | v.       | 整合               | The system integrates data from multiple departments. |
+| liaison         | n.       | 聯絡人；聯繫       | She acts as a liaison between headquarters and the branch. |
+| logistical      | adj.     | 後勤的             | Logistical challenges delayed the project. |
+| marginal        | adj.     | 邊際的；微小的     | The profit increase was only marginal. |
+| mitigate        | v.       | 緩解；減輕         | The new policy aims to mitigate risk. |
+| outsourcing     | n.       | 外包               | Outsourcing reduced their operational costs. |
+| plummet         | v.       | 暴跌               | Sales plummeted in the third quarter. |
+| revamp          | v./n.    | 改造；翻新         | They plan to revamp the entire website. |
+| stipulation     | n.       | 條件；規定         | The contract includes a stipulation on deadlines. |
+| volatile        | adj.     | 不穩定的；波動大的 | The market remains volatile due to economic uncertainty. |
+
+---
+
+## 📖 文法學習：關係子句（Relative Clauses）
+
+### 🔹 說明
+
+關係子句可用來修飾名詞，使句子更完整，常使用的關係代名詞有：  
+**who（人） / which（物） / that（人或物）**
+
+### 🔹 句型說明
+
+- The employee **who joined last month** was promoted.  
+- The system **that crashed yesterday** has been repaired.  
+- They invested in software **which improves efficiency**.
+
+### 🔹 限定與非限定用法
+
+- **限定子句**：提供必要資訊，不加逗號。  
+- **非限定子句**：提供補充資訊，加逗號，如：  
+  - The CEO, **who is retiring next year**, gave a farewell speech.
+
+---
+
+## ✅ 文法練習
+
+1. The manager ______ approved the budget is on leave.  
+   (A) which (B) who (C) what (D) whom  
+   **答案：B**
+
+2. The plan that ______ last week has already been implemented.  
+   (A) proposed (B) is proposed (C) proposing (D) was proposed  
+   **答案：D**
+
+3. The analyst, ______ report surprised everyone, was promoted.  
+   (A) whose (B) who (C) which (D) whom  
+   **答案：A**
+
+4. The department ______ handles logistics is expanding.  
+   (A) whom (B) that (C) whose (D) who  
+   **答案：B**
+
+5. The software, ______ features are customizable, was well received.  
+   (A) which (B) who (C) whose (D) that  
+   **答案：C**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+Subject: Infrastructure Overhaul – Project Launch Phase
+
+Dear All,
+
+We are excited to announce the launch of Phase 1 of our Infrastructure Overhaul Initiative, a project that will modernize our logistics network and integrate cloud-based tracking systems. This initiative, which has been in planning since Q3 of last year, will streamline operations and facilitate real-time data analysis across all warehouses.
+
+The rollout begins next Monday, starting with the northern region. Staff training and onboarding have already commenced, and a liaison from the IT team will be assigned to each branch. Please note that temporary delays in shipment tracking may occur during system migration. Your cooperation and patience are highly appreciated.
+
+We believe this transition, though complex, will yield long-term benefits and greatly improve our service responsiveness.
+
+Sincerely,  
+Operations Management
+```
+
+---
+
+### 問題：
+
+1. What is the primary goal of the project mentioned?  
+   (A) To train warehouse staff  
+   (B) To expand international markets  
+   (C) To modernize infrastructure and systems  
+   (D) To increase product variety  
+   **答案：C**
+
+2. What will begin next Monday?  
+   (A) Recruitment of IT staff  
+   (B) A shipment delay investigation  
+   (C) The first phase of project rollout  
+   (D) Customer service training  
+   **答案：C**
+
+3. According to the message, what is one expected challenge?  
+   (A) Budget cuts  
+   (B) Customer complaints  
+   (C) Tracking delays  
+   (D) Equipment failures  
+   **答案：C**
+
+4. What does “a liaison from the IT team will be assigned” imply?  
+   (A) Branches will handle technical issues alone  
+   (B) Each location will have direct IT support  
+   (C) IT teams will be relocated  
+   (D) There will be mass recruitment  
+   **答案：B**
+
+5. What can be inferred about the company’s approach?  
+   (A) It avoids technological change  
+   (B) It only focuses on short-term gains  
+   (C) It values efficiency and long-term planning  
+   (D) It intends to reduce employee workload  
+   **答案：C**
+
+---
+
+# 第三十九天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字              | 詞性     | 中文意思           | 例句 |
+|-------------------|----------|--------------------|------|
+| acquisition       | n.       | 收購；獲得         | The company announced a major acquisition yesterday. |
+| allocate          | v.       | 分配               | Funds were allocated for research and development. |
+| arbitrary         | adj.     | 隨意的；武斷的     | The manager made an arbitrary decision without consulting the team. |
+| audit trail       | n.       | 審計追蹤紀錄       | An audit trail is essential for financial accountability. |
+| backlog           | n.       | 積壓的工作         | The team worked overtime to clear the backlog. |
+| broker            | n.       | 經紀人             | She works as a real estate broker. |
+| consolidate       | v.       | 合併；統整         | The company plans to consolidate its subsidiaries. |
+| contingency       | n.       | 應變措施           | We have a contingency plan for emergencies. |
+| deductible        | n./adj.  | 自付額；可扣除的   | You must pay the deductible before insurance covers the cost. |
+| deteriorate       | v.       | 惡化               | The economic situation continues to deteriorate. |
+| divest            | v.       | 剝離；出售資產     | The firm divested its unprofitable branch. |
+| embargo           | n./v.    | 禁運；禁止         | The government imposed a trade embargo on weapons. |
+| endorsement       | n.       | 背書；贊同         | Her product received celebrity endorsement. |
+| fiscal year       | n.       | 財政年度           | Our fiscal year ends in September. |
+| franchise         | n./v.    | 加盟；特許經營     | He opened a fast food franchise downtown. |
+| inventory turnover| n.       | 存貨周轉率         | Inventory turnover improved after new systems were installed. |
+| margin            | n.       | 利潤；邊緣         | The profit margin has increased by 3%. |
+| merger            | n.       | 合併               | The merger between the two companies was finalized. |
+| niche             | n.       | 利基市場；小眾市場 | They found a niche in eco-friendly packaging. |
+| procure           | v.       | 採購               | We need to procure parts from a new supplier. |
+| quote             | n./v.    | 報價               | The vendor submitted a quote for the materials. |
+| restructure       | v.       | 重組               | The organization plans to restructure its departments. |
+| surcharge         | n.       | 附加費             | An additional fuel surcharge will be applied. |
+| tariff            | n.       | 關稅               | Import tariffs have increased significantly. |
+| underwriting      | n.       | 承銷；保險核保     | The insurance company completed the underwriting process. |
+
+---
+
+## 📖 文法學習：被動語態進階（Passive Voice - Advanced Uses）
+
+### 🔹 說明
+
+**被動語態**除了基本句型（be + p.p.）外，還有多種進階用法：
+1. 被動進行式：be + being + p.p.
+2. 被動完成式：have/has/had been + p.p.
+3. Modal + be + p.p.（助動詞 + 被動）
+
+### 🔹 範例句
+
+- The system **is being updated** by the IT team.  
+- The contract **has been signed** by both parties.  
+- The documents **must be submitted** before Friday.
+
+---
+
+## ✅ 文法練習
+
+1. The report ______ by the committee yesterday.  
+   (A) is reviewed (B) was reviewed (C) reviewed (D) has reviewing  
+   **答案：B**
+
+2. All files ______ before the deadline.  
+   (A) must be uploaded (B) must uploaded (C) must uploading (D) must upload  
+   **答案：A**
+
+3. The machine is ______ at the moment.  
+   (A) being repaired (B) repairing (C) be repaired (D) repaired  
+   **答案：A**
+
+4. The data ______ before the audit begins.  
+   (A) had checking (B) had been checked (C) has checking (D) has checked  
+   **答案：B**
+
+5. The invoices ______ yet.  
+   (A) haven’t been paid (B) haven’t paid (C) not paid (D) didn’t pay  
+   **答案：A**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+Subject: Important Notice – Policy Changes to Procurement Process
+
+Dear Colleagues,
+
+Starting next month, the procurement policy will be revised to increase efficiency and accountability. All department purchases above $3,000 must now be pre-approved by the Finance Division. This change is part of a broader restructuring effort aimed at reducing operational costs and preventing redundant spending.
+
+Additionally, a centralized procurement portal will be launched to track orders, manage inventory turnover, and maintain transparency. Training on how to use the new system will be conducted next week by a designated liaison from the IT team.
+
+Please be advised that orders placed outside the portal will not be processed. Your cooperation is critical to the success of this transition.
+
+Regards,  
+Procurement Office
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of the new policy?  
+   (A) To increase employee salaries  
+   (B) To control procurement and reduce cost  
+   (C) To shorten the fiscal year  
+   (D) To expand the purchasing team  
+   **答案：B**
+
+2. What must be done for large purchases?  
+   (A) Submit a quote to suppliers  
+   (B) Request approval from a vendor  
+   (C) Get pre-approval from Finance  
+   (D) Avoid using the online system  
+   **答案：C**
+
+3. Why will a centralized portal be used?  
+   (A) To reduce communication with suppliers  
+   (B) To replace the finance department  
+   (C) To improve order tracking and transparency  
+   (D) To allow late submissions  
+   **答案：C**
+
+4. What happens to orders outside the portal?  
+   (A) They will be delayed  
+   (B) They will not be processed  
+   (C) They need double confirmation  
+   (D) They are automatically approved  
+   **答案：B**
+
+5. What can be inferred from the message?  
+   (A) The company is facing financial problems  
+   (B) Managers are upset with the change  
+   (C) The firm is trying to tighten internal control  
+   (D) Employees do not trust the procurement system  
+   **答案：C**
+
+---
+
+# 第四十天
+
+---
+
+## 📝 單字學習 (25 個)
+
+| 單字                   | 詞性       | 中文意思           | 例句 |
+|------------------------|------------|--------------------|------|
+| applicable             | adj.       | 適用的             | The discount is only applicable to selected items. |
+| arbitration            | n.         | 仲裁               | They agreed to resolve the dispute through arbitration. |
+| capital expenditure    | n.         | 資本支出           | The capital expenditure increased significantly this quarter. |
+| caveat                 | n.         | 警告；限制條件     | There is one caveat to this agreement. |
+| collateral             | n.         | 擔保品             | He used his house as collateral for the loan. |
+| consignment            | n.         | 寄售；托運         | The shipment arrived as part of a consignment. |
+| contingent             | adj./n.    | 依情況而定的；代表團 | The bonus is contingent on performance. |
+| defer                  | v.         | 延期；順從         | The decision was deferred until next week. |
+| disbursement           | n.         | 撥款               | The disbursement of funds will occur in July. |
+| discretionary          | adj.       | 可自由決定的       | The manager has discretionary power over hiring. |
+| entitlement            | n.         | 權利；應得的東西   | Employees have full entitlement to health benefits. |
+| equity                 | n.         | 股本；公平         | He invested in company equity. |
+| escrow                 | n.         | 第三方保管契約     | The funds are held in escrow until closing. |
+| expenditure            | n.         | 支出               | Marketing expenditure has risen by 10%. |
+| foreclosure            | n.         | 查封               | The bank initiated foreclosure on the property. |
+| garnishment            | n.         | 扣押（薪資）       | The court issued a wage garnishment order. |
+| intangible             | adj.       | 無形的             | Brand reputation is an intangible asset. |
+| liability              | n.         | 負債；責任         | The company reported an increase in liabilities. |
+| maturity               | n.         | 到期；成熟         | The bond reaches maturity in five years. |
+| overhead               | n.         | 經常性開支         | Overhead costs include rent and utilities. |
+| preliminary            | adj.       | 初步的             | We completed a preliminary review of the budget. |
+| reimbursement          | n.         | 報銷；補償         | Submit your receipts for reimbursement. |
+| severance              | n.         | 資遣費             | All laid-off staff received severance packages. |
+| solvent                | adj.       | 有償付能力的       | The firm remains solvent despite the downturn. |
+| valuation              | n.         | 估價               | The property valuation was conducted by a licensed firm. |
+
+---
+
+## 📖 文法學習：倒裝句（Inversion）
+
+### 🔹 說明
+
+倒裝句是為了強調或表達正式語氣時，將句子的語序改變，特別是在以下情況常見：
+
+1. 否定副詞或表示頻率/程度的副詞開頭  
+2. 條件句的省略 if 結構  
+3. only, seldom, little 等強調語氣
+
+### 🔹 句型範例
+
+- **Never have I seen** such efficient service.  
+- **Rarely does he arrive** on time.  
+- **Only when the report was finished** did we understand the issue.  
+- **Had I known** about the change, I would’ve prepared better.  
+
+---
+
+## ✅ 文法練習
+
+1. ______ had the presentation started when the power went out.  
+   (A) Hardly (B) No sooner (C) Rarely (D) Seldom  
+   **答案：B**
+
+2. Only after the deadline ______ we realize the form was missing.  
+   (A) did (B) had (C) do (D) were  
+   **答案：A**
+
+3. Little ______ she know about the financial risk.  
+   (A) did (B) has (C) was (D) does  
+   **答案：A**
+
+4. ______ I understood the importance of budgeting.  
+   (A) Only after beginning my own business (B) After only begin my own business (C) Begin only did I (D) Only begin I  
+   **答案：A**
+
+5. Had the client not signed the contract, the deal ______ canceled.  
+   (A) will be (B) would be (C) would have been (D) has been  
+   **答案：C**
+
+---
+
+## 📚 多益閱讀理解練習
+
+請閱讀以下段落並回答問題：
+
+```
+To: All Department Heads  
+From: CFO Office  
+Subject: Preliminary Budget Review for Q3
+
+Dear Managers,
+
+As part of our fiscal planning for the upcoming quarter, all departments are required to submit their preliminary budget reports by June 5th. This initial review will help identify discrepancies, evaluate capital expenditure plans, and anticipate cash flow requirements. Please note that any proposed discretionary spending above $10,000 must be justified in a separate document.
+
+Additionally, all expenses projected as contingent or deferred must be labeled accordingly. Overhead cost estimates should be itemized, and any anticipated liabilities or severance obligations must be flagged for review. 
+
+Your timely cooperation is essential to ensure we maintain solvency and align our expenditures with corporate goals.
+
+Thank you,  
+Finance Division
+```
+
+---
+
+### 問題：
+
+1. What is the main purpose of the memo?  
+   (A) To authorize a new budget  
+   (B) To request initial departmental budgets  
+   (C) To increase discretionary spending  
+   (D) To delay capital expenditures  
+   **答案：B**
+
+2. What must accompany spending over $10,000?  
+   (A) An audit report  
+   (B) An invoice  
+   (C) A justification document  
+   (D) A managerial signature  
+   **答案：C**
+
+3. What type of expenses must be specially labeled?  
+   (A) Equipment costs  
+   (B) Salaries and wages  
+   (C) Deferred or contingent items  
+   (D) Overhead utilities  
+   **答案：C**
+
+4. Why are department heads asked to cooperate?  
+   (A) To meet compliance regulations  
+   (B) To improve audit documentation  
+   (C) To ensure financial health and planning  
+   (D) To speed up reimbursement claims  
+   **答案：C**
+
+5. What can be inferred about the company’s approach?  
+   (A) It lacks clear budgeting standards  
+   (B) It strictly controls spending and reporting  
+   (C) It prioritizes expansion over stability  
+   (D) It outsources financial planning  
+   **答案：B**
 
 ---

@@ -570,3 +570,235 @@ Thank you for your understanding.
    ✏️ 開頭 From 欄位顯示是由 Facilities Management 發送。
 
 ---
+
+# 📘 TOEIC 第六週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The marketing team will ______ a new campaign next week.  
+   (A) launch (B) locate (C) lease (D) leave  
+
+2. Please find the product information in the attached ______.  
+   (A) brochure (B) benefit (C) category (D) component  
+
+3. We offer a 30-day money-back ______.  
+   (A) renovation (B) guarantee (C) insurance (D) authorization  
+
+4. The product is currently out of ______ due to high demand.  
+   (A) component (B) specification (C) stock (D) delivery  
+
+5. Customers must fill out a ______ before making a claim.  
+   (A) report (B) form (C) resume (D) certificate  
+
+6. They are reviewing the budget to reduce unnecessary ______.  
+   (A) expenditures (B) competitors (C) appliances (D) circumstances  
+
+7. The software includes new security ______.  
+   (A) attachments (B) features (C) devices (D) claims  
+
+8. All visitors must ______ at the front desk.  
+   (A) resist (B) reside (C) resign (D) register  
+
+9. Our factory meets international safety ______.  
+   (A) standards (B) candidates (C) statements (D) possessions  
+
+10. We need to ______ the deadline to complete the project.  
+    (A) determine (B) predict (C) extend (D) reflect  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. If she ______ earlier, she would have caught the train.  
+    (A) leaves (B) left (C) had left (D) will leave  
+
+12. He asked me where I ______ the documents.  
+    (A) put (B) have put (C) had put (D) puts  
+
+13. The report ______ by the manager before the meeting.  
+    (A) will prepare (B) has prepared (C) was prepared (D) prepares  
+
+14. The person ______ called earlier wants to meet you.  
+    (A) who (B) which (C) whom (D) whose  
+
+15. I’ll contact you as soon as I ______ the update.  
+    (A) received (B) receive (C) receiving (D) had received  
+
+16. Not only the employees but also the manager ______ responsible.  
+    (A) are (B) is (C) be (D) were  
+
+17. The documents need ______ immediately.  
+    (A) to send (B) be sent (C) to be sent (D) sending  
+
+18. She has worked here ______ five years.  
+    (A) during (B) for (C) since (D) by  
+
+19. Neither of the answers ______ correct.  
+    (A) is (B) are (C) be (D) were  
+
+20. The package ______ delivered by 5 p.m. today.  
+    (A) has (B) will (C) will be (D) is  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+Subject: Request for Equipment Upgrade
+
+Dear IT Support,
+
+Our department has been experiencing delays due to outdated computers. We would like to request an upgrade for all desktop units. Please advise on the process and expected timeline.
+
+Best regards,  
+Emily Hsu  
+Marketing Department
+```
+
+21. Why did Emily write this message?  
+    (A) To file a complaint about a coworker  
+    (B) To request better equipment  
+    (C) To cancel a service order  
+    (D) To report a security issue  
+
+22. What problem is her department facing?  
+    (A) Too many clients  
+    (B) Insufficient training  
+    (C) Outdated equipment  
+    (D) Delivery delays  
+
+23. What type of equipment does she want upgraded?  
+    (A) Printers  
+    (B) Network cables  
+    (C) Desktop computers  
+    (D) Monitors  
+
+24. What does she ask IT support to provide?  
+    (A) New laptops  
+    (B) A repair team  
+    (C) Installation tools  
+    (D) The process and timeline  
+
+25. Which department does Emily work in?  
+    (A) Human Resources  
+    (B) Accounting  
+    (C) Marketing  
+    (D) Development  
+
+---
+
+## 📘 TOEIC 第六週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | A    |
+| 2    | A    |
+| 3    | B    |
+| 4    | C    |
+| 5    | B    |
+| 6    | A    |
+| 7    | B    |
+| 8    | D    |
+| 9    | A    |
+| 10   | C    |
+| 11   | C    |
+| 12   | C    |
+| 13   | C    |
+| 14   | A    |
+| 15   | B    |
+| 16   | B    |
+| 17   | C    |
+| 18   | B    |
+| 19   | A    |
+| 20   | C    |
+| 21   | B    |
+| 22   | C    |
+| 23   | C    |
+| 24   | D    |
+| 25   | C    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **launch**：推出新活動或產品的常用動詞，選 (A)。  
+   ➤ The marketing team will **launch** a new campaign next week.
+
+2. **brochure**：產品簡介、小冊子，選 (A)。  
+   ➤ Please find the product information in the attached **brochure**.
+
+3. **guarantee**：保證（退款等），選 (B)。  
+   ➤ We offer a 30-day money-back **guarantee**.
+
+4. **stock**：庫存，常與 out of 搭配使用，選 (C)。  
+   ➤ The product is currently out of **stock** due to high demand.
+
+5. **form**：表單，常見於申請或回報流程，選 (B)。  
+   ➤ Customers must fill out a **form** before making a claim.
+
+6. **expenditures**：支出，符合精簡預算語意，選 (A)。  
+   ➤ They are reviewing the budget to reduce unnecessary **expenditures**.
+
+7. **features**：功能、特徵，符合語境，選 (B)。  
+   ➤ The software includes new security **features**.
+
+8. **register**：訪客需要報到，選 (D)。  
+   ➤ All visitors must **register** at the front desk.
+
+9. **standards**：標準，國際安全標準，選 (A)。  
+   ➤ Our factory meets international safety **standards**.
+
+10. **extend**：延長截止日，選 (C)。  
+    ➤ We need to **extend** the deadline to complete the project.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **had left**：第三類條件句，與過去事實相反，選 (C)。  
+    ➤ If she **had left** earlier, she would have caught the train.
+
+12. **had put**：過去完成式，表示比另一過去動作更早發生，選 (C)。  
+    ➤ He asked me where I **had put** the documents.
+
+13. **was prepared**：過去被動語態，動作已完成於會議前，選 (C)。  
+    ➤ The report **was prepared** by the manager before the meeting.
+
+14. **who**：主詞關係代名詞，指人，選 (A)。  
+    ➤ The person **who** called earlier wants to meet you.
+
+15. **receive**：as soon as + 現在簡單式表未來，選 (B)。  
+    ➤ I’ll contact you as soon as I **receive** the update.
+
+16. **is**：not only...but also... 結構中動詞依照就近主詞（manager）決定，選 (B)。  
+    ➤ Not only the employees but also the manager **is** responsible.
+
+17. **to be sent**：need + to be + Vpp，表示需要被送出，選 (C)。  
+    ➤ The documents need **to be sent** immediately.
+
+18. **for**：表示一段時間（五年），選 (B)。  
+    ➤ She has worked here **for** five years.
+
+19. **is**：neither of... 為單數主詞，選 (A)。  
+    ➤ Neither of the answers **is** correct.
+
+20. **will be**：未來式被動語態，選 (C)。  
+    ➤ The package **will be** delivered by 5 p.m. today.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：設備升級請求**
+
+21. **(B) To request better equipment**：開頭說明因舊電腦導致延遲，提出升級請求。  
+22. **(C) Outdated equipment**：直接寫到 "outdated computers"。  
+23. **(C) Desktop computers**：文中寫明欲升級 "all desktop units"。  
+24. **(D) The process and timeline**：她詢問流程與預期時程。  
+25. **(C) Marketing**：簽名欄註明她來自「Marketing Department」。
+
+---

@@ -169,6 +169,20 @@
 
 ### 一、設計目的（Motivation）
 
+我之前參與的專案是伺服馬達驅動器系統，整體韌體開發由三個部門協作完成，平台採用 **TI 的 AM64 晶片**，屬於 **Multi-core 架構**。
+
+晶片中包含 **兩顆 Cortex-A53** 以及 **四顆 Cortex-R5F** 核心：
+
+- **Linux 部門** 負責 A53 核心，這部分執行 Linux 作業系統。他們的工作主要包括撰寫 **開機程式（bootloader）**、**系統初始化（system init）**、**記憶體映射（memory mapping）**，並協助我們建立與驅動程式互通的介面（例如 **shared memory** 或 **memory-mapped I/O**）。
+
+- **韌體一課** 負責 R5F 核心，執行 FreeRTOS，專注處理馬達控制的即時任務，包含電流回授、扭矩計算、感測數值讀取等。這部分屬於 **Real-Time System**，強調低延遲與可預測反應時間。
+
+- **我所在的部門為韌體二課**，負責撰寫 A53 使用者層的應用程式。我們的邏輯以 **Linux 使用者層 thread** 為單位執行，透過 **定時掃描（polling）** 判斷按鍵是否觸發，並根據結果即時更新 **LCD 顯示面板**。我們也會與 RTOS 部門撰寫的控制邏輯透過 **shared memory** 與 **交握 API** 交換資料，將即時運算結果整合顯示於面板上。
+
+整個系統架構屬於典型的 **AMP（Asymmetric Multiprocessing）**：Linux 執行上層人機介面，RTOS 負責底層即時控制，兩者透過 **IPC** 協同運作。
+
+---
+
 - **技術動機一：**  
   延續自我介紹中提到的體動式設備開發經驗，為了強化底層能力，開始自學 UART driver 程式設計，並進一步延伸至 LCD 與 Touch Panel driver。
 

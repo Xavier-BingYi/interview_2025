@@ -18,9 +18,10 @@
    - [3.2 多媒體系統](#32-多媒體系統multimedia-systems)
    - [3.3 手持與嵌入式系統](#33-手持與嵌入式系統handheld-and-embedded-systems)
    - [3.4 系統選擇與設計思維](#34-系統選擇與設計思維)
-4. [作業系統基本概念練習題](#4-作業系統基本概念練習題)
-   - [4.1 選擇題](#41-選擇題共-25-題)
-   - [4.2 申論題](#42-申論題共-10-題)
+4. [作業系統概念統整與測驗練習](#4-作業系統概念統整與測驗練習)
+   - [4.1 核心觀念重點整理](#41-核心觀念重點整理)
+   - [4.2 選擇題（共 10 題）](#42-選擇題共-10-題)
+   - [4.3 申論題（共 8 題）](#43-申論題共-8-題)
 
 ## Ch1：Introduction
 1. [作業系統基本定義與功能](#1-作業系統基本定義與功能)
@@ -181,11 +182,25 @@
 
 #### ▸ 三種系統比較表
 
-| 系統類型         | 執行模式           | 系統目標         | OS 功能涵蓋                             |
-|------------------|--------------------|------------------|----------------------------------------|
-| Batch            | 單一使用者、單一工作 | 簡化控制流程     | 無明確 OS 功能                         |
-| Multi-programming | 多個程式           | 資源利用率最大化 | 記憶體管理、CPU 排程、I/O 系統        |
-| Time-sharing     | 多使用者、多程式   | 提升即時回應     | 加入虛擬記憶體、檔案系統、同步與死結處理 |
+| 系統類型                  | 執行模式       | 系統目標      | OS 功能涵蓋                          | 現代是否仍在使用？      | 現代對應情境                              |
+| --------------------- | ---------- | --------- | -------------------------------- | -------------- | ----------------------------------- |
+| **Batch**             | 單一使用者、單一工作 | 簡化控制流程    | 無明確 OS 功能，作業一次送出，執行完再看結果         | ✅ 少數主機仍使用      | 批次金融處理、大型資料報表（如 COBOL on Mainframe） |
+| **Multi-programming** | 多個程式共存於記憶體 | 資源使用率最大化  | 記憶體管理、CPU 排程、I/O 處理與 Spooling 技術 | ✅ 現代 OS 核心機制之一 | 所有作業系統（Linux、Windows、macOS）         |
+| **Time-sharing**      | 多使用者、多程式   | 提升即時互動與反應 | 加入虛擬記憶體、檔案系統、多工支援、同步與死結處理        | ✅ 現代主流架構       | 桌面系統、伺服器、多使用者登入環境等                  |
+
+#### ▸ 補充說明
+
+- **Batch System**：
+  - 適合無需互動、計算時間長的任務（如薪資計算、稅務報表）。
+  - 效率低、回應慢，但在特定產業中仍有需求（如 IBM z 系列主機）。
+
+- **Multi-programming System**：
+  - 現代所有作業系統都具備此技術。
+  - 即便是單一使用者系統（如個人電腦），背景也會同時執行許多程式（防毒、音樂播放器、瀏覽器等）。
+
+- **Time-sharing System**：
+  - 對應到現在的「多使用者作業系統」（multi-user OS）。
+  - 如：一台 Linux 伺服器可同時讓多位使用者透過 SSH 登入並執行不同任務。
 
 ---
 
@@ -205,12 +220,40 @@
 ### 2.2 平行系統（Parallel Systems）
 
 #### ▸ 多處理器架構（Multiprocessor Systems）
-- 又稱為 **Tightly Coupled Systems**，具備兩個以上 CPU，彼此透過共享記憶體通訊。
-- 優點：**高吞吐量（throughput）**、**成本效益（economical）**、**可靠性高（reliability）**。
 
-#### ▸ 架構類型
-- **Symmetric Multiprocessor (SMP)**：每顆 CPU 地位相同，執行同一個 OS，需同步機制保護資料一致性。
-- **Asymmetric Multiprocessor (AMP)**：主從式架構，Master CPU 管理工作分派，其餘 CPU 執行子任務，擴充性佳但資源浪費風險較高。
+- 又稱為 **Tightly Coupled Systems**，具備兩個以上 CPU，彼此透過共享記憶體進行通訊。
+- 優點包括：
+  - **高吞吐量（Throughput）**：可同時處理更多任務。
+  - **成本效益高（Economical）**：相較多台電腦，系統整合成本更低。
+  - **可靠性高（Reliability）**：部分 CPU 故障仍可維持系統運作。
+
+---
+
+#### ▸ 架構類型比較
+
+- **SMP（Symmetric Multiprocessor）**：每顆 CPU 地位相同，執行同一個作業系統。所有 CPU 共用排程器與記憶體，需使用同步機制來確保資料一致性。
+- **AMP（Asymmetric Multiprocessor）**：主從式架構，由 Master CPU 分派工作，其餘 CPU 執行子任務。各 CPU 可執行不同作業系統或任務，互不干擾，適合任務明確分工的系統。
+
+---
+
+#### ▸ 架構應用比較表
+
+| 架構類型                                | 是否主流應用               | 常見應用場景                             | 說明                                             |
+|-----------------------------------------|----------------------------|------------------------------------------|--------------------------------------------------|
+| **AMP（Asymmetric Multiprocessing）**   | ✅ 高異質性嵌入式系統主流     | MCU + DSP、ARM + FPGA、車載 ECU         | 適合異質核心，各 CPU 可執行不同任務或作業系統       |
+| **SMP（Symmetric Multiprocessing）**    | ✅ 多核心 SoC 架構主流       | 高階 ARM SoC（如手機、Raspberry Pi）    | 適合核心等同、需共享排程與記憶體的多工環境         |
+
+---
+
+#### ▸ 補充說明
+
+SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或電腦時，可以同時看影片、滑 IG、背景下載，系統會盡量讓你感覺不到延遲（delay）。這是因為 SMP 會平均分配任務給每個核心，讓效能發揮到最大，因此手機與 PC 幾乎都是採用 SMP 架構。
+
+但嵌入式系統的重點不同，更重視**即時性（Real-time Determinism）**。舉例來說，像伺服馬達控制或感測器讀值，只要延遲幾毫秒就可能造成控制失效。因此我們會選用 AMP 架構，讓每個核心可以各自執行專屬任務互不干擾。例如：
+- 一個核心專門負責控制演算法運算（如 PID）。
+- 另一個核心處理螢幕顯示或通訊。
+
+這樣就算畫面 lag，也不會影響核心控制邏輯，系統穩定性與即時性都能兼顧。
 
 #### ▸ 多核心處理器（Multi-Core Processor）
 - 單一 CPU 晶片內含多個核心（cores），可同時執行多個任務。
@@ -226,12 +269,15 @@
 ### 2.3 記憶體存取架構（Memory Access Architectures）
 
 #### ▸ UMA（Uniform Memory Access）
-- 常見於 **SMP 系統**，所有 CPU 對主記憶體擁有相同存取時間。
+- 常見於 **SMP 系統**，所有 CPU 存取主記憶體的延遲相同。
 - 優點：系統設計簡單，任務可自由分派給任一 CPU。
+- 缺點：多個 CPU 同時存取時容易造成記憶體瓶頸（bandwidth contention）。
 
 #### ▸ NUMA（Non-Uniform Memory Access）
-- 將系統分成多個節點（node），每個節點包含 CPU 與本地記憶體。
-- 跨節點存取需透過連接通道，速度較慢，造成記憶體存取時間不一致。
+- 常見於 **AMP 系統**，每個節點（node）包含自己的 CPU 和本地記憶體。
+- CPU 存取本地記憶體較快，跨節點存取則需透過互連通道，延遲較高。
+- 常見於高階伺服器與異質多核心嵌入式系統（如 Linux + RTOS），藉由獨立記憶體實現資源隔離與穩定性。
+- 缺點：需注意資料配置與核心綁定，否則頻繁跨節點存取會影響效能。
 
 ---
 
@@ -247,12 +293,14 @@
 - **Reliability**：系統部分故障不會影響整體運作。
 
 #### ▸ 架構分類
-- **Client-Server 架構**：Server 管理資源並提供服務，Client 提出請求。
-  - 優點：集中管理容易。
-  - 缺點：Server 成為效能瓶頸與單點失效風險。
-- **Peer-to-Peer 架構**：所有節點地位平等，無中央控制。
-  - 優點：無單一故障點，可靠性高，動態彈性佳。
-  - 例子：BitTorrent、Internet。
+- **Client-Server 架構**：系統分為服務端（Server）與請求端（Client），資源集中由 Server 管理，便於控管與安全設計。
+  - 優點：集中管理容易，適合大型企業系統。
+  - 缺點：Server 易成效能瓶頸，存在單點失效風險。
+  - 應用範例：網站服務（Web Server）、雲端平台（如 Google Cloud）、Email 系統（SMTP/IMAP）。
+- **Peer-to-Peer 架構（P2P）**：所有節點地位平等，無中央控制。節點可互為 Server 與 Client，系統具高度可靠性與擴展性。
+  - 優點：無單點故障，動態彈性佳。
+  - 缺點：管理與安全性較困難。
+  - 應用範例：檔案共享（如 BitTorrent）、區塊鏈平台（如 Ethereum）、去中心化應用（Web3）。
 
 ---
 
@@ -275,22 +323,26 @@
 ### 3.1 即時系統（Real-Time Systems）
 
 #### ▸ 系統定義與目標
-- Real-Time 並不代表「執行速度快」，而是**在預期的時間內完成任務**（符合 deadline）。
-- 系統需保證在固定時間內作出反應，常應用於工業控制、醫療影像、科學實驗、武器系統等。
+- **Real-Time 並不代表執行速度快**，而是指系統**必須在預期時間內完成任務（符合 deadline）**。
+- 廣泛應用於：工業控制、醫療影像、科學實驗、武器系統等。
+- 系統需具備可預測的反應與回應時間，排程器（scheduler）是實現即時性的關鍵元件。
 
 #### ▸ 系統分類
-- **Hard Real-Time**：
-  - 違反 deadline 將導致嚴重系統錯誤（如核能控制系統）。
-  - 常不使用 secondary storage（如硬碟），資料儲存在 ROM 或 memory。
-- **Soft Real-Time**：
-  - 違反 deadline 可容忍，但會影響系統品質（如多媒體串流）。
-  - 以 priority 控制排程，確保關鍵任務優先完成。
+- **Hard Real-Time System**（強即時系統）：
+  - 對於系統來說，每個任務的 **deadline（截止時間）都必須準時完成**。
+  - **若錯過 deadline，系統會產生嚴重錯誤或整體失效**（如：核能電廠控制系統、飛彈導航）。
+  - 為了保證即時性，這類系統通常**不使用硬碟等慢速的 secondary storage**，資料會儲存在速度較快且延遲可預測的 memory 或 ROM 中。
+
+- **Soft Real-Time System**（弱即時系統）：
+  - 系統也會嘗試在 deadline 前完成任務，但**偶爾延遲是可以接受的**，不會造成系統崩潰，只是效能或使用者體驗下降。
+  - 常見於多媒體應用，如影音串流畫面延遲或畫質暫降。
+  - 透過 **priority-based scheduling（優先權排程）** 確保關鍵任務先處理。
 
 #### ▸ 系統設計挑戰
-- 設計需考慮：
-  - **Scheduling Algorithm**（排程演算法）
-  - **資源配置與儲存限制**（無硬碟時的資料管理）
-- 最常見的排程方式：**Earliest Deadline First (EDF)**。
+- 核心挑戰在於如何設計：
+  - **即時排程演算法**（如 Earliest Deadline First, EDF）
+  - **記憶體與儲存策略**：避免使用慢速儲存裝置，確保時間可預測性。
+  - **資源配置策略**：確保關鍵任務獲得足夠 CPU 資源以達成即時反應。
 
 ---
 
@@ -342,194 +394,243 @@
 
 ---
 
-## 4. 作業系統基本概念練習題
+## 4. 作業系統概念統整與測驗練習
 
 ---
 
-### 4.1 選擇題（共 25 題）
+### 4.1 核心觀念重點整理
 
-1. 下列何者為 Batch System 的主要缺點？  
-   A. 多工效率過高  
-   B. 需大量使用者互動  
-   C. 無法有效使用 CPU  
-   D. 無法使用外部裝置  
+1. **Multi-programming System（多重程式系統）**
+- 多個程式可同時駐留主記憶體。
+- 作業系統透過記憶體管理、CPU 排程、I/O 管理與 Spooling 技術來管理程式切換。
+- 可在一個程式等待 I/O 時執行其他程式，提升 CPU 使用率、減少 idle time。
+- 為現代作業系統的基本機制。
 
-2. Multi-programming 技術的主要目的是？  
-   A. 改善網路傳輸速度  
-   B. 增加記憶體容量  
-   C. 提高 CPU 使用率  
-   D. 加快螢幕更新頻率  
+---
 
-3. Time-sharing 系統與 Multi-programming 最大差異為？  
-   A. 能即時互動  
-   B. 僅限單一使用者  
-   C. 不支援磁碟存取  
-   D. 無法同時排程多作業  
+2. **Time-Sharing System（分時系統）**
+- 支援多位使用者同時互動。
+- 利用時間片（time slice）快速切換 CPU，讓使用者感覺像獨佔系統。
+- 達成即時互動的效果。
 
-4. 在 Multi-programming 系統中，Spooling 的主要用途是？  
-   A. 儲存使用者設定檔  
-   B. 同步多處理器排程  
-   C. 提高 I/O 裝置使用效率  
-   D. 加速 CPU 資料預取  
+---
 
-5. 下列何者最能描述 SMP 架構？  
-   A. 每顆 CPU 有獨立作業系統  
-   B. 各 CPU 執行不同應用程式，互不干涉  
-   C. 所有 CPU 平等共享 OS 與資源  
-   D. 僅限單核系統適用  
+3. **Multiprocessor System（多處理器系統）**
+- 系統中具備兩顆以上 CPU，透過共享記憶體協作運作。
+- 架構類型：
+  - **SMP（Symmetric Multiprocessing）**：CPU 地位對等，共享 OS 與記憶體，常見於桌機與伺服器。
+  - **AMP（Asymmetric Multiprocessing）**：主從式分工，主 CPU 管理任務，子 CPU 執行任務。常見於嵌入式系統（如 Linux + RTOS）。
 
-6. NUMA 架構中，最大挑戰為何？  
-   A. 每個核心效能不一  
-   B. 記憶體存取時間不一致  
-   C. CPU 不支援虛擬化  
-   D. 無法存取外部硬體  
+---
 
-7. 下列何者屬於 UMA 架構特性？  
-   A. CPU 與 RAM 階層式連接  
-   B. 記憶體存取延遲隨地點變化  
-   C. 所有處理器存取時間相等  
-   D. 僅支援雙核心處理器  
+4. **記憶體存取架構（Memory Access Architectures）**
+- **UMA（Uniform Memory Access）**
+  - 所有 CPU 存取主記憶體的延遲相同。
+  - 常見於 SMP 系統。
+  - 優點：架構簡單。
+  - 缺點：多核心競爭記憶體會造成瓶頸。
 
-8. 哪一個描述為 GPU 的 SIMD 架構優勢？  
-   A. 能同時執行不同指令  
-   B. 善於處理大量資料平行運算  
-   C. 可直接操作主機記憶體  
-   D. 適合高邏輯跳躍程式  
+- **NUMA（Non-Uniform Memory Access）**
+  - 每個節點（node）擁有獨立的 CPU 與本地記憶體。
+  - 跨節點存取延遲較高，需透過互連通道。
+  - 應用於 AMP 系統或大型 SMP 系統（如伺服器）。
+  - 優點：資源隔離、效能擴展。
+  - 缺點：需注意資料與核心綁定。
 
-9. 在下列何種應用中，GPU 表現會較差？  
-   A. AI 推論模型  
-   B. 圖像批次處理  
-   C. 條件分歧頻繁的邏輯流程  
-   D. 影音濾鏡運算  
+---
 
-10. 若作業系統需要保證每個任務都能在固定時間內完成，應使用？  
-    A. Batch OS  
-    B. General-purpose OS  
-    C. Soft Real-Time OS  
-    D. Hard Real-Time OS  
+5. **Multi-core vs Multiprocessor vs SMP（常見混淆）**
 
-11. 哪一項最能區分 Hard 與 Soft Real-Time 系統？  
-    A. 是否支援圖形介面  
-    B. 達成 deadline 的可容忍程度  
-    C. 作業系統類型不同  
-    D. 記憶體大小不同  
+- **Multiprocessor**：系統中安裝多顆獨立 CPU（如雙插槽伺服器）。
+- **Multi-core**：一顆 CPU 晶片內整合多個核心（cores）。
 
-12. Distributed System 的主要特性為？  
-    A. 所有裝置集中處理資料  
-    B. 節點彼此獨立並透過網路溝通  
-    C. 作業僅能在中央伺服器上執行  
-    D. 不支援網路共享資源  
+---
 
-13. Peer-to-Peer 架構的優點為？  
-    A. 單一節點管理全部資料  
-    B. 單點故障不會癱瘓整體系統  
-    C. 易於監控與集中管理  
-    D. 必須具備高階硬體  
+**以 TI AM64x（例如 AM6442）為例說明：**
 
-14. 在 Client-Server 架構中，Server 最大的弱點是？  
-    A. 可同時接收多個請求  
-    B. 無法管理硬體裝置  
-    C. 成為效能瓶頸與單點故障來源  
-    D. 執行效率過高導致過熱  
+| 核心類型                                 | 數量             | 用途                                | 架構              |
+|------------------------------------------|------------------|-------------------------------------|-------------------|
+| **Cortex-A53**                           | 2                | 跑 Linux（應用層）                   | 支援 SMP          |
+| **Cortex-R5F**                           | 2–4              | 控制／即時處理（RTOS 或 bare-metal） | 可組 AMP          |
+| **MCU Subsystem（含 1 顆 R5F）**         | 1                | 負責開機流程與安全監控               | 通常跑 bootloader |
+| **PRU（Programmable Real-Time Unit）**   | 2                | 精準 I/O 控制／使用者自定義邏輯        | 獨立子系統        |
 
-15. Clustered System 的典型網路連線方式為？  
-    A. 衛星網路  
-    B. 無線區域網路  
-    C. 高速區域網路（如 InfiniBand）  
-    D. 電話撥接網路  
+---
 
-16. 為何需要系統中的虛擬記憶體機制？  
-    A. 將所有資料儲存在 ROM  
-    B. 支援硬體中斷處理  
-    C. 提供更多邏輯記憶體空間  
-    D. 增加作業系統開機速度  
+**對應作業系統名詞如下：**
 
-17. Desktop System 相較於 Mainframe 最大差異為？  
-    A. 僅能執行 Linux  
-    B. 通常為單一使用者專用  
-    C. 無支援鍵盤滑鼠  
-    D. 執行速度一定較慢  
+| 作業系統名詞                             | 在 AM64x 上的具體對應說明                                                                 |
+|------------------------------------------|--------------------------------------------------------------------------------------------|
+| **Multiprocessor System**                | 若與另一顆 SoC（如外部 MCU）協同運作，可稱為 Multiprocessor System                         |
+| **Multi-core**                           | 單一 AM64x SoC 上整合多種核心（A53、R5F、PRU）                                             |
+| **SMP（Symmetric Multiprocessing）**     | A53 雙核心共用記憶體並執行同一作業系統（Linux）→ 屬於 SMP 架構                            |
+| **AMP（Asymmetric Multiprocessing）**    | A53 跑 Linux、R5F 跑 RTOS（如 FreeRTOS）→ 為 AMP 應用架構                                 |
+| **Multi-programming System**             | A53 跑 Linux 時，OS 同時載入多個程式並透過排程器管理切換 → 實現 Multi-programming           |
+| **Time-Sharing System**                  | A53 的 Linux 以時間片切換使用者程序（如 terminal + background download）→ 實現 Time-sharing |
+| **UMA / NUMA**                           | AM64x 通常為 UMA（共享記憶體），若手動隔離記憶體分區，也可模擬 NUMA 行為                   |
+| **Real-Time System**                     | R5F 核心執行 RTOS 或 bare-metal，即為 Real-Time 系統；亦可配置為 Hard Real-Time 環境         |
 
-18. 多核心處理器的優勢在於？  
-    A. 各核心記憶體獨立互不干涉  
-    B. 通訊速度比多顆單核心慢  
-    C. 功耗與成本皆低於多顆單核心  
-    D. 不需要系統同步機制  
+---
 
-19. 在 OS 設計中，哪一系統最需要即時排程演算法如 EDF？  
-    A. 多人線上遊戲伺服器  
-    B. 飛彈導航控制系統  
-    C. 電子郵件應用程式  
-    D. 桌面文字編輯器  
+6. **Real-Time Systems（即時系統）**
+- Real-Time 強調的是「在可預測時間內完成任務」，非速度快。
+- 常應用於工控、醫療、飛控、軍事等領域。
+- 排程器（scheduler）為核心設計挑戰之一。
 
-20. 下列何者不是 Mainframe 系統的常見用途？  
-    A. 銀行帳務系統  
-    B. 高速 3D 遊戲運算  
-    C. 醫院資料處理  
-    D. 批次交易計算任務  
+**系統分類：**
+- **Hard Real-Time**
+  - 任務不能遲到，否則系統失效。
+  - 不使用硬碟等慢速裝置，改用記憶體或 ROM。
+  - 例：核能控制、飛彈導航。
+
+- **Soft Real-Time**
+  - 遲到可接受但會影響體驗。
+  - 常用於多媒體應用（如影音串流）。
+  - 採用優先權排程（priority-based scheduling）。
+
+---
+
+7. **Distributed System vs Clustered System**
+- **Distributed System（分散式系統）**
+  - 節點鬆散耦合，透過網路協作。
+  - 節點獨立管理，對外呈現多系統。
+  - 範例：P2P、IoT、區塊鏈。
+
+- **Clustered System（叢集系統）**
+  - 節點部署於 LAN，緊密耦合。
+  - 協同提供單一服務，對外呈現單一系統。
+  - 分為 Symmetric / Asymmetric Cluster。
+  - 應用於 HPC、高可用伺服器等場景。
+
+---
+
+### 4.2 選擇題（共 10 題）
+
+1. Multi-programming 技術的主要目的是？
+   A. 提高 GPU 運算效能
+   B. 增加主記憶體容量
+   C. 提高 CPU 使用率
+   D. 支援即時互動
+
+2. 下列哪一個敘述最能描述 Time-Sharing 系統？
+   A. 同時支援多顆處理器
+   B. 系統一次只能執行一個工作
+   C. 多個使用者可即時互動
+   D. 系統需滿足嚴格 deadline
+
+3. 在 SMP 架構中，哪一項為正確描述？
+   A. 每個 CPU 執行不同作業系統
+   B. CPU 間資源獨立，不互相干擾
+   C. 所有 CPU 執行同一作業系統並共享記憶體
+   D. 僅適用於單一核心處理器
+
+4. NUMA 架構的主要挑戰是什麼？
+   A. CPU 數量限制
+   B. 記憶體存取延遲不一致
+   C. GPU 效能不足
+   D. 無法支援虛擬記憶體
+
+5. 在 AM64x 晶片中，將 A53 跑 Linux、R5F 跑 RTOS 的系統架構稱為？
+   A. SMP
+   B. AMP
+   C. NUMA
+   D. UMA
+
+6. 下列何者不屬於 Multi-core 晶片的優點？
+   A. 節省空間
+   B. 核心間支援資料共享
+   C. 每顆核心皆執行不同 OS
+   D. 提升整體處理效能
+
+7. Real-Time 系統的最大特點是什麼？
+   A. 執行速度快
+   B. 可隨意延遲任務
+   C. 預測性與即時回應能力
+   D. 支援多個使用者同時登入
+
+8. 硬即時系統（Hard Real-Time）的應用最可能出現在哪裡？
+   A. 影片播放平台
+   B. 核能電廠控制系統
+   C. 一般文書處理系統
+   D. 社群媒體伺服器
+
+9. 下列關於 UMA 的敘述何者為真？
+   A. 每個 CPU 使用不同作業系統
+   B. 每個節點皆有獨立記憶體
+   C. CPU 存取記憶體延遲一致
+   D. 僅能應用於嵌入式系統
+
+10. 使用 AM64x 時，哪一種記憶體架構最可能出現？
+    A. UMA
+    B. NUMA
+    C. Distributed RAM
+    D. Cache-only model
+---
+
+以下是配合你剛才重新命題的選擇題所對應的答案區，格式與你提供的一致：
 
 ---
 
 #### 參考答案
 
-> ✅ 選擇題解析區，快速對照與自我檢討。
-
-1. **C**：Batch 系統 CPU 經常 idle，效率低。  
-2. **C**：Multi-programming 目的是讓 CPU 不空閒。  
-3. **A**：Time-sharing 提供即時互動，Multi-programming 不行。  
-4. **C**：Spooling 提高 I/O 裝置使用率，減少 CPU 等待。  
-5. **C**：SMP 所有 CPU 平等運作，並共享記憶體與 OS。  
-6. **B**：NUMA 的存取延遲不一致，需要 OS 特別管理。  
-7. **C**：UMA 的存取時間一致，簡化排程設計。  
-8. **B**：SIMD 適合大規模資料平行運算。  
-9. **C**：GPU 不擅長處理分支條件複雜的程式。  
-10. **D**：Hard Real-Time 需嚴格滿足 deadline。  
-11. **B**：Soft RT 可容錯；Hard RT 無法容忍逾時。  
-12. **B**：Distributed System 節點獨立運作。  
-13. **B**：P2P 架構天生具備高容錯與分散性。  
-14. **C**：所有請求集中於 Server 容易成為瓶頸。  
-15. **C**：Cluster 系統用高速 LAN 提高資料傳輸效率。  
-16. **C**：虛擬記憶體擴大邏輯空間，支援記憶體不足。  
-17. **B**：Desktop 通常設計給單一使用者操作。  
-18. **C**：單顆多核心節能且成本較低。  
-19. **B**：飛彈控制需確保每任務即時完成。  
-20. **B**：Mainframe 不適合即時圖形密集運算。
+1. **C**：Multi-programming 的主要目的在於提升 CPU 使用率，減少 idle time。
+2. **C**：Time-Sharing 允許多位使用者即時互動，是現代多使用者系統的基礎。
+3. **C**：SMP 架構中，所有 CPU 共用 OS 且共享記憶體與排程器。
+4. **B**：NUMA 的最大挑戰是不同節點間存取記憶體延遲不同，需謹慎設計排程與資料配置。
+5. **B**：A53 跑 Linux、R5F 跑 RTOS 的組合屬於 AMP（異質對稱多工）。
+6. **C**：Multi-core 晶片內核心共享同一作業系統，不會各自執行不同 OS。
+7. **C**：Real-Time 系統的關鍵在於「反應時間可預測」，非純粹運算速度。
+8. **B**：核能電廠控制系統需嚴格即時性，典型 Hard Real-Time 應用。
+9. **C**：UMA（均勻記憶體存取）架構的特點是所有 CPU 存取延遲一致。
+10. **A**：AM64x 晶片內部核心多共享相同 DRAM，預設為 UMA 架構。
 
 ---
 
-### 4.2 申論題（共 6 題）
+### 4.3 申論題（共 8 題）
 
-> ✅ 深論題型，用以評估作業系統與韌體層級設計的理解與實務能力。
+1. 請說明 Multi-programming 與 Time-sharing 系統在系統資源配置、CPU 使用率與使用者互動體驗上的不同，並舉例說明在嵌入式系統中是否適合使用 Time-sharing。
 
-1. 請說明 Batch System、Multi-programming 與 Time-sharing 系統的主要差異，以及它們對 CPU 使用率與使用者體驗的影響。  
-2. 請比較 Symmetric 與 Asymmetric Multi-processor 架構，並說明在 NUMA 與 UMA 環境下，OS 在 CPU scheduling 與 memory management 上可能遇到的挑戰。  
-3. 請說明 Client-Server 與 Peer-to-Peer 架構的差異，並就一個實際應用（例如：影音串流或 IoT）說明你會如何選擇。  
-4. 請解釋 Hard Real-Time 與 Soft Real-Time 系統的差別，並說明在設計醫療裝置或車用控制系統時會如何選擇。  
-5. 針對嵌入式系統的設計限制（如無硬碟、記憶體小、功耗限制），請說明作業系統在資源管理上的關鍵考量與應對策略。  
-6. 請解釋 GPU 採用 SIMD 架構的優勢與限制，並說明它適合處理哪些類型的運算任務。
+2. 請比較 SMP（Symmetric Multiprocessing）與 AMP（Asymmetric Multiprocessing）在系統設計與應用場景上的差異，並說明你所在專案中是否遇過 AMP 架構的實務情境。
+
+3. NUMA 與 UMA 架構在作業系統開發與排程策略上有何不同？請說明在韌體開發中如何因應 NUMA 帶來的資料延遲問題。
+
+4. 請解釋 Multi-core、Multiprocessor 與 SMP 的概念差異，並以 TI AM64x 晶片為例，說明它們在實務中的應用與關聯性。
+
+5. 為何 Real-Time System 不等於運作速度快？請比較 Hard Real-Time 與 Soft Real-Time 系統在記憶體使用、I/O 管理與排程策略上的設計差異。
+
+6. 當你設計一個 LCD 顯示與按鍵輸入的控制邏輯時，如何透過 Linux Thread 與 Shared Memory 與 RTOS 協作？請說明其中涉及的 IPC 技術與可能的同步問題。
+
+7. 分散式系統（Distributed System）與叢集系統（Clustered System）有何本質差異？請說明各自的應用優勢，並指出其在高可靠性系統中的角色。
+
+8. 若你的系統需同時支援 Linux + RTOS（如 A53 跑 Linux，R5F 跑 FreeRTOS），請描述如何設計有效的資料交握（Handshaking）與通訊架構，並說明相關的系統挑戰與對策。
 
 ---
 
 #### 參考答案
 
-1. **Batch 系統、Multi-programming、Time-sharing 的差異**  
-   Batch 系統無互動性、一次只能處理一個作業，CPU 經常閒置；Multi-programming 可同時載入多個作業，提升 CPU 使用率；Time-sharing 則強化即時性，透過快速切換讓使用者感覺自己獨占 CPU，提供良好的互動體驗。
+1. **Multi-programming 與 Time-sharing 系統比較**
+   Multi-programming 透過讓多個程式同時駐留記憶體並由作業系統排程切換，以提高 CPU 使用率；而 Time-sharing 則引入時間片（time slice）與使用者互動，讓多位使用者能感受到「同時操作」的體驗。嵌入式系統若以即時性為主，較少使用 Time-sharing，但若具備人機互動需求（如 UI 顯示），則可在上層使用 Time-sharing 架構。
 
-2. **SMP 與 AMP 架構比較；NUMA 與 UMA 下的資源管理挑戰**  
-   SMP 所有 CPU 地位平等，共享 OS 與記憶體；AMP 則由 Master 控制 Slave，適用於分工明確的大型系統。NUMA 中不同 CPU 存取記憶體延遲不同，需避免跨節點存取導致效能下降；UMA 所有 CPU 存取延遲一致，排程較簡單但擴充性有限。
+2. **SMP 與 AMP 的實務比較與應用場景**
+   SMP 中所有 CPU 共用作業系統與記憶體，適合多核心均等任務的系統；AMP 則將任務分配給不同角色的 CPU，各自執行獨立作業系統或控制邏輯。在我所參與的 AM64x 專案中，A53 核心執行 Linux，R5F 執行 RTOS，屬典型 AMP 架構，彼此透過 shared memory 與 IPC 協作。
 
-3. **Client-Server 與 Peer-to-Peer 架構比較與應用選擇**  
-   Client-Server 架構中心化、管理簡單但有單點失效風險；P2P 架構節點平等，具備高可用性與良好擴展性。例：影音串流通常採用 Client-Server 架構；而 IoT 裝置間協作可用 P2P 減少延遲與集中壓力。
+3. **NUMA 與 UMA 在排程與資源配置上的挑戰**
+   UMA 架構下所有核心存取主記憶體延遲一致，方便任務動態分配。NUMA 則需考慮核心與記憶體的對應關係，避免跨節點存取延遲過高。OS 若未妥善綁定資料與對應核心，會造成效能下降。在韌體設計上應儘量區隔資料區域並固定排程。
 
-4. **Hard Real-Time 與 Soft Real-Time 的差異與系統選型**  
-   Hard Real-Time 系統中，錯過 deadline 將導致系統失效，適用於車載控制、醫療裝置等關鍵應用；Soft Real-Time 容許偶爾延遲，如影片串流。若系統需確保即時反應與高安全性，應選 Hard Real-Time OS。
+4. **Multi-core、Multiprocessor 與 SMP 在 AM64x 上的應用**
+   AM64x 為 Multi-core SoC，內含多種處理核心；若與外部 MCU 協同運作則為 Multiprocessor 系統。兩顆 A53 共用 Linux 與記憶體，即構成 SMP 架構。不同概念適用於不同層級的系統整合說明。
 
-5. **嵌入式系統下的資源限制與設計策略**  
-   面對無硬碟、小記憶體與低功耗需求，嵌入式系統應使用 RTOS，採靜態記憶體配置、任務優先等級明確、最小核心設計與中斷驅動的 I/O 機制，確保反應快且穩定。
+5. **Real-Time 不等於快；Hard vs Soft RT 的設計差異**
+   Real-Time 的核心是「可預測性」與「符合 deadline」。Hard RT 不容許任何任務延遲，需使用 ROM 或 SRAM 儲存、靜態配置記憶體與使用高優先排程；Soft RT 容許偶爾延遲，適合影音處理或 UI 顯示，採較具彈性的排程方式。
 
-6. **GPU SIMD 架構的特性與應用**  
-   SIMD 架構可對大量資料同時執行相同指令，適用於矩陣運算、影像處理、AI 推論等資料平行運算場景。但不適合有高度條件跳躍或流程分歧的運算，否則會降低處理效率。
+6. **Linux Thread 與 RTOS 的協作架構與挑戰**
+   典型作法是 A53 使用 thread 掃描按鍵與更新畫面，R5F 使用 RTOS 控制感測回授並透過 shared memory 傳送結果。需注意同步與 race condition 問題，可透過 lock、flag 或 double buffer 實現資料一致性與穩定性。
 
+7. **Distributed vs Clustered 系統差異與應用**
+   Distributed 系統節點鬆散耦合，彼此獨立，常見於 IoT、P2P、區塊鏈；Clustered 系統部署於同一 LAN，協作提供單一服務，應用於 HPC 與高可用伺服器。前者具動態彈性與可靠性，後者重效能整合與集中管理。
+
+8. **Linux + RTOS 的 IPC 設計與挑戰**
+   當 A53 跑 Linux，R5F 跑 RTOS 時，資料交握需透過 shared memory、mailbox 或 RPMsg 等方式進行。挑戰包含資料一致性、記憶體映射正確性、同步機制選擇與除錯困難。建議使用封包格式定義、cache flush 與中斷通知等方式強化穩定性。
 
 ---
 

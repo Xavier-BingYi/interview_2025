@@ -568,3 +568,236 @@ Thank you for your cooperation.
    **答案：D**
 
 ---
+
+# 📘 TOEIC 第七週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The team must ______ the new policy immediately.  
+   (A) adopt (B) comply (C) amend (D) dismiss  
+
+2. The error was corrected in the latest ______ of the software.  
+   (A) benchmark (B) edition (C) bid (D) certificate  
+
+3. Employees are required to ______ with the updated safety rules.  
+   (A) advocate (B) accommodate (C) comply (D) authorize  
+
+4. The manager will ______ a new assistant next week.  
+   (A) attain (B) appoint (C) accomplish (D) assume  
+
+5. They need to ______ the agreement before signing.  
+   (A) authorize (B) advocate (C) amend (D) abandon  
+
+6. The new system is not ______ with older versions.  
+   (A) apparent (B) compatible (C) abundant (D) adverse  
+
+7. The company placed a ______ for the government contract.  
+   (A) bid (B) benchmark (C) circulation (D) consent  
+
+8. He reached his sales target and celebrated his ______.  
+   (A) constraint (B) accomplishment (C) contradiction (D) advantage  
+
+9. The survey was conducted by an ______ donor.  
+   (A) anonymous (B) adverse (C) abrupt (D) absent  
+
+10. Our factory is ______ to the shipping facility.  
+    (A) abundant (B) adjacent (C) apparent (D) adverse  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. If we ______ the deadline, the client will be unhappy.  
+    (A) miss (B) missed (C) had missed (D) missing  
+
+12. If I ______ more experience, I would apply for the job.  
+    (A) have (B) had (C) will have (D) having  
+
+13. We would have arrived earlier if we ______ a taxi.  
+    (A) took (B) take (C) had taken (D) take on  
+
+14. If she ______ harder, she could pass the test.  
+    (A) studied (B) studies (C) had studied (D) studying  
+
+15. If the printer is out of paper, it ______ a warning.  
+    (A) gives (B) gave (C) would give (D) will give  
+
+16. The teacher ______ the students clean the classroom.  
+    (A) made (B) had (C) let (D) helped  
+
+17. I will ______ him check the documents again.  
+    (A) have (B) get (C) help (D) let  
+
+18. We couldn’t ______ her change her mind.  
+    (A) make (B) let (C) get (D) help  
+
+19. They ______ us use the conference room.  
+    (A) made (B) helped (C) let (D) had  
+
+20. He ______ me (to) prepare the report.  
+    (A) helped (B) had (C) let (D) make  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+Subject: Safety Inspection Reminder
+
+Dear Staff,
+
+A building-wide safety inspection will take place this Friday, May 12. Please ensure that all emergency exits are clear and that storage areas are tidy. The inspection will begin at 9:00 AM and include offices, storage rooms, and emergency equipment.
+
+All issues must be reported to the facilities team before the inspection date.
+
+Best regards,  
+Facilities Management
+```
+
+21. What is the purpose of this email?  
+    (A) To announce a holiday  
+    (B) To schedule a team meeting  
+    (C) To remind about a safety inspection  
+    (D) To introduce new staff  
+
+22. When will the inspection take place?  
+    (A) May 10  
+    (B) May 12  
+    (C) Next Monday  
+    (D) Next Saturday  
+
+23. Who is responsible for ensuring compliance?  
+    (A) All employees  
+    (B) The safety office  
+    (C) Department heads  
+    (D) Facilities team  
+
+24. What areas will be inspected?  
+    (A) Conference rooms only  
+    (B) Parking lots  
+    (C) All public areas  
+    (D) Offices, storage, emergency exits  
+
+25. When should issues be reported by?  
+    (A) Before May 12  
+    (B) On May 12  
+    (C) After the inspection  
+    (D) No deadline given  
+
+---
+
+## 📘 TOEIC 第七週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | A    |
+| 2    | B    |
+| 3    | C    |
+| 4    | B    |
+| 5    | C    |
+| 6    | B    |
+| 7    | A    |
+| 8    | B    |
+| 9    | A    |
+| 10   | B    |
+| 11   | A    |
+| 12   | B    |
+| 13   | C    |
+| 14   | A    |
+| 15   | A    |
+| 16   | A    |
+| 17   | A    |
+| 18   | C    |
+| 19   | C    |
+| 20   | A    |
+| 21   | C    |
+| 22   | B    |
+| 23   | A    |
+| 24   | D    |
+| 25   | A    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **adopt**：實施政策常用動詞，選 (A)。  
+   ➤ The team must **adopt** the new policy immediately.
+
+2. **edition**：版本，用於書籍或軟體等，選 (B)。  
+   ➤ The error was corrected in the latest **edition** of the software.
+
+3. **comply**：遵守規定，搭配 with 使用，選 (C)。  
+   ➤ Employees are required to **comply** with the updated safety rules.
+
+4. **appoint**：任命助理是常見商務動作，選 (B)。  
+   ➤ The manager will **appoint** a new assistant next week.
+
+5. **amend**：修訂協議內容最適當，選 (C)。  
+   ➤ They need to **amend** the agreement before signing.
+
+6. **compatible**：與舊版本相容，選 (B)。  
+   ➤ The new system is not **compatible** with older versions.
+
+7. **bid**：標案、投標，符合政府合約語境，選 (A)。  
+   ➤ The company placed a **bid** for the government contract.
+
+8. **accomplishment**：成就，達成銷售目標後慶祝，選 (B)。  
+   ➤ He reached his sales target and celebrated his **accomplishment**.
+
+9. **anonymous**：匿名捐助者，選 (A)。  
+   ➤ The survey was conducted by an **anonymous** donor.
+
+10. **adjacent**：相鄰的，描述工廠位置，選 (B)。  
+    ➤ Our factory is **adjacent** to the shipping facility.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **miss**：第一類條件句，If + 現在簡單式，選 (A)。  
+    ➤ If we **miss** the deadline, the client will be unhappy.
+
+12. **had**：第二類條件句，與現在相反的假設，選 (B)。  
+    ➤ If I **had** more experience, I would apply for the job.
+
+13. **had taken**：第三類條件句，與過去事實相反，選 (C)。  
+    ➤ We would have arrived earlier if we **had taken** a taxi.
+
+14. **studied**：第二類條件句使用過去式，選 (A)。  
+    ➤ If she **studied** harder, she could pass the test.
+
+15. **gives**：If + 現在簡單式，描述事實條件，選 (A)。  
+    ➤ If the printer is out of paper, it **gives** a warning.
+
+16. **made**：使役動詞 make + 人 + 原形動詞，選 (A)。  
+    ➤ The teacher **made** the students clean the classroom.
+
+17. **have**：使役動詞 have + 人 + 原形動詞，選 (A)。  
+    ➤ I will **have** him check the documents again.
+
+18. **get**：使役動詞 get + 人 + to V，選 (C)。  
+    ➤ We couldn’t **get** her to change her mind.
+
+19. **let**：使役動詞 let + 人 + 原形動詞，選 (C)。  
+    ➤ They **let** us use the conference room.
+
+20. **helped**：help + 人 + (to) V，皆可省略 to，選 (A)。  
+    ➤ He **helped** me (to) prepare the report.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：安全檢查提醒**
+
+21. **(C) To remind about a safety inspection**：主旨即是提醒即將到來的安全檢查。  
+22. **(B) May 12**：信中明確指出檢查日為 May 12。  
+23. **(A) All employees**：信中要求大家確保安全出口清空，表示全體員工需配合。  
+24. **(D) Offices, storage, emergency exits**：信中列出檢查的三個區域。  
+25. **(A) Before May 12**：所有問題需在檢查前通報，選 (A)。
+
+---
