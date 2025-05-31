@@ -1,19 +1,19 @@
 # 目錄
 
 ## Ch0：Operating System
-1. [大型主機系統演進與多工系統](#1-大型主機系統演進與多工系統)
+1. [大型主機系統演進與多工系統](#1-大型主機系統演進與多工系統Mainframe-and-Multiprogramming-Systems)
    - [1.1 大型主機系統與歷史演進](#11-大型主機系統與歷史演進)
    - [1.2 批次系統（Batch System）](#12-批次系統batch-system)
    - [1.3 多重程式系統（Multi-programming System）](#13-多重程式系統multi-programming-system)
    - [1.4 分時系統（Time-Sharing System）](#14-分時系統time-sharing-system)
    - [1.5 系統比較總結](#15-系統比較總結)
-2. [電腦系統架構與運算模型](#2-電腦系統架構與運算模型)
+2. [電腦系統架構與運算模型](#2-電腦系統架構與運算模型Computer-System-Architectures-and-Models)
    - [2.1 架構類型概觀](#21-電腦系統架構類型概觀)
    - [2.2 平行系統](#22-平行系統parallel-systems)
    - [2.3 記憶體存取架構](#23-記憶體存取架構memory-access-architectures)
    - [2.4 分散式系統架構](#24-分散式系統架構distributed-systems)
    - [2.5 叢集系統（Clustered Systems）](#25-clustered-systems叢集系統)
-3. [特殊應用系統架構](#3-特殊應用系統架構)
+3. [特殊應用系統架構](#3-特殊應用系統架構Special-Purpose-System-Architectures)
    - [3.1 即時系統](#31-即時系統real-time-systems)
    - [3.2 多媒體系統](#32-多媒體系統multimedia-systems)
    - [3.3 手持與嵌入式系統](#33-手持與嵌入式系統handheld-and-embedded-systems)
@@ -32,8 +32,6 @@
    - [2.1 基本架構與 OS 角色](#21-電腦系統基本架構與作業系統角色)
    - [2.2 I/O 與忙碌等待](#22-io-操作流程與忙碌等待問題)
    - [2.3 中斷驅動 I/O](#23-中斷驅動-io-機制interrupt-driven-io)
-   - [2.4 中斷處理與同步](#24-中斷處理細節與系統同步)
-   - [2.5 Interrupt vs Trap](#25-interrupt-與-trap-的差異與效能考量)
 3. [儲存階層與快取管理](#3-儲存階層與快取管理storage-hierarchy-and-cache-management)
    - [3.1 儲存設備與階層設計](#31-儲存設備層級與設計原則)
    - [3.2 RAM 類型](#32-ram-類型與存取特性)
@@ -46,9 +44,10 @@
    - [4.3 I/O 保護與防範](#43-io-保護與惡意操作防範)
    - [4.4 記憶體保護](#44-記憶體保護memory-protection)
    - [4.5 CPU 保護與 Timer](#45-cpu-保護與-timer-機制)
-5. [作業系統導論練習題](#5-作業系統導論練習題)
-   - [5.1 選擇題](#51-選擇題共-20-題)
-   - [5.2 申論題](#52-申論題共-8-題)
+5. [作業系統與硬體互動總結與測驗練習](#5-作業系統與硬體互動總結與測驗練習)
+   - [5.1 核心觀念重點整理](#51-核心觀念重點整理)
+   - [5.2 選擇題](#52-選擇題共-20-題)
+   - [5.3 申論題](#53-申論題共-8-題)
 
 ## Ch2：OS Structure
 
@@ -714,11 +713,12 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 
 ### 2.2 I/O 操作流程與忙碌等待問題
 
-#### ▸ 裝置控制器（Device Controller）結構
-- 每個 controller 負責一種特定裝置，並有本地 buffer。
-- 控制器設有 **Status Register** 和 **Data Register**：
-  - Status Register：顯示裝置當前狀態（如 idle 或 busy）。
-  - Data Register：小型緩衝區，暫存傳輸資料。
+#### ▸ 裝置控制器（Device Controller）
+- 一般為獨立晶片，位於 **CPU 與外部裝置（Device）之間**，負責資料傳輸與狀態管理。
+- 每個控制器專責一種特定類型的裝置，並內建 **本地緩衝區（local buffer）**。
+- 控制器內通常包含兩個主要暫存器：
+  - **Status Register**：回報裝置目前狀態（如 idle、busy、error）。
+  - **Data Register**：作為暫存區，暫時存放即將傳輸或剛接收的資料。
 
 #### ▸ 資料交換流程
 - **Device ↔ Controller Buffer**：由控制器直接處理。
@@ -739,54 +739,40 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 #### ▸ 中斷機制概述
 - 中斷（Interrupt）允許裝置主動通知 CPU，而不是由 CPU 主動輪詢。
 - 改善 busy waiting 的缺點，使 CPU 可進行其他計算，提升系統效率。
+你的敘述基本正確，以下是幫你修飾後、語意更清晰並符合系統層級用語的版本：
 
 #### ▸ 中斷處理流程
-1. Device driver 透過 system call 啟動 I/O。
-2. Controller 執行實際資料傳輸。
-3. 傳輸完成後，controller 發送 interrupt signal。
-4. CPU 接收中斷並切換至 Interrupt Handler。
-5. Interrupt Handler 處理完成後，返回原本程式。
 
-#### ▸ 硬體中斷與軟體中斷
-- **Hardware Interrupt**：裝置事件（如滑鼠移動、鍵盤輸入）觸發。
-- **Software Interrupt（Trap）**：程式主動呼叫 system call 或產生錯誤（如 division by zero）。
+1. **Device Driver** 透過 **System Call** 向作業系統發出 I/O 請求。
+2. 作業系統將命令傳給 **Device Controller**，控制器開始初始化並執行實際的資料傳輸（通常傳至其 **local buffer**）。
+3. 傳輸完成後，控制器發出 **中斷訊號（Interrupt Signal）** 給 CPU。
+4. CPU 收到中斷後，暫停當前執行流程，切換至對應的 **Interrupt Handler（中斷處理常式）**。
+5. Interrupt Handler 處理完畢後，CPU 透過 **中斷返回（Interrupt Return）** 回到原本被中斷的程式繼續執行。
 
 #### ▸ 中斷向量表（Interrupt Vector）
-- 系統維護中斷向量（array of function pointers），每個中斷對應一個 Handler。
-- 安裝驅動程式時，更新中斷向量以指向新的中斷處理程序。
+- 作業系統維護一張 **中斷向量表（Interrupt Vector Table）**，實為一組 function pointers 陣列，每個欄位對應一個中斷號（signal number）及其對應的 **Interrupt Handler（中斷處理常式）**。
+- 當中斷發生時，系統根據中斷號查表，呼叫對應的 **Service Routine**（負責處理該中斷的程式碼）。
+- 當安裝新裝置並載入對應 driver 時，作業系統會同時更新向量表中對應的 function pointer，更新向量表中的對應中斷處理程序，讓新的 handler 接手該中斷號的處理。
 
----
+#### ▸ 硬體中斷與軟體中斷
 
-### 2.4 中斷處理細節與系統同步
+- **硬體中斷（Hardware Interrupt）**：由外部裝置（如鍵盤、滑鼠、網卡）觸發，透過中斷向量表查找對應的 handler 進行處理。每個裝置驅動程式（driver）會註冊中斷號與對應的 Service Routine。
 
-#### ▸ Resident Monitor 與 Service Routine
-- Resident Monitor 常駐記憶體，負責中斷控制與管理。
-- 當中斷發生時，查詢 interrupt vector 找到對應 service routine 執行。
+- **軟體中斷（Software Interrupt / Trap）**：由程式主動或錯誤行為觸發。
+  - **System Call**：像 `printf()` 這類呼叫，其實是透過 trap 切換控制權給 OS。
+  - **Exception / Fault**：例如除以 0、記憶體錯誤等，程式無法繼續執行，OS 接手處理（如顯示 "Segmentation fault"）。
 
-#### ▸ 軟體中斷處理流程
-- User program 呼叫 system call（如 read、write）→ 系統產生 software interrupt。
-- OS 根據 call number 進行 switch-case，找到對應的服務例程執行，完成後回到 user 程式。
+- OS 會根據中斷來源使用不同處理流程：
+  - **硬體中斷**：查中斷向量表。
+  - **軟體中斷**：由 OS 自訂的分派機制（如 switch-case）選擇對應處理程序。
+
+> 📌 軟體中斷稱為 **trap**，表示 CPU 主動「陷入」OS，由 OS 接管控制權，處理 system call 或例外錯誤。
 
 #### ▸ 中斷的同步與保護機制
-- 當中斷處理進行中時，會暫時 disable 其他低優先權的中斷（interrupt masking）。
-- 確保高優先權中斷能即時處理，避免 lost interrupt 和系統狀態混亂。
-- 必須保存中斷發生時的 register、program counter（PC）、memory state，確保能正確 resume。
-
----
-
-### 2.5 Interrupt 與 Trap 的差異與效能考量
-
-#### ▸ Interrupt 與 Trap 比較
-- **Interrupt**：來自外部裝置（硬體中斷）。
-- **Trap**：由使用者程式內部事件（錯誤或 system call）主動觸發。
-
-#### ▸ 中斷處理開銷
-- 中斷發生時需要儲存大量上下文（context saving），會帶來額外負擔（overhead）。
-- 太頻繁的中斷會降低整體系統效能。
-
-#### ▸ 系統效能最佳化
-- 使用 Assembly Code 撰寫中斷服務程序，確保極速處理。
-- 嚴格區分高、低優先權中斷，必要時 mask 掉低優先權中斷以提升效率。
+- 當系統中有多個程式並行執行且中斷頻繁發生時，容易產生同步問題。為了避免 lost interrupt 或系統狀態錯亂，作業系統通常會採取以下保護措施：
+  - 使用 **Interrupt Masking**：在處理高優先權中斷時，暫時屏蔽低優先權中斷，避免處理流程被干擾。
+  - 使用 **快速、精簡的中斷服務常式（Service Routine）**，多以組合語言實作以確保執行速度極快。
+- 當中斷發生時，需要儲存大量上下文（context saving），會帶來額外負擔（overhead）系統必須立即保存當前執行狀態，包括 **暫存器（Register）**、**程式計數器（PC）**、**關鍵記憶體內容**，以便中斷處理完成後，能安全返回原本的執行點，確保程式不中斷地繼續執行。
 
 ---
 
@@ -811,16 +797,16 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 ### 3.2 RAM 類型與存取特性
 
 #### ▸ DRAM（Dynamic RAM）
-- 使用單一電晶體儲存每個 bit，體積小、成本低、耗電少，但速度較慢。
-- 必須定期刷新（refresh），常用於主記憶體（main memory）。
+- 每個 bit 由一個電晶體與電容構成，體積小、成本低、功耗低，但速度較慢。
+- 廣泛用於 **主記憶體（Main Memory）**。
 
 #### ▸ SRAM（Static RAM）
-- 每個 bit 使用六個電晶體，速度快但體積大、成本高、耗電高。
-- 適用於 cache 記憶體，提供更快速的暫存能力。
+- 每個 bit 需使用六個電晶體構成，速度快但體積大、成本高、耗電較高。
+- 常用於 **快取記憶體（Cache）**，提供高速存取以提升系統效能。
 
 #### ▸ 隨機存取特性（Random Access）
-- RAM 屬於 **random access memory**，無論存取哪個位置，延遲一致。
-- 有助於系統預測效能表現，與硬碟等非隨機存取裝置不同。
+- RAM 屬於 **隨機存取記憶體**，無論存取哪個位址，其延遲時間基本一致。
+- 有助於確保程式執行時的穩定性與預測性，與硬碟等順序存取裝置不同，後者存取延遲會依資料位置而異。
 
 ---
 
@@ -839,16 +825,18 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 ### 3.4 快取記憶體與效能提升
 
 #### ▸ Cache 概念與原理
-- 快取是一種**暫存常用資料**的高速儲存空間，提升存取效率。
-- 資料會從慢速儲存層級暫存到較快層級（如 CPU cache）。
-
-#### ▸ Cache Hit 與 Miss
-- 若資料存在 cache → **cache hit**，可快速讀取。
-- 若資料不存在 → **cache miss**，需逐層向下尋找，花費更多時間。
+- 快取是一種 **暫存常用資料** 的高速儲存空間。
+- CPU 存取資料時會先查找最近的快取層級（如 L1、L2、L3），若資料存在（**cache hit**），可快速取出；若不存在（**cache miss**），則需往主記憶體甚至磁碟等較慢層級查找。
+- 系統會自動將常用資料從慢速儲存暫存到高速層級，以提升整體運算效能。
 
 #### ▸ 區域性（Locality）特性
-- 多數程式存取具有 **temporal（時間）與 spatial（空間）區域性**，提高 cache 命中率。
-- 若資料不重複使用（如 big data scan），cache 效益反而下降。
+- Cache 效能提升依賴「**區域性原則（Locality of Reference）**」：
+  - **時間區域性**：剛用過的資料很快還會再用。
+  - **空間區域性**：鄰近的資料很可能被用到。
+- 某些情境下不建議使用 Cache，例如：
+  - 巨量資料處理（Big Data Processing）僅掃描一次、不重複使用。
+  - 資料量大到連主記憶體都無法容納。
+- 此時使用快取反而增加負擔，故資料密集型系統（Data-Intensive Systems）常直接繞過 Cache 設計。
 
 ---
 
@@ -878,53 +866,62 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 
 #### ▸ 作業系統如何實現保護
 - OS 必須能夠控管對 I/O、記憶體、CPU 等硬體資源的存取，並保證各程序間獨立運作。
-- 實現保護機制的基礎在於硬體支援，例如模式切換與指令限制。
+- 實現保護機制的基礎在於硬體支援，因為硬體是無法被修改的，不像軟體可能被惡意程式竄改，例如模式切換與指令限制。
 
 ---
 
 ### 4.2 雙模式操作（Dual-Mode Operation）
 
 #### ▸ 執行模式的區分
-- 現代系統透過 mode bit 將執行模式分為：
-  - **User Mode**：執行使用者程式。
-  - **Kernel Mode（Monitor Mode）**：執行作業系統內部程式。
+- 現代作業系統透過硬體中的 mode bit（模式位元，存在某個狀態暫存器中）來區分執行權限：
+  - `Mode bit = 1`：**User Mode**，用於執行使用者層程式，權限受限。
+  - `Mode bit = 0`：**Kernel Mode（又稱 Monitor Mode）**，用於執行作業系統核心程式，擁有完整控制權。
 
 #### ▸ 模式切換與中斷
-- 當 system call 或 interrupt 發生時，系統自動將 mode bit 從 1 切換為 0，進入 Kernel Mode。
-- OS 處理完成後，再將 mode bit 切回 1，回到 User Mode。
+- 當發生 **System Call** 或 **Interrupt** 時，系統會自動將 mode bit 從 1 切換為 0，進入 Kernel Mode。
+- 作業系統處理完畢後，會將 mode bit 切回 1，返回使用者程式繼續執行。
 
 #### ▸ 特權指令（Privileged Instructions）
-- 僅能在 Kernel Mode 執行，如 I/O 操作、改寫中斷向量、變更記憶體設定等。
-- 若在 User Mode 嘗試執行，會觸發中斷並由 OS 處理（通常終止程式）。
+- 特權指令是被硬體架構設計為只能在 Kernel Mode 下執行的操作（如 x86 架構）。
+- 常見指令包括：I/O 裝置操作、修改中斷向量表、設定記憶體保護等。
+- 若在 User Mode 嘗試執行特權指令，將會觸發中斷（trap），由作業系統介入處理，通常終止該程式以保護系統安全。
 
 ---
 
 ### 4.3 I/O 保護與惡意操作防範
 
 #### ▸ 為何需要 I/O 保護
-- I/O 裝置（如鍵盤、滑鼠、硬碟）為共享資源，若使用者能自由控制，將可能造成資料衝突或系統崩潰。
-- 因此，**所有 I/O 指令皆為特權指令**，只能由 OS 控制與調度。
+- I/O 裝置（如鍵盤、滑鼠、硬碟）為多個程序共享的系統資源，若使用者程式能任意存取，將可能造成資料衝突、裝置混亂，甚至導致系統當機。
+- 為避免此情形，**所有 I/O 指令皆被設計為特權指令（Privileged Instructions）**，只能在 Kernel Mode 由作業系統執行，使用者程式無法直接操作。
 
 #### ▸ 潛在風險與攻擊方式
-- 若未限制記憶體權限，惡意程式可改寫 OS 的中斷向量，讓硬體中斷執行惡意程式碼。
-- 類似攻擊包含：改寫驅動程式、變更中斷處理流程、任意傳送資料等。
+- 雖然特權指令保護了 I/O 操作，但若 **記憶體保護機制不足**，仍可能遭惡意程式繞過。
+- 例如，若使用者可任意存取記憶體，就可能修改 **中斷向量表（Interrupt Vector Table）**，使硬體中斷跳至惡意程式碼執行。
+- 常見攻擊手法包含：
+  - 改寫驅動程式邏輯。
+  - 篡改中斷處理程序流程。
+  - 透過共享 I/O 線路發送惡意資料。
+- 因此，**記憶體保護與 I/O 特權限制**需同時並存，才可確保系統整體安全性。
 
 ---
 
-### 4.4 記憶體保護（Memory Protection）
-
 #### ▸ 保護哪些內容
-- 重要結構：中斷向量表（interrupt vector）、中斷服務程式（ISR）、OS 資料區。
-- 避免程式存取、改寫不屬於自身的記憶體空間。
+- 關鍵結構需受到保護，例如：
+  - **中斷向量表（Interrupt Vector）**
+  - **中斷服務程式（Interrupt Service Routine, ISR）**
+  - **作業系統的資料與程式區**
+- 避免使用者程式任意存取或修改不屬於自身的記憶體區段。
 
 #### ▸ 硬體支援機制
-- 使用兩個 register：
-  - **Base register**：記憶體起始位置。
-  - **Limit register**：可存取的記憶體範圍。
+- 現代硬體會搭配兩個重要暫存器來保護記憶體範圍：
+  - **Base Register**：記錄可存取記憶體的起始位址。
+  - **Limit Register**：記錄從 base 起可存取的最大位移範圍。
 - 每次存取都會比對是否落在合法範圍，否則觸發錯誤（如 segmentation fault）。
 
 #### ▸ 保護的實際效果
 - 每個程式只能操作自己的記憶體，避免讀取他人資料或干擾系統結構。
+- Base 與 Limit register 的設定只能透過 **Privileged Instruction（特權指令）** 修改。
+  - 例如：當程式呼叫 `malloc()` 動態配置記憶體時，實際上是由作業系統修改對應的 limit，讓程式能合法使用更多空間。
 - 所有記憶體管理操作須經過 OS 核可。
 
 ---
@@ -933,29 +930,90 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 
 #### ▸ 為什麼需要 CPU 保護
 - 若單一程式無限制佔用 CPU，其他程式將無法執行，造成資源壟斷與死當風險。
-- 保護機制能強制程式交出 CPU 控制權，確保系統公平運作。
+- 舉例：當程式進入 `while(1)` 的無限迴圈，系統仍可正常運作，代表作業系統保有 CPU 控制權。
+- 透過保護機制，OS 能強制回收 CPU，避免任一程式壟斷資源。
 
 #### ▸ Timer 機制的應用
-- 作業系統設置 **計時器（timer）**，每經過固定時間產生一次中斷。
-- 當中斷發生，CPU 會跳出目前程式，由 OS 根據排程策略（scheduling）選擇下一個程式執行。
+- 作業系統會設置一個 **計時器（Timer）**，每經過固定時間產生一次 **中斷（Interrupt）**。
+- 當中斷觸發時，CPU 會跳離當前程式，轉由 OS 排程下一個程序，實現輪流執行。
 
 #### ▸ 中斷與程序切換
-- Timer 中斷是 context switch 的契機。
-- 可實現 time-sharing、確保每個程序公平執行並預防無限迴圈霸佔 CPU。
+- Timer 中斷是實現 **Context Switch（上下文切換）** 的契機。
+- 可用來實作 **Time-Sharing（分時機制）**，確保多個程序能公平地使用 CPU，防止無限迴圈佔用資源。
 
 ---
 
-以下是根據您提供的 Chap1\_Introduction.pdf 製作的練習題內容，已完整依照您指定的 Markdown 格式排版（含選擇題與申論題）：
+## 5. 作業系統與硬體互動總結與測驗練習
 
 ---
 
-## 5. 作業系統導論練習題
+### 5.1 核心觀念重點整理
+
+1. **作業系統角色與 API 抽象化**
+- OS 提供應用程式與硬體之間的抽象層，使程式無需直接操作硬體。
+- 主要職責包含：
+  - Resource Allocator：管理 CPU、memory、I/O 等資源。
+  - Control Program：管控程式與硬體操作，避免錯誤干擾。
+  - Coordinator：協調多程序、多使用者間的競爭。
+  - Interface Provider：提供 System Call 介面操作底層資源。
 
 ---
 
-### 5.1 選擇題（共 20 題）
+2. **執行模式與特權指令**
+- OS 透過 mode bit 區分執行模式：
+  - Mode bit = 1：User Mode，僅限執行非特權操作。
+  - Mode bit = 0：Kernel Mode，可執行特權指令。
+- 特權指令（如記憶體設定、I/O 操作）僅能於 Kernel Mode 執行，否則觸發 Trap。
 
-> ✅ 單選題形式，涵蓋 Ch1 重點與常見考題。
+---
+
+3. **裝置控制與中斷處理流程**
+- Device Controller 位於 CPU 與外部裝置之間，負責資料傳輸與狀態管理。
+- 控制器內含：
+  - Status Register：裝置狀態回報。
+  - Data Register：暫存資料。
+- 中斷處理流程：
+  1. Device Driver 發出 I/O 要求。
+  2. Controller 傳輸完成後發出 Interrupt。
+  3. CPU 切入中斷處理，執行對應 Handler。
+  4. 處理完畢後恢復原程式執行。
+
+---
+
+4. **中斷向量表與 Trap 機制**
+- 中斷向量表是由 function pointer 組成的陣列，根據中斷號觸發對應 Handler。
+- 軟體中斷（Software Interrupt）又稱 Trap，通常由 system call 或 exception 觸發，由 OS 負責處理。
+
+---
+
+5. **中斷同步與保護措施**
+- 為避免系統狀態錯亂與遺失中斷，OS 採取：
+  - Interrupt Masking：暫時屏蔽低優先權中斷。
+  - 簡化中斷處理常式。
+  - Context Saving：儲存當前執行狀態，便於後續恢復。
+
+---
+
+6. **記憶體與儲存層級架構**
+- 儲存採階層架構：register → cache → DRAM → SSD/HDD → tape。
+- DRAM 用於主記憶體，速度較慢但容量大；SRAM 用於 cache，速度快但體積大。
+- RAM 屬於隨機存取，存取延遲一致，利於效能預測。
+
+---
+
+7. **Cache 概念與一致性挑戰**
+- Cache 用於暫存常用資料，提升資料存取速度。
+- 多核心系統需注意 Cache Coherency 問題，避免資料不一致，常用 MESI 協定解決。
+
+---
+
+8. **CPU 保護與 Timer 中斷**
+- 為防止程序無限佔用 CPU，OS 利用 Timer 產生中斷進行排程切換。
+- Timer 中斷為 time-sharing 實作的核心機制，實現程序公平與穩定執行。
+
+---
+
+### 5.2 選擇題（共 20 題）
 
 1. 下列何者不是作業系統的主要目標？
    A. 提供便利的操作介面
@@ -1104,9 +1162,7 @@ SMP 架構著重於**多工排程與使用者體驗**。像我們使用手機或
 
 ---
 
-### 5.2 申論題（共 8 題）
-
-> ✅ 深論題型，用以強化理解作業系統基本原理與設計理念。
+### 5.3 申論題（共 8 題）
 
 1. 請簡述作業系統的三大目標，並分別說明其重要性。
 2. 說明為何需要 Dual-Mode Operation，並舉例解釋特權指令與保護機制之間的關聯。
