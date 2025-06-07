@@ -1,0 +1,7 @@
+"./Src/gpio.o"
+"./Src/main.o"
+"./Src/mem_io.o"
+"./Src/rcc.o"
+"./Src/syscalls.o"
+"./Src/sysmem.o"
+"./Startup/startup_stm32f429zitx.o"
