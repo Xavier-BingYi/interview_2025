@@ -25,8 +25,9 @@ int main(void)
 	gpio_init(RCC_AHB1EN_GPIOG);
 	gpio_set_mode(GPIOG_BASE, GPIO_PIN_13, GPIO_MODE_OUTPUT);
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
-	gpio_set_mode(GPIOG_BASE, GPIO_PIN_14, GPIO_MODE_OUTPUT);
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+	//gpio_set_mode(GPIOG_BASE, GPIO_PIN_14, GPIO_MODE_OUTPUT);
+	//gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+
     while (1)
     {
     }

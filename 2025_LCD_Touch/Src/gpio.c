@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <rcc.h>
 #include <gpio.h>
+#include <mem_io.h>
+
 
 
 void gpio_init(uint8_t port){

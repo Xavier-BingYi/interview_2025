@@ -547,3 +547,940 @@ Thank you for your cooperation.
    **答案：C**
 
 ---
+
+# 📘 TOEIC 第八週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The manager decided to ______ the outdated software.  
+   (A) maintain (B) abandon (C) yield (D) obey  
+
+2. The customer found a great ______ on winter coats.  
+   (A) relief (B) justice (C) bargain (D) zone  
+
+3. Please be ______ when handling client data.  
+   (A) generous (B) cautious (C) sincere (D) adjacent  
+
+4. He tried to ______ the inspector with false information.  
+   (A) illustrate (B) quote (C) deceive (D) vanish  
+
+5. This model is more ______ in terms of fuel usage.  
+   (A) economical (B) generous (C) judicial (D) frequent  
+
+6. The ______ predicted clear skies tomorrow.  
+   (A) justice (B) forecast (C) zone (D) peer  
+
+7. You should never ______ to ask for assistance.  
+   (A) hesitate (B) maintain (C) yield (D) obey  
+
+8. The professor used charts to ______ her points.  
+   (A) deceive (B) illustrate (C) launch (D) abandon  
+
+9. The company will ______ its latest product next week.  
+   (A) launch (B) task (C) negotiate (D) vanish  
+
+10. The employee must ______ the supervisor’s instructions.  
+    (A) quote (B) yield (C) obey (D) abandon  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. The man ______ fixed the copier is a technician.  
+    (A) whose (B) who (C) what (D) where  
+
+12. That’s the employee ______ you met yesterday.  
+    (A) whose (B) whom (C) which (D) that  
+
+13. The vendor ______ products are eco-friendly gained popularity.  
+    (A) who (B) which (C) whose (D) what  
+
+14. This is the cafe ______ we had our first meeting.  
+    (A) who (B) where (C) what (D) which  
+
+15. The folder ______ contents were missing was in my drawer.  
+    (A) what (B) whose (C) which (D) that  
+
+16. That’s the file ______ was sent by the legal team.  
+    (A) which (B) who (C) what (D) where  
+
+17. The supervisor ______ office is next to mine is retiring.  
+    (A) who (B) which (C) whose (D) whom  
+
+18. The woman ______ answered your call is on vacation now.  
+    (A) who (B) that (C) which (D) what  
+
+19. The book ______ you recommended was excellent.  
+    (A) where (B) who (C) that (D) what  
+
+20. He’s the manager ______ strategies improved the outcome.  
+    (A) whose (B) who (C) what (D) where  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+```
+NOTICE
+
+TO: All Staff  
+FROM: Facilities Department  
+SUBJECT: Elevator Maintenance
+
+Please be advised that the elevators in Building B will be under maintenance on Thursday, June 15, from 9:00 AM to 1:00 PM. During this time, please use the stairs or the elevators in Building A.
+
+We apologize for the inconvenience and appreciate your cooperation.
+```
+
+21. What is the purpose of the notice?  
+    (A) To announce a staff meeting  
+    (B) To notify about elevator maintenance  
+    (C) To promote building A  
+    (D) To schedule new elevator installations  
+
+22. When will the maintenance happen?  
+    (A) June 14  
+    (B) June 15, 1:00 PM to 5:00 PM  
+    (C) June 15, 9:00 AM to 1:00 PM  
+    (D) June 16  
+
+23. Which building’s elevators will be under maintenance?  
+    (A) Building A  
+    (B) Building C  
+    (C) Building B  
+    (D) Main Building  
+
+24. What are employees advised to do?  
+    (A) Take the day off  
+    (B) Use Building B’s elevators  
+    (C) Use stairs or Building A’s elevators  
+    (D) Delay all meetings  
+
+25. Who sent this notice?  
+    (A) IT Department  
+    (B) Human Resources  
+    (C) Facilities Department  
+    (D) Security Office  
+
+---
+
+## 📘 TOEIC 第八週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | B    |
+| 2    | C    |
+| 3    | B    |
+| 4    | C    |
+| 5    | A    |
+| 6    | B    |
+| 7    | A    |
+| 8    | B    |
+| 9    | A    |
+| 10   | C    |
+| 11   | B    |
+| 12   | B    |
+| 13   | C    |
+| 14   | B    |
+| 15   | B    |
+| 16   | A    |
+| 17   | C    |
+| 18   | A    |
+| 19   | C    |
+| 20   | A    |
+| 21   | B    |
+| 22   | C    |
+| 23   | C    |
+| 24   | C    |
+| 25   | C    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **abandon**：放棄、淘汰舊軟體，選 (B)。  
+   ➤ The manager decided to **abandon** the outdated software.
+
+2. **bargain**：特價品，與 winter coats 搭配最合理，選 (C)。  
+   ➤ The customer found a great **bargain** on winter coats.
+
+3. **cautious**：小心的，處理客戶資料要小心，選 (B)。  
+   ➤ Please be **cautious** when handling client data.
+
+4. **deceive**：欺騙，符合「用錯誤資訊誤導」語境，選 (C)。  
+   ➤ He tried to **deceive** the inspector with false information.
+
+5. **economical**：節能省錢，fuel usage 語境下最適，選 (A)。  
+   ➤ This model is more **economical** in terms of fuel usage.
+
+6. **forecast**：預報，氣象預報常用單字，選 (B)。  
+   ➤ The **forecast** predicted clear skies tomorrow.
+
+7. **hesitate**：猶豫不決，搭配 to ask 最自然，選 (A)。  
+   ➤ You should never **hesitate** to ask for assistance.
+
+8. **illustrate**：說明、圖解，與 charts 搭配常見，選 (B)。  
+   ➤ The professor used charts to **illustrate** her points.
+
+9. **launch**：推出產品或服務，符合文意，選 (A)。  
+   ➤ The company will **launch** its latest product next week.
+
+10. **obey**：服從，與 instruction（指示）搭配自然，選 (C)。  
+    ➤ The employee must **obey** the supervisor’s instructions.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **who**：主詞關係代名詞，修飾人，選 (B)。  
+    ➤ The man **who** fixed the copier is a technician.
+
+12. **whom**：受詞關係代名詞，you met someone，選 (B)。  
+    ➤ That’s the employee **whom** you met yesterday.
+
+13. **whose**：表示「其…的」，修飾 products，選 (C)。  
+    ➤ The vendor **whose** products are eco-friendly gained popularity.
+
+14. **where**：地點關係副詞，選 (B)。  
+    ➤ This is the cafe **where** we had our first meeting.
+
+15. **whose**：所有格關係代名詞，修飾 contents，選 (B)。  
+    ➤ The folder **whose** contents were missing was in my drawer.
+
+16. **which**：指物，為主詞關係代名詞，選 (A)。  
+    ➤ That’s the file **which** was sent by the legal team.
+
+17. **whose**：所有格關係代名詞，修飾 office，選 (C)。  
+    ➤ The supervisor **whose** office is next to mine is retiring.
+
+18. **who**：主詞關係代名詞，選 (A)。  
+    ➤ The woman **who** answered your call is on vacation now.
+
+19. **that**：受詞關係代名詞，選 (C)。  
+    ➤ The book **that** you recommended was excellent.
+
+20. **whose**：修飾 strategies，表「他的策略」，選 (A)。  
+    ➤ He’s the manager **whose** strategies improved the outcome.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：電梯維修公告**
+
+21. **(B) To notify about elevator maintenance**：開頭明說此公告是關於維修。  
+22. **(C) June 15, 9:00 AM to 1:00 PM**：內文明確寫出維修時間。  
+23. **(C) Building B**：開頭明確指出是 Building B 的電梯維修。  
+24. **(C) Use stairs or Building A’s elevators**：內文提供的替代方案。  
+25. **(C) Facilities Department**：公告由 Facilities Department 發出。
+
+---
+
+# 📘 TOEIC 八週複習模擬測驗（共 50 題）
+
+---
+
+## 一、單字填空（Vocabulary - 25 題）
+
+1. The company decided to ______ its office to a larger location.
+   (A) replace (B) relocate (C) revise (D) retain
+
+2. He was ______ for the position due to his extensive experience.
+   (A) qualified (B) rejected (C) assigned (D) promoted
+
+3. Please ______ your password regularly for security.
+   (A) register (B) review (C) reset (D) replace
+
+4. All staff must follow the safety ______ during emergencies.
+   (A) policies (B) procedures (C) promotions (D) partnerships
+
+5. The factory will ______ production until the inspection is complete.
+   (A) facilitate (B) halt (C) improve (D) schedule
+
+6. Customers are encouraged to fill out a ______ after service.
+   (A) response (B) checklist (C) survey (D) guideline
+
+7. She has a strong ______ in marketing and data analysis.
+   (A) background (B) application (C) procedure (D) position
+
+8. The IT team will perform a system ______ this weekend.
+   (A) breakdown (B) update (C) renewal (D) automation
+
+9. Let’s schedule the meeting in a more ______ time slot.
+   (A) flexible (B) specific (C) identical (D) occasional
+
+10. His innovative ideas led to the ______ of a new product line.
+    (A) transition (B) launch (C) upgrade (D) consumption
+
+11. The manager reviewed the ______ to ensure fair evaluation.
+    (A) performances (B) interviews (C) criteria (D) feedbacks
+
+12. They decided to ______ the terms of the contract.
+    (A) attach (B) amend (C) compile (D) attain
+
+13. Please refer to the ______ for updated company policies.
+    (A) monitor (B) manual (C) mechanic (D) mandate
+
+14. The finance team detected an unexpected ______ in the budget.
+    (A) decline (B) defect (C) delay (D) donation
+
+15. The HR department will conduct an annual ______ review.
+    (A) personnel (B) performance (C) payroll (D) position
+
+16. Employees are encouraged to attend the training ______.
+    (A) selection (B) session (C) solution (D) situation
+
+17. The report should be ______ to the supervisor by noon.
+    (A) submitted (B) supported (C) simplified (D) shared
+
+18. The marketing team worked on the product’s brand ______.
+    (A) expansion (B) extension (C) identification (D) identity
+
+19. All payments must be made before the ______ date.
+    (A) deposited (B) due (C) early (D) directed
+
+20. They were pleased with the sales ______ from the last quarter.
+    (A) revenue (B) refund (C) request (D) resource
+
+21. She has been an ______ part of our success this year.
+    (A) optional (B) interactive (C) integral (D) individual
+
+22. The CEO made an ______ during the press conference.
+    (A) application (B) agreement (C) announcement (D) attachment
+
+23. The office will be closed for routine equipment ______.
+    (A) installation (B) interpretation (C) interaction (D) integration
+
+24. The customer’s complaint was handled in a ______ manner.
+    (A) prompt (B) rare (C) doubtful (D) vague
+
+25. Each team member is responsible for meeting their weekly ______.
+    (A) quotation (B) quota (C) quality (D) quarter
+
+---
+
+## 二、文法選擇（Grammar - 15 題）
+
+26. If we ______ early, we can catch the first train.
+    (A) leave (B) left (C) had left (D) leaving
+
+27. She ______ the documents before the deadline.
+    (A) submitted (B) submitting (C) had submitting (D) submits
+
+28. I wonder ______ he finished the assignment.
+    (A) that (B) if (C) when (D) whether or not
+
+29. The manager insisted that he ______ the report immediately.
+    (A) submit (B) submits (C) submitted (D) submitting
+
+30. Not only the staff but also the director ______ present at the meeting.
+    (A) are (B) were (C) is (D) be
+
+31. The files must ______ by noon.
+    (A) send (B) sent (C) be sent (D) being sent
+
+32. They suggested ______ the meeting to next week.
+    (A) postpone (B) to postpone (C) postponing (D) postponed
+
+33. The intern has been working here ______ March.
+    (A) since (B) for (C) during (D) from
+
+34. Neither of the proposals ______ acceptable to the board.
+    (A) are (B) is (C) were (D) have been
+
+35. The technician fixed the problem before it ______ serious.
+    (A) become (B) becomes (C) became (D) becoming
+
+36. He asked me ______ I could assist him.
+    (A) when (B) what (C) if (D) whether
+
+37. It’s important that she ______ on time for the presentation.
+    (A) arrive (B) arrives (C) arrived (D) arriving
+
+38. They ______ the project by the time we got there.
+    (A) complete (B) had completed (C) completed (D) are completing
+
+39. The instructions explain how the device ______.
+    (A) operates (B) operate (C) operating (D) is operate
+
+40. ______ he tried his best, he didn’t win the competition.
+    (A) Despite (B) Even (C) Although (D) Because
+
+---
+
+## 三、閱讀理解（Reading - 10 題）
+
+### 閱讀一
+
+```
+Subject: Printer Maintenance Schedule
+
+Dear Staff,
+
+Please be informed that all office printers will undergo routine maintenance on Friday, June 14 between 2:00 PM and 5:00 PM. During this period, printing services will be unavailable. Kindly complete all urgent printing tasks before the scheduled time.
+
+Thank you for your understanding.
+Administration Team
+```
+
+41. What is the purpose of this notice?  
+(A) To announce new printing rules  
+(B) To request paper orders  
+(C) To inform about maintenance  
+(D) To introduce new printers
+
+42. When will the maintenance begin?  
+(A) 9:00 AM  
+(B) 12:00 PM  
+(C) 2:00 PM  
+(D) 5:00 PM
+
+43. What should staff do before 2:00 PM on June 14?  
+(A) Turn off printers  
+(B) Submit print requests  
+(C) Cancel all meetings  
+(D) Report to IT
+
+---
+
+### 閱讀二
+
+```
+MEMO
+
+To: All Employees  
+From: HR Department  
+Subject: Annual Leave Policy Update
+
+Starting next month, employees may carry over a maximum of five unused vacation days into the following year. Any unused days beyond this limit will be forfeited. Please plan accordingly and submit leave requests in advance.
+```
+
+44. What is the main purpose of this memo?  
+(A) To remind employees of sick leave policies  
+(B) To announce changes to the vacation policy  
+(C) To cancel upcoming holidays  
+(D) To encourage overtime work
+
+45. What is the limit on carryover vacation days?  
+(A) Three days  
+(B) Five days  
+(C) Seven days  
+(D) Ten days
+
+46. What happens to extra unused days?  
+(A) They can be sold back  
+(B) They are added to sick leave  
+(C) They are forfeited  
+(D) They roll over automatically
+
+---
+
+### 閱讀三
+
+```
+NOTICE
+
+Subject: Parking Lot Closure
+
+The building’s main parking lot will be closed on Sunday, July 2 for repaving. Please use the secondary lot located behind the building. The main lot will reopen on Monday morning.
+```
+
+47. Why is the parking lot being closed?  
+(A) For cleaning  
+(B) For security upgrades  
+(C) For repaving  
+(D) For painting
+
+48. When will the main lot reopen?  
+(A) Sunday night  
+(B) Monday morning  
+(C) Tuesday morning  
+(D) Saturday afternoon
+
+49. What should employees do on July 2?  
+(A) Work from home  
+(B) Use the secondary lot  
+(C) Park at the front gate  
+(D) Avoid coming to the office
+
+---
+
+### 閱讀四
+
+```
+Subject: Reminder - Weekly Team Meeting
+
+This is a reminder that our weekly team meeting will be held this Thursday at 10:00 AM in Conference Room A. Please come prepared with your project updates and reports.
+
+Thanks,  
+Rachel
+```
+
+50. What should employees bring to the meeting?  
+(A) Lunch  
+(B) Project updates  
+(C) Office supplies  
+(D) Client contacts
+
+# 📘 TOEIC 八週複習模擬測驗（共 50 題）
+
+---
+
+## 一、單字填空（Vocabulary - 25 題）
+
+1. The company decided to ______ its office to a larger location.
+   (A) replace (B) relocate (C) revise (D) retain
+
+2. He was ______ for the position due to his extensive experience.
+   (A) qualified (B) rejected (C) assigned (D) promoted
+
+3. Please ______ your password regularly for security.
+   (A) register (B) review (C) reset (D) replace
+
+4. All staff must follow the safety ______ during emergencies.
+   (A) policies (B) procedures (C) promotions (D) partnerships
+
+5. The factory will ______ production until the inspection is complete.
+   (A) facilitate (B) halt (C) improve (D) schedule
+
+6. Customers are encouraged to fill out a ______ after service.
+   (A) response (B) checklist (C) survey (D) guideline
+
+7. She has a strong ______ in marketing and data analysis.
+   (A) background (B) application (C) procedure (D) position
+
+8. The IT team will perform a system ______ this weekend.
+   (A) breakdown (B) update (C) renewal (D) automation
+
+9. Let’s schedule the meeting in a more ______ time slot.
+   (A) flexible (B) specific (C) identical (D) occasional
+
+10. His innovative ideas led to the ______ of a new product line.
+    (A) transition (B) launch (C) upgrade (D) consumption
+
+11. The manager reviewed the ______ to ensure fair evaluation.
+    (A) performances (B) interviews (C) criteria (D) feedbacks
+
+12. They decided to ______ the terms of the contract.
+    (A) attach (B) amend (C) compile (D) attain
+
+13. Please refer to the ______ for updated company policies.
+    (A) monitor (B) manual (C) mechanic (D) mandate
+
+14. The finance team detected an unexpected ______ in the budget.
+    (A) decline (B) defect (C) delay (D) donation
+
+15. The HR department will conduct an annual ______ review.
+    (A) personnel (B) performance (C) payroll (D) position
+
+16. Employees are encouraged to attend the training ______.
+    (A) selection (B) session (C) solution (D) situation
+
+17. The report should be ______ to the supervisor by noon.
+    (A) submitted (B) supported (C) simplified (D) shared
+
+18. The marketing team worked on the product’s brand ______.
+    (A) expansion (B) extension (C) identification (D) identity
+
+19. All payments must be made before the ______ date.
+    (A) deposited (B) due (C) early (D) directed
+
+20. They were pleased with the sales ______ from the last quarter.
+    (A) revenue (B) refund (C) request (D) resource
+
+21. She has been an ______ part of our success this year.
+    (A) optional (B) interactive (C) integral (D) individual
+
+22. The CEO made an ______ during the press conference.
+    (A) application (B) agreement (C) announcement (D) attachment
+
+23. The office will be closed for routine equipment ______.
+    (A) installation (B) interpretation (C) interaction (D) integration
+
+24. The customer’s complaint was handled in a ______ manner.
+    (A) prompt (B) rare (C) doubtful (D) vague
+
+25. Each team member is responsible for meeting their weekly ______.
+    (A) quotation (B) quota (C) quality (D) quarter
+
+---
+
+## 二、文法選擇（Grammar - 15 題）
+
+26. If we ______ early, we can catch the first train.
+    (A) leave (B) left (C) had left (D) leaving
+
+27. She ______ the documents before the deadline.
+    (A) submitted (B) submitting (C) had submitting (D) submits
+
+28. I wonder ______ he finished the assignment.
+    (A) that (B) if (C) when (D) whether or not
+
+29. The manager insisted that he ______ the report immediately.
+    (A) submit (B) submits (C) submitted (D) submitting
+
+30. Not only the staff but also the director ______ present at the meeting.
+    (A) are (B) were (C) is (D) be
+
+31. The files must ______ by noon.
+    (A) send (B) sent (C) be sent (D) being sent
+
+32. They suggested ______ the meeting to next week.
+    (A) postpone (B) to postpone (C) postponing (D) postponed
+
+33. The intern has been working here ______ March.
+    (A) since (B) for (C) during (D) from
+
+34. Neither of the proposals ______ acceptable to the board.
+    (A) are (B) is (C) were (D) have been
+
+35. The technician fixed the problem before it ______ serious.
+    (A) become (B) becomes (C) became (D) becoming
+
+36. He asked me ______ I could assist him.
+    (A) when (B) what (C) if (D) whether
+
+37. It’s important that she ______ on time for the presentation.
+    (A) arrive (B) arrives (C) arrived (D) arriving
+
+38. They ______ the project by the time we got there.
+    (A) complete (B) had completed (C) completed (D) are completing
+
+39. The instructions explain how the device ______.
+    (A) operates (B) operate (C) operating (D) is operate
+
+40. ______ he tried his best, he didn’t win the competition.
+    (A) Despite (B) Even (C) Although (D) Because
+
+---
+
+## 三、閱讀理解（Reading - 10 題）
+
+### 閱讀一
+
+```
+Subject: Printer Maintenance Schedule
+
+Dear Staff,
+
+Please be informed that all office printers will undergo routine maintenance on Friday, June 14 between 2:00 PM and 5:00 PM. During this period, printing services will be unavailable. Kindly complete all urgent printing tasks before the scheduled time.
+
+Thank you for your understanding.
+Administration Team
+```
+
+41. What is the purpose of this notice?  
+(A) To announce new printing rules  
+(B) To request paper orders  
+(C) To inform about maintenance  
+(D) To introduce new printers
+
+42. When will the maintenance begin?  
+(A) 9:00 AM  
+(B) 12:00 PM  
+(C) 2:00 PM  
+(D) 5:00 PM
+
+43. What should staff do before 2:00 PM on June 14?  
+(A) Turn off printers  
+(B) Submit print requests  
+(C) Cancel all meetings  
+(D) Report to IT
+
+---
+
+### 閱讀二
+
+```
+MEMO
+
+To: All Employees  
+From: HR Department  
+Subject: Annual Leave Policy Update
+
+Starting next month, employees may carry over a maximum of five unused vacation days into the following year. Any unused days beyond this limit will be forfeited. Please plan accordingly and submit leave requests in advance.
+```
+
+44. What is the main purpose of this memo?  
+(A) To remind employees of sick leave policies  
+(B) To announce changes to the vacation policy  
+(C) To cancel upcoming holidays  
+(D) To encourage overtime work
+
+45. What is the limit on carryover vacation days?  
+(A) Three days  
+(B) Five days  
+(C) Seven days  
+(D) Ten days
+
+46. What happens to extra unused days?  
+(A) They can be sold back  
+(B) They are added to sick leave  
+(C) They are forfeited  
+(D) They roll over automatically
+
+---
+
+### 閱讀三
+
+```
+NOTICE
+
+Subject: Parking Lot Closure
+
+The building’s main parking lot will be closed on Sunday, July 2 for repaving. Please use the secondary lot located behind the building. The main lot will reopen on Monday morning.
+```
+
+47. Why is the parking lot being closed?  
+(A) For cleaning  
+(B) For security upgrades  
+(C) For repaving  
+(D) For painting
+
+48. When will the main lot reopen?  
+(A) Sunday night  
+(B) Monday morning  
+(C) Tuesday morning  
+(D) Saturday afternoon
+
+49. What should employees do on July 2?  
+(A) Work from home  
+(B) Use the secondary lot  
+(C) Park at the front gate  
+(D) Avoid coming to the office
+
+---
+
+### 閱讀四
+
+```
+Subject: Reminder - Weekly Team Meeting
+
+This is a reminder that our weekly team meeting will be held this Thursday at 10:00 AM in Conference Room A. Please come prepared with your project updates and reports.
+
+Thanks,  
+Rachel
+```
+
+50. What should employees bring to the meeting?  
+(A) Lunch  
+(B) Project updates  
+(C) Office supplies  
+(D) Client contacts
+
+---
+
+## 📘 TOEIC 八週複習模擬測驗答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | B    |
+| 2    | A    |
+| 3    | C    |
+| 4    | B    |
+| 5    | B    |
+| 6    | C    |
+| 7    | A    |
+| 8    | B    |
+| 9    | A    |
+| 10   | B    |
+| 11   | C    |
+| 12   | B    |
+| 13   | B    |
+| 14   | A    |
+| 15   | B    |
+| 16   | B    |
+| 17   | A    |
+| 18   | D    |
+| 19   | B    |
+| 20   | A    |
+| 21   | C    |
+| 22   | C    |
+| 23   | A    |
+| 24   | A    |
+| 25   | B    |
+| 26   | A    |
+| 27   | A    |
+| 28   | B    |
+| 29   | A    |
+| 30   | C    |
+| 31   | C    |
+| 32   | C    |
+| 33   | A    |
+| 34   | B    |
+| 35   | C    |
+| 36   | C    |
+| 37   | A    |
+| 38   | B    |
+| 39   | A    |
+| 40   | C    |
+| 41   | C    |
+| 42   | C    |
+| 43   | B    |
+| 44   | B    |
+| 45   | B    |
+| 46   | C    |
+| 47   | C    |
+| 48   | B    |
+| 49   | B    |
+| 50   | B    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **relocate**：遷移至新地點。  
+   ➤ The company decided to **relocate** its office.
+
+2. **qualified**：有資格的，因為經驗豐富。  
+   ➤ He was **qualified** for the position.
+
+3. **reset**：重設密碼是常見用語。  
+   ➤ Please **reset** your password.
+
+4. **procedures**：緊急程序需遵守，非單純政策。  
+   ➤ Follow the safety **procedures**.
+
+5. **halt**：暫停生產。  
+   ➤ The factory will **halt** production.
+
+6. **survey**：顧客服務後的問卷。  
+   ➤ Fill out a **survey** after service.
+
+7. **background**：背景，尤其在行銷與數據分析領域。  
+   ➤ She has a strong **background**.
+
+8. **update**：系統更新。  
+   ➤ The team will perform a system **update**.
+
+9. **flexible**：彈性時間，語意自然。  
+   ➤ A more **flexible** time slot.
+
+10. **launch**：推出新產品。  
+    ➤ The **launch** of a new line.
+
+11. **criteria**：標準，複數。  
+    ➤ Reviewed the **criteria** for evaluation.
+
+12. **amend**：修正合約。  
+    ➤ They decided to **amend** the contract.
+
+13. **manual**：員工手冊。  
+    ➤ Refer to the **manual**.
+
+14. **decline**：預算下降。  
+    ➤ Detected a **decline** in the budget.
+
+15. **performance**：年度績效評估。  
+    ➤ Annual **performance** review.
+
+16. **session**：訓練場次。  
+    ➤ Attend the training **session**.
+
+17. **submit**：交付文件。  
+    ➤ Should be **submitted** by noon.
+
+18. **identity**：品牌形象。  
+    ➤ Worked on brand **identity**.
+
+19. **due**：到期日。  
+    ➤ Before the **due** date.
+
+20. **revenue**：營收。  
+    ➤ Sales **revenue** from last quarter.
+
+21. **integral**：不可或缺的。  
+    ➤ An **integral** part of our success.
+
+22. **announcement**：宣布事項。  
+    ➤ Made an **announcement**.
+
+23. **installation**：設備安裝。  
+    ➤ Closed for **installation**.
+
+24. **prompt**：迅速處理。  
+    ➤ Handled in a **prompt** manner.
+
+25. **quota**：業績目標。  
+    ➤ Weekly **quota**.
+
+---
+
+### 二、文法選擇（Grammar）
+
+26. **leave**：第一類條件句用現在式。  
+    ➤ If we **leave** early, we can catch the train.
+
+27. **submitted**：過去式，符合上下文。  
+    ➤ She **submitted** the documents.
+
+28. **if**：用於間接問句。  
+    ➤ I wonder **if** he finished it.
+
+29. **submit**：虛擬語氣 that 子句內用原形動詞。  
+    ➤ He **submit** the report immediately.
+
+30. **is**：主詞為 director，為單數。  
+    ➤ The director **is** present.
+
+31. **be sent**：被動語態。  
+    ➤ Must **be sent** by noon.
+
+32. **postponing**：建議用動名詞。  
+    ➤ Suggested **postponing** the meeting.
+
+33. **since**：起始時間點用 since。  
+    ➤ Working here **since** March.
+
+34. **is**：neither 為單數，動詞用 is。  
+    ➤ Neither **is** acceptable.
+
+35. **became**：描述過去時間，用過去式。  
+    ➤ Before it **became** serious.
+
+36. **if**：問是否能幫忙。  
+    ➤ He asked me **if** I could assist.
+
+37. **arrive**：重要的是她「能準時到」，虛擬語氣原形動詞。  
+    ➤ It’s important that she **arrive** on time.
+
+38. **had completed**：過去完成，描述在某一時間之前完成的動作。  
+    ➤ They **had completed** the project.
+
+39. **operates**：第三人稱單數。  
+    ➤ Device **operates** like this.
+
+40. **Although**：雖然盡力但沒贏，用 although 引導對比句。  
+    ➤ **Although** he tried, he didn’t win.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**閱讀一：Printer Maintenance**
+
+41. **(C)** 通知維修事宜。  
+42. **(C)** 2:00 PM 開始。  
+43. **(B)** 完成緊急列印工作。
+
+**閱讀二：Annual Leave Policy**
+
+44. **(B)** 宣布休假政策更改。  
+45. **(B)** 最多可攜帶 5 天。  
+46. **(C)** 超過會被沒收。
+
+**閱讀三：Parking Lot Closure**
+
+47. **(C)** 為了鋪路。  
+48. **(B)** 週一早上重新開放。  
+49. **(B)** 改停後方停車場。
+
+**閱讀四：Meeting Reminder**
+
+50. **(B)** 帶專案更新資料。

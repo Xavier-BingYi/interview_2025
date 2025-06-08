@@ -1,4 +1,3 @@
-``````markdown
 # 新增專案與硬體初始化（STM32F429ZI）
 
 ## 1. 新增 STM32 專案
@@ -96,3 +95,31 @@ CJ
 ---
 
 若你已完成上述步驟，接下來就可以開始設定 GPIOG_MODER（模式）與 GPIOG_ODR（輸出資料）來讓 LED 亮起。
+
+
+
+
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -T STM32F429ZITX_FLASH.ld Startup/startup_stm32f429zitx.s Src/main.c Src/mem_io.c Src/gpio.c Src/rcc.c Src\syscalls.c Src\sysmem.c -IInc -o 2025_LCD_Touch.elf
+
+
+
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -TC:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\STM32F429ZITX_FLASH.ld C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Startup\startup_stm32f429zitx.s C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\main.c C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\mem_io.c C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\gpio.c C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\rcc.c C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\syscalls.c C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Src\sysmem.c -IC:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Inc -o C:\Users\Xavier\Desktop\mine\SourceTree\interview_2025\2025_LCD_Touch\Debug\2025_LCD_Touch.elf
+
+
+arm-none-eabi-objcopy -O binary Debug\2025_LCD_Touch.elf Debug\2025_LCD_Touch.bin
+
+
+
+
+  | 區塊                                | 作用                                                             |
+| --------------------------------- | -------------------------------------------------------------- |
+| `arm-none-eabi-gcc`               | 使用 ARM 的交叉編譯器，為 STM32 編譯用                                      |
+| `-mcpu=cortex-m4`                 | 告訴編譯器目標處理器是 ARM Cortex-M4（STM32F429 就是 M4）                     |
+| `-mthumb`                         | 使用 Thumb 指令集（Cortex-M 系列用的精簡指令集）                               |
+| `-nostartfiles`                   | 不連結 C runtime 的啟動檔（如 crt0.o）——因為我們自己提供 `startup_stm32f429zitx.s` |
+| `-nostdlib`                       | 不連結標準 C 函式庫（如 printf），用於裸機系統                                   |
+| `-T STM32F429ZITX_FLASH.ld`            | 指定 Linker script，定義記憶體位置、段區 `.text` `.bss` 等                   |
+| `Startup/startup_stm32f429zitx.s`   | 提供啟動碼與中斷向量表的組語檔                                                |
+| `Src/main.c Src/gpio.c Src/rcc.c` | 你主要的 C 原始碼檔案                                                   |
+| `-IInc`                           | 指定標頭檔搜尋目錄（讓 `#include "gpio.h"` 等能找到）                          |
+| `-o 2025_LCD_Touch.elf`           | 輸出的檔案名：`.elf` 執行檔（可拿去 objcopy 或 debug）                         |
