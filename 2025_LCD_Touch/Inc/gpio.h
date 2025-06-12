@@ -49,8 +49,8 @@
 //#define GPIO_IDR_OFFSET      0x10  // Input data register
 #define GPIO_ODR_OFFSET      0x14  // Output data register
 //#define GPIO_BSRR_OFFSET     0x18  // Bit set/reset register
-//#define GPIO_AFRL_OFFSET     0x20  // Alternate function low register
-//#define GPIO_AFRH_OFFSET     0x24  // Alternate function high register
+#define GPIO_AFRL_OFFSET     0x20  // Alternate function low register
+#define GPIO_AFRH_OFFSET     0x24  // Alternate function high register
 
 /* GPIO MODER register bit values (2-bit per pin) */
 #define GPIO_MODE_INPUT      0U  // 00: Input mode
@@ -58,8 +58,30 @@
 #define GPIO_MODE_ALTERNATE  2U  // 10: Alternate function mode
 #define GPIO_MODE_ANALOG     3U  // 11: Analog mode (power save / ADC)
 
-void gpio_init(uint8_t port);
+/* GPIO alternate function (AF0 ~ AF15) */
+typedef enum {
+    ALTERNATE_AF0  = 0,  // SYS
+    ALTERNATE_AF1  = 1,  // TIM1 / TIM2
+    ALTERNATE_AF2  = 2,  // TIM3 / TIM4 / TIM5
+    ALTERNATE_AF3  = 3,  // TIM8 / TIM9 / TIM10 / TIM11
+    ALTERNATE_AF4  = 4,  // I2C1 / I2C2 / I2C3
+    ALTERNATE_AF5  = 5,  // SPI1 / SPI2 / SPI3 / SPI4 / SPI5 / SPI6
+    ALTERNATE_AF6  = 6,  // SPI2 / SPI3 / SAI1
+    ALTERNATE_AF7  = 7,  // SPI3 / USART1 / USART2 / USART3
+    ALTERNATE_AF8  = 8,  // USART6 / UART4 / UART5 / UART7 / UART8
+    ALTERNATE_AF9  = 9,  // CAN1 / CAN2 / TIM12 / TIM13 / TIM14 / LCD
+    ALTERNATE_AF10 = 10, // OTG2_HS / OTG1_FS
+    ALTERNATE_AF11 = 11, // ETH
+    ALTERNATE_AF12 = 12, // FMC / SDIO / OTG2_FS
+    ALTERNATE_AF13 = 13, // DCMI
+    ALTERNATE_AF14 = 14, // LCD
+    ALTERNATE_AF15 = 15  // SYS
+} GPIO_AlternateFunction;
+
+
+void gpio_init(void);
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode);
+void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction func);
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val);
 
 

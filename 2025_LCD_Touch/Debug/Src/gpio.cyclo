@@ -1,3 +1,0 @@
-../Src/gpio.c:15:6:gpio_init	1
-../Src/gpio.c:19:6:gpio_set_mode	1
-../Src/gpio.c:27:6:gpio_set_outdata	1

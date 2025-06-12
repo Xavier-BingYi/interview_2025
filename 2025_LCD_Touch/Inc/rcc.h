@@ -28,7 +28,20 @@
 #define RCC_AHB1EN_GPIOJ 9
 #define RCC_AHB1EN_GPIOK 10
 
+/* RCC USARTEN Group */
+typedef enum {
+    RCC_USART1EN,
+    RCC_USART2EN,
+    RCC_USART3EN,
+    RCC_UART4EN,
+    RCC_UART5EN,
+    RCC_USART6EN
+} USART_Module;
+
 
 void rcc_enable_ahb1_clock(uint8_t bit_pos);
+void rcc_enable_apb1_clock(uint8_t bit_pos);
+void rcc_enable_apb2_clock(uint8_t bit_pos);
+
 
 #endif /* RCC_H_ */

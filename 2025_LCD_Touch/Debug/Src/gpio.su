@@ -1,3 +1,0 @@
-../Src/gpio.c:15:6:gpio_init	16	static
-../Src/gpio.c:19:6:gpio_set_mode	32	static
-../Src/gpio.c:27:6:gpio_set_outdata	32	static

@@ -329,7 +329,7 @@ STM32F103C8T6（U2）這顆 IC 是板上內建的 ST-LINK 模組控制器，扮�
 
 ---
 
-### 3.1.1 SWD 功能：燒錄與 Debug
+#### 3.1.1 SWD 功能：燒錄與 Debug
 
 ST-LINK 可透過 SWD（Serial Wire Debug）介面控制 STM32F429ZI 進行燒錄與除錯。
 
@@ -349,7 +349,7 @@ SWD 是由 ARM Cortex-M MCU 內建的除錯通訊協定，只需要兩條線即�
 
 ---
 
-### 3.1.2 UART 功能：虛擬 COM Port 傳輸
+#### 3.1.2 UART 功能：虛擬 COM Port 傳輸
 
 除了 SWD，ST-LINK 也模擬 USB-to-UART 功能，讓 PC 能以虛擬 COM Port 的方式接收 `printf()` 輸出。
 
@@ -362,7 +362,7 @@ SWD 是由 ARM Cortex-M MCU 內建的除錯通訊協定，只需要兩條線即�
 
 > 通常只需使用 TX 即可完成 `printf()` 輸出，RX 可視情況選用（例如接收指令、互動等）。
 
-### 3.2 USART 模組簡介與 GPIO 設定
+### 3.2 USART RCC 與 GPIO 設定
 
 USART（Universal Synchronous/Asynchronous Receiver Transmitter）是 STM32 提供的串列通訊模組，支援同步與非同步傳輸模式。在一般應用中，多使用非同步模式（UART），搭配終端機進行資料輸出與接收。
 
@@ -380,33 +380,175 @@ USART（Universal Synchronous/Asynchronous Receiver Transmitter）是 STM32 提�
 
 #### 3.2.1 啟用 RCC 時脈（USART1）
 
-首先需查明 USART1 掛載在哪條匯流排上，以便正確設定 RCC（Reset and Clock Control）模組：
+由於我們確定是使用 **PA9 / PA10** 作為 USART 的 TX / RX 腳位，但若原理圖中未明確標示是使用 USART1、USART2 或其他模組，此時就需要查詢這些 GPIO 腳位所支援的 USART 功能對應關係。
 
-- **USART1 掛載於 APB2 匯流排**
-- 啟用時需設定 `RCC_APB2ENR` 寄存器的 Bit 4（USART1EN）
+可參考 **《DataSheet - STM32F427xx / STM32F429xx》** 的下列位置：
 
-這表示在 RCC 中的 APB2 時脈使能暫存器中，**將 Bit 4 設為 1** 即可開啟 USART1 模組的時脈供應。
+- **第 4 章：Pinouts and pin description**
+- **Table 12：STM32F427xx and STM32F429xx alternate function mapping**
+
+根據表格查詢結果如下：
+
+| 腳位  | 支援功能（部分列出）                      |
+|-------|--------------------------------------------|
+| PA9   | TIM1_CH2, I2C3_SMBA, **USART1_TX**, DCMI_D0 |
+| PA10  | TIM1_CH3, **USART1_RX**, OTG_FS_ID, DCMI_D1 |
+
+由此可知，PA9 / PA10 僅支援 **USART1**，並無支援 USART2 或 USART3，因此可明確判斷目前所使用的是 **USART1** 模組。
+
+---
+
+接著需確認 USART1 掛載於哪一匯流排，以便正確設定 RCC（Reset and Clock Control）模組時脈來源。查詢方式有兩種：
+
+**方法一：查閱 DataSheet**
+
+- Section 2.1 — Full compatibility throughout the family  
+- Figure 4 — Block diagram  
+
+可確認 **USART1 掛載於 APB2 匯流排**（最大頻率為 90 MHz）
+
+**方法二：查閱 Reference Manual**
+
+- 《Reference Manual (RM0090)》
+- 第 6 章：**RCC registers**
+- Section 6.3.14 — **RCC_APB2ENR (APB2 peripheral clock enable register)**
+
+參考原文描述如下：
+
+````c
+Bit 4 USART1EN: USART1 clock enable  
+This bit is set and cleared by software.  
+0: USART1 clock disabled  
+1: USART1 clock enabled
+````
+
+這表示將 RCC_APB2ENR 寄存器中的 Bit 4 設為 1，即可啟用 USART1 模組的時脈供應。
+
+---
+
+程式碼範例如下：
+
+````c
+void rcc_enable_apb1_clock(uint8_t bit_pos){
+    uint32_t addr = RCC_BASE + RCC_APB1ENR;
+    uint32_t bitmask = 1U << bit_pos;
+    io_writeMask(addr, bitmask, bitmask);
+}
+
+void rcc_enable_apb2_clock(uint8_t bit_pos){
+    uint32_t addr = RCC_BASE + RCC_APB2ENR;
+    uint32_t bitmask = 1U << bit_pos;
+    io_writeMask(addr, bitmask, bitmask);
+}
+
+void usart_rcc_enable(USART_Module usart_num){
+    switch (usart_num){
+        case RCC_USART1EN:
+            rcc_enable_apb2_clock(4);
+            break;
+        case RCC_USART6EN:
+            rcc_enable_apb2_clock(5);
+            break;
+        case RCC_USART2EN:
+            rcc_enable_apb1_clock(17);
+            break;
+        case RCC_USART3EN:
+            rcc_enable_apb1_clock(18);
+            break;
+        case RCC_UART4EN:
+            rcc_enable_apb1_clock(19);
+            break;
+        case RCC_UART5EN:
+            rcc_enable_apb1_clock(20);
+            break;
+        default:
+            return;
+    }
+}
+````
 
 ---
 
 #### 3.2.2 GPIO 腳位設定為 Alternate Function
 
-USART1 使用 PA9 / PA10 腳位，這兩個腳位預設為 GPIO 模式，必須切換至 Alternate Function 模式才能運作：
+USART1 使用 PA9 與 PA10 腳位，預設為一般 GPIO 模式，需切換為 Alternate Function 模式並指定編號 **AF7**（對應 USART1），才能正常使用通訊功能。
 
-- **模式設定**：將 PA9、PA10 切換為 Alternate Function 模式（MODER = 10）
-- **功能對應設定**：指定 AF 編號為 **AF7**（對應 USART1）
+對應設定如下：
 
-這代表需設定：
+| 腳位 | 功能       | 模式               | AF 編號 |
+|------|------------|--------------------|---------|
+| PA9  | USART1_TX  | Alternate Function | AF7     |
+| PA10 | USART1_RX  | Alternate Function | AF7     |
 
-| 腳位 | 功能     | 模式          | AF 編號 |
-|------|----------|---------------|---------|
-| PA9  | USART1_TX | Alternate Function | AF7     |
-| PA10 | USART1_RX | Alternate Function | AF7     |
+---
 
-設定步驟包含：
+**設定流程：**
 
-1. 修改 `MODER` 暫存器，將目標腳位設定為 AF 模式
-2. 修改 `AFRH` 暫存器，將腳位對應的 AF 設定為 7（USART1 專用）
+- **設定 GPIO 模式為 Alternate Function**
+
+    ````c
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE);
+    ````
+
+- **設定 Alternate Function 編號為 AF7**
+
+    可參考 DataSheet 第 4 章：**Pinouts and pin description**，其中的  
+    **Table 12：STM32F427xx and STM32F429xx alternate function mapping** 列出各 GPIO 腳位對應的 Alternate Function。  
+    例如 PA9 / PA10 皆對應 USART1，並屬於 **AF7** 功能。
+
+    AF 編號可使用下列列舉方式定義：
+
+    ````c
+    typedef enum {
+        ALTERNATE_AF0  = 0,  // SYS
+        ALTERNATE_AF1  = 1,  // TIM1 / TIM2
+        ALTERNATE_AF2  = 2,  // TIM3 / TIM4 / TIM5
+        ALTERNATE_AF3  = 3,  // TIM8 / TIM9 / TIM10 / TIM11
+        ALTERNATE_AF4  = 4,  // I2C1 / I2C2 / I2C3
+        ALTERNATE_AF5  = 5,  // SPI1 ~ SPI6
+        ALTERNATE_AF6  = 6,  // SPI2 / SPI3 / SAI1
+        ALTERNATE_AF7  = 7,  // SPI3 / USART1 ~ USART3
+        ALTERNATE_AF8  = 8,  // USART6 / UART4 ~ UART8
+        ALTERNATE_AF9  = 9,  // CAN1 / CAN2 / TIM12 ~ TIM14 / LCD
+        ALTERNATE_AF10 = 10, // OTG2_HS / OTG1_FS
+        ALTERNATE_AF11 = 11, // ETH
+        ALTERNATE_AF12 = 12, // FMC / SDIO / OTG2_FS
+        ALTERNATE_AF13 = 13, // DCMI
+        ALTERNATE_AF14 = 14, // LCD
+        ALTERNATE_AF15 = 15  // SYS
+    } GPIO_AlternateFunction;
+    ````
+
+    設定 AFR 暫存器的函式如下：
+
+    ````c
+    void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction af) {
+        uint32_t reg_addr, shift, data, mask;
+
+        if (pin <= 7) {
+            reg_addr = port_base + GPIO_AFRL_OFFSET;
+            shift = pin * 4;
+        } else if (pin <= 15) {
+            reg_addr = port_base + GPIO_AFRH_OFFSET;
+            shift = (pin - 8) * 4;
+        } else {
+            return;
+        }
+
+        data = ((uint32_t)af & 0x0F) << shift;
+        mask = 0x0F << shift;
+
+        io_writeMask(reg_addr, data, mask);
+    }
+    ````
+
+    呼叫方式範例如下：
+
+    ````c
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_9, ALTERNATE_AF7);   // USART1_TX
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_10, ALTERNATE_AF7);  // USART1_RX
+    ````
 
 ---
 

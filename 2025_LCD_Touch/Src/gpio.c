@@ -12,8 +12,13 @@
 
 
 
-void gpio_init(uint8_t port){
-	rcc_enable_ahb1_clock(port);
+void gpio_init(void){
+	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOG);
+
+	gpio_set_mode(GPIOG_BASE, GPIO_PIN_13, GPIO_MODE_OUTPUT);
+	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
+	//gpio_set_mode(GPIOG_BASE, GPIO_PIN_14, GPIO_MODE_OUTPUT);
+	//gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
 }
 
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode){
@@ -21,6 +26,28 @@ void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode){
 	uint32_t shift = (pin & 0x0F)* 2;
 	uint32_t data = ((uint32_t)mode & 3U) << shift;
 	uint32_t mask = 3U << shift;
+	io_writeMask(reg_addr, data, mask);
+}
+
+void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction af){
+    uint32_t reg_addr;
+    uint32_t shift;
+    uint32_t data;
+    uint32_t mask;
+
+    if (pin <= 7){
+		reg_addr = port_base + GPIO_AFRL_OFFSET;
+		shift = pin* 4;
+	}else if (pin <= 15){
+		reg_addr = port_base + GPIO_AFRH_OFFSET;
+		shift = (pin - 8)* 4;
+	}else{
+		return;
+	}
+
+    data = ((uint32_t)af & 0x0F) << shift;
+    mask = 0x0F << shift;
+
 	io_writeMask(reg_addr, data, mask);
 }
 
