@@ -554,6 +554,218 @@ USART1 使用 PA9 與 PA10 腳位，預設為一般 GPIO 模式，需切換為 A
 
 ### 3.3 USART 暫存器初始化（9600 Baud 為例）
 
+#### 3.3.1 匯流排時脈來源與 USART 的關係
+
+STM32 的周邊模組（如 USART、SPI、TIM）皆掛載於不同的匯流排（Bus）上，每個匯流排有各自的時脈來源，這些時脈來源與主系統時脈（HCLK）並不相同。
+
+以 USART 為例，各模組所屬的匯流排與對應的時脈如下：
+
+| 周邊模組   | 所屬匯流排 | 對應時脈變數     |
+|------------|-------------|------------------|
+| USART1 / 6 | APB2        | `fCK_APB2`       |
+| USART2 / 3 | APB1        | `fCK_APB1`       |
+
+在進行波特率設定時，`fCK` 即為匯流排的時脈頻率，作為 USART 傳輸時脈的輸入來源，而**非系統主時脈 HCLK**。
+
+---
+
+以下為 STM32F4 系列常見的時脈配置範例：
+
+- 系統主時脈 HCLK = 180 MHz  
+- APB2 匯流排預分頻值 = `/2` → `fCK_APB2` = 90 MHz  
+- APB1 匯流排預分頻值 = `/4` → `fCK_APB1` = 45 MHz  
+
+因此：
+
+- 使用 USART1 或 USART6 時，波特率計算會以 90 MHz 為輸入時脈  
+- 使用 USART2 或 USART3 時，則使用 45 MHz 為輸入時脈
+
+---
+
+若使用 STM32CubeIDE 或 STM32CubeMX 設定系統時脈，上述匯流排的分頻結果會自動產生。  
+但在裸機開發環境下，則須由使用者根據 PLL 設定與匯流排分頻因子，**自行推算 APB1 / APB2 的實際時脈值**，並用於後續的 USART 波特率配置。
+
+根據 ST 官方文件《RM0090》：
+
+- **7.2.2 HSI clock** 中提到：HSI = 16 MHz 為預設內部時脈  
+- **7.2.6 System clock (SYSCLK)** 中提到：系統時脈（SYSCLK）可來自 HSI、HSE 或 PLL，而 MCU 上電初始預設值就是選用 HSI  
+- **7.3.3 RCC_CFGR register** 中提到：
+  - `PPRE2`（APB2 預設分頻器）= `100` → `/2`
+  - `PPRE1`（APB1 預設分頻器）= `101` → `/4`
+
+---
+
+因此，若目前什麼都沒改，且使用 USART1（掛載於 APB2）進行傳輸，則：
+
+```
+USART1 的時脈 fCK = fCK_APB2 = SYSCLK / 2 = HSI / 2 = 8 MHz（預設）
+```
+
+---
+
+**上電預設時脈總結：**
+
+| 項目             | 預設值                       |
+|------------------|------------------------------|
+| 系統時脈 SYSCLK  | `HSI` = 16 MHz               |
+| HCLK             | = SYSCLK = 16 MHz            |
+| APB1 Prescaler   | `/4` → `fCK_APB1 = 4 MHz`    |
+| APB2 Prescaler   | `/2` → `fCK_APB2 = 8 MHz`    |
+
+---
+
+#### 3.3.2 波特率計算原理與過取樣模式
+
+在 USART 傳輸中，資料以位元（bit）為單位透過 TX 腳送出。為了讓接收端（Rx）與傳送端（Tx）能以相同的時間基準同步傳輸資料，必須設定一致的通訊速率，稱為 **波特率（Baud Rate）**。
+
+此波特率的計算，是根據匯流排提供的時脈來源（fCK）除上一個分頻值（USARTDIV）得到的。
+
+**波特率公式：**
+
+根據《RM0090 Reference Manual》第 30.3.4 節 *Fractional baud rate generation*，標準 USART 模式下的波特率為：
+
+````c
+Tx/Rx baud = fCK / [8 × (2 − OVER8) × USARTDIV]
+````
+
+| 符號         | 說明                                          |
+|--------------|-----------------------------------------------|
+| `fCK`        | USART 模組所屬匯流排的時脈頻率（APB1 或 APB2）  |
+| `OVER8`      | 過取樣設定，定義於 `USART_CR1` 暫存器的 bit 15 |
+| `USARTDIV`   | 波特率分頻值，寫入 `USART_BRR` 暫存器中         |
+
+---
+
+**過取樣模式說明（Oversampling）：**
+
+USART 為了精確判斷每一個資料位元的邊界與狀態，會對每個 bit 進行「多次取樣」，稱為過取樣模式。
+
+| 模式                | 每位元取樣次數 | OVER8 值 | 精準度 | 資源消耗     | 適用場景           |
+|---------------------|----------------|----------|--------|--------------|--------------------|
+| 16 倍過取樣（預設） | 16 次          | 0        | 高     | 高（耗時脈） | 高速、高可靠性     |
+| 8 倍過取樣          | 8 次           | 1        | 較低   | 低（省時脈） | 低速、省電、低誤差 |
+
+→ 在 8 倍過取樣下，波特率公式中的除數會變小，因此可在較低時脈下仍維持同樣波特率，適合低功耗應用。
+
+---
+
+**USARTDIV 與 BRR 寄存器格式：**
+
+`USARTDIV` 是一個「無號固定小數點數」，分為：
+
+- **整數部分（Mantissa）**
+- **小數部分（Fraction）**
+
+該值會寫入至 `USART_BRR` 暫存器，格式如下：
+
+| 過取樣模式    | OVER8 值 | 小數位元數 | `BRR` 寫法                             |
+|---------------|-----------|-------------|----------------------------------------|
+| 16 倍過取樣   | 0         | 4 bits      | `BRR = mantissa << 4 | fraction`       |
+| 8 倍過取樣    | 1         | 3 bits      | `BRR = mantissa << 4 | (fraction & 0x7)` <br>且 bit[3] 必須為 0 |
+
+> 注意：當你寫入 `USART_BRR` 後，硬體會立即根據該值重新計算內部時脈，**不可在正在傳輸期間修改 BRR**，否則可能導致通訊中斷或資料遺失。
+
+---
+
+**程式範例：**
+````c
+void usart_brr(uint32_t usart_base, uint32_t usart_div_x100) {
+    uint32_t reg_addr = usart_base + USART_BRR_OFFSET;
+
+    // 讀取 OVER8 設定值（bit 15）
+    uint32_t cr1_over8 = (read_io(usart_base + USART_CR1_OFFSET) >> USART_CR1_OVER8) & 0x01;
+
+    // 拆解 USARTDIV 為整數 + 小數百分比（×100）
+    uint32_t mantissa = usart_div_x100 / 100;
+    uint32_t fraction = usart_div_x100 - mantissa * 100;
+
+    if (cr1_over8 == 0) {
+        // (fraction / 100) * 16 = 0 → use (fraction * 16 + 50) / 100 ； 加 50 是為了四捨五入
+        fraction = (fraction * 16 + 50) / 100;
+    } else {
+        // (fraction / 100) * 8 = 0 → use (fraction * 8 + 50) / 100
+        fraction = ((fraction * 8 + 50) / 100) & 0x07;  // 只保留 3 bits，小數最高不能超過 7
+    }
+
+    // 組合 mantissa 與 fraction，寫入 BRR
+    uint32_t val = (mantissa << 4) | fraction;
+    io_write(reg_addr, val);
+}
+
+void usart_set_baudrate(uint32_t usart_base, uint32_t fck, uint32_t baudrate){
+	uint32_t cr1_over8 = (read_io(usart_base + USART_CR1_OFFSET) >> USART_CR1_OVER8) & 0x01;
+
+	uint32_t usart_div_x100 = (fck*100) / (baudrate * 8 * (2 - cr1_over8));
+
+	usart_brr(usart_base, usart_div_x100);
+}
+````
+
+---
+
+#### 3.3.3 資料傳送流程與 USART 傳輸器原理
+
+根據《RM0090 Reference Manual》第 30.3.2 節 *Transmitter*，USART 傳輸器可支援傳送 8-bit 或 9-bit 的資料，傳輸長度由 `M` 位元（`USART_CR1` 中的 M bit）所設定。
+
+當啟用 `TE`（Transmit Enable）= 1，傳輸器會開始運作，並將資料從「傳輸移位暫存器（Transmit Shift Register）」輸出至 TX 腳位（同步模式下也會輸出時脈至 CK 腳位）。資料以 **最低有效位元（LSB）先出** 的順序從 TX 傳出。
+
+> 注意：**TE 不可在傳輸進行中關閉**（即不可將 TE 清為 0），否則會導致傳輸中斷。
+
+---
+
+**資料傳送結構：**
+
+- `USART_DR` 實際對應的資料暫存器為 **TDR（Transmit Data Register）**
+- 當 CPU 將資料寫入 `USART_DR` 時，資料會被送至傳輸移位暫存器
+- 傳輸格式：每個字元前有 1 個 **Start Bit（邏輯低）**，結尾有 1 或多個 **Stop Bit（邏輯高）**
+- 支援 Stop Bit 長度設定為：0.5 / 1 / 1.5 / 2 bits
+- 在啟用 TE 之後，USART 會先送出一個 **Idle Frame（空閒幀）**
+
+---
+
+**USART 傳送初始化與傳送流程步驟：**
+
+1. **啟用 USART 模組**
+
+   將 `USART_CR1` 暫存器中的 **UE（USART Enable）位元** 設為 1。
+
+2. **設定資料長度**
+
+   透過 `USART_CR1` 的 **M 位元** 選擇傳送字元長度（8 或 9 位元）。
+
+3. **設定停止位元數量**
+
+   在 `USART_CR2` 中設定 **STOP[1:0] 位元**，可選 0.5 / 1 / 1.5 / 2 stop bits。
+
+4. **（可選）啟用 DMA 傳輸功能**
+
+   若需使用 DMA 傳輸多筆資料，請：
+   - 在 `USART_CR3` 中啟用 **DMAT 位元**
+   - 配置 DMA 控制器（詳見 multi-buffer communication 說明）
+
+5. **設定傳輸速度**
+
+   在 `USART_BRR` 暫存器中設定所需的波特率（baud rate）。
+
+6. **啟用傳送器**
+
+   將 `USART_CR1` 中的 **TE（Transmit Enable）位元** 設為 1，啟用傳送器。
+   > 啟用後會自動傳送一個 idle frame 作為初始訊號。
+
+7. **寫入要傳送的資料**
+
+   將資料寫入 `USART_DR`（資料暫存器）：
+   - 此動作會清除 TXE（傳送暫存器為空）旗標
+   - 每筆資料皆需重複寫入一次（若為單一緩衝區傳輸）
+
+8. **等待傳輸完成**
+
+   最後一筆資料寫入後，等待 **TC（Transmission Complete）= 1**
+   - 代表最後一幀資料已完成傳送
+   - 若接下來要關閉 USART，務必先確認 TC = 1，以免資料遺失
+
+---
+
 * 設定 baud rate、啟用 TX（暫不使用 RX）
 * 設定 CR1、BRR 等暫存器值
 

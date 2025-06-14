@@ -35,8 +35,10 @@ typedef enum {
     RCC_USART3EN,
     RCC_UART4EN,
     RCC_UART5EN,
-    RCC_USART6EN
-} USART_Module;
+    RCC_USART6EN,
+    RCC_UART7EN,
+    RCC_UART8EN,
+} USART_RCC_Module;
 
 
 void rcc_enable_ahb1_clock(uint8_t bit_pos);
