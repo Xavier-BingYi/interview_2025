@@ -23,6 +23,8 @@
 int main(void)
 {
 	gpio_init();
+	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
+	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
 
     while (1)
     {

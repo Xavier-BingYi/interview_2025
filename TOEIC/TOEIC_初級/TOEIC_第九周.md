@@ -544,3 +544,236 @@ We apologize for the inconvenience and appreciate your understanding.
 
 ---
 
+# 📘 TOEIC 第九週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The construction company plans to ______ the old warehouse.  
+   (A) enroll (B) demolish (C) assess (D) devote  
+
+2. All employees must ______ their ID badges at the entrance.  
+   (A) display (B) classify (C) dispose (D) negotiate  
+
+3. He was praised for his ______ handling of the customer complaint.  
+   (A) drastic (B) prompt (C) deliberate (D) modest  
+
+4. The new recycling policy encourages staff to ______ paper properly.  
+   (A) prohibit (B) emerge (C) dispose (D) decline  
+
+5. The decision to cut jobs was considered ______ but necessary.  
+   (A) drastic (B) remote (C) annual (D) mutual  
+
+6. Our proposal includes a cost ______ for the entire project.  
+   (A) enrollment (B) coverage (C) estimate (D) disposal  
+
+7. The manager will ______ responsibilities among the team.  
+   (A) classify (B) display (C) devote (D) delegate  
+
+8. Their service is ______ as one of the best in the industry.  
+   (A) assisted (B) classified (C) regarded (D) forecasted  
+
+9. Each employee is allowed to ______ a certain amount of time to training.  
+   (A) devote (B) prohibit (C) emerge (D) demolish  
+
+10. This product line targets a more ______ market segment.  
+    (A) mutual (B) modest (C) remote (D) drastic  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. He has been working here ______ 2018.  
+    (A) for (B) since (C) from (D) until  
+
+12. They will finish the report ______ Friday.  
+    (A) for (B) at (C) by (D) on  
+
+13. We have lived in this city ______ a long time.  
+    (A) for (B) since (C) by (D) during  
+
+14. The meeting was delayed ______ the heavy rain.  
+    (A) because (B) because of (C) due (D) although  
+
+15. ______ she was tired, she finished the report.  
+    (A) Despite (B) Because (C) Although (D) Due to  
+
+16. He didn’t attend the seminar ______ he was sick.  
+    (A) due to (B) although (C) because (D) but  
+
+17. We stayed home ______ the weather was bad.  
+    (A) because (B) due (C) even though (D) despite  
+
+18. I haven’t seen him ______ last week.  
+    (A) from (B) until (C) since (D) during  
+
+19. ______ the storm, the event went on as planned.  
+    (A) Although (B) Because (C) Due to (D) Despite  
+
+20. They postponed the launch ______ a technical issue.  
+    (A) because of (B) although (C) despite (D) but  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+````text
+MEMO
+
+TO: All Employees  
+FROM: Human Resources  
+SUBJECT: Office Clean-Up Day
+
+To improve our work environment, we will have an Office Clean-Up Day this Friday. Please remove all unnecessary items from your desks and common areas. Labeled disposal bins will be placed in each department.
+
+Your cooperation is appreciated.
+
+— HR Department
+````
+
+21. What is the purpose of this memo?  
+    (A) To introduce a new employee  
+    (B) To announce an office holiday  
+    (C) To request cleaning participation  
+    (D) To explain HR policy  
+
+22. When will the clean-up take place?  
+    (A) Monday  
+    (B) Wednesday  
+    (C) Thursday  
+    (D) Friday  
+
+23. What should employees do?  
+    (A) Rearrange office furniture  
+    (B) Remove extra items  
+    (C) Attend a meeting  
+    (D) Prepare a presentation  
+
+24. What will be provided to assist employees?  
+    (A) Vacuum cleaners  
+    (B) Brooms  
+    (C) Disposal bins  
+    (D) Cleaning staff  
+
+25. Who issued this memo?  
+    (A) IT Department  
+    (B) Operations  
+    (C) Human Resources  
+    (D) Facilities  
+
+---
+
+## 📘 TOEIC 第九週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | B    |
+| 2    | A    |
+| 3    | B    |
+| 4    | C    |
+| 5    | A    |
+| 6    | C    |
+| 7    | D    |
+| 8    | C    |
+| 9    | A    |
+| 10   | B    |
+| 11   | B    |
+| 12   | C    |
+| 13   | A    |
+| 14   | B    |
+| 15   | C    |
+| 16   | C    |
+| 17   | A    |
+| 18   | C    |
+| 19   | D    |
+| 20   | A    |
+| 21   | C    |
+| 22   | D    |
+| 23   | B    |
+| 24   | C    |
+| 25   | C    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **demolish**：拆除建築，符合語意，選 (B)。  
+   ➤ The construction company plans to **demolish** the old warehouse.
+
+2. **display**：出示證件時常用此字，選 (A)。  
+   ➤ All employees must **display** their ID badges at the entrance.
+
+3. **prompt**：處理客訴迅速，符合語氣，選 (B)。  
+   ➤ He was praised for his **prompt** handling of the customer complaint.
+
+4. **dispose**：搭配 paper 表「妥善處理紙張」，選 (C)。  
+   ➤ The new recycling policy encourages staff to **dispose** paper properly.
+
+5. **drastic**：劇烈的，裁員通常用 drastic decision，選 (A)。  
+   ➤ The decision to cut jobs was considered **drastic** but necessary.
+
+6. **estimate**：費用預估為常用商業詞，選 (C)。  
+   ➤ Our proposal includes a cost **estimate** for the entire project.
+
+7. **delegate**：委派責任，符合文意，選 (D)。  
+   ➤ The manager will **delegate** responsibilities among the team.
+
+8. **regarded**：視為，被認為是，常與 best 搭配，選 (C)。  
+   ➤ Their service is **regarded** as one of the best in the industry.
+
+9. **devote**：投入時間在訓練上，常見搭配，選 (A)。  
+   ➤ Each employee is allowed to **devote** a certain amount of time to training.
+
+10. **modest**：中等、適度，描述市場規模，選 (B)。  
+    ➤ This product line targets a more **modest** market segment.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **since**：與現在完成式搭配表示「自從」，選 (B)。  
+    ➤ He has been working here **since** 2018.
+
+12. **by**：在某時間點「之前」，強調期限，選 (C)。  
+    ➤ They will finish the report **by** Friday.
+
+13. **for**：表示一段時間，搭配現在完成式，選 (A)。  
+    ➤ We have lived in this city **for** a long time.
+
+14. **because of**：介系詞後接名詞，符合 heavy rain，選 (B)。  
+    ➤ The meeting was delayed **because of** the heavy rain.
+
+15. **Although**：雖然…仍然…，為讓步連接詞，選 (C)。  
+    ➤ **Although** she was tired, she finished the report.
+
+16. **because**：因為…，說明缺席原因，選 (C)。  
+    ➤ He didn’t attend the seminar **because** he was sick.
+
+17. **because**：說明原因，常與 bad weather 搭配，選 (A)。  
+    ➤ We stayed home **because** the weather was bad.
+
+18. **since**：與現在完成式搭配，表示「自從」，選 (C)。  
+    ➤ I haven’t seen him **since** last week.
+
+19. **Despite**：儘管（後接名詞/動名詞），選 (D)。  
+    ➤ **Despite** the storm, the event went on as planned.
+
+20. **because of**：因為某事，搭配名詞使用，選 (A)。  
+    ➤ They postponed the launch **because of** a technical issue.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：辦公室清潔日公告**
+
+21. **(C) To request cleaning participation**：說明要大家清理辦公區域。  
+22. **(D) Friday**：公告明確指出本週五實施清潔日。  
+23. **(B) Remove extra items**：要求清除不必要的物品。  
+24. **(C) Disposal bins**：公告中提到會提供 disposal bins。  
+25. **(C) Human Resources**：由人資部門發布的通知。
+
+---

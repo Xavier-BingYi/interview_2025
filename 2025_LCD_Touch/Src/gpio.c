@@ -16,9 +16,7 @@ void gpio_init(void){
 	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOG);
 
 	gpio_set_mode(GPIOG_BASE, GPIO_PIN_13, GPIO_MODE_OUTPUT);
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
-	//gpio_set_mode(GPIOG_BASE, GPIO_PIN_14, GPIO_MODE_OUTPUT);
-	//gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+	gpio_set_mode(GPIOG_BASE, GPIO_PIN_14, GPIO_MODE_OUTPUT);
 }
 
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode){
