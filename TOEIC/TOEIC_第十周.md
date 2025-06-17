@@ -558,3 +558,237 @@ Finance Division
    **答案：B**
 
 ---
+
+# 📘 TOEIC 第十週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The CFO emphasized the need to reduce ______ before the fiscal year ends.  
+   (A) procurement (B) collateral (C) overhead (D) merger  
+
+2. A detailed ______ must be submitted before reimbursement is approved.  
+   (A) entitlement (B) justification (C) escrow (D) caveat  
+
+3. The firm decided to ______ several departments to improve efficiency.  
+   (A) marginalize (B) consolidate (C) amortize (D) deviate  
+
+4. The contract includes a ______ that limits liability under certain conditions.  
+   (A) valuation (B) franchise (C) caveat (D) quote  
+
+5. All disbursements will be made from an ______ account until final approval.  
+   (A) intangible (B) escrow (C) capital (D) severance  
+
+6. Due to market uncertainty, the investment was deemed too ______.  
+   (A) volatile (B) discretionary (C) preliminary (D) solvent  
+
+7. We were required to provide ______ before proceeding with the loan.  
+   (A) procurement (B) collateral (C) equity (D) overhead  
+
+8. The CEO praised the company’s improved inventory ______ ratio.  
+   (A) turnover (B) attrition (C) surplus (D) expenditure  
+
+9. His employment contract includes full ______ to stock options.  
+   (A) entitlement (B) liability (C) escrow (D) maturity  
+
+10. The revised plan was approved with only a few minor ______.  
+    (A) assets (B) margins (C) stipulations (D) endorsements  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. Rarely ______ such an enthusiastic response from investors.  
+    (A) we received (B) have we received (C) did we receiving (D) we have received  
+
+12. Only after the audit ______ the discrepancy discovered.  
+    (A) had completed (B) did complete (C) was completed (D) was the  
+
+13. ______ the forecast, we increased our capital expenditure.  
+    (A) Based on (B) Only if (C) Despite of (D) Although  
+
+14. Had they complied with regulations, they ______ the penalty.  
+    (A) avoided (B) have avoided (C) would have avoided (D) had avoided  
+
+15. The report needs to be finalized before it ______ to the board.  
+    (A) submits (B) submitted (C) is submitted (D) be submitted  
+
+16. We recommend ______ discretionary expenses until next quarter.  
+    (A) to postpone (B) postponing (C) postpone (D) to be postponed  
+
+17. The marketing strategy, ______ includes influencer outreach, will launch Monday.  
+    (A) who (B) which (C) what (D) where  
+
+18. ______ being delayed, the project was completed within budget.  
+    (A) Despite (B) Although (C) Because of (D) While  
+
+19. The team failed to meet the deadline, ______ their performance review.  
+    (A) affecting (B) affected (C) which affected (D) and affect  
+
+20. Had I known the clause existed, I ______ it from the contract.  
+    (A) removed (B) would have removed (C) have removed (D) had removed  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+````text
+To: All Regional Managers  
+From: Finance Department  
+Subject: Q4 Expense Policy Update
+
+In response to recent fluctuations in market conditions, the Finance Department is introducing revised expense guidelines for Q4. All discretionary spending exceeding $5,000 must receive written approval from the CFO’s office. Any spending without such approval will not be reimbursed.
+
+Additionally, departments are urged to reevaluate ongoing subscriptions and vendor contracts to identify cost-saving opportunities. A list of recurring payments must be submitted by the end of this week for central review.
+
+Please direct any questions to your designated finance liaison.
+````
+
+---
+
+21. What is the primary purpose of this memo?  
+   (A) To introduce a new CFO  
+   (B) To revise expense procedures  
+   (C) To announce a system outage  
+   (D) To recruit finance liaisons  
+
+22. What type of expense requires written approval?  
+   (A) All vendor payments  
+   (B) Monthly salaries  
+   (C) Discretionary costs over $5,000  
+   (D) Budgeted department purchases  
+
+23. What will happen if an expense lacks CFO approval?  
+   (A) It will be delayed  
+   (B) It will be reassigned  
+   (C) It will be escalated  
+   (D) It will not be reimbursed  
+
+24. What are departments asked to review?  
+   (A) All employee evaluations  
+   (B) Subscription and vendor costs  
+   (C) Equipment upgrade timelines  
+   (D) Inventory distribution methods  
+
+25. Who should be contacted for questions?  
+   (A) The procurement officer  
+   (B) The department head  
+   (C) The CFO directly  
+   (D) The finance liaison  
+
+---
+
+## 📘 TOEIC 第十週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | C    |
+| 2    | B    |
+| 3    | B    |
+| 4    | C    |
+| 5    | B    |
+| 6    | A    |
+| 7    | B    |
+| 8    | A    |
+| 9    | A    |
+| 10   | C    |
+| 11   | B    |
+| 12   | C    |
+| 13   | A    |
+| 14   | C    |
+| 15   | C    |
+| 16   | B    |
+| 17   | B    |
+| 18   | A    |
+| 19   | C    |
+| 20   | B    |
+| 21   | B    |
+| 22   | C    |
+| 23   | D    |
+| 24   | B    |
+| 25   | D    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **overhead**：指日常營運費用，如租金、管理費，選 (C)。  
+   ➤ The CFO emphasized the need to reduce **overhead** before the fiscal year ends.
+
+2. **justification**：提出報銷時需附上正當理由，選 (B)。  
+   ➤ A detailed **justification** must be submitted before reimbursement is approved.
+
+3. **consolidate**：整併部門以提升效率，符合語境，選 (B)。  
+   ➤ The firm decided to **consolidate** several departments to improve efficiency.
+
+4. **caveat**：契約中的限制條款、但書，選 (C)。  
+   ➤ The contract includes a **caveat** that limits liability under certain conditions.
+
+5. **escrow**：指交易完成前由第三方保管資金，選 (B)。  
+   ➤ All disbursements will be made from an **escrow** account until final approval.
+
+6. **volatile**：形容不穩定的投資市場風險高，選 (A)。  
+   ➤ Due to market uncertainty, the investment was deemed too **volatile**.
+
+7. **collateral**：做為貸款的擔保品，選 (B)。  
+   ➤ We were required to provide **collateral** before proceeding with the loan.
+
+8. **turnover**：存貨週轉率，用來衡量庫存效率，選 (A)。  
+   ➤ The CEO praised the company’s improved inventory **turnover** ratio.
+
+9. **entitlement**：應得權益，與 stock options 連用常見，選 (A)。  
+   ➤ His employment contract includes full **entitlement** to stock options.
+
+10. **stipulations**：契約中的附帶條件或限制，選 (C)。  
+    ➤ The revised plan was approved with only a few minor **stipulations**.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **have we received**：倒裝句語序，rarely 放句首時需倒裝，選 (B)。  
+    ➤ Rarely **have we received** such an enthusiastic response from investors.
+
+12. **was completed**：完成式被動語態，才可接主詞後倒裝句，選 (C)。  
+    ➤ Only after the audit **was completed** the discrepancy discovered.
+
+13. **Based on**：依據某事，後接名詞，選 (A)。  
+    ➤ **Based on** the forecast, we increased our capital expenditure.
+
+14. **would have avoided**：第三類條件句，與 had 搭配，選 (C)。  
+    ➤ Had they complied with regulations, they **would have avoided** the penalty.
+
+15. **is submitted**：被動語態，用於需要「被提交」的情況，選 (C)。  
+    ➤ The report needs to be finalized before it **is submitted** to the board.
+
+16. **postponing**：recommend 後接動名詞，選 (B)。  
+    ➤ We recommend **postponing** discretionary expenses until next quarter.
+
+17. **which**：非限定用法，用來補述前句 entire strategy，選 (B)。  
+    ➤ The marketing strategy, **which** includes influencer outreach, will launch Monday.
+
+18. **Despite**：儘管，後接動名詞或名詞，選 (A)。  
+    ➤ **Despite** being delayed, the project was completed within budget.
+
+19. **which affected**：非限定關係子句，用來補述前句，選 (C)。  
+    ➤ The team failed to meet the deadline, **which affected** their performance review.
+
+20. **would have removed**：第三類假設語氣句，選 (B)。  
+    ➤ Had I known the clause existed, I **would have removed** it from the contract.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：財務部公告第四季支出政策更新**
+
+21. **(B) To revise expense procedures**：整篇都是關於更新支出政策。  
+22. **(C) Discretionary costs over $5,000**：提及此類花費需 CFO 書面核可。  
+23. **(D) No reimbursement**：無核可則不予報銷，為明文規定。  
+24. **(B) Subscription and vendor costs**：鼓勵部門審視此類支出以節省成本。  
+25. **(D) Finance liaison**：如有疑問，請聯繫財務對口窗口。
+
+---
