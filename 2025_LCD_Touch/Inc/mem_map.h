@@ -14,8 +14,7 @@
 #define APB1PERIPH_BASE 0x40000000
 
 /* USART bus frequency（MCU default value）*/
-#define FCK_APB1 4000000U  // USART2/3/4/5/7/8
-#define FCK_APB2 8000000U  // USART1/6
+#define FCK_APB2 16000000U  // USART1/6
 
 
 

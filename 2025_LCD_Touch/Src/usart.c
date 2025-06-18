@@ -15,6 +15,7 @@
 
 void usart_init(void){
 	usart_rcc_enable(RCC_USART1EN);
+	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
 
 	gpio_set_mode(GPIOA_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
 	gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_9, ALTERNATE_AF7);  // USART1_TX
@@ -130,7 +131,7 @@ void usart_wait_complete(uint32_t usart_base) {
 
 void usart_print(uint32_t usart_base, const char *str){
     while (*str) {
-        usart_send_byte(usart_base, (uint8_t)*str);
+    	usart_write(usart_base, (uint8_t)*str);
         str++;
     }
     usart_wait_complete(usart_base);

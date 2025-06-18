@@ -17,16 +17,30 @@
  */
 
 #include <stdint.h>
+#include <mem_io.h>
 #include <gpio.h>
 #include <rcc.h>
+#include <usart.h>
 
 int main(void)
 {
 	gpio_init();
+	usart_init();
+
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
 
     while (1)
     {
+    	usart_print(USART1_BASE, "USART\r\n");
+    	usart_write(USART1_BASE, 't');
+    	usart_write(USART1_BASE, 'e');
+    	usart_write(USART1_BASE, 'x');
+    	usart_write(USART1_BASE, 't');
+    	usart_write(USART1_BASE, '\r');
+    	usart_write(USART1_BASE, '\n');
+
+    	for (volatile int i = 0; i < 1000000; i++); // about 1 second
+
     }
 }

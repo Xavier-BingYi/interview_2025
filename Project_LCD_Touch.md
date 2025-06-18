@@ -592,24 +592,41 @@ STM32 的周邊模組（如 USART、SPI、TIM）皆掛載於不同的匯流排�
 #### 依據 ST 官方文件《RM0090》的預設時脈資訊
 
 - **7.2.2 - HSI clock：**  
-  預設內部時脈 HSI = 16 MHz
+  預設內部時脈 HSI 為 16 MHz。
 
 - **7.2.6 - System clock (SYSCLK)：**  
-  系統時脈（SYSCLK）可由 HSI、HSE 或 PLL 來自定義來源  
-  MCU 上電後預設選用 HSI
+  系統時脈（SYSCLK）可由 HSI、HSE 或 PLL 選擇，  
+  MCU 上電後預設選用 **HSI** 作為時脈來源。
 
 - **7.3.3 - RCC_CFGR register：**  
-  - `PPRE2`（APB2 分頻器）= `100` → `/2`  
-  - `PPRE1`（APB1 分頻器）= `101` → `/4`
+  `Bits 15:13 – PPRE2: APB high-speed prescaler (APB2)`  
+  此欄位由軟體設定，用來控制 APB2 的除頻倍率：
+
+  ```
+  0xx: AHB clock 不除頻（/1）
+  100: 除以 2（/2）
+  101: 除以 4（/4）
+  110: 除以 8（/8）
+  111: 除以 16（/16）
+  ```
 
 ---
 
 #### 預設情況下 USART 的時脈來源
 
-若未修改任何系統時脈設定，且使用 USART1（掛載於 APB2）進行傳輸：
+首先，我們可以透過程式確認目前 APB2 是否啟用了除頻功能：
+
+````c
+uint32_t cfgr = io_read(RCC_BASE + 0x08);
+uint32_t ppre2 = (cfgr >> 13) & 0x7;  // PPRE2 分頻器
+````
+
+如果 `ppre2 == 0`，表示目前 **APB2 並未進行分頻**（除頻倍率為 /1）。
+
+因此，在**未修改任何系統時脈配置**下，若使用 USART1（掛載於 APB2）傳輸，時脈來源為：
 
 ```
-USART1 的時脈 fCK = fCK_APB2 = SYSCLK / 2 = HSI / 2 = 8 MHz（預設）
+USART1 的時脈 fCK = fCK_APB2 = SYSCLK / PPRE2 = HSI / 1 = 16 MHz（實測預設值）
 ```
 
 ---
@@ -620,8 +637,7 @@ USART1 的時脈 fCK = fCK_APB2 = SYSCLK / 2 = HSI / 2 = 8 MHz（預設）
 |------------------|------------------------------|
 | 系統時脈 SYSCLK  | `HSI` = 16 MHz               |
 | HCLK             | = SYSCLK = 16 MHz            |
-| APB1 Prescaler   | `/4` → `fCK_APB1 = 4 MHz`    |
-| APB2 Prescaler   | `/2` → `fCK_APB2 = 8 MHz`    |
+| APB2 Prescaler   | `/1` → `fCK_APB2 = 16 MHz`    |
 
 ---
 
@@ -672,7 +688,7 @@ USART 為了精確判斷每一個資料位元的邊界與狀態，會對每個 b
 | 過取樣模式    | OVER8 值 | 小數位元數 | `BRR` 寫法                             |
 |---------------|-----------|-------------|----------------------------------------|
 | 16 倍過取樣   | 0         | 4 bits      | `BRR = mantissa << 4 | fraction`       |
-| 8 倍過取樣    | 1         | 3 bits      | `BRR = mantissa << 4 | (fraction & 0x7)` <br>且 bit[3] 必須為 0 |
+| 8 倍過取樣    | 1         | 3 bits      | `BRR = mantissa << 4 | (fraction & 0x7)` 且 bit[3] 必須為 0 |
 
 > 注意：當你寫入 `USART_BRR` 後，硬體會立即根據該值重新計算內部時脈，**不可在正在傳輸期間修改 BRR**，否則可能導致通訊中斷或資料遺失。
 
@@ -792,28 +808,94 @@ usart_cr1_write_bit(USART1_BASE, USART_CR1_M, 0); // Set word length to 8 bits (
 usart_cr2_write_bits(USART1_BASE, USART_CR2_STOP, 2, USART_STOP_1); // Set stop bits to 1 bit (STOP[1:0] = 00)
 usart_cr1_write_bit(USART1_BASE, USART_CR1_TE, 1); // Enable transmitter (TE = 1)
 
-void usart_write(uint32_t usart_base, uint8_t data) {
+void usart_write(uint32_t usart_base, uint8_t data){
     uint32_t reg_addr = usart_base + USART_DR_OFFSET;
 
-    // 等待 TXE = 1（資料暫存器為空）
     while (usart_SR_read_bit(usart_base, USART_SR_TXE) == 0);
 
-    // 寫入資料
     io_write(reg_addr, (uint32_t)data);
+}
 
-    // 等待 TC = 1（整個傳送完成）
+void usart_wait_complete(uint32_t usart_base) {
     while (usart_SR_read_bit(usart_base, USART_SR_TC) == 0);
+}
+
+void usart_print(uint32_t usart_base, const char *str){
+    while (*str) {
+    	usart_write(usart_base, (uint8_t)*str);
+        str++;
+    }
+    usart_wait_complete(usart_base);
 }
 ````
 
 ---
 
-## 3.4 printf 函式整合與字串輸出
+## 3.4 printf 函式整合與字串輸出 
 
-### 3.4.1 
-*實作 `uart_print()` 傳送字串
+### 3.4.1 USART 字串輸出與 Tera Term 顯示驗證
 
-### 3.4.2 
+開啟 Tera Term，建立新連線後選擇 ST-Link 提供的虛擬 COM 埠（例如 COM3），  
+並將 Baud Rate 設為與 MCU 相同（例如：9600），其餘設定如下：
+
+- Data bits：8 bits  
+- Stop bits：1 bit
+- 編碼接收（可選）：UTF-8 或 ISO8859-1（建議用於純 ASCII 顯示）
+
+當 MCU 執行下列程式時：
+
+```c
+usart_print(USART1_BASE, "Hello\r\n");
+```
+
+Tera Term 終端機應能顯示：
+
+```
+Hello
+```
+
+---
+
+#### 若 Tera Term 無法正確顯示內容，請依序檢查以下常見錯誤：
+
+1. **USART RCC 未開啟**  
+   請確認 `RCC->APB2ENR` 中已啟用 USART1（Bit 4）。
+
+2. **GPIO PORTA 未開啟（用於 PA9/PA10）**  
+   若使用 USART1 的 TX 輸出，需啟用 `GPIOA` 並將 `PA9` 設為 AF7 模式。  
+   建議加入：
+   ```c
+   rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+   ```
+
+3. **`FCK_APB2` 設定錯誤**  
+   預設情況下，MCU 上電時：
+   - `SYSCLK = HSI = 16 MHz`
+   - `PPRE2 = 0b000`（無除頻）
+   - ⇒ `FCK_APB2 = 16 MHz`
+
+   若你誤設：
+   ```c
+   #define FCK_APB2 8000000  // 錯誤
+   ```
+   將導致 USART 實際輸出為 19200 baud，而非預期的 9600。  
+   解法為改為：
+   ```c
+   #define FCK_APB2 16000000  // 正確
+   ```
+
+4. **波特率（Baud Rate）設定錯誤**  
+   請確認 MCU 計算用的 `FCK_APB2` 值正確，否則 USART 實際輸出速率將與 Tera Term 不符。
+
+5. **資料太快導致刷屏或看不到**  
+   建議加入簡單延遲測試顯示內容：
+   ```c
+   for (volatile int i = 0; i < 1000000; i++);  // 約略延遲 1 秒
+   ```
+
+---
+
+### 3.4.2 自訂 my_printf 串列格式化函式
 * 實作簡易 `my_printf()` 函式（支援 `%s`, `%d` 等格式）
 * 讓 `printf("hello %d", 123);` 能透過 UART 輸出
 
