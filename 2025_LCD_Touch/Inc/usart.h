@@ -62,6 +62,7 @@ void usart_cr2_write_bits(uint32_t usart_base, uint8_t bit_pos, uint8_t width, u
 void usart_write(uint32_t usart_base, uint8_t data);
 void usart_wait_complete(uint32_t usart_base);
 void usart_print(uint32_t usart_base, const char *str);
+void usart_printf(const char *fmt, ...);
 
 
 #endif /* USART_H_ */

@@ -895,8 +895,127 @@ Hello
 
 ---
 
-### 3.4.2 自訂 my_printf 串列格式化函式
-* 實作簡易 `my_printf()` 函式（支援 `%s`, `%d` 等格式）
-* 讓 `printf("hello %d", 123);` 能透過 UART 輸出
+### 3.4.2 usart_printf() 實作：支援格式化輸出（%d, %x, %p, %s, %c, %%）
+
+為了讓裸機環境下的 STM32 也能使用類似 `printf()` 的字串輸出功能，以下實作一個簡易版的 `usart_printf()` 函式，透過字元與變數組合完成動態格式輸出。
 
 ---
+
+#### usart_printint()：整數轉字串輸出
+
+````c
+void usart_printint(int data, int base, int is_signed)
+{
+	static char digits[] = "0123456789ABCDEF";
+	char buf[16];
+	int count = 0;
+	int is_negative = 0;
+	int abs_data;
+
+	if(is_signed && data < 0){
+		is_negative = 1;
+		abs_data = -data;
+	} else {
+		abs_data = data;
+	}
+	if (abs_data == 0){
+		buf[count++] = digits[0];
+	}else{
+		while (abs_data != 0){
+			buf[count++] = digits[abs_data % base];
+			abs_data = abs_data / base;
+		}
+	}
+
+	if(is_negative)
+		buf[count++] = '-';
+
+	while(--count >= 0)
+		usart_write(USART1_BASE, buf[count]);
+}
+````
+
+此函式可將整數轉換為指定進位（10 進位或 16 進位）後的字串，再透過 USART 輸出。若 `is_signed=1` 且數值為負，會自動補上負號。
+
+- `base` = 10 → 十進位（對應 %d）
+- `base` = 16 → 十六進位（對應 %x 或 %p）
+
+---
+
+#### usart_printf()：支援多種格式的字串輸出
+
+````c
+// Mini printf function for USART: supports %d, %x, %p, %s, %c, %%
+void usart_printf(const char *fmt, ...)	
+{
+	int state = 0;  // 0 = normal text, 1 = after '%' waiting for format specifier
+	int *arg_ptr = (int*)(void*)&fmt + 1;  // == (int*)((void*)&fmt + 4);pointer to the first variable argument
+
+    for (int i = 0; fmt[i] != '\0'; i++){  // walk through each character in format string
+        if (state == 0){
+            if (fmt[i] == '%'){
+                state = 1;  // enter format mode
+            }else{
+                usart_write(USART1_BASE, fmt[i]);
+            }
+        }else if (state == 1){
+            if (fmt[i] == 'd'){
+                usart_printint(*arg_ptr, 10, 1);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == 'x' || fmt[i] == 'p'){
+                usart_printint(*arg_ptr, 16, 1);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == 's'){
+                char *string = (char*)*arg_ptr;  // get string pointer from argument
+                if (string == 0)
+                    string = "(null)";
+                for (int c = 0; *string != '\0'; c++){
+                    usart_write(USART1_BASE, *string);
+                    string = string + 1;  // move to next char
+                }
+                arg_ptr = arg_ptr + 1;  // move to next argument
+            } else if (fmt[i] == 'c'){
+                usart_write(USART1_BASE, (char)*arg_ptr);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == '%'){
+                usart_write(USART1_BASE, '%');
+            } else{  // Unrecognized specifier: output as % + character
+                usart_write(USART1_BASE, '%');
+                usart_write(USART1_BASE, fmt[i]);
+            }
+            state = 0;
+        }
+    }
+}
+````
+
+- 輸入格式字串 `fmt`，包含文字與格式符號（specifier）
+- 支援 `%d`、`%x`、`%p`、`%s`、`%c`、`%%`
+- 使用 `arg_ptr` 指向格式字串後的第一個變數參數，逐個處理
+
+---
+
+#### 範例支援格式說明：
+
+| 格式符號 | 說明                  | 備註             |
+|----------|-----------------------|------------------|
+| `%d`     | 有號十進位整數         | 呼叫 `usart_printint(..., 10, 1)` |
+| `%x`     | 十六進位整數（小寫）    | 基本以大寫輸出 ABCDEF |
+| `%p`     | 指標，實際等同 `%x` 處理 |                 |
+| `%s`     | 字串輸出（char*）     | 支援 NULL 判斷    |
+| `%c`     | 單一字元               |                 |
+| `%%`     | 輸出單一 `%` 符號     |                 |
+
+---
+
+#### 特殊設計說明
+
+- `arg_ptr = (int*)(void*)&fmt + 1;`：此行為手動取得第一個變數參數的位址，模擬 `varargs` 行為。雖可在嵌入式環境中運作，但此方式依賴平台堆疊結構，較不具可攜性。建議實務上改用 C 標準函式庫提供的變數參數機制：
+
+  ```c
+  #include <stdarg.h>
+  ```
+
+  搭配 `va_list`、`va_start`、`va_arg` 等標準巨集使用，可提升程式的可攜性與可維護性。
+
+- 在處理 `%s` 時，雖參數實際為 `char*`，但透過 `int*` 讀取會被視為一個整數（即字串的起始位址）。因此需強制轉型為 `char*`，才能正確逐字輸出字串內容。

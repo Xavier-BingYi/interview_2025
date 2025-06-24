@@ -136,3 +136,88 @@ void usart_print(uint32_t usart_base, const char *str){
     }
     usart_wait_complete(usart_base);
 }
+
+void usart_printint(int data, int base, int is_signed)
+{
+	static char digits[] = "0123456789ABCDEF";
+	char buf[16];
+	int count = 0;
+	int is_negative = 0;
+	int abs_data;
+
+	if(is_signed && data < 0){
+		is_negative = 1;
+		abs_data = -data;
+	} else {
+		abs_data = data;
+	}
+	if (abs_data == 0){
+		buf[count++] = digits[0];
+	}else{
+		while (abs_data != 0){
+			buf[count++] = digits[abs_data % base];
+			abs_data = abs_data / base;
+		}
+	}
+
+	if(is_negative)
+		buf[count++] = '-';
+
+	while(--count >= 0)
+		usart_write(USART1_BASE, buf[count]);
+}
+
+void usart_printfloat(float xx) // Not working: float is not supported.
+{
+  int beg = (int)(xx);
+  int fin = (int)(xx*100)-beg*100;
+  usart_printint(xx, 10, 1);
+  usart_write(USART1_BASE, '.');
+  if (fin < 10){
+	  usart_write(USART1_BASE, '0');
+  }
+  usart_printint(fin, 10, 1);
+}
+
+// Mini printf function for USART: supports %d, %x, %p, %s, %c, %%
+void usart_printf(const char *fmt, ...)	// TODO, https://github.com/shreshthtuli/xv6/blob/master/printf.charactor
+{
+	int state = 0;  // 0 = normal text, 1 = after '%' waiting for format specifier
+	int *arg_ptr = (int*)(void*)&fmt + 1;  // == (int*)((void*)&fmt + 4);pointer to the first variable argument
+
+    for (int i = 0; fmt[i] != '\0'; i++){  // walk through each character in format string
+        if (state == 0){
+            if (fmt[i] == '%'){
+                state = 1;  // enter format mode
+            }else{
+                usart_write(USART1_BASE, fmt[i]);
+            }
+        }else if (state == 1){
+            if (fmt[i] == 'd'){
+                usart_printint(*arg_ptr, 10, 1);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == 'x' || fmt[i] == 'p'){
+                usart_printint(*arg_ptr, 16, 1);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == 's'){
+                char *string = (char*)*arg_ptr;  // get string pointer from argument
+                if (string == 0)
+                    string = "(null)";
+                for (int c = 0; *string != '\0'; c++){
+                    usart_write(USART1_BASE, *string);
+                    string = string + 1;  // move to next char
+                }
+                arg_ptr = arg_ptr + 1;  // move to next argument
+            } else if (fmt[i] == 'c'){
+                usart_write(USART1_BASE, (char)*arg_ptr);
+                arg_ptr = arg_ptr + 1;
+            } else if (fmt[i] == '%'){
+                usart_write(USART1_BASE, '%');
+            } else{  // Unrecognized specifier: output as % + character
+                usart_write(USART1_BASE, '%');
+                usart_write(USART1_BASE, fmt[i]);
+            }
+            state = 0;
+        }
+    }
+}
