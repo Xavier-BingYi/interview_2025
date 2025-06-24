@@ -1019,3 +1019,52 @@ void usart_printf(const char *fmt, ...)
   搭配 `va_list`、`va_start`、`va_arg` 等標準巨集使用，可提升程式的可攜性與可維護性。
 
 - 在處理 `%s` 時，雖參數實際為 `char*`，但透過 `int*` 讀取會被視為一個整數（即字串的起始位址）。因此需強制轉型為 `char*`，才能正確逐字輸出字串內容。
+
+---
+
+# 4. 外部中斷（EXTI）與中斷控制器（NVIC）
+
+## 4.1 中斷概念與 NVIC 架構（理解中斷從哪來、由誰處理）
+
+* 中斷（Interrupt）的本質與流程（事件驅動）
+* STM32 NVIC（Nested Vectored Interrupt Controller）簡介
+* 向量表與 IRQ Handler 的角色
+* 實際處理順序與回到主程式的流程
+* 示意流程圖：「主程式 → 中斷發生 → 跳轉 ISR → 回主程式」
+
+---
+
+## 4.2 EXTI 外部中斷的設定流程與原理
+
+* EXTI 模組介紹：哪幾種事件可以觸發（按鈕、PA0、Timer…）
+* 腳位連接到 EXTI 線的方式（SYSCFG 設定）
+* 上升沿／下降沿觸發原理
+* 設定 Register：EXTI\_IMR、EXTI\_RTSR、EXTI\_PR 等
+* 註冊 ISR 與 NVIC 的 IRQ 編號（EXTI0\_IRQn 等）
+
+---
+
+## 4.3 NVIC 中斷控制器設定與中斷優先權配置
+
+* NVIC 的 IRQ 編號對應表（EX: EXTI0 = IRQ6）
+* 使用 NVIC\_ISER 開啟中斷來源
+* NVIC\_IPR 設定優先權（可先跳過或保留預設）
+* `NVIC_EnableIRQ()` 自訂 API 實作範例
+* 重點：NVIC 負責「允許與排序」，EXTI 負責「產生事件」
+
+---
+
+## 4.4 按鈕觸發 LED 實作範例（PA0 按鈕觸發 PG13）
+
+* 初始化 EXTI0 → 對應 PA0（需透過 SYSCFG 設定腳位映射）
+* GPIO 初始化（PA0 為輸入、PG13 為輸出）
+* 設定 EXTI\_RTSR、IMR、PR
+* 註冊 EXTI0\_IRQHandler()
+* ISR 中控制 LED 狀態翻轉
+* 測試流程與注意事項（中斷旗標清除與偵錯建議）
+
+---
+
+這樣編排可以幫你完整貫穿「中斷來源 → 模組處理 → 中斷觸發 → 實作驗證」四個核心步驟，維持你之前的學習邏輯與節奏。
+
+若你同意這樣的章節安排，我可以幫你依此架構撰寫整份第 4 章內容，並延續你原本的 Markdown 說明風格與程式碼註解風格。是否要我現在就開始寫 #4.1？

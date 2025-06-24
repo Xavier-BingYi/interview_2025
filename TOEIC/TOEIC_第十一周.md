@@ -537,3 +537,237 @@ If you have questions or require additional support, please contact your operati
    **答案：D**
 
 ---
+
+# 📘 TOEIC 第十一週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The manager suggested a complete system ______ to address performance issues.  
+   (A) overhaul (B) contingency (C) benchmark (D) liaison  
+
+2. Late deliveries could ______ our contract with the supplier.  
+   (A) articulate (B) endorse (C) jeopardize (D) procure  
+
+3. We conducted a thorough ______ before the acquisition.  
+   (A) appraisal (B) amendment (C) retention (D) outreach  
+
+4. A clear ______ between the client and design team is essential.  
+   (A) quota (B) liaison (C) inventory (D) tenure  
+
+5. The CEO wants to ______ the vision clearly to all stakeholders.  
+   (A) scrutinize (B) articulate (C) speculate (D) alleviate  
+
+6. The quarterly ______ was lower due to reduced demand.  
+   (A) yield (B) benchmark (C) mandate (D) feasibility  
+
+7. The company provided an ______ to encourage employee innovation.  
+   (A) incentive (B) overhaul (C) deficit (D) scrutiny  
+
+8. All vendor contracts are now under legal ______.  
+   (A) compliance (B) amendment (C) scrutiny (D) affiliate  
+
+9. We need a ______ plan in case of supply chain disruption.  
+   (A) benchmark (B) viability (C) procurement (D) contingency  
+
+10. High employee ______ has been a challenge this fiscal year.  
+    (A) turnover (B) mandate (C) retention (D) tenure  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. Rarely ______ such an efficient resolution to the issue.  
+    (A) have we witnessed (B) we have witnessed (C) did we witness (D) we witness  
+
+12. ______ the final audit is completed, we cannot release the funds.  
+    (A) If (B) Until (C) Unless (D) Although  
+
+13. Only after the review ______ the team proceed.  
+    (A) had (B) was (C) did (D) can  
+
+14. Not only ______ the deadline, but the team also exceeded expectations.  
+    (A) did meet (B) they met (C) did they meet (D) met they  
+
+15. ______ he followed up earlier, the error could have been avoided.  
+    (A) Had (B) If (C) Should (D) Even if  
+
+16. ______ the system upgrade requires additional training is still being debated.  
+    (A) Whether (B) What (C) If that (D) Which  
+
+17. The decision depends on ______ we can secure enough funding.  
+    (A) if (B) whether (C) how (D) why  
+
+18. It is imperative that each employee ______ their compliance certificate.  
+    (A) submitted (B) submits (C) submit (D) has submitted  
+
+19. Seldom ______ such detailed financial forecasts.  
+    (A) we encounter (B) do we encounter (C) we encountered (D) did encounter  
+
+20. I wonder ______ the results will meet the board’s expectations.  
+    (A) how (B) why (C) if (D) whether  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+````text
+To: All HR Personnel  
+From: Director of Human Resources  
+Subject: Revised Onboarding Procedure
+
+Starting next month, all new employee onboarding will be handled exclusively through the Digital HR Portal. This platform consolidates contract issuance, tax documentation, and benefits enrollment into one streamlined workflow.
+
+All departments must complete a brief training module before the launch. Note that any onboarding conducted outside the portal will not be recorded in official HR systems.
+
+The portal will go live on the first Monday of next month. Additional resources and FAQs will be shared via email by this Friday.
+````
+
+---
+
+21. What is the main purpose of this memo?  
+   (A) To announce a hiring freeze  
+   (B) To change how onboarding is managed  
+   (C) To introduce new tax policies  
+   (D) To terminate the HR portal  
+
+22. When will the new platform be launched?  
+   (A) This Friday  
+   (B) First Monday of next month  
+   (C) Immediately  
+   (D) Next Friday  
+
+23. What is required before departments can use the new platform?  
+   (A) Submit onboarding forms  
+   (B) Hold a team meeting  
+   (C) Complete a training module  
+   (D) Update employee contracts  
+
+24. What will happen if onboarding is done outside the system?  
+   (A) It will be reviewed by IT  
+   (B) It will be counted manually  
+   (C) It won’t be officially recorded  
+   (D) It will delay benefits approval  
+
+25. How will supporting information be shared?  
+   (A) Through the company newsletter  
+   (B) At an in-person meeting  
+   (C) Via email  
+   (D) On printed handouts
+
+---
+
+## 📘 TOEIC 第十一週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | A    |
+| 2    | C    |
+| 3    | A    |
+| 4    | B    |
+| 5    | B    |
+| 6    | A    |
+| 7    | A    |
+| 8    | C    |
+| 9    | D    |
+| 10   | A    |
+| 11   | A    |
+| 12   | B    |
+| 13   | C    |
+| 14   | C    |
+| 15   | A    |
+| 16   | A    |
+| 17   | B    |
+| 18   | C    |
+| 19   | B    |
+| 20   | D    |
+| 21   | B    |
+| 22   | B    |
+| 23   | C    |
+| 24   | C    |
+| 25   | C    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **overhaul**：徹底檢修、整頓，改善系統性能，選 (A)。  
+   ➤ The manager suggested a complete system **overhaul** to address performance issues.
+
+2. **jeopardize**：危及、使陷入危險，與合約搭配常見，選 (C)。  
+   ➤ Late deliveries could **jeopardize** our contract with the supplier.
+
+3. **appraisal**：估價、評估，用於收購前的詳細審查，選 (A)。  
+   ➤ We conducted a thorough **appraisal** before the acquisition.
+
+4. **liaison**：溝通聯繫者，與 client/design team 搭配常見，選 (B)。  
+   ➤ A clear **liaison** between the client and design team is essential.
+
+5. **articulate**：清楚表達，傳達願景時常用此詞，選 (B)。  
+   ➤ The CEO wants to **articulate** the vision clearly to all stakeholders.
+
+6. **yield**：收益、產出，描述財報表現常見用語，選 (A)。  
+   ➤ The quarterly **yield** was lower due to reduced demand.
+
+7. **incentive**：獎勵、誘因，與創新表現搭配自然，選 (A)。  
+   ➤ The company provided an **incentive** to encourage employee innovation.
+
+8. **scrutiny**：詳盡審查，用於法務或稽核，選 (C)。  
+   ➤ All vendor contracts are now under legal **scrutiny**.
+
+9. **contingency**：應變計畫、備案，與 supply chain 搭配合理，選 (D)。  
+   ➤ We need a **contingency** plan in case of supply chain disruption.
+
+10. **turnover**：人員流動率，形容今年的困境，選 (A)。  
+    ➤ High employee **turnover** has been a challenge this fiscal year.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **have we witnessed**：rarely 倒裝句，選 (A)。  
+    ➤ Rarely **have we witnessed** such an efficient resolution to the issue.
+
+12. **Until**：直到...才，與否定搭配常見，選 (B)。  
+    ➤ **Until** the final audit is completed, we cannot release the funds.
+
+13. **did**：Only after 放句首引導倒裝句，選 (C)。  
+    ➤ Only after the review **did** the team proceed.
+
+14. **did they meet**：not only 放句首時為倒裝句，選 (C)。  
+    ➤ Not only **did they meet** the deadline, but the team also exceeded expectations.
+
+15. **Had**：第三類假設語氣倒裝句省略 if，選 (A)。  
+    ➤ **Had** he followed up earlier, the error could have been avoided.
+
+16. **Whether**：名詞子句開頭，可作主詞，選 (A)。  
+    ➤ **Whether** the system upgrade requires additional training is still being debated.
+
+17. **whether**：depends on 後接名詞子句，選 (B)。  
+    ➤ The decision depends on **whether** we can secure enough funding.
+
+18. **submit**：It is imperative that + 主詞 + 原形動詞，選 (C)。  
+    ➤ It is imperative that each employee **submit** their compliance certificate.
+
+19. **do we encounter**：seldom 放句首，需倒裝，選 (B)。  
+    ➤ Seldom **do we encounter** such detailed financial forecasts.
+
+20. **whether**：I wonder 後常接是否的名詞子句，選 (D)。  
+    ➤ I wonder **whether** the results will meet the board’s expectations.
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：HR 部門公告新員工入職流程全面改為線上系統**
+
+21. **(B) To change how onboarding is managed**：說明將使用數位 HR 平台處理入職。  
+22. **(B) First Monday of next month**：文中明確指出啟用日。  
+23. **(C) Complete a training module**：需完成培訓才能使用新平台。  
+24. **(C) It won’t be officially recorded**：不使用系統入職將不被記錄。  
+25. **(C) Via email**：說明附加資源與常見問答將透過信件發送。
+
+---
