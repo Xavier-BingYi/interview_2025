@@ -1,3 +1,4 @@
+"./Src/exti.o"
 "./Src/gpio.o"
 "./Src/main.o"
 "./Src/mem_io.o"

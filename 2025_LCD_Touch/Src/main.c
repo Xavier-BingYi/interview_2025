@@ -21,11 +21,13 @@
 #include <gpio.h>
 #include <rcc.h>
 #include <usart.h>
+#include <exti.h>
 
 int main(void)
 {
 	gpio_init();
 	usart_init();
+	exti_init();
 
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);

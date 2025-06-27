@@ -8,12 +8,8 @@
 #ifndef RCC_H_
 #define RCC_H_
 
-#define RCC_BASE       0x40023800UL
-
-/* RCC register address offset */
-#define RCC_AHB1ENR    0x30
-#define RCC_APB1ENR    0x40
-#define RCC_APB2ENR    0x44
+/* USART bus frequency（MCU default value）*/
+#define FCK_APB2 16000000U  // USART1/6
 
 /* RCC AHB1 bit positions */
 #define RCC_AHB1EN_GPIOA 0
@@ -39,6 +35,9 @@ typedef enum {
     RCC_UART7EN,
     RCC_UART8EN,
 } USART_RCC_Module;
+
+/* RCC APB2 bit positions */
+#define RCC_APB2EN_SYSCFG 14  // SYSCFG EN bit = bit 14
 
 
 void rcc_enable_ahb1_clock(uint8_t bit_pos);

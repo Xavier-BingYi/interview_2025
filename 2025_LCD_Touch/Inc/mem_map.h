@@ -13,9 +13,97 @@
 #define APB2PERIPH_BASE 0x40010000
 #define APB1PERIPH_BASE 0x40000000
 
-/* USART bus frequency（MCU default value）*/
-#define FCK_APB2 16000000U  // USART1/6
 
+
+
+/* RCC Group */
+//------------------------------------------------
+#define RCC_BASE       0x40023800UL
+
+/* RCC register address offset */
+#define RCC_AHB1ENR    0x30
+#define RCC_APB1ENR    0x40
+#define RCC_APB2ENR    0x44
+
+
+
+
+/* GPIO Group */
+//------------------------------------------------
+/* GPIO port register base addresses (AHB1) */
+#define GPIOA_BASE (AHB1PERIPH_BASE + 0x0000)
+#define GPIOB_BASE (AHB1PERIPH_BASE + 0x0400)
+#define GPIOC_BASE (AHB1PERIPH_BASE + 0x0800)
+#define GPIOD_BASE (AHB1PERIPH_BASE + 0x0C00)
+#define GPIOE_BASE (AHB1PERIPH_BASE + 0x1000)
+#define GPIOF_BASE (AHB1PERIPH_BASE + 0x1400)
+#define GPIOG_BASE (AHB1PERIPH_BASE + 0x1800)
+#define GPIOH_BASE (AHB1PERIPH_BASE + 0x1C00)
+#define GPIOI_BASE (AHB1PERIPH_BASE + 0x2000)
+#define GPIOJ_BASE (AHB1PERIPH_BASE + 0x2400)
+#define GPIOK_BASE (AHB1PERIPH_BASE + 0x2800)
+
+/* GPIO register offsets (from GPIOx_BASE)*/
+#define GPIO_MODER_OFFSET    0x00  // Mode register
+//#define GPIO_OTYPER_OFFSET   0x04  // Output type register
+//#define GPIO_OSPEEDR_OFFSET  0x08  // Output speed register
+//#define GPIO_PUPDR_OFFSET    0x0C  // Pull-up/pull-down register
+//#define GPIO_IDR_OFFSET      0x10  // Input data register
+#define GPIO_ODR_OFFSET      0x14  // Output data register
+//#define GPIO_BSRR_OFFSET     0x18  // Bit set/reset register
+#define GPIO_AFRL_OFFSET     0x20  // Alternate function low register
+#define GPIO_AFRH_OFFSET     0x24  // Alternate function high register
+
+
+
+
+/* USART Group */
+//---------------------- APB2 ----------------------
+#define USART1_BASE (APB2PERIPH_BASE + 0x1000)  // APB2
+#define USART6_BASE (APB2PERIPH_BASE + 0x1400)  // APB2
+
+//---------------------- APB1 ----------------------
+#define USART2_BASE (APB1PERIPH_BASE + 0x4400)  // APB1
+#define USART3_BASE (APB1PERIPH_BASE + 0x4800)  // APB1
+#define UART4_BASE  (APB1PERIPH_BASE + 0x4C00)  // APB1
+#define UART5_BASE  (APB1PERIPH_BASE + 0x5000)  // APB1
+#define UART7_BASE  (APB1PERIPH_BASE + 0x7800)  // APB1
+#define UART8_BASE  (APB1PERIPH_BASE + 0x7C00)  // APB1
+
+/* USART register offsets (from USARTx_BASE)*/
+#define USART_SR_OFFSET  0x00  // Status register
+#define USART_DR_OFFSET  0x04  // Data register
+#define USART_BRR_OFFSET 0x08  // Baud rate register
+#define USART_CR1_OFFSET 0x0C  // Control register 1
+#define USART_CR2_OFFSET 0x10  // Control register 2
+
+
+
+
+
+/* SYSCFG Group */
+//------------------------------------------------
+#define SYSCFG_BASE 0x40013800
+
+/* SYSCFG register offsets (relative to SYSCFG_BASE) */
+#define SYSCFG_EXTICR1_OFFSET    0x08  // External interrupt configuration register 1 (EXTI0–3)
+#define SYSCFG_EXTICR2_OFFSET    0x0C  // External interrupt configuration register 2 (EXTI4–7)
+#define SYSCFG_EXTICR3_OFFSET    0x10  // External interrupt configuration register 3 (EXTI8–11)
+#define SYSCFG_EXTICR4_OFFSET    0x14  // External interrupt configuration register 4 (EXTI12–15)
+
+//#define SYSCFG ((SYSCFG_TypeDef *) SYSCFG_BASE)
+
+
+
+
+/* EXTI Group */
+//------------------------------------------------
+#define EXTI_BASE 0x40013C00
+
+#define EXTI_IMR_OFFSET 0x00
+#define EXTI_RTSR_OFFSET 0x08
+#define EXTI_FTSR_OFFSET 0x0C
+#define EXTI_PR_OFFSET 0x14
 
 
 #endif /* MEM_MAP_H_ */

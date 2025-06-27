@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <mem_io.h>
+#include <mem_map.h>
 #include <rcc.h>
 
 void rcc_enable_ahb1_clock(uint8_t bit_pos){
