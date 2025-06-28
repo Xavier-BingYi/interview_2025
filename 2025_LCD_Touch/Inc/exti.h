@@ -44,12 +44,24 @@ typedef enum{
     EXTI_INTERRUPT_ENABLE  = 1
 }EXTI_InterruptMask;
 
+#define NVIC_ISER_BASE  0xE000E100U  // NVIC Interrupt Set-Enable Registers (ISER0 base)
+
+typedef enum {
+    WWDG        = 0,   // Window Watchdog interrupt
+    PVD         = 1,   // PVD through EXTI line detection
+    TAMP_STAMP  = 2,   // Tamper and TimeStamp interrupts
+    RTC_WKUP    = 3,   // RTC Wakeup interrupt
+    FLASH       = 4,   // Flash global interrupt
+    RCC         = 5,   // RCC global interrupt
+    EXTI0       = 6    // EXTI Line0 interrupt
+} IRQn;
+
 void exti_init(void);
 void exti_select_port(SYSCFG_EXTI_LINE exti_line, uint8_t port_code);
 void exti_enable_rising_trigger(SYSCFG_EXTI_LINE exti_line);
 void exti_enable_falling_trigger(SYSCFG_EXTI_LINE exti_line);
 void exti_set_interrupt_mask(SYSCFG_EXTI_LINE exti_line, EXTI_InterruptMask enable);
-void nvic_enable_irq(uint32_t irqn);
+void nvic_enable_irq(IRQn irqn);
 
 
 #endif /* EXTI_H_ */

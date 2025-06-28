@@ -1344,30 +1344,64 @@ void exti_set_interrupt_mask(SYSCFG_EXTI_LINE exti_line, EXTI_InterruptMask enab
 
 ### 步驟四：啟用 NVIC 中斷
 
-當 EXTI 偵測到邊緣事件且未被 IMR 遮罩後，會送出 IRQ 給 NVIC。此時必須在 **NVIC（中斷控制器）中啟用對應中斷來源**，否則 CPU 將不會進入中斷服務函式。
+當 EXTI 偵測到邊緣事件且未被 IMR 遮罩後，會送出 IRQ 給 NVIC。此時必須在 **NVIC（中斷控制器）中啟用對應中斷來源**，否則 CPU 將不會跳轉至中斷服務函式（ISR）執行。
 
-對於 `EXTI0`（對應腳位為 `PA0`），其中斷來源為 `EXTI0_IRQn`，IRQ 編號為 `6`。
+STM32F429 的 NVIC 模組並非 ST 自行實作，而是由 ARM Cortex-M4 處理器核心內建支援。根據《Cortex-M4 User Guide》第 4.2 節 *Nested Vectored Interrupt Controller* 說明，NVIC 的中斷啟用暫存器（**NVIC_ISER**，Interrupt Set-Enable Registers）起始位址為：
+
+```
+NVIC_ISER0：0xE000E100
+```
+
+每個 `NVIC_ISERx` 暫存器為 32-bit 寬度，可控制 32 個中斷通道對應的啟用狀態：
+
+- `ISER0` → IRQ 0 ~ 31 → 0xE000E100
+- `ISER1` → IRQ 32 ~ 63 → 0xE000E104
+- `ISER2` → IRQ 64 ~ 95 → 0xE000E108  
+- 以此類推，每組位址間隔為 4 bytes。
+
+若我們欲啟用 `EXTI0`（對應腳位為 `PA0`），其中斷來源為 `EXTI0_IRQn`，IRQ 編號為 **6**，即可透過以下方式判斷對應哪一組 ISER 暫存器：
+
+- 例如 `irqn = 6`：`6 / 32 = 0` → 落在 `ISER0`
+- 例如 `irqn = 37`：`37 / 32 = 1` → 落在 `ISER1`
+
+---
 
 #### 啟用 NVIC 中斷
 
-以下為封裝的 NVIC 啟用函式：
+以下為通用的 NVIC 中斷啟用函式，可根據 IRQ 編號自動計算對應位址並啟用該中斷：
 
-```c
-#define NVIC_ISER_BASE  0xE000E100U
+````c
+#define NVIC_ISER_BASE  0xE000E100U  // NVIC Interrupt Set-Enable Registers (ISER0 base)
 
-void nvic_enable_irq(IRQn_Type irqn) {
-    uint32_t reg_addr = NVIC_ISER_BASE + ((uint32_t)irqn / 32) * 4;
-    uint32_t data = 1U << ((uint32_t)irqn % 32);
+typedef enum {
+    WWDG        = 0,   // Window Watchdog interrupt
+    PVD         = 1,   // PVD through EXTI line detection
+    TAMP_STAMP  = 2,   // Tamper and TimeStamp interrupts
+    RTC_WKUP    = 3,   // RTC Wakeup interrupt
+    FLASH       = 4,   // Flash global interrupt
+    RCC         = 5,   // RCC global interrupt
+    EXTI0       = 6    // EXTI Line0 interrupt
+} IRQn;
 
-    io_writeMask(reg_addr, data, data);
+void nvic_enable_irq(IRQn irqn) {
+    // 每 32 個中斷共用一組 32-bit ISER 暫存器，位址間隔為 4 bytes
+    uint32_t reg_addr = NVIC_ISER_BASE + ((uint32_t)irqn / 32U) * 4U;
+
+    // 計算該中斷在對應 ISER 暫存器中的位元遮罩
+    uint32_t bit_mask = 1U << (irqn % 32U);
+
+    // 寫入對應位置以啟用中斷（Set Enable）
+    io_writeMask(reg_addr, bit_mask, bit_mask);
 }
-```
+````
 
-在主程式中，啟用 EXTI0 中斷如下：
+#### 主程式啟用範例
 
-```c
-nvic_enable_irq(EXTI0_IRQn);   // 啟用 NVIC 的 EXTI0 IRQ（編號 6）
-```
+若要啟用 EXTI0 中斷，可在初始化階段加入：
+
+````c
+nvic_enable_irq(EXTI0);   // 啟用 NVIC 的 EXTI0 IRQ（IRQn = 6）
+````
 
 ---
 

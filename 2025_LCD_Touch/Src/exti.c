@@ -24,7 +24,7 @@ void exti_init(void) {
 	exti_enable_falling_trigger(SYSCFG_EXTI0);
 	exti_set_interrupt_mask(SYSCFG_EXTI0, EXTI_INTERRUPT_ENABLE);
 
-	nvic_enable_irq(6);
+	nvic_enable_irq(EXTI0);
 }
 
 void exti_select_port(SYSCFG_EXTI_LINE exti_line, uint8_t port_code){
@@ -82,11 +82,10 @@ void exti_clear_pending_flag(SYSCFG_EXTI_LINE exti_line) {
     io_writeMask(reg_addr, data, data);
 }
 
-void nvic_enable_irq(uint32_t irqn) {
-    uint32_t reg_addr = 0xE000E100 + ((uint32_t)irqn / 32) * 4;
-    uint32_t data = 1U << ((uint32_t)irqn % 32);
-
-    io_writeMask(reg_addr, data, data);
+void nvic_enable_irq(IRQn irqn) {
+    uint32_t reg_addr = NVIC_ISER_BASE + ((uint32_t)irqn / 32) * 4;  // @param  irqn: IRQ number (Interrupt Request Number)
+    uint32_t bit_mask = 1U << ((uint32_t)irqn % 32);
+    io_writeMask(reg_addr, bit_mask, bit_mask);
 }
 
 void EXTI0_IRQHandler(void) {
