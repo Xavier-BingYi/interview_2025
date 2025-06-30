@@ -1032,9 +1032,9 @@ void usart_printf(const char *fmt, ...)
 
 ---
 
-## 4.1 中斷觸發與事件機制
+## 4.1 中斷觸發與事件機制 
 
-### ISR（Interrupt Service Routine）
+### 4.1.1 ISR（Interrupt Service Routine）
 
 ISR 是中斷發生時，CPU 所執行的特定函式。例如當：
 
@@ -1042,7 +1042,7 @@ ISR 是中斷發生時，CPU 所執行的特定函式。例如當：
 - USART 收到資料
 - 定時器時間到
 
-這些事件皆可觸發對應的 ISR。CPU 會暫停主程式執行，自動跳轉至 ISR 完成處理後，再返回主程式。
+這些事件皆可觸發對應的 ISR。CPU 會暫停主程式執行，自動跳轉至 ISR 處理對應事件，結束後再返回主程式。
 
 ---
 
@@ -1050,192 +1050,255 @@ STM32F4xx 系列支援使用 **`WFE`（Wait For Event）** 指令進入待命狀
 
 ---
 
-### 模式一：中斷模式（Interrupt Mode）+ `SEVONPEND`
+### 4.1.2 模式一：中斷模式（Interrupt Mode）
 
-此為最常見的模式，會產生 IRQ 並觸發 ISR。
+此為最常見的模式。
 
-#### 設定步驟：
+在 STM32 中，**EXTI（External Interrupt/Event Controller）** 是負責偵測 GPIO 邊緣變化的模組。當 EXTI 偵測到腳位變化後，會產生對應的 IRQ 編號並傳給 **NVIC（Nested Vectored Interrupt Controller）**。
 
-1. **EXTI**：
-   - 設定 `RTSR`（Rising Trigger Selection Register）：啟用上升緣觸發
-   - 設定 `FTSR`（Falling Trigger Selection Register）：啟用下降緣觸發
-   - 設定 `IMR`（Interrupt Mask Register）：允許中斷產生
+**NVIC** 是 Cortex-M4 處理器內建的中斷控制器，負責統一管理所有中斷來源，判斷是否啟用該中斷並交由 CPU 處理。當條件符合時，Cortex-M4 會自動進入中斷處理程序，跳轉至對應的 **ISR（Interrupt Service Routine，中斷服務函式）**。
 
-2. **NVIC**：
-   - 啟用對應 IRQ 中斷來源（如 `EXTI0_IRQn`）
-   - 設定中斷優先順序（可選）
+中斷觸發後，由 Cortex-M4 硬體自動完成：
+- 將主程式狀態（如 PC、xPSR）推入堆疊
+- 跳轉至對應 ISR 位址（由向量表定義）
 
-#### 中斷範例：
+此階段與處理過程**不需 EXTI 再參與**。
 
-| 中斷來源     | IRQ 編號 |
-|--------------|----------|
-| EXTI0        | 6        |
-| USART1       | 37       |
-| TIM2（定時器）| 28       |
+#### 優點：
 
-**優點**：可進行邏輯處理，適用於需要即時反應的情境，例如按鈕輸入、UART 收發、定時器觸發等。
+- 可直接撰寫 ISR 處理邏輯
+- 反應速度快，適用於即時控制場景
+- 常用於按鈕輸入、UART 收發、定時器觸發等
 
 ---
 
-### 模式二：事件模式（Event Mode）
+#### 中斷來源與對應 IRQ 編號範例：
 
-此模式不產生中斷（IRQ），也不跳入 ISR，僅送出一個「事件脈衝」。
+| 中斷來源       | IRQ 編號 |
+|----------------|----------|
+| EXTI0          | 6        |
+| USART1         | 37       |
+| TIM2（定時器） | 28       |
+
+---
+
+#### 中斷觸發處理流程：
+
+```
+[GPIO 腳位 (如 PA0) 邊緣變化]
+        ↓
+[EXTI 偵測到變化 → 產生對應 IRQ 編號（如 EXTI0 = IRQ6）]
+        ↓
+[NVIC 收到 IRQ，判斷是否啟用與優先順序是否允許]
+        ↓
+[若允許 → Cortex-M4 硬體自動跳轉對應的 ISR]
+        ↓
+[CPU 執行 ISR，執行完自動返回主程式]
+```
+
+---
 
 #### 設定步驟：
 
-1. **EXTI**：
-   - 設定 `RTSR` / `FTSR`：設定觸發邊緣
-   - 設定 `EMR`（Event Mask Register）：允許事件產生
+1. **EXTI 設定**：
+   - `RTSR`（Rising Trigger Selection Register）：啟用上升緣觸發
+   - `FTSR`（Falling Trigger Selection Register）：啟用下降緣觸發
+   - `IMR`（Interrupt Mask Register）：允許該 EXTI 線產生中斷
 
-#### 使用方式：
+2. **NVIC 設定**：
+   - 啟用對應 IRQ（如 `EXTI0_IRQn`）
+   - 設定中斷優先順序（可選）
 
-- 可與 `WFE` 配合，用於進入低功耗待命，等待事件喚醒。
-- 可作為模組間事件傳遞觸發，如：透過事件驅動 DMA。
+---
 
-**適用情境**：不需 CPU 處理，只需喚醒或觸發其他硬體模組的低功耗應用場景。
+### 4.1.3 模式二：事件模式（Event Mode）
+
+此為 EXTI 的另一種應用方式，**不會產生 IRQ、也不會觸發 ISR**，而是透過「event（事件脈衝）」傳遞給系統，用於 **喚醒 CPU 或觸發其他硬體模組（如 DMA、Timer 等）**。
+
+在此模式下，EXTI 偵測 GPIO 邊緣變化後，僅會產生 event，不會進入中斷處理流程。因此整個流程**不會經過 NVIC，也不需撰寫 ISR**。
+
+---
+
+#### 使用情境：
+
+- 配合 `WFE` 使用，實現低功耗待命與喚醒機制
+- GPIO 邊緣觸發 Timer、DMA 等模組動作，而不需要 CPU 介入
+- 系統中需要快速反應但不需軟體邏輯處理的交握情境
+- 適用於低功耗設計，不需進入 ISR 處理的應用場景
+
+---
+
+#### 運作流程：
+
+```
+[GPIO 腳位（如 PA0）邊緣變化]
+        ↓
+[EXTI 偵測事件 → 發出 event（非 IRQ）]
+        ↓
+[若有設定 EMR，則產生事件脈衝 → 可喚醒 CPU 或觸發硬體]
+        ↓
+[系統內部模組（WFE / DMA / Timer）接收事件，自行處理]
+```
+
+---
+
+#### 設定步驟：
+
+1. **EXTI 設定**：
+   - `RTSR` / `FTSR`：設定上升/下降緣觸發
+   - `EMR`（Event Mask Register）：允許產生 event（非中斷）
+   - **不需設定 `IMR`**，因為此模式不涉及中斷處理
 
 ---
 
 ## 4.2 中斷向量表
 
-中斷向量表（Interrupt Vector Table）是一張儲存在記憶體開頭（通常位於 `0x00000000`）的表格，用來定義當中斷發生時，CPU 要跳轉執行的函式位置。
+中斷向量表（Interrupt Vector Table）是一張儲存在記憶體開頭的表格，用來定義當中斷或例外（Exception）發生時，CPU 要跳轉執行的處理函式位址。  
+**預設位置為 `0x00000000`**，但實際上此位置是由處理器內部的 **VTOR（Vector Table Offset Register）** 指定，**可透過程式變更為其他位置（如 `0x08000000`，常見於 Bootloader 應用）**。
 
-Reference Manual 中第 12.2 節 *External interrupt/event controller* 所附表格，其各欄位說明如下：
+---
+
+### 4.2.1 向量表格式與來源說明
+
+根據 Reference Manual 第 12.2 節 *External interrupt/event controller* 所附的中斷表格，這是 MCU 啟動時放置於 `.isr_vector` 區段中的向量表內容。  
+該表格省略了 Initial SP（初始堆疊指標）與部分保留欄位，通常從 `Reset` 項開始顯示。其欄位意義如下：
 
 | 欄位名稱              | 說明 |
 |-----------------------|------|
-| **Position Priority** | 中斷編號（IRQ number），即 `NVIC_EnableIRQ(...)` 所需的參數 |
+| **Position Priority** | 中斷編號（IRQ number），即 `nvic_enable_irq(...)` 所需的參數 |
 | **Type of Priority**  | 優先順序型態，`fixed` 表示不可更改，`settable` 表示可透過暫存器設定 |
-| **Acronym**           | 中斷或異常的代號，例如 `EXTI0`, `HardFault`, `SysTick` 等 |
-| **Description**       | 中斷的簡要用途說明 |
-| **Address**           | 向量表中對應的記憶體位置（指向中斷服務函式的入口） |
+| **Acronym**           | 中斷或例外的代號，例如 `EXTI0`, `HardFault`, `SysTick` 等 |
+| **Description**       | 中斷來源的簡要用途說明 |
+| **Address**           | 向量表中儲存的處理函式位址（即 ISR 的入口位址） |
+
+> Cortex-M 架構中，向量表前 16 筆為核心例外（Exception），從第 16 筆起才是 NVIC 管理的 IRQ 中斷項目（如 EXTI、USART、TIM 等）。
 
 ---
 
-**以 `EXTI Line 0`為例：**
+### 4.2.2 EXTI 中斷範例與 ISR 實作
 
-- 它對應的 IRQ 編號是 **6**。
-- 對應的中斷服務函式為 `EXTI0_IRQHandler()`。
-- 在啟動檔（`startup.s`）中，向量表包含以下一行：
+以 EXTI Line 0 為例：
 
-```assembly
+- 對應的 IRQ 編號為 **6**
+- 對應的中斷服務函式名稱為 `EXTI0_IRQHandler()`
+- 在啟動檔（通常為 `startup_stm32f4xx.s`）中，向量表會包含以下項目：
+
+````assembly
 .word EXTI0_IRQHandler   /* EXTI Line0 interrupt */
-```
+````
 
-這表示當 IRQ6（EXTI0）發生時，CPU 將自動跳轉執行 `EXTI0_IRQHandler()` 函式。
-
-開發者只需在 C 程式中定義此函式，例如：
-
-```c
-void EXTI0_IRQHandler(void) {
-    // 中斷處理程式碼
-}
-```
-
-只要函式名稱正確，編譯器與連結器便會自動將其連接至中斷向量表，**無需額外註冊或配置**。
+這表示當 IRQ6（EXTI0）發生時，CPU 將從向量表讀出該位址，**自動跳轉執行 `EXTI0_IRQHandler()` 函式**。
 
 ---
 
-**補充說明**
+#### ISR 實作
 
-STM32 的啟動檔會在 `.isr_vector` 區段中，預先將每個中斷對應到正確的 IRQ 位置。開發者無需手動修改這張表，只需定義對應名稱的函式，即可完成中斷流程的銜接。
+開發者僅需在 C 程式中定義同名函式即可：
+
+````c
+void EXTI0_IRQHandler(void) {
+    // 中斷處理邏輯
+}
+````
+
+只要函式名稱正確，編譯器與連結器便會自動將其綁定至向量表中對應位置，**無需手動註冊或修改向量表**。
+
+---
+
+#### 補充說明
+
+STM32 的啟動檔會在 `.isr_vector` 區段中，預先將每個中斷對應到正確的 IRQ 位置。這份向量表通常由 **CMSIS 或 ST 官方啟動碼提供**，開發者只需正確定義對應名稱的 ISR，即可完成中斷流程整合。
 
 ---
 
 ## 4.3 EXTI 線與觸發機制
 
-EXTI 控制器內最多有 23 條「邊緣偵測線」（EXTI0 ~ EXTI22），每條線都能根據輸入訊號的變化，產生中斷（interrupt）或事件（event）請求。
+### 4.3.1 EXTI 基本功能與觸發原理
 
-每條 EXTI 線可**個別設定用途**（中斷或事件），並可選擇在 **上升沿、下降沿或雙邊緣** 觸發。這些設定分別對應下列暫存器：
+EXTI 控制器最多支援 23 條邊緣偵測線（EXTI0 ~ EXTI22），每條 EXTI 線皆可獨立設定成 **中斷（Interrupt）** 或 **事件（Event）** 模式，並可選擇以下任一種觸發方式：
 
-- `EXTI_RTSR`：設定上升沿觸發（Rising Trigger Selection Register）
-- `EXTI_FTSR`：設定下降沿觸發（Falling Trigger Selection Register）
+- 上升沿（Rising Edge）
+- 下降沿（Falling Edge）
+- 雙邊緣（Rising + Falling）
 
-是否允許該 EXTI 線產生中斷，則透過：
+對應設定的控制暫存器如下：
 
-- `EXTI_IMR`：中斷遮罩暫存器（Interrupt Mask Register）  
-  - 1 表允許中斷產生  
-  - 0 表遮罩中斷（不觸發）
+| 功能            | 暫存器名稱       | 說明                               |
+|-----------------|------------------|------------------------------------|
+| 上升沿觸發設定   | `EXTI_RTSR`       | 設為 1 表示此線會對上升沿產生反應  |
+| 下降沿觸發設定   | `EXTI_FTSR`       | 設為 1 表示此線會對下降沿產生反應  |
+| 是否允許產生中斷 | `EXTI_IMR`        | 中斷遮罩暫存器，1=允許，0=遮罩     |
+| 中斷掛起狀態     | `EXTI_PR`         | 中斷觸發時，對應 bit 會設為 1      |
 
-當中斷發生時，對應的「中斷掛起旗標」會被設為 1，紀錄此 EXTI 線已觸發中斷。該旗標儲存在：
-
-- `EXTI_PR`：掛起暫存器（Pending Register）
-
-> 注意：這個旗標 **不會自動清除**。你必須在對應的 ISR（例如 `EXTI0_IRQHandler()`）中，手動寫入 1 來清除它，否則中斷會持續重複觸發。
-
----
-
-### EXTI 線與 GPIO 的對應規則
-
-EXTI0 並不是固定對應到 PA0。事實上，**任一 Port（A~I）的第 0 腳位都可以對應到 EXTI0**，但不能對應到 EXTI1 或其他線。
-
-| EXTI 線 | 可對應腳位（同一號碼） |
-|---------|--------------------------|
-| EXTI0   | PA0, PB0, PC0, ..., PI0 |
-| EXTI1   | PA1, PB1, PC1, ..., PI1 |
-| ...     | ...                      |
-| EXTI15  | PA15, PB15, ..., PI15   |
-
-### 重要限制
-
-- 每條 EXTI 線 **一次只能對應到一個來源腳位**
-- 例如：你只能選擇 **PA0 或 PB0** 對應到 EXTI0，不可同時接兩個
-- 此對應關係由 `SYSCFG->EXTICR[n]` 暫存器設定（n = 0~3）
-
-### EXTI 對應 GPIO 的設定方式（以 EXTI0 為例）
-
-若你要讓 **PA0 對應 EXTI0**，則需設定：
-
-```c
-RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;  // 開啟 SYSCFG 時脈
-SYSCFG->EXTICR[0] &= ~(0xF << 0);      // 將 EXTI0 對應到 Port A（0x0）
-```
-
-| EXTICR 範圍     | 控制哪條 EXTI 線 | 對應的 GPIO 腳位 |
-|----------------|------------------|------------------|
-| EXTICR[0] bits [3:0]  | EXTI0 | Px0 |
-| EXTICR[0] bits [7:4]  | EXTI1 | Px1 |
-| EXTICR[0] bits [11:8] | EXTI2 | Px2 |
-| EXTICR[0] bits [15:12]| EXTI3 | Px3 |
+> 注意：`EXTI_PR` 中的掛起旗標（Pending Flag）**不會自動清除**，需在 ISR 中手動寫入 1 才能清除，否則中斷會持續觸發。
 
 ---
 
-這些設定完成後，EXTERNAL INTERRUPT 就能從對應的腳位觸發，並進入你所撰寫的中斷服務函式（ISR）。
+### 4.3.2 EXTI 與 GPIO 對應規則與設定
+
+#### EXTI 線與 GPIO 腳位的對應關係
+
+EXTI 線 **並非固定對應到某個 Port**。以 `EXTI0` 為例，它可選擇對應至 `PA0 ~ PI0` 中任一腳位（取決於實體封裝與功能支援），但同一時間只能對應一個。
+
+| EXTI 線  | 可對應的 GPIO 腳位     |
+|----------|-------------------------|
+| EXTI0    | PA0, PB0, PC0, ..., PI0 |
+| EXTI1    | PA1, PB1, PC1, ..., PI1 |
+| ...      | ...                     |
+| EXTI15   | PA15, PB15, ..., PI15   |
+
+#### 設定限制
+
+- 每條 EXTI 線 **同一時間僅可對應一個 GPIO 腳位**
+- 例如：EXTI0 可對應至 PA0 **或** PB0，但不可同時綁定
 
 ---
 
 ## 4.4 EXTI 中斷觸發實作：按鈕觸發印出訊息
 
-首先查看原理圖，可以發現開發板上的藍色按鈕接至 `PA0` 腳位。從電路設計來看，此按鈕為「上拉電阻 + 按下接地」的配置，也就是：
+開發板上的藍色按鈕連接至腳位 `PA0`，其電路設計為「上拉電阻 + 按下接地」的配置。也就是說：
 
-- 按鈕**未按下時為高電位**
-- 按下時，腳位被拉至**低電位**
+- **按鈕未按下時**，腳位維持在 **高電位（邏輯 1）**
+- **按鈕按下時**，腳位會被拉至 **低電位（邏輯 0）**
 
-因此建議設定為「**下降緣觸發**」（falling edge trigger），也就是當電位從高轉低時產生中斷。
+因此，建議將 EXTI 設為「**下降緣觸發**（falling edge trigger）」，當使用者按下按鈕、電位從高轉低時，觸發中斷事件。
 
-按鈕觸發中斷的流程如下：
+按鈕觸發中斷的整體流程如下：
 
-1. **GPIO 腳位邊緣變化**（如按下按鈕）
-2. **EXTI 偵測到變化並產生中斷事件**
-3. **NVIC 接收到對應 IRQ 並判定可處理**
-4. **CPU 跳轉至 ISR（中斷服務函式）執行**
+```text
+GPIO 腳（如 PA0）
+  ↓  
+EXTI 邊緣偵測器（RTSR/FTSR）
+  ↓  
+IMR（允許或遮罩）
+  ↓  
+NVIC 傳送 IRQ 給 CPU
+  ↓  
+CPU 跳轉執行 ISR
+```
 
-因此，我們除了要設定 EXTI 模組產生中斷，也必須在 **NVIC 中啟用對應的 IRQ 中斷來源（例如 `EXTI0_IRQn`）**，並撰寫對應的 **中斷服務函式（ISR）** 來處理按鈕事件，例如印出 `"Button Pressed!"`。
+為完成上述流程，需依序完成以下設定：
+
+1. 將 PA0 設定為輸入模式  
+2. 將 EXTI0 對應至 PA0  
+3. 設定邊緣觸發條件與開啟中斷遮罩（IMR）  
+4. 在 NVIC 中啟用對應 IRQ（EXTI0_IRQn，編號 6）  
+5. 撰寫對應的 ISR，並於其中清除中斷掛起旗標  
 
 ---
 
-### 步驟一：開啟 Port A 時脈並設定 PA0 為輸入模式
+### 4.4.1 GPIO 與 EXTI 初始化（PA0 作為輸入）
+
+在 EXTI 中斷中，GPIO 腳位作為「邊緣偵測輸入」，無需設定為 Alternate Function（AF），僅需將其設為輸入模式即可：
 
 ```c
 rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);                   // 啟用 GPIOA 時脈
 gpio_set_mode(GPIOA_BASE, GPIO_PIN_0, GPIO_MODE_INPUT);    // 將 PA0 設為輸入模式
 ```
 
-PA0 不需設定為 alternate function，因為 EXTI 使用的是 GPIO 輸入邊緣偵測，不走 AF。
-
 ---
 
-### 步驟二：設定 SYSCFG，將 EXTI0 對應到 PA0
+### 4.4.2 將 EXTI0 對應至 PA0（SYSCFG 設定）
 
 EXTI 控制器的每一條線（EXTI0 ~ EXTI15）都需指定其對應的 GPIO 腳位，這項對應關係是透過 `SYSCFG_EXTICR` 暫存器來設定的。
 
@@ -1278,7 +1341,7 @@ exti_select_port(SYSCFG_EXTI0, SYSCFG_EXTICR_PORTA);      // 將 EXTI0 對應至
 
 ---
 
-### 步驟三：設定邊緣觸發方式與中斷遮罩
+### 4.4.3 設定下降沿觸發與開啟中斷遮罩
 
 #### 邊緣觸發設定
 
@@ -1309,26 +1372,12 @@ void exti_enable_falling_trigger(SYSCFG_EXTI_LINE exti_line) {
 
 #### 中斷遮罩設定：EXTI_IMR
 
-`IMR` 是 **Interrupt Mask Register（中斷遮罩暫存器）**，用來控制哪一條 EXTI 線允許產生中斷（IRQ），哪一條被遮罩。
+`IMR`（Interrupt Mask Register，中斷遮罩暫存器）用來控制哪一條 EXTI 線允許產生中斷（IRQ），哪一條會被遮罩。
 
-如果不設定 IMR，即使 EXTI 偵測到訊號變化，也 **無法觸發中斷服務函式（ISR）**。  
-以下為中斷遮罩控制流程的示意：
+若未設定 IMR，則即使 EXTI 偵測到邊緣變化，也**不會觸發對應的中斷服務函式（ISR）**。  
+例如：若 `IMR[0] = 0`，即使 `PA0` 有訊號變化，最終也不會送出 IRQ 中斷請求。
 
-```text
-GPIO 腳（如 PA0）
-  ↓  
-EXTI 邊緣偵測器（RTSR/FTSR）
-  ↓  
-IMR（允許或遮罩）
-  ↓  
-NVIC 傳送 IRQ 給 CPU
-  ↓  
-CPU 跳轉執行 ISR
-```
-
-若 IMR 對應位元未打開，例如 `IMR[0] = 0`，即使 PA0 有訊號觸發，最終也不會觸發中斷。
-
-以下函式可設定是否啟用中斷遮罩功能：
+以下為設定 IMR 是否啟用的控制函式：
 
 ```c
 void exti_set_interrupt_mask(SYSCFG_EXTI_LINE exti_line, EXTI_InterruptMask enable) {
@@ -1342,33 +1391,43 @@ void exti_set_interrupt_mask(SYSCFG_EXTI_LINE exti_line, EXTI_InterruptMask enab
 
 ---
 
-### 步驟四：啟用 NVIC 中斷
+### 4.4.4 NVIC 中斷啟用
 
-當 EXTI 偵測到邊緣事件且未被 IMR 遮罩後，會送出 IRQ 給 NVIC。此時必須在 **NVIC（中斷控制器）中啟用對應中斷來源**，否則 CPU 將不會跳轉至中斷服務函式（ISR）執行。
+當 EXTI 偵測到腳位的邊緣事件且對應中斷未被 IMR 遮罩後，會送出 IRQ 給 NVIC。此時必須在 **NVIC（Nested Vectored Interrupt Controller，中斷控制器）中啟用對應的中斷來源**，否則 CPU 將無法跳轉至中斷服務函式（ISR）執行。
 
-STM32F429 的 NVIC 模組並非 ST 自行實作，而是由 ARM Cortex-M4 處理器核心內建支援。根據《Cortex-M4 User Guide》第 4.2 節 *Nested Vectored Interrupt Controller* 說明，NVIC 的中斷啟用暫存器（**NVIC_ISER**，Interrupt Set-Enable Registers）起始位址為：
+---
 
-```
-NVIC_ISER0：0xE000E100
-```
+#### NVIC 結構與 IRQ 編號對應方式
 
-每個 `NVIC_ISERx` 暫存器為 32-bit 寬度，可控制 32 個中斷通道對應的啟用狀態：
+STM32F429 所使用的 NVIC 模組由 ARM Cortex-M4 核心內建提供，而非 ST 自行設計。根據《Cortex-M4 User Guide》第 4.2 節 *Nested Vectored Interrupt Controller* 說明：
 
-- `ISER0` → IRQ 0 ~ 31 → 0xE000E100
-- `ISER1` → IRQ 32 ~ 63 → 0xE000E104
-- `ISER2` → IRQ 64 ~ 95 → 0xE000E108  
-- 以此類推，每組位址間隔為 4 bytes。
+> 中斷啟用的暫存器為 `NVIC_ISERx`（Interrupt Set-Enable Registers）  
+> 每組為 32-bit 寬度，控制 32 個中斷來源  
+> 起始位址為：`0xE000E100`
 
-若我們欲啟用 `EXTI0`（對應腳位為 `PA0`），其中斷來源為 `EXTI0_IRQn`，IRQ 編號為 **6**，即可透過以下方式判斷對應哪一組 ISER 暫存器：
+| 暫存器名稱 | 可控制的 IRQ 範圍 | 位址         |
+|------------|-------------------|--------------|
+| ISER0      | IRQ 0 ~ 31        | 0xE000E100   |
+| ISER1      | IRQ 32 ~ 63       | 0xE000E104   |
+| ISER2      | IRQ 64 ~ 95       | 0xE000E108   |
+| ...        | ...               | ...          |
+
+每組暫存器間間隔 4 bytes。
+
+---
+
+#### EXTI0 IRQ 編號對應 ISER 暫存器
+
+欲啟用 `EXTI0`（對應腳位為 `PA0`），其中斷來源為 `EXTI0_IRQn`，IRQ 編號為 **6**，即可透過以下方式判斷對應哪一組 ISER 暫存器：
 
 - 例如 `irqn = 6`：`6 / 32 = 0` → 落在 `ISER0`
 - 例如 `irqn = 37`：`37 / 32 = 1` → 落在 `ISER1`
 
 ---
 
-#### 啟用 NVIC 中斷
+#### 通用 NVIC 中斷啟用函式
 
-以下為通用的 NVIC 中斷啟用函式，可根據 IRQ 編號自動計算對應位址並啟用該中斷：
+下列函式可根據 IRQ 編號自動計算對應暫存器位址與位元位置，進行中斷啟用：
 
 ````c
 #define NVIC_ISER_BASE  0xE000E100U  // NVIC Interrupt Set-Enable Registers (ISER0 base)
@@ -1395,17 +1454,17 @@ void nvic_enable_irq(IRQn irqn) {
 }
 ````
 
-#### 主程式啟用範例
+---
 
-若要啟用 EXTI0 中斷，可在初始化階段加入：
+#### 實際使用範例
 
-````c
+```c
 nvic_enable_irq(EXTI0);   // 啟用 NVIC 的 EXTI0 IRQ（IRQn = 6）
-````
+```
 
 ---
 
-### 步驟五：撰寫 ISR：EXTI0_IRQHandler
+### 4.4.5 ISR：撰寫中斷服務函式
 
 每一個 IRQ 都對應一個「中斷服務函式」，EXTI0 對應的函式為 `EXTI0_IRQHandler()`。
 
@@ -1433,3 +1492,5 @@ void exti_clear_pending_flag(SYSCFG_EXTI_LINE exti_line) {
 > 注意：**若未清除 EXTI_PR 的 pending bit，則會一直觸發中斷，導致 CPU 反覆進入 ISR。**
 
 ---
+
+# 5. LCD 控制實作與顯示測試

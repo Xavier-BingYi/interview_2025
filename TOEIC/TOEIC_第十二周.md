@@ -540,3 +540,125 @@ Should you have any questions, please contact the Finance Help Desk.
    (C) Human Resources  
    (D) Administrative Manager  
    **答案：B**
+
+---
+
+# 📘 TOEIC 第十二週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The revised compensation package includes a substantial ______ bonus for senior staff.  
+   (A) tenure (B) incentive (C) affiliate (D) premium  
+
+2. Please review the contract's ______ to ensure all clauses are acceptable.  
+   (A) projection (B) stipulations (C) endorsement (D) turnover  
+
+3. The company aims to reduce costs without ______ quality.  
+   (A) jeopardizing (B) exceeding (C) mandating (D) forecasting  
+
+4. Following the resignation, there was a temporary ______ in leadership.  
+   (A) benchmark (B) outreach (C) vacancy (D) subsidy  
+
+5. The compliance department initiated a full ______ of procurement records.  
+   (A) audit (B) dividend (C) inventory (D) mandate  
+
+6. We are seeking to ______ our logistics network by partnering with local firms.  
+   (A) streamline (B) prolong (C) offset (D) waive  
+
+7. Their growth strategy focuses on regional ______ and customer retention.  
+   (A) overhead (B) expansion (C) contingency (D) retention  
+
+8. He was offered a full-time ______ after completing his internship.  
+   (A) assignment (B) tenure (C) placement (D) contract  
+
+9. The final price is subject to ______ depending on market demand.  
+   (A) depreciation (B) speculation (C) fluctuation (D) appraisal  
+
+10. The CFO outlined key ______ to guide the next fiscal year.  
+    (A) liabilities (B) benchmarks (C) subsidiaries (D) transactions  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. Not until the final audit ______ submitted did the CFO sign off.  
+    (A) is (B) was (C) had (D) were  
+
+12. Had they verified the data earlier, the error ______ prevented.  
+    (A) is (B) was (C) would be (D) could have been  
+
+13. We don’t know ______ the client will accept the new terms.  
+    (A) whether (B) what (C) who (D) how  
+
+14. Seldom ______ such a comprehensive report from that department.  
+    (A) we receive (B) received we (C) have we received (D) do we received  
+
+15. It’s unclear ______ the meeting has been postponed.  
+    (A) why (B) what (C) that (D) if  
+
+16. Only after extensive revisions ______ approved by the board.  
+    (A) was the proposal (B) the proposal was (C) the board approved (D) it was  
+
+17. What the board needs now ______ clear projections for Q4.  
+    (A) is (B) are (C) has been (D) were  
+
+18. The CFO suggested that the team ______ the report by Friday.  
+    (A) completes (B) complete (C) completed (D) has completed  
+
+19. ______ you have questions, feel free to contact legal.  
+    (A) As if (B) Whether (C) Should (D) Unless  
+
+20. What surprised investors most was ______ the figures had changed.  
+    (A) when (B) how (C) whether (D) what  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+````text
+To: All Department Leads  
+From: Strategic Planning Office  
+Subject: FY Budget Adjustment Protocols
+
+Due to recent changes in projected revenue, the executive board has approved a mid-year adjustment to departmental budgets. Starting next week, all new expenditure requests must be submitted through the Central Budgeting System (CBS) for pre-approval.
+
+Departments are advised to review their remaining quarterly allocations. Any overspending without prior clearance will result in delayed reimbursement or possible retraction of funds.
+
+Training on the CBS platform is scheduled for this Thursday. Attendance is mandatory for all team leads involved in budgeting activities.
+````
+
+---
+
+21. What prompted the new protocol?  
+   (A) New software deployment  
+   (B) Forecasted revenue changes  
+   (C) Regulatory issues  
+   (D) Leadership changes  
+
+22. What is now required for all new expenses?  
+   (A) Executive approval  
+   (B) Managerial sign-off  
+   (C) Centralized pre-approval  
+   (D) HR authorization  
+
+23. What happens if a department spends without clearance?  
+   (A) Extra funds will be granted  
+   (B) The request will be denied  
+   (C) Reimbursement may be delayed or revoked  
+   (D) The budget will be increased  
+
+24. Who must attend the CBS training?  
+   (A) All employees  
+   (B) Finance department only  
+   (C) Department leads  
+   (D) Project managers  
+
+25. When will the CBS system take effect?  
+   (A) Immediately  
+   (B) This Thursday  
+   (C) Next week  
+   (D) Next month  
+
+---
