@@ -40,6 +40,20 @@ int main(void)
 	usart_write(USART1_BASE, '\r');
 	usart_write(USART1_BASE, '\n');
 
+	/*
+	ltdc_gpio_init();             // ✅ Step 1: LTDC 所有 RGB 腳設為 AF14（PJ/PK/PI 為主）
+	sdram_gpio_init();            // ✅ Step 2: FMC/SDRAM 所有控制腳設為 AF12（PD/PE/PF/PG/PH）
+
+	sdram_init();                 // ✅ Step 3: 正確設定 SDCR[0] / SDTR[0] → Bank1 初始化
+	test_sdram_single_access();   // ✅ Step 4: 嘗試寫入 SDRAM[0] 並讀出，確認硬體真的可用
+	sdram_self_test();            // ✅ Step 5: 批量測試 SDRAM 讀寫功能（你已有函式）
+
+	ltdc_clock_init();            // ✅ Step 6: （建議補上）設定 pixel clock 來源（使用 PLLSAI）
+	ltdc_init();                  // ✅ Step 7: 初始化 LTDC 圖層與解析度、frame buffer 設定
+	lcd_clear_red();              // ✅ Step 8: 將整個 SDRAM frame buffer 填上紅色（0xF800）
+	ltdc_start_display();         // ✅ Step 9: 啟動 shadow reload，開始送畫面
+	*/
+
     while (1)
     {
     	usart_printf("-123 + 23 = 100.00; %d \r\n",21);
