@@ -13,17 +13,18 @@
 #include <mem_map.h>
 #include <exti.h>
 
-void exti_init(void) {
-
+void exti_gpio_init(void){
 	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
 	gpio_set_mode(GPIOA_BASE, GPIO_PIN_0, GPIO_MODE_INPUT);
+}
+
+void exti_init(void) {
+	exti_gpio_init();
 
 	rcc_enable_apb2_clock(RCC_APB2EN_SYSCFG);
 	exti_select_port(SYSCFG_EXTI0, SYSCFG_EXTICR_PORTA);
-
 	exti_enable_falling_trigger(SYSCFG_EXTI0);
 	exti_set_interrupt_mask(SYSCFG_EXTI0, EXTI_INTERRUPT_ENABLE);
-
 	nvic_enable_irq(EXTI0);
 }
 

@@ -7,9 +7,11 @@
 C_SRCS += \
 ../Src/exti.c \
 ../Src/gpio.c \
+../Src/ltdc.c \
 ../Src/main.c \
 ../Src/mem_io.c \
 ../Src/rcc.c \
+../Src/sdram.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c \
 ../Src/usart.c 
@@ -17,9 +19,11 @@ C_SRCS += \
 OBJS += \
 ./Src/exti.o \
 ./Src/gpio.o \
+./Src/ltdc.o \
 ./Src/main.o \
 ./Src/mem_io.o \
 ./Src/rcc.o \
+./Src/sdram.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o \
 ./Src/usart.o 
@@ -27,9 +31,11 @@ OBJS += \
 C_DEPS += \
 ./Src/exti.d \
 ./Src/gpio.d \
+./Src/ltdc.d \
 ./Src/main.d \
 ./Src/mem_io.d \
 ./Src/rcc.d \
+./Src/sdram.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d \
 ./Src/usart.d 
@@ -42,7 +48,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/exti.cyclo ./Src/exti.d ./Src/exti.o ./Src/exti.su ./Src/gpio.cyclo ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/mem_io.cyclo ./Src/mem_io.d ./Src/mem_io.o ./Src/mem_io.su ./Src/rcc.cyclo ./Src/rcc.d ./Src/rcc.o ./Src/rcc.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/usart.cyclo ./Src/usart.d ./Src/usart.o ./Src/usart.su
+	-$(RM) ./Src/exti.cyclo ./Src/exti.d ./Src/exti.o ./Src/exti.su ./Src/gpio.cyclo ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/ltdc.cyclo ./Src/ltdc.d ./Src/ltdc.o ./Src/ltdc.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/mem_io.cyclo ./Src/mem_io.d ./Src/mem_io.o ./Src/mem_io.su ./Src/rcc.cyclo ./Src/rcc.d ./Src/rcc.o ./Src/rcc.su ./Src/sdram.cyclo ./Src/sdram.d ./Src/sdram.o ./Src/sdram.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/usart.cyclo ./Src/usart.d ./Src/usart.o ./Src/usart.su
 
 .PHONY: clean-Src
 

@@ -545,3 +545,237 @@ Further details will be provided in Monday’s briefing.
    **答案：C**
 
 ---
+
+# 📘 TOEIC 第十三週練習題（共 25 題）
+
+## 一、單字填空（Vocabulary - 10 題）
+
+1. The international ______ was formed to coordinate energy research.  
+   (A) stakeholder (B) liaison (C) consortium (D) appraisal  
+
+2. The ongoing economic ______ has caused several firms to restructure.  
+   (A) downturn (B) influx (C) hedge (D) discrepancy  
+
+3. All employees must strictly ______ the updated safety guidelines.  
+   (A) mitigate (B) enforce (C) waive (D) gauge  
+
+4. Any cancellation will result in a ______ of your initial deposit.  
+   (A) backlog (B) remittance (C) forfeit (D) liaison  
+
+5. The company detected an asset ______ during the audit.  
+   (A) impairment (B) parity (C) clause (D) redundancy  
+
+6. Our software contains proprietary code and is protected by ______ rights.  
+   (A) turnover (B) proprietary (C) consensus (D) equity  
+
+7. Clients should send their ______ no later than the 10th of each month.  
+   (A) itinerary (B) remittance (C) appraisal (D) ledger  
+
+8. If production continues to ______, we may fail to meet quarterly targets.  
+   (A) underperform (B) streamline (C) expedite (D) gauge  
+
+9. A new ______ on imported steel raised manufacturing costs significantly.  
+   (A) tariff (B) audit (C) subsidy (D) quota  
+
+10. The discrepancy in numbers prompted further financial ______.  
+    (A) influx (B) scrutiny (C) overhaul (D) waiver  
+
+---
+
+## 二、文法選擇（Grammar - 10 題）
+
+11. ______ the schedule properly, we completed the task ahead of time.  
+    (A) Planning (B) Planned (C) Plan (D) Have planned  
+
+12. ______ by the board, the new policy will go into effect next week.  
+    (A) Approve (B) Approved (C) Approving (D) Approval  
+
+13. ______ the documents, he submitted the request.  
+    (A) Complete (B) Completing (C) Completed (D) Having completed  
+
+14. ______ properly, this device can last over ten years.  
+    (A) Maintain (B) Maintaining (C) Maintains (D) Maintained  
+
+15. ______ the delay, the shipment arrived in good condition.  
+    (A) Experiencing (B) Experience (C) Experienced (D) Having experienced  
+
+16. The CEO explained the strategy, ______ everyone’s concerns.  
+    (A) address (B) addressing (C) addressed (D) addresses  
+
+17. ______ too quickly, the message caused confusion.  
+    (A) Delivering (B) Delivered (C) Deliver (D) Delivers  
+
+18. The team left early, ______ the manager to finish alone.  
+    (A) leaves (B) leave (C) leaving (D) left  
+
+19. ______ the market trends, they revised their forecast.  
+    (A) Observing (B) Observe (C) Observes (D) Observed  
+
+20. ______ by the poor results, the department launched a review.  
+    (A) Disappointed (B) Disappointing (C) Disappoints (D) Disappointedly  
+
+---
+
+## 三、閱讀理解（Reading - 5 題）
+
+### 閱讀短文
+
+````text
+To: All Regional Teams  
+From: Corporate Communications  
+Subject: Brand Repositioning Strategy
+
+Due to changing market dynamics and consumer behavior, our marketing division will initiate a brand repositioning campaign this quarter. This includes revised messaging, updated visual assets, and an emphasis on digital outreach.
+
+Departments are asked to streamline all external communications to align with the new branding. A media kit and style guide will be distributed next Monday.
+
+Managers are responsible for overseeing compliance across their teams. All rollout activity will be reviewed under quarterly brand audits.
+````
+
+---
+
+21. What is the purpose of the email?  
+   (A) To announce budget increases  
+   (B) To notify staff of a branding initiative  
+   (C) To promote internal training  
+   (D) To request feedback on customer service  
+
+22. What does the campaign involve?  
+   (A) Redesigning the product itself  
+   (B) Launching a new software  
+   (C) Updating branding and outreach strategies  
+   (D) Hiring a new marketing team  
+
+23. What are teams instructed to do?  
+   (A) Ignore external messages  
+   (B) Focus on logistics only  
+   (C) Align communications with new branding  
+   (D) Stop all advertising  
+
+24. What will be provided to assist with the transition?  
+   (A) Customer surveys  
+   (B) Performance bonuses  
+   (C) A media kit and guide  
+   (D) Technical manuals  
+
+25. What will happen each quarter?  
+   (A) Performance bonuses will be paid  
+   (B) Brand audits will be conducted  
+   (C) Products will be rebranded again  
+   (D) New regions will be launched  
+
+---
+
+## 📘 TOEIC 第十三週練習題答案
+
+| 題號 | 答案 |
+|------|------|
+| 1    | C    |
+| 2    | A    |
+| 3    | B    |
+| 4    | C    |
+| 5    | A    |
+| 6    | D    |
+| 7    | B    |
+| 8    | A    |
+| 9    | A    |
+| 10   | B    |
+| 11   | A    |
+| 12   | B    |
+| 13   | D    |
+| 14   | D    |
+| 15   | C    |
+| 16   | B    |
+| 17   | C    |
+| 18   | A    |
+| 19   | A    |
+| 20   | B    |
+| 21   | B    |
+| 22   | C    |
+| 23   | C    |
+| 24   | C    |
+| 25   | B    |
+
+---
+
+## 📝 題目詳解
+
+### 一、單字填空（Vocabulary）
+
+1. **consortium**：聯盟、協會，常見於跨國或產業合作，選 (C)。  
+   ➤ The international **consortium** was formed…
+
+2. **downturn**：經濟下滑，與結構調整搭配自然，選 (A)。  
+   ➤ The economic **downturn** has caused…
+
+3. **enforce**：執行、實施，搭配規範與政策最恰當，選 (B)。  
+   ➤ Must strictly **enforce** safety guidelines.
+
+4. **forfeit**：喪失、沒收，描述取消預訂損失，選 (C)。  
+   ➤ Will result in a **forfeit** of deposit.
+
+5. **impairment**：資產減損，常用於會計或審計術語，選 (A)。  
+   ➤ Detected an asset **impairment**…
+
+6. **equity**：股權、權益，搭配 proprietary code 與權利最適切，選 (D)。  
+   ➤ Protected by **equity** rights.
+
+7. **remittance**：匯款，與 send 與時間搭配自然，選 (B)。  
+   ➤ Clients should send their **remittance**…
+
+8. **underperform**：表現不佳，用於描述產線表現，選 (A)。  
+   ➤ Production continues to **underperform**…
+
+9. **tariff**：關稅，與製造成本增加相關，選 (A)。  
+   ➤ A new **tariff** raised manufacturing costs.
+
+10. **scrutiny**：詳細審查，與財務數據、差異搭配自然，選 (B)。  
+    ➤ Prompted further financial **scrutiny**.
+
+---
+
+### 二、文法選擇（Grammar）
+
+11. **Planning**：現在分詞作副詞，表示條件背景，選 (A)。  
+    ➤ **Planning** the schedule properly...
+
+12. **Approved**：過去分詞作形容詞，修飾主詞，選 (B)。  
+    ➤ **Approved** by the board...
+
+13. **Having completed**：完成式分詞，表示動作完成，選 (D)。  
+    ➤ **Having completed** the documents...
+
+14. **Maintained**：被動語態的過去分詞，表示條件，選 (D)。  
+    ➤ **Maintained** properly...
+
+15. **Having experienced**：完成式分詞，說明過去經歷，選 (D)。  
+    ➤ **Having experienced** the delay...
+
+16. **addressing**：現在分詞表示同時發生，選 (B)。  
+    ➤ CEO explained the strategy, **addressing**…
+
+17. **Delivered**：被動語態開頭，修飾句主詞，選 (B)。  
+    ➤ **Delivered** too quickly…
+
+18. **leaving**：現在分詞表示附帶結果，選 (C)。  
+    ➤ The team left early, **leaving** the manager…
+
+19. **Observing**：現在分詞表示同時進行，選 (A)。  
+    ➤ **Observing** the market trends...
+
+20. **Disappointed**：過去分詞修飾主詞，表主動感受，選 (A)。  
+    ➤ **Disappointed** by the poor results...
+
+---
+
+### 三、閱讀理解（Reading）
+
+**短文主題：品牌再定位計畫與部門遵循指引**
+
+21. **(B)**：文中第一句即說明為 brand repositioning。  
+22. **(C)**：提到 messaging、assets、digital outreach，屬於品牌更新策略。  
+23. **(C)**：明確指示要 align communications。  
+24. **(C)**：文中指出 media kit and style guide 將提供。  
+25. **(B)**：明確寫出「will be reviewed under quarterly brand audits」。
+
+---

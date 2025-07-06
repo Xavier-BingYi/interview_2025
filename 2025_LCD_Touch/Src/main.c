@@ -22,6 +22,8 @@
 #include <rcc.h>
 #include <usart.h>
 #include <exti.h>
+#include <ltdc.h>
+#include <sdram.h>
 
 int main(void)
 {
@@ -40,10 +42,11 @@ int main(void)
 	usart_write(USART1_BASE, '\r');
 	usart_write(USART1_BASE, '\n');
 
-	/*
+
 	ltdc_gpio_init();             // ✅ Step 1: LTDC 所有 RGB 腳設為 AF14（PJ/PK/PI 為主）
 	sdram_gpio_init();            // ✅ Step 2: FMC/SDRAM 所有控制腳設為 AF12（PD/PE/PF/PG/PH）
 
+	/*
 	sdram_init();                 // ✅ Step 3: 正確設定 SDCR[0] / SDTR[0] → Bank1 初始化
 	test_sdram_single_access();   // ✅ Step 4: 嘗試寫入 SDRAM[0] 並讀出，確認硬體真的可用
 	sdram_self_test();            // ✅ Step 5: 批量測試 SDRAM 讀寫功能（你已有函式）

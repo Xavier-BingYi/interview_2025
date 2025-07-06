@@ -13,23 +13,26 @@
 #include <usart.h>
 #include <stdbool.h>
 
+void usart_gpio_init(void)
+{
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_9, ALTERNATE_AF7);  // USART1_TX
+
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_10, ALTERNATE_AF7); // USART1_RX
+}
+
 void usart_init(void){
 	usart_rcc_enable(RCC_USART1EN);
-	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
-
-	gpio_set_mode(GPIOA_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
-	gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_9, ALTERNATE_AF7);  // USART1_TX
-
-	gpio_set_mode(GPIOA_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE);
-	gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_10, ALTERNATE_AF7); // USART1_RX
+	usart_gpio_init();
 
 	usart_cr1_write_bit(USART1_BASE, USART_CR1_UE, 1); // // Enable USART (UE = 1)
 	usart_cr1_write_bit(USART1_BASE, USART_CR1_M, 0); // Set word length to 8 bits (M = 0)
 	usart_cr2_write_bits(USART1_BASE, USART_CR2_STOP, 2, USART_STOP_1); // Set stop bits to 1 bit (STOP[1:0] = 00)
-
 	usart_cr1_write_bit(USART1_BASE, USART_CR1_OVER8, 0); // Set OverSampling by 16 (OVER8 = 0)
 	usart_set_baudrate(USART1_BASE, FCK_APB2, 9600); // Set baud rate to 9600 BPS (based on APB2 clock frequency)
-
 	usart_cr1_write_bit(USART1_BASE, USART_CR1_TE, 1); // Enable transmitter (TE = 1)
 
 }

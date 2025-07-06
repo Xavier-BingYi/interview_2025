@@ -1653,3 +1653,52 @@ STM32F429I-DISC1 開發板的 LCD 模組採用 **ILI9341 控制器**，並以 **
 本節將依序完成：
 1. 設定 LTDC 所需的 RGB 並行輸出腳為 **AF14**
 2. 設定 FMC 控制 SDRAM 所需的地址線與資料線腳位為 **AF12**
+
+### 5.2.1 LTDC GPIO 腳位初始化
+
+#### LTDC 的三個時脈區域（Clock Domain）
+
+LTDC 顯示控制器主要分為三個時脈區域，各自負責不同功能：
+
+---
+
+1. **AHB clock domain**：資料傳輸來源  
+   - 畫面資料來自 **SDRAM**（frame buffer）
+   - 透過 AHB 匯流排傳送至 LTDC 內部的 Layer FIFO 暫存區
+
+2. **APB2 clock domain**：控制設定與中斷通知  
+   - MCU 可透過 APB2 匯流排存取 LTDC 的控制暫存器與狀態暫存器
+   - 用於設定解析度、Layer 位置、像素格式、啟用參數等
+   - 同時提供中斷通知功能（畫面更新完成、FIFO 狀態、錯誤等）
+
+3. **Pixel clock domain**：畫面處理與輸出核心  
+   - 含圖層混合、像素格式轉換、抖動處理等模組，搭配 Timing Generator 產生畫面同步訊號
+   - 包含以下功能：
+     - **Layer FIFO**：兩層圖層暫存（每層 64×32-bit），可獨立啟用/關閉
+     - **Pixel Format Converter（PFC）**：像素格式統一轉換（如 RGB565、ARGB8888）
+     - **Blending Unit**：混合 Layer0 / Layer1 畫素資料（支援透明度混合）
+     - **Dithering Unit**：將高位元顏色轉換為較低位元輸出，避免顏色斷層
+     - **Timing Generator**：產生畫面時序訊號，如 `HSYNC`、`VSYNC`、`DE`、`CLK`
+   - 最終輸出資料經由 RGB 並行介面（如下所示）送往 LCD 面板
+
+---
+
+#### 輸出訊號（通往 LCD 面板）
+
+| 訊號腳位         | 說明 |
+|------------------|------|
+| `LCD_HSYNC`      | 水平同步訊號 |
+| `LCD_VSYNC`      | 垂直同步訊號 |
+| `LCD_DE`         | Data Enable：資料傳輸使能 |
+| `LCD_CLK`        | Dot Clock：像素時脈 |
+| `LCD_R[7:0]`     | 紅色通道（8 bit） |
+| `LCD_G[7:0]`     | 綠色通道（8 bit） |
+| `LCD_B[7:0]`     | 藍色通道（8 bit） |
+
+這些訊號對應至 STM32 GPIO 所設定的 **AF14 腳位功能**，會在 `ltdc_gpio_init()` 中統一設定，最終將畫面資料輸出至 LCD-TFT 面板。
+
+---
+
+#### 初始化設定
+
+將所有 LTDC 所需的 RGB、控制訊號腳位設定為 Alternate Function（AF14），以啟用 RGB 並行輸出模式。
