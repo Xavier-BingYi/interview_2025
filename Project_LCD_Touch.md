@@ -1699,6 +1699,456 @@ LTDC 顯示控制器主要分為三個時脈區域，各自負責不同功能：
 
 ---
 
-#### 初始化設定
+#### LCD RGB 資料線 GPIO 初始化設定
 
-將所有 LTDC 所需的 RGB、控制訊號腳位設定為 Alternate Function（AF14），以啟用 RGB 並行輸出模式。
+根據 LCD 模組 **FRD240C48003-B** 的原理圖可知，其 RGB 各通道僅接出 6 條資料腳位（R0~R5、G0~G5、B0~B5），表示該模組採用 **RGB666（18-bit）** 顯示格式。此格式常見於嵌入式系統，能有效節省 GPIO 腳位，同時提供良好的顯示品質。
+
+---
+
+##### 顏色格式比較：
+
+| 格式     | 每通道位元 | 總位元數 | 說明                             |
+|----------|-------------|-----------|----------------------------------|
+| RGB888   | 8 bit × 3   | 24 bits   | 真正全彩顯示，每通道 256 色階     |
+| RGB666   | 6 bit × 3   | 18 bits   | 常見於 MCU 應用，節省 GPIO 腳位   |
+| RGB565   | 5-6-5       | 16 bits   | 最省資源格式，與 MCU 相容性最佳   |
+
+---
+
+##### Red 通道（R0~R5）：
+
+| 資料位元 | STM32 GPIO |
+|----------|------------|
+| R0       | PC10       |
+| R1       | PB0        |
+| R2       | PA11       |
+| R3       | PA12       |
+| R4       | PB1        |
+| R5       | PG6        |
+| R6~R7    | 未接       |
+
+---
+
+##### Green 通道（G0~G5）：
+
+| 資料位元 | STM32 GPIO |
+|----------|------------|
+| G0       | PA6        |
+| G1       | PG10       |
+| G2       | PB10       |
+| G3       | PB11       |
+| G4       | PC7        |
+| G5       | PD3        |
+| G6~G7    | 未接       |
+
+---
+
+##### Blue 通道（B0~B5）：
+
+| 資料位元 | STM32 GPIO |
+|----------|------------|
+| B0       | PD6        |
+| B1       | PG11       |
+| B2       | PG12       |
+| B3       | PA3        |
+| B4       | PB8        |
+| B5       | PB9        |
+| B6~B7    | 未接       |
+
+---
+
+##### GPIO 初始化範例程式：
+
+````C
+void ltdc_gpio_init(void) 
+{
+    // Enable GPIO clocks
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOB);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOC);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOD);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOG);
+
+    // RED pins (R0~R5)
+    gpio_set_mode(GPIOC_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE); // R0
+    gpio_set_alternate_function(GPIOC_BASE, GPIO_PIN_10, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_0, GPIO_MODE_ALTERNATE); // R1
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_0, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_11, GPIO_MODE_ALTERNATE); // R2
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_11, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_12, GPIO_MODE_ALTERNATE); // R3
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_12, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_1, GPIO_MODE_ALTERNATE); // R4
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_1, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_6, GPIO_MODE_ALTERNATE); // R5
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_6, ALTERNATE_AF14);
+
+    // GREEN pins (G0~G5)
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_6, GPIO_MODE_ALTERNATE); // G0
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_6, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE); // G1
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_10, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE); // G2
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_10, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_11, GPIO_MODE_ALTERNATE); // G3
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_11, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOC_BASE, GPIO_PIN_7, GPIO_MODE_ALTERNATE); // G4
+    gpio_set_alternate_function(GPIOC_BASE, GPIO_PIN_7, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_3, GPIO_MODE_ALTERNATE); // G5
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_3, ALTERNATE_AF14);
+
+    // BLUE pins (B0~B5)
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_6, GPIO_MODE_ALTERNATE); // B0
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_6, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_11, GPIO_MODE_ALTERNATE); // B1
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_11, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_12, GPIO_MODE_ALTERNATE); // B2
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_12, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_3, GPIO_MODE_ALTERNATE); // B3
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_3, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_8, GPIO_MODE_ALTERNATE); // B4
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_8, ALTERNATE_AF14);
+
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE); // B5
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_9, ALTERNATE_AF14);
+}
+````
+
+---
+
+#### LCD 同步與資料控制 GPIO 初始化設定
+
+LCD 顯示需要除畫素資料（RGB）外，還需搭配數條 **時序控制訊號（Timing Control Signals）**，用來同步畫面掃描與資料輸出。
+
+這些訊號不屬於畫面內容本身，而是協助 LCD 正確更新畫面的重要時脈與同步腳位。
+
+---
+
+##### 控制訊號對應關係：
+
+| 原理圖名稱 | LTDC 訊號名稱 | 功能說明         | STM32 GPIO 腳位 |
+|------------|----------------|------------------|------------------|
+| HSYNC      | `LCD_HSYNC`    | 水平同步訊號     | `PC6`           |
+| VSYNC      | `LCD_VSYNC`    | 垂直同步訊號     | `PA4`           |
+| ENABLE     | `LCD_DE`       | Data Enable（使能）| `PF10`          |
+| DOTCLK     | `LCD_CLK`      | Dot Clock（像素時脈）| `PG7`        |
+
+---
+
+##### GPIO 初始化範例程式：
+
+````c
+rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOC);
+rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOF);
+rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOG);
+
+// LCD control signals
+gpio_set_mode(GPIOF_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE);  // LCD_DE
+gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_10, ALTERNATE_AF14);
+
+gpio_set_mode(GPIOG_BASE, GPIO_PIN_7, GPIO_MODE_ALTERNATE);   // LCD_CLK
+gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_7, ALTERNATE_AF14);
+
+gpio_set_mode(GPIOC_BASE, GPIO_PIN_6, GPIO_MODE_ALTERNATE);   // LCD_HSYNC
+gpio_set_alternate_function(GPIOC_BASE, GPIO_PIN_6, ALTERNATE_AF14);
+
+gpio_set_mode(GPIOA_BASE, GPIO_PIN_4, GPIO_MODE_ALTERNATE);   // LCD_VSYNC
+gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_4, ALTERNATE_AF14);
+````
+
+---
+
+### 5.2.2 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
+
+#### SDRAM 與 FMC 控制器簡介
+
+STM32F429 除了內建的 SRAM、Flash 等內部記憶體之外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash、以及 SDRAM。
+
+在 LCD 顯示應用中，MCU 為了能一次性輸出整個畫面像素資料，通常會先將圖像內容暫存於 **SDRAM**，再由 **LTDC 顯示模組自動掃描該記憶體內容並輸出至畫面**。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
+
+STM32F429 提供的 **FMC（Flexible Memory Controller）** 模組是一個高整合度的記憶體控制單元，能支援多種外部記憶體介面，包含：
+
+- SRAM / PSRAM
+- NOR Flash / NAND Flash
+- **SDRAM（同步動態隨機存取記憶體）**
+
+FMC 具備自動控制時序、命令序列、暫存區與匯流排協定轉換能力，能讓 MCU 以與內部記憶體相同的方式存取外部 SDRAM。
+
+在 STM32F429 系統中，**SDRAM 是透過 FMC（Flexible Memory Controller）模組，掛接於 AHB3 匯流排上運作**。  
+所有與 SDRAM 通訊的 GPIO 腳位，皆必須設定為 **AF12（Alternate Function 12，對應 FMC 模組）** 模式。
+
+根據《RM0090 Reference Manual》的 **第 37.4.3 節 SDRAM address mapping** 所述：  
+只要 `HADDR[28] = 0`，便表示 SDRAM 掛接於 **FMC 的 Bank1 子模組**，並由 `FMC_SDCR1`、`FMC_SDTR1` 等暫存器進行控制。
+
+而在 **第 37.7.2 節 SDRAM external memory interface signals** 中，列出了 SDRAM 所需的硬體訊號腳位，包含：
+
+- **地址線（A0~A12）**
+- **資料線（D0~D31）**（實際可能僅接至 D15）
+- **控制線**：如 `SDCKE1`（Clock Enable）、`SDNE1`（Chip Enable）、`SDCLK`（SDRAM Clock）等
+
+這些腳位皆需設定為 **AF12 模式**，以對應 FMC 功能，完成 SDRAM 的初始化與資料交換操作。
+
+> 補充：FMC 外部記憶體的位址由 MCU 固定對映，**並非接續於內部 SRAM 之後**。  
+> 開發板上的外部 SDRAM（32MB）會被映射至獨立的位址區間 `0xD0000000`，與內部 SRAM 無重疊或連接。  
+> **此區域即為 LTDC 使用的 frame buffer 儲存位置**，MCU 可透過讀寫該記憶體區段，間接控制 LCD 顯示內容。
+
+---
+
+#### SDRAM 與 GPIO 對應關係整理（依原理圖）
+
+從原理圖中可確認，SDRAM 僅使用以下訊號與 STM32F429 MCU 相連：
+
+- **位址線（Address）**：接至 A0 ~ A11
+- **資料線（Data）**：接至 D0 ~ D15
+- **控制線（Control）**：僅接上部分常用訊號，其餘視應用需求補充
+
+---
+
+##### SDRAM 控制訊號對應關係：
+
+| 原理圖名稱 | FMC 訊號名稱 | 功能說明                     | STM32 GPIO 腳位 |
+|------------|---------------|------------------------------|------------------|
+| CLK        | `SDCLK`       | SDRAM 時脈來源               | `PG8`            |
+| CKE        | `SDCKE1`      | Clock Enable（時脈啟用）     | `PB5`            |
+| /CS        | `SDNE1`       | SDRAM 晶片啟用（Chip Enable）| `PB6`            |
+| /WE        | `SDNWE`       | 寫入使能（Write Enable）     | `PC0`            |
+| /RAS       | `SDNRAS`      | 列位址啟動（Row Addr Strobe）| `PF11`           |
+| /CAS       | `SDNCAS`      | 行位址啟動（Col Addr Strobe）| `PG15`           |
+
+---
+
+##### SDRAM 地址線對應（A0 ~ A11）：
+
+| 資料位元 | STM32 GPIO |
+|----------|------------|
+| A0       | PF0        |
+| A1       | PF1        |
+| A2       | PF2        |
+| A3       | PF3        |
+| A4       | PF4        |
+| A5       | PF5        |
+| A6       | PF12       |
+| A7       | PF13       |
+| A8       | PF14       |
+| A9       | PF15       |
+| A10      | PG0        |
+| A11      | PG1        |
+
+---
+
+##### SDRAM 資料線對應（D0 ~ D15）：
+
+| 資料位元 | STM32 GPIO |
+|----------|------------|
+| D0       | PD14       |
+| D1       | PD15       |
+| D2       | PD0        |
+| D3       | PD1        |
+| D4       | PE7        |
+| D5       | PE8        |
+| D6       | PE9        |
+| D7       | PE10       |
+| D8       | PE11       |
+| D9       | PE12       |
+| D10      | PE13       |
+| D11      | PE14       |
+| D12      | PE15       |
+| D13      | PD8        |
+| D14      | PD9        |
+| D15      | PD10       |
+
+---
+
+#### GPIO 初始化範例程式：
+
+````C
+void fmc_gpio_init(void)
+{
+    // Enable GPIO clocks
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOB);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOC);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOD);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOE);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOF);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOG);
+
+    // Address lines A0~A11
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_0, GPIO_MODE_ALTERNATE);  // A0
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_0, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_1, GPIO_MODE_ALTERNATE);  // A1
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_1, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_2, GPIO_MODE_ALTERNATE);  // A2
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_2, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_3, GPIO_MODE_ALTERNATE);  // A3
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_3, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_4, GPIO_MODE_ALTERNATE);  // A4
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_4, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_5, GPIO_MODE_ALTERNATE);  // A5
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_5, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_12, GPIO_MODE_ALTERNATE); // A6
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_12, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_13, GPIO_MODE_ALTERNATE); // A7
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_13, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_14, GPIO_MODE_ALTERNATE); // A8
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_14, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_15, GPIO_MODE_ALTERNATE); // A9
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_15, ALTERNATE_AF12);
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_0, GPIO_MODE_ALTERNATE);  // A10
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_0, ALTERNATE_AF12);
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_1, GPIO_MODE_ALTERNATE);  // A11
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_1, ALTERNATE_AF12);
+
+    // Data lines D0~D15
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_14, GPIO_MODE_ALTERNATE); // D0
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_14, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_15, GPIO_MODE_ALTERNATE); // D1
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_15, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_0, GPIO_MODE_ALTERNATE);  // D2
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_0, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_1, GPIO_MODE_ALTERNATE);  // D3
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_1, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_7, GPIO_MODE_ALTERNATE);  // D4
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_7, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_8, GPIO_MODE_ALTERNATE);  // D5
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_8, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);  // D6
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_9, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE); // D7
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_10, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_11, GPIO_MODE_ALTERNATE); // D8
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_11, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_12, GPIO_MODE_ALTERNATE); // D9
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_12, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_13, GPIO_MODE_ALTERNATE); // D10
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_13, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_14, GPIO_MODE_ALTERNATE); // D11
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_14, ALTERNATE_AF12);
+    gpio_set_mode(GPIOE_BASE, GPIO_PIN_15, GPIO_MODE_ALTERNATE); // D12
+    gpio_set_alternate_function(GPIOE_BASE, GPIO_PIN_15, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_8, GPIO_MODE_ALTERNATE);  // D13
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_8, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);  // D14
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_9, ALTERNATE_AF12);
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_10, GPIO_MODE_ALTERNATE); // D15
+    gpio_set_alternate_function(GPIOD_BASE, GPIO_PIN_10, ALTERNATE_AF12);
+
+    // Control signals
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_8, GPIO_MODE_ALTERNATE);  // SDCLK
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_8, ALTERNATE_AF12);
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_5, GPIO_MODE_ALTERNATE);  // SDCKE1
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_5, ALTERNATE_AF12);
+    gpio_set_mode(GPIOB_BASE, GPIO_PIN_6, GPIO_MODE_ALTERNATE);  // SDNE1
+    gpio_set_alternate_function(GPIOB_BASE, GPIO_PIN_6, ALTERNATE_AF12);
+    gpio_set_mode(GPIOC_BASE, GPIO_PIN_0, GPIO_MODE_ALTERNATE);  // SDNWE
+    gpio_set_alternate_function(GPIOC_BASE, GPIO_PIN_0, ALTERNATE_AF12);
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_11, GPIO_MODE_ALTERNATE); // SDNRAS
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_11, ALTERNATE_AF12);
+    gpio_set_mode(GPIOG_BASE, GPIO_PIN_15, GPIO_MODE_ALTERNATE); // SDNCAS
+    gpio_set_alternate_function(GPIOG_BASE, GPIO_PIN_15, ALTERNATE_AF12);
+}
+````
+
+---
+
+## 5.3 FMC 參數初始化
+
+### 5.3.1 開啟 AHB3 時脈
+
+根據《STM32F429 Datasheet》的 Block Diagram，**FMC 模組掛載於 AHB3 匯流排**，因此在初始化 SDRAM 之前，需先啟用 FMC 的 AHB3 時脈。
+
+以下為 AHB3 Clock 啟用程式：
+
+````c
+#define RCC_AHB3ENR_FMCEN (1U << 0)
+
+void rcc_enable_ahb3_clock(void) {
+    uint32_t addr = RCC_BASE + RCC_AHB3ENR;
+    io_writeMask(addr, RCC_AHB3ENR_FMCEN, RCC_AHB3ENR_FMCEN); // Enable FMC clock
+}
+````
+
+---
+
+### 5.3.2 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
+
+由於 SDRAM 預設會掛接於 **FMC 的 Bank1 子模組**（`HADDR[28] = 0`），而 Bank1 是由 `FMC_SDCR1` 與 `FMC_SDTR1` 兩個暫存器所控制，因此需對這兩個暫存器進行基本設定，例如 SDRAM 的資料寬度、記憶體大小、CAS 延遲、列/行位元數等。以下為程式碼範例：
+
+````c
+#define FMC_BASE 0xA0000000
+
+#define FMC_SDCR_OFFSET(bank)  (0x140 + ((bank - 1) * 4))
+#define FMC_SDTR_OFFSET(bank)  (0x148 + ((bank - 1) * 4))
+
+typedef enum{
+    FMC_SDCR_NC = 0,
+    FMC_SDCR_NR,
+    FMC_SDCR_MWID,
+    FMC_SDCR_NB,
+    FMC_SDCR_CAS,
+    FMC_SDCR_WP,
+    FMC_SDCR_SDCLK,
+    FMC_SDCR_RBURST,
+    FMC_SDCR_RPIPE
+} fmc_sdcr_field_t;
+
+typedef enum {
+    FMC_SDTR_TMRD = 0,   // [3:0]
+    FMC_SDTR_TXSR,       // [7:4]
+    FMC_SDTR_TRAS,       // [11:8]
+    FMC_SDTR_TRC,        // [15:12]
+    FMC_SDTR_TWR,        // [19:16]
+    FMC_SDTR_TRP,        // [23:20]
+    FMC_SDTR_TRCD        // [27:24]
+} fmc_sdtr_field_t;
+
+void fmc_init(void){
+	rcc_enable_ahb3_clock();
+
+	// Configure FMC_SDCR
+    fmc_sdcr_write_field(1, FMC_SDCR_NC,    0x01); // Column = 9 bits
+    fmc_sdcr_write_field(1, FMC_SDCR_NR,    0x01); // Row = 12 bits
+    fmc_sdcr_write_field(1, FMC_SDCR_MWID,  0x01); // Memory width = 16-bit
+    fmc_sdcr_write_field(1, FMC_SDCR_NB,    0x01); // Bank number = 4 banks
+    fmc_sdcr_write_field(1, FMC_SDCR_CAS,   0x02); // CAS latency = 2 cycles
+    fmc_sdcr_write_field(1, FMC_SDCR_WP,    0x00); // Write protect disable
+    fmc_sdcr_write_field(1, FMC_SDCR_SDCLK, 0x02); // SDRAM clock = HCLK/2
+    fmc_sdcr_write_field(1, FMC_SDCR_RBURST,0x01); // Enable burst read
+    fmc_sdcr_write_field(1, FMC_SDCR_RPIPE, 0x00); // Read pipe delay = 0
+
+    // Configure FMC_SDTR
+    fmc_sdtr_write_field(1, FMC_SDTR_TMRD,  2); // Load to Active delay
+    fmc_sdtr_write_field(1, FMC_SDTR_TXSR,  7); // Exit self-refresh delay
+    fmc_sdtr_write_field(1, FMC_SDTR_TRAS,  4); // Self refresh time
+    fmc_sdtr_write_field(1, FMC_SDTR_TRC,   7); // Row cycle delay
+    fmc_sdtr_write_field(1, FMC_SDTR_TWR,   2); // Write recovery time
+    fmc_sdtr_write_field(1, FMC_SDTR_TRP,   2); // Row precharge delay
+    fmc_sdtr_write_field(1, FMC_SDTR_TRCD,  2); // Row to column delay
+}
+````
+
+### 5.3.3 依序送出五個 JEDEC 初始化指令至 SDRAM
+
+Clock Configuration Enable
+
+PALL (Precharge All)
+
+Auto-refresh（2 次）
+
+Mode Register 設定
+
+設定 Refresh Rate 計數器

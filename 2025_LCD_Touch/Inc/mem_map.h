@@ -22,6 +22,7 @@
 
 /* RCC register address offset */
 #define RCC_AHB1ENR    0x30
+#define RCC_AHB3ENR    0x38
 #define RCC_APB1ENR    0x40
 #define RCC_APB2ENR    0x44
 
@@ -105,5 +106,14 @@
 #define EXTI_FTSR_OFFSET 0x0C
 #define EXTI_PR_OFFSET 0x14
 
+
+
+
+/* FMC Group */
+//------------------------------------------------
+#define FMC_BASE 0xA0000000
+
+#define FMC_SDCR_OFFSET(bank)  (0x140 + ((bank - 1) * 4))
+#define FMC_SDTR_OFFSET(bank)  (0x148 + ((bank - 1) * 4))
 
 #endif /* MEM_MAP_H_ */
