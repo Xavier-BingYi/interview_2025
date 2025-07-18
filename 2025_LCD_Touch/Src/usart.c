@@ -70,9 +70,7 @@ void usart_rcc_enable(USART_RCC_Module usart_num){
 
 void usart_brr(uint32_t usart_base,  uint32_t usart_div_x100){
 	uint32_t reg_addr = usart_base + USART_BRR_OFFSET;
-
 	uint32_t cr1_over8 = (io_read(usart_base + USART_CR1_OFFSET) >> USART_CR1_OVER8) & 0x01;
-
 	uint32_t mantissa = usart_div_x100 / 100;
 	uint32_t fraction = usart_div_x100 - mantissa * 100;
 
@@ -88,7 +86,6 @@ void usart_brr(uint32_t usart_base,  uint32_t usart_div_x100){
 
 void usart_set_baudrate(uint32_t usart_base, uint32_t fck, uint32_t baudrate){
 	uint32_t cr1_over8 = (io_read(usart_base + USART_CR1_OFFSET) >> USART_CR1_OVER8) & 0x01;
-
 	uint32_t usart_div_x100 = (fck*100) / (baudrate * 8 * (2 - cr1_over8));
 
 	usart_brr(usart_base, usart_div_x100);
@@ -96,6 +93,7 @@ void usart_set_baudrate(uint32_t usart_base, uint32_t fck, uint32_t baudrate){
 
 bool usart_SR_read_bit(uint32_t usart_base, uint8_t bit_pos) {
     uint32_t reg_addr = usart_base + USART_SR_OFFSET;
+
     return (io_read(reg_addr) & (1U << bit_pos)) != 0;
 }
 
@@ -103,6 +101,7 @@ void usart_cr1_write_bit(uint32_t usart_base, uint8_t bit_pos, uint8_t val){
 	uint32_t reg_addr = usart_base + USART_CR1_OFFSET;
 	uint32_t mask = 1U << bit_pos;
 	uint32_t data = (uint32_t)val << bit_pos;
+
 	io_writeMask(reg_addr, data, mask);
 }
 
@@ -110,6 +109,7 @@ void usart_cr2_write_bit(uint32_t usart_base, uint8_t bit_pos, uint8_t val){
 	uint32_t reg_addr = usart_base + USART_CR2_OFFSET;
 	uint32_t mask = 1U << bit_pos;
 	uint32_t data = (uint32_t)val << bit_pos;
+
 	io_writeMask(reg_addr, data, mask);
 }
 
@@ -117,6 +117,7 @@ void usart_cr2_write_bits(uint32_t usart_base, uint8_t bit_pos, uint8_t width, u
     uint32_t reg_addr = usart_base + USART_CR2_OFFSET;
     uint32_t mask = ((1U << width) - 1) << bit_pos;
     uint32_t data = (uint32_t)val << bit_pos;
+
     io_writeMask(reg_addr, data, mask);
 }
 
@@ -124,7 +125,6 @@ void usart_write(uint32_t usart_base, uint8_t data){
     uint32_t reg_addr = usart_base + USART_DR_OFFSET;
 
     while (usart_SR_read_bit(usart_base, USART_SR_TXE) == 0);
-
     io_write(reg_addr, (uint32_t)data);
 }
 

@@ -1646,23 +1646,15 @@ STM32F429I-DISC1 開發板的 LCD 模組採用 **ILI9341 控制器**，並以 **
 
 ---
 
-## 5.2 GPIO 腳位初始化：LTDC 與 SDRAM
+## 5.2 LTDC GPIO 腳位初始化
 
 為了讓 LTDC 顯示模組與 SDRAM 記憶體能正常運作，必須先將相關 GPIO 腳位設定為對應的 Alternate Function 模式。STM32F429I-DISC1 所使用的 RGB LCD 採用 LTDC 模組驅動，而畫面資料則儲存在外接 SDRAM，兩者皆透過大量 GPIO 腳位與內部匯流排連接。
 
-本節將依序完成：
-1. 設定 LTDC 所需的 RGB 並行輸出腳為 **AF14**
-2. 設定 FMC 控制 SDRAM 所需的地址線與資料線腳位為 **AF12**
+### 5.2.1 LTDC 的三個時脈區域（Clock Domains）
 
-### 5.2.1 LTDC GPIO 腳位初始化
+LTDC 顯示控制器主要劃分為三個時脈區域（Clock Domains），各自負責不同的功能：
 
-#### LTDC 的三個時脈區域（Clock Domain）
-
-LTDC 顯示控制器主要分為三個時脈區域，各自負責不同功能：
-
----
-
-1. **AHB clock domain**：資料傳輸來源  
+1. **AHB Clock Domain**：資料傳輸來源
    - 畫面資料來自 **SDRAM**（frame buffer）
    - 透過 AHB 匯流排傳送至 LTDC 內部的 Layer FIFO 暫存區
 
@@ -1683,81 +1675,73 @@ LTDC 顯示控制器主要分為三個時脈區域，各自負責不同功能：
 
 ---
 
-#### 輸出訊號（通往 LCD 面板）
+### 5.2.2 LTDC 的輸出訊號（通往 LCD 面板）
 
-| 訊號腳位         | 說明 |
-|------------------|------|
-| `LCD_HSYNC`      | 水平同步訊號 |
-| `LCD_VSYNC`      | 垂直同步訊號 |
-| `LCD_DE`         | Data Enable：資料傳輸使能 |
-| `LCD_CLK`        | Dot Clock：像素時脈 |
-| `LCD_R[7:0]`     | 紅色通道（8 bit） |
-| `LCD_G[7:0]`     | 綠色通道（8 bit） |
-| `LCD_B[7:0]`     | 藍色通道（8 bit） |
+以下為 LTDC 顯示輸出所使用的訊號腳位：
 
-這些訊號對應至 STM32 GPIO 所設定的 **AF14 腳位功能**，會在 `ltdc_gpio_init()` 中統一設定，最終將畫面資料輸出至 LCD-TFT 面板。
+| 訊號腳位     | 說明                             |
+|--------------|----------------------------------|
+| `LCD_HSYNC`  | 水平同步訊號                     |
+| `LCD_VSYNC`  | 垂直同步訊號                     |
+| `LCD_DE`     | Data Enable：資料傳輸使能        |
+| `LCD_CLK`    | Dot Clock：像素時脈              |
+| `LCD_R[7:0]` | 紅色通道（8 位元）               |
+| `LCD_G[7:0]` | 綠色通道（8 位元）               |
+| `LCD_B[7:0]` | 藍色通道（8 位元）               |
+
+這些訊號對應至 STM32 GPIO 所設定的 **AF14 腳位功能**，將在 `ltdc_gpio_init()` 中統一設定，最終將畫面資料輸出至 LCD-TFT 面板。
 
 ---
 
-#### LCD RGB 資料線 GPIO 初始化設定
+### 5.2.3 LTDC 的 RGB 資料線 GPIO 初始化設定
 
 根據 LCD 模組 **FRD240C48003-B** 的原理圖可知，其 RGB 各通道僅接出 6 條資料腳位（R0~R5、G0~G5、B0~B5），表示該模組採用 **RGB666（18-bit）** 顯示格式。此格式常見於嵌入式系統，能有效節省 GPIO 腳位，同時提供良好的顯示品質。
 
----
+#### 顏色格式比較
 
-##### 顏色格式比較：
+| 格式    | 每通道位元數 | 總位數  | 說明                                 |
+|---------|---------------|---------|--------------------------------------|
+| RGB888  | 8 bit × 3     | 24 bits | 真正全彩顯示，每通道支援 256 色階    |
+| RGB666  | 6 bit × 3     | 18 bits | 常見於 MCU 應用，節省 GPIO 腳位      |
+| RGB565  | 5-6-5         | 16 bits | 最省資源格式，與 MCU 相容性最佳      |
 
-| 格式     | 每通道位元 | 總位元數 | 說明                             |
-|----------|-------------|-----------|----------------------------------|
-| RGB888   | 8 bit × 3   | 24 bits   | 真正全彩顯示，每通道 256 色階     |
-| RGB666   | 6 bit × 3   | 18 bits   | 常見於 MCU 應用，節省 GPIO 腳位   |
-| RGB565   | 5-6-5       | 16 bits   | 最省資源格式，與 MCU 相容性最佳   |
-
----
-
-##### Red 通道（R0~R5）：
+#### Red 通道（R0~R5）
 
 | 資料位元 | STM32 GPIO |
-|----------|------------|
-| R0       | PC10       |
-| R1       | PB0        |
-| R2       | PA11       |
-| R3       | PA12       |
-| R4       | PB1        |
-| R5       | PG6        |
-| R6~R7    | 未接       |
+|----------|-------------|
+| R0       | PC10        |
+| R1       | PB0         |
+| R2       | PA11        |
+| R3       | PA12        |
+| R4       | PB1         |
+| R5       | PG6         |
+| R6~R7    | 未接        |
 
----
-
-##### Green 通道（G0~G5）：
+#### Green 通道（G0~G5）
 
 | 資料位元 | STM32 GPIO |
-|----------|------------|
-| G0       | PA6        |
-| G1       | PG10       |
-| G2       | PB10       |
-| G3       | PB11       |
-| G4       | PC7        |
-| G5       | PD3        |
-| G6~G7    | 未接       |
+|----------|-------------|
+| G0       | PA6         |
+| G1       | PG10        |
+| G2       | PB10        |
+| G3       | PB11        |
+| G4       | PC7         |
+| G5       | PD3         |
+| G6~G7    | 未接        |
 
----
-
-##### Blue 通道（B0~B5）：
+#### Blue 通道（B0~B5）
 
 | 資料位元 | STM32 GPIO |
-|----------|------------|
-| B0       | PD6        |
-| B1       | PG11       |
-| B2       | PG12       |
-| B3       | PA3        |
-| B4       | PB8        |
-| B5       | PB9        |
-| B6~B7    | 未接       |
+|----------|-------------|
+| B0       | PD6         |
+| B1       | PG11        |
+| B2       | PG12        |
+| B3       | PA3         |
+| B4       | PB8         |
+| B5       | PB9         |
+| B6~B7    | 未接        |
 
----
-
-##### GPIO 初始化範例程式：
+#### GPIO 初始化範例程式
 
 ````C
 void ltdc_gpio_init(void) 
@@ -1830,26 +1814,22 @@ void ltdc_gpio_init(void)
 
 ---
 
-#### LCD 同步與資料控制 GPIO 初始化設定
+### 5.2.4 LTDC 的同步與資料控制 GPIO 初始化設定
 
 LCD 顯示需要除畫素資料（RGB）外，還需搭配數條 **時序控制訊號（Timing Control Signals）**，用來同步畫面掃描與資料輸出。
 
 這些訊號不屬於畫面內容本身，而是協助 LCD 正確更新畫面的重要時脈與同步腳位。
 
----
+#### 控制訊號對應關係
 
-##### 控制訊號對應關係：
+| 原理圖名稱 | LTDC 訊號名稱 | 功能說明               | STM32 GPIO 腳位 |
+|------------|----------------|------------------------|------------------|
+| HSYNC      | `LCD_HSYNC`    | 水平同步訊號           | `PC6`            |
+| VSYNC      | `LCD_VSYNC`    | 垂直同步訊號           | `PA4`            |
+| ENABLE     | `LCD_DE`       | Data Enable（資料使能）| `PF10`           |
+| DOTCLK     | `LCD_CLK`      | Dot Clock（像素時脈）  | `PG7`            |
 
-| 原理圖名稱 | LTDC 訊號名稱 | 功能說明         | STM32 GPIO 腳位 |
-|------------|----------------|------------------|------------------|
-| HSYNC      | `LCD_HSYNC`    | 水平同步訊號     | `PC6`           |
-| VSYNC      | `LCD_VSYNC`    | 垂直同步訊號     | `PA4`           |
-| ENABLE     | `LCD_DE`       | Data Enable（使能）| `PF10`          |
-| DOTCLK     | `LCD_CLK`      | Dot Clock（像素時脈）| `PG7`        |
-
----
-
-##### GPIO 初始化範例程式：
+#### GPIO 初始化範例程式
 
 ````c
 rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
@@ -1873,41 +1853,102 @@ gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_4, ALTERNATE_AF14);
 
 ---
 
-### 5.2.2 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
+## 5.3 SDRAM 與 FMC 控制器簡介
 
-#### SDRAM 與 FMC 控制器簡介
+STM32F429 除了內建的 SRAM、Flash 等內部記憶體外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash 與 SDRAM。
 
-STM32F429 除了內建的 SRAM、Flash 等內部記憶體之外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash、以及 SDRAM。
-
-在 LCD 顯示應用中，MCU 為了能一次性輸出整個畫面像素資料，通常會先將圖像內容暫存於 **SDRAM**，再由 **LTDC 顯示模組自動掃描該記憶體內容並輸出至畫面**。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
-
-STM32F429 提供的 **FMC（Flexible Memory Controller）** 模組是一個高整合度的記憶體控制單元，能支援多種外部記憶體介面，包含：
-
-- SRAM / PSRAM
-- NOR Flash / NAND Flash
-- **SDRAM（同步動態隨機存取記憶體）**
-
-FMC 具備自動控制時序、命令序列、暫存區與匯流排協定轉換能力，能讓 MCU 以與內部記憶體相同的方式存取外部 SDRAM。
-
-在 STM32F429 系統中，**SDRAM 是透過 FMC（Flexible Memory Controller）模組，掛接於 AHB3 匯流排上運作**。  
-所有與 SDRAM 通訊的 GPIO 腳位，皆必須設定為 **AF12（Alternate Function 12，對應 FMC 模組）** 模式。
-
-根據《RM0090 Reference Manual》的 **第 37.4.3 節 SDRAM address mapping** 所述：  
-只要 `HADDR[28] = 0`，便表示 SDRAM 掛接於 **FMC 的 Bank1 子模組**，並由 `FMC_SDCR1`、`FMC_SDTR1` 等暫存器進行控制。
-
-而在 **第 37.7.2 節 SDRAM external memory interface signals** 中，列出了 SDRAM 所需的硬體訊號腳位，包含：
-
-- **地址線（A0~A12）**
-- **資料線（D0~D31）**（實際可能僅接至 D15）
-- **控制線**：如 `SDCKE1`（Clock Enable）、`SDNE1`（Chip Enable）、`SDCLK`（SDRAM Clock）等
-
-這些腳位皆需設定為 **AF12 模式**，以對應 FMC 功能，完成 SDRAM 的初始化與資料交換操作。
-
-> 補充：FMC 外部記憶體的位址由 MCU 固定對映，**並非接續於內部 SRAM 之後**。  
-> 開發板上的外部 SDRAM（32MB）會被映射至獨立的位址區間 `0xD0000000`，與內部 SRAM 無重疊或連接。  
-> **此區域即為 LTDC 使用的 frame buffer 儲存位置**，MCU 可透過讀寫該記憶體區段，間接控制 LCD 顯示內容。
+在 LCD 顯示應用中，由於 frame buffer 體積龐大，STM32 的內部 SRAM 通常無法容納完整畫面資料。  
+為了確保畫面顯示的流暢與穩定，系統常將圖像內容暫存於 **SDRAM**，再由 **LTDC（LCD-TFT Controller）模組** 自動掃描該記憶體區塊並輸出至 LCD 螢幕。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
 
 ---
+
+### 5.3.1 FMC 系統架構概述
+
+根據參考手冊第 37.1 節（FMC main features）與 37.2 節（Block diagram）描述，**FMC（Flexible Memory Controller）** 提供一個高度整合的外部記憶體控制模組，整體系統可分為三個主要區塊：
+
+#### 1. AHB 匯流排介面與組態暫存器
+
+- 透過系統內部的 **AHB3 匯流排** 與 MCU 核心連接。  
+- 負責接收 MCU 發出的記憶體存取請求，並轉換為外部記憶體所需的協定。  
+- 提供組態暫存器設定功能，可調整 SDRAM 的時序參數、啟用狀態等。  
+- 輸入時脈來源為 **HCLK（主系統時脈）**。
+
+#### 2. 三大記憶體控制器
+
+- **NOR / PSRAM 控制器**：用於靜態記憶體（SRAM、NOR Flash）  
+- **NAND / PC 卡控制器**：支援 NAND Flash 與 PCMCIA 裝置  
+- **SDRAM 控制器**：支援同步動態隨機存取記憶體（SDRAM）與行動式 LPSDR SDRAM
+
+#### 3. 外部裝置介面（I/O 腳位）
+
+FMC 控制器經由下列腳位與外部 SDRAM 模組進行通訊：
+
+| 腳位             | 功能說明                             |
+|------------------|--------------------------------------|
+| `FMC_SDCLK`      | SDRAM 時脈輸出                       |
+| `FMC_SDNCAS`     | SDRAM 列位址選擇（CAS）              |
+| `FMC_SDNRAS`     | SDRAM 行位址選擇（RAS）              |
+| `FMC_SDNWE`      | SDRAM 寫入使能                       |
+| `FMC_SDCKE[1:0]` | SDRAM Clock Enable（啟用時脈）        |
+| `FMC_SDNE[1:0]`  | SDRAM Chip Select（晶片使能）         |
+
+FMC 模組的主要功能包括：
+
+- 將 AHB 匯流排的傳輸轉換為外部記憶體協定。  
+- 滿足外部記憶體的時序要求與通訊延遲。  
+- 管理所有外接裝置的地址線、資料線與控制訊號。  
+- 每個外部裝置透過專屬的 Chip Select（CS 腳）進行選擇。  
+- FMC 同一時間僅能與一個外部裝置進行操作。
+
+---
+
+### 5.3.2 SDRAM 控制器功能說明
+
+根據 37.7.1（SDRAM controller main features），STM32 所內建的 SDRAM 控制器具備下列特性：
+
+- 支援兩組獨立組態的 SDRAM Bank  
+- 支援 8-bit、16-bit、32-bit 資料匯流排寬度  
+- 提供 13 位元列位址與 11 位元欄位位址，並具備 4 個內部 Bank  
+- 支援多種資料存取模式：Word（32-bit）、Half-word（16-bit）、Byte（8-bit）  
+- SDRAM 時脈來源可設定為 HCLK / 2 或 HCLK / 3  
+- 所有時序參數皆可程式化設定  
+- 內建 Auto Refresh（自動刷新）機制，且可調整刷新速率  
+
+---
+
+### 5.3.3 SDRAM 對外介面腳位說明
+
+根據 RM0090 第 37.7.2 節（**SDRAM External Memory Interface Signals**），  
+STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊。
+
+啟用 SDRAM 時，相關 GPIO 腳位必須設定為 **Alternate Function 12（AF12）**，以啟用 FMC 模組功能。  
+未使用的腳位則可配置為其他用途。
+
+| SDRAM 信號       | I/O 類型 | 功能說明                                                      | 對應 Alternate Function |
+|------------------|----------|----------------------------------------------------------------|--------------------------|
+| `SDCLK`          | O        | SDRAM 時脈輸出                                                 | 無                       |
+| `SDCKE[1:0]`     | O        | Clock Enable：<br>`SDCKE0` 對應 Bank1，`SDCKE1` 對應 Bank2     | 無                       |
+| `SDNE[1:0]`      | O        | Chip Enable：<br>`SDNE0` 控制 Bank1，`SDNE1` 控制 Bank2        | 無                       |
+| `A[12:0]`        | O        | 列位址（Row Address）                                          | `FMC_A[12:0]`            |
+| `D[31:0]`        | I/O      | 雙向資料匯流排                                                 | `FMC_D[31:0]`            |
+| `BA[1:0]`        | O        | Bank Address：選擇 SDRAM 晶片內部的 4 個 bank                 | `FMC_A[15:14]`           |
+| `NRAS`           | O        | Row Address Strobe（行位址觸發）                               | 無                       |
+| `NCAS`           | O        | Column Address Strobe（列位址觸發）                            | 無                       |
+| `SDNWE`          | O        | SDRAM 寫入使能（Write Enable）
+
+根據上表與原理圖中的接腳配置，我們使用了以下腳位：
+
+- `PB5 = SDCKE1`（Clock Enable 1）
+- `PB6 = SDNE1`（Chip Enable 1）
+
+可由此確定：**本專案的 SDRAM 是連接在 FMC 的 Bank2 上（對應 `FMC_SDCR2`）**。  
+後續初始化流程中，也應在 `FMC_SDCMR` 設定 `CTB2 = 1` 來操作 Bank2。
+
+---
+
+## 5.4 SDRAM 初始化
+
+### 5.4.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
 
 #### SDRAM 與 GPIO 對應關係整理（依原理圖）
 
@@ -1977,7 +2018,7 @@ FMC 具備自動控制時序、命令序列、暫存區與匯流排協定轉換�
 #### GPIO 初始化範例程式：
 
 ````C
-void fmc_gpio_init(void)
+void fmc_sdram_gpio_init(void)
 {
     // Enable GPIO clocks
     rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOB);
@@ -2065,9 +2106,9 @@ void fmc_gpio_init(void)
 
 ---
 
-## 5.3 FMC 參數初始化
+### 5.4.2 SDRAM 初始化步驟
 
-### 5.3.1 開啟 AHB3 時脈
+#### 開啟 AHB3 時脈
 
 根據《STM32F429 Datasheet》的 Block Diagram，**FMC 模組掛載於 AHB3 匯流排**，因此在初始化 SDRAM 之前，需先啟用 FMC 的 AHB3 時脈。
 
@@ -2082,11 +2123,107 @@ void rcc_enable_ahb3_clock(void) {
 }
 ````
 
+#### 初始化流程
+
+根據 RM0090 §37.7.3（**SDRAM controller functional description**）說明：  
+所有 SDRAM 控制器的輸出訊號（包含地址與資料）皆在 **SDRAM 時脈（FMC_SDCLK）的下降緣（falling edge）** 發生變化。
+
+SDRAM 的初始化完全由**軟體控制**。  
+若同時使用兩個 SDRAM Bank（Bank1、Bank2），則必須於初始化階段**同時發出命令**，  
+這可透過在 `FMC_SDCMR` 暫存器中設定 `CTB1` 與 `CTB2` 位元完成。
+
+> 補充：FMC 外部記憶體的位址由 MCU 固定對映，**並非接續於內部 SRAM 之後**。  
+
+1. 設定記憶體控制參數
+- 設定 `FMC_SDCRx` 暫存器中的 SDRAM 規格參數  
+- 其中 **SDCLK 時脈頻率**、**突發讀取（RBURST）**、**讀取延遲（RPIPE）** 僅能設定於 `FMC_SDCR1`
+
+2. 設定記憶體時序參數
+- 設定 `FMC_SDTRx` 暫存器中的時序參數，如 TRCD、TRP、TRC  
+- 其中 **TRP 與 TRC 必須設定於 `FMC_SDTR1`**
+
+3. 發出「時脈啟用命令（Clock Configuration Enable）」
+- 在 `FMC_SDCMR` 中設定 `MODE = 001` 並設置目標 Bank（CTB1 / CTB2）  
+- 此命令會讓 `SDCKE` 腳位輸出高電位，開啟 SDRAM 時脈輸出
+
+4. 等待上電延遲時間
+- 延遲時間典型值為 **100 μs**，實際值請參照 SDRAM datasheet
+
+5. 發出「Precharge All」命令
+- 在 `FMC_SDCMR` 中設定 `MODE = 010`，並設置目標 Bank（CTB1 / CTB2）
+
+6. 發出「Auto-refresh」命令
+- 設定 `MODE = 011`，設置目標 Bank 以及自動刷新次數（`NRFS`）  
+- 通常需執行 **8 次 Auto-refresh**，實際值見 SDRAM datasheet
+
+7. 發出「Load Mode Register」命令
+- 設定 `MODE = 100`，在 `MRD` 欄位中填入對應值，並設置目標 Bank  
+- 此命令會將資料寫入 SDRAM 的 Mode Register
+
+> 注意：  
+> - `CAS latency` 必須與 `FMC_SDCRx` 中設定一致  
+> - `Burst Length` 應設為 1，對應 `M[2:0] = 000`  
+> - 若 Bank1、Bank2 使用不同 Mode Register，必須分別發出兩次命令
+
+8. 設定 Refresh 速率
+- 設定 `FMC_SDRTR` 暫存器  
+- Refresh Rate 為兩次自動刷新命令間的間隔，依 SDRAM 規格決定
+
+至此，SDRAM 初始化完成，裝置已可接受正常的讀寫命令。  
+
+#### 初始化範例程式
+
+
+
+
+
+
+
+
+
+
+
 ---
 
-### 5.3.2 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
+### 5.4.4 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
 
-由於 SDRAM 預設會掛接於 **FMC 的 Bank1 子模組**（`HADDR[28] = 0`），而 Bank1 是由 `FMC_SDCR1` 與 `FMC_SDTR1` 兩個暫存器所控制，因此需對這兩個暫存器進行基本設定，例如 SDRAM 的資料寬度、記憶體大小、CAS 延遲、列/行位元數等。以下為程式碼範例：
+從 FMC 的觀點來看，外部記憶體被劃分為 6 個固定大小為 256 MByte 的 bank，FMC 控制器分配記憶體空間來對應不同種類的外部記憶體
+
+| Bank編號   | 用途                | 裝置類型         |
+| -------- | ----------------- | ------------ |
+| Bank 1   | NOR Flash 或 PSRAM | 最多 4 個裝置     |
+| Bank 2-3 | NAND Flash        | 每個 bank 一個裝置 |
+| Bank 4   | PC Card           |              |
+| Bank 5-6 | SDRAM             | 每個 bank 一個裝置 |
+
+
+
+由於 SDRAM 通常掛接於 **FMC 的 Bank1 子模組（SDNE0）**，其地址空間對應為：
+
+```
+0xD0000000 ~ 0xDFFFFFFF（即 HADDR[28] = 0）
+```
+
+因此我們需對 **Bank1 對應的兩個暫存器**：
+
+- `FMC_SDCR1`：控制參數設定（如資料寬度、列/行位元數、CAS 延遲等）
+- `FMC_SDTR1`：時序參數設定（如 TRCD、TRP、TRAS、TWR 等）
+
+進行初始化，以告訴 FMC 控制器該如何與外部 SDRAM 正確通訊。
+
+> 🔍 補充：
+> - 若使用 Bank2（SDNE1）則對應暫存器為 `FMC_SDCR2` 與 `FMC_SDTR2`。
+> - Bank1、Bank2 可對應不同 SDRAM 模組，但初始化邏輯相同。
+
+
+
+| 設定項目                            | 說明                                 | 文件章節                   |
+| ------------------------------- | ---------------------------------- | ---------------------- |
+| `FMC_SDCRx`（你設定 SDRAM 結構與時鐘）    | SDRAM 資料寬度、行列數、CAS、是否寫保護、HCLK/2 等等 | **§37.8.4 FMC\_SDCRx** |
+| `FMC_SDTRx`（你設定 SDRAM 的 timing） | SDRAM 的 TMRD、TRP、TRCD 等 timing 設定  | **§37.8.5 FMC\_SDTRx** |
+
+
+以下為程式碼範例：
 
 ````c
 #define FMC_BASE 0xA0000000
@@ -2141,7 +2278,15 @@ void fmc_init(void){
 }
 ````
 
-### 5.3.3 依序送出五個 JEDEC 初始化指令至 SDRAM
+### 5.4.5 依序送出五個 JEDEC 初始化指令至 SDRAM
+
+| 動作                                                                | 解釋                      | 對應章節                                               |
+| ----------------------------------------------------------------- | ----------------------- | -------------------------------------------------- |
+| 發送 Clock enable / Precharge / Auto-refresh / Load mode register 等 | 控制 SDRAM 進入工作狀態的命令流程    | ✅ **§37.3.1 SDRAM memory initialization sequence** |
+| 每個命令怎麼寫進寄存器                                                       | 解釋 `FMC_SDCMR` 寫法       | ✅ **§37.8.6 FMC\_SDCMR**                           |
+| 設定 Refresh Rate                                                   | 需要計算、寫入 `FMC_SDRTR` 寄存器 | ✅ **§37.8.8 FMC\_SDRTR**                           |
+
+
 
 Clock Configuration Enable
 
@@ -2152,3 +2297,19 @@ Auto-refresh（2 次）
 Mode Register 設定
 
 設定 Refresh Rate 計數器
+
+
+| 你寫的 function                | 實作功能                     | 文件章節                            |
+| --------------------------- | ------------------------ | ------------------------------- |
+| `fmc_sdcr_write_field()`    | 告訴 FMC：我的 SDRAM 規格是什麼    | **§37.8.4 FMC\_SDCRx**          |
+| `fmc_sdtr_write_field()`    | 告訴 FMC：要用哪些時序參數控制 SDRAM  | **§37.8.5 FMC\_SDTRx**          |
+| `fmc_sdram_init_sequence()` | 送 JEDEC SDRAM 指令，讓晶片真正開機 | **§37.3.1 + §37.8.6 + §37.8.8** |
+
+
+| 步驟     | 對應功能（你寫的程式）                                     | RM0090 正確章節                                  | 說明                                                        |
+| ------ | ----------------------------------------------- | -------------------------------------------- | --------------------------------------------------------- |
+| Step 1 | 設定 SDRAM 結構參數（NC, NR, CAS...）                   | `fmc_sdcr_write_field()`                     | **§37.7.5.1 FMC\_SDCRx register**                         |
+| Step 2 | 設定 SDRAM 時序參數（TRCD, TRP...）                     | `fmc_sdtr_write_field()`                     | **§37.7.5.2 FMC\_SDTRx register**                         |
+| Step 3 | 送初始化指令序列（Clock enable、Auto-refresh、Load mode 等） | `fmc_sdram_init_sequence()`                  | ✅ **§37.7.3.1 Initialization sequence**（🔺這就是 JEDEC 指令步驟） |
+| Step 4 | 寫入 SDRAM Command Register（MODE, CTB, NRFS 等欄位）  | 在 `fmc_sdram_init_sequence()` 中寫 `FMC_SDCMR` | **§37.7.5.3 FMC\_SDCMR register**                         |
+| Step 5 | 設定 Refresh 週期參數                                 | 在 `fmc_sdram_init_sequence()` 中寫 `FMC_SDRTR` | **§37.7.5.4 FMC\_SDRTR register**                         |

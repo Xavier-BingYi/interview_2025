@@ -113,7 +113,9 @@
 //------------------------------------------------
 #define FMC_BASE 0xA0000000
 
-#define FMC_SDCR_OFFSET(bank)  (0x140 + ((bank - 1) * 4))
-#define FMC_SDTR_OFFSET(bank)  (0x148 + ((bank - 1) * 4))
+#define SDRAM_SDCR_OFFSET(bank)  (0x140 + ((bank - 1) * 4))
+#define SDRAM_SDTR_OFFSET(bank)  (0x148 + ((bank - 1) * 4))
+#define SDRAM_SDCMR_OFFSET  0x150
+#define SDRAM_SDRTR_OFFSET  0x150
 
 #endif /* MEM_MAP_H_ */
