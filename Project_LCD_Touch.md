@@ -1493,37 +1493,1060 @@ void exti_clear_pending_flag(SYSCFG_EXTI_LINE exti_line) {
 
 ---
 
-# 5. LCD 控制實作與顯示測試
+# 5. LCD 圖形架構與 LTDC 顯示流程
 
-## 5.1 LCD 顯示介面介紹與 STM32F429I-DISC1 架構分析
+## 5.1 簡介嵌入式圖形系統
+
+介紹嵌入式圖形系統的基本架構，包括 MCU、LCD、frame buffer、DMA、圖形函式庫等核心組件。
+
+### 5.1.1 圖形應用程式（Graphics Application）
+
+嵌入式圖形應用是一種基於微控制器的互動式系統，會在顯示裝置上呈現以下圖形元素：
+
+1. **色彩（Colours）**  
+   - 文字顏色（Color of the text）  
+   - 背景色或圖層顏色（Background color / layer color）
+
+2. **形狀（Shapes）**  
+   - 方塊（Box）  
+   - 圓形（Circle）  
+   - 箭頭（Arrows）  
+   - 線條（Lines）
+
+3. **圖片（Images）**  
+   - 任意圖片（如 BMP、JPG、PNG，需轉碼處理）
+
+4. **文字（Texts）**  
+   - 靜態或動態字串顯示
+
+5. **圖形效果（Graphical Effects）**  
+   - 捲動、滑動、滑入滑出、按壓與釋放等動畫
+
+6. **元件（Widgets）**  
+   - 按鈕、單選鈕、核取方塊等 GUI 控制元件
+
+7. **影片（Videos）**  
+   - 僅適用於具備高記憶體與解碼能力的系統
+
+8. **3D 繪圖（3D Rendering）**  
+   - 需具備浮點單元（FPU）與高運算資源支援
+
+9. **遊戲應用（Gaming）**  
+   - 小型互動遊戲或圖形化操作介面
 
 ---
 
-### 5.1.1 常見 LCD 控制方式與 STM32 對應模組
+### 5.1.2 嵌入式圖形系統結構（System Architecture） 
 
-| 控制方式                  | 簡介        | 使用介面                          | 對應 STM32 模組                            | 傳輸方式 | 備註                                                             |
-|---------------------------|-------------|-----------------------------------|--------------------------------------------|----------|------------------------------------------------------------------|
-| **SPI**                   | 最簡單常見   | MOSI, SCK, CS, DC                 | SPI                                        | 序列     | 速度慢，通常 MCU 寫一筆畫一筆                                     |
-| **FMC（8080 並列）**      | 中階常見     | RD, WR, DB0~DB15                  | FMC (Flexible Memory Controller)           | 並列     | LCD 為 MCU Interface 時使用（如 ST7796、ILI9341 也支援）         |
-| **RGB 並行介面**          | 高速顯示     | HSYNC, VSYNC, DOTCLK, RGB888      | **LTDC** (LCD-TFT Display Controller)      | 並行即時 | 直接「驅動螢幕」，類似繪圖卡                                        |
-| **DSI / HDMI / LVDS**     | 更高階應用   | 差動線對                           | DSI Host（僅部分 STM32 有支援）           | 並行高速 | 用於高解析、觸控 LCD，如智慧型設備顯示                            |
+#### 基本模組構成
+
+1. **Microcontroller（主控器）**
+   - **CPU**：執行應用邏輯與資料處理  
+   - **RAM**：儲存 frame buffer、變數與繪圖中間資料  
+   - **Flash**：儲存圖片、字型與程式碼等靜態資源  
+
+2. **Interface（通訊介面）**
+   - MCU 與顯示器之間的連接介面，常見有：
+     - **RGB（DPI）**：高速並列像素資料傳輸
+     - **SPI / 串列匯流排（DBI）**：透過指令與資料寄存器控制 LCD
+     - **DSI（Display Serial Interface）**：專為顯示而設計的高速串列通訊介面  
+
+3. **Display（顯示器）**
+   - 可搭配的顯示裝置類型包括：
+     - **LCD**（TFT、IPS）
+     - **OLED**
+     - **LED**
+     - **CRT**
+     - **Plasma**
 
 ---
 
-### 5.1.2 常見 LCD 控制器與 ILI9341 介紹
+#### 核心組成元件說明（Important Components）
+
+**Microcontroller（主控端）**
+
+- **Processor（處理器）**  
+  負責執行主程式、處理繪圖邏輯、解碼影像資料，並更新 frame buffer。
+
+- **RAM（作為 frame buffer）**  
+  用於儲存目前要顯示的畫面資料，每筆像素資訊（如 RGB565 / RGB888）會由顯示器持續讀取。
+
+- **Flash（快閃記憶體）**  
+  儲存靜態資源（圖像、字型、文字等），程式運行期間會載入並轉為像素資料顯示。
+
+**Display Module（顯示模組）**
+
+- **Glass（顯示玻璃）**  
+  實際呈現畫面給使用者觀看的區域。
+
+- **Driver Chip（驅動晶片）**  
+  解譯 MCU 傳來的訊號，並產生所需的電氣信號與驅動電壓，控制像素發光顯示正確顏色。
 
 ---
 
-#### 常見 LCD 控制器與其製造商對照表
+#### 其他關鍵模組（Other Important Components）
 
-| 控制器型號   | 製造商               | 常見解析度 | 支援介面                       | 備註                                             |
-|--------------|------------------------|------------|----------------------------------|--------------------------------------------------|
-| **ILI9341**  | 奕力科技 Ilitek         | 240×320    | SPI、8080 並列、RGB 並行         | 最常見型號之一，支援多種介面，開發資源豐富         |
-| **ST7789**   | 矽創電子 Sitronix       | 240×240    | SPI                             | 僅支援序列傳輸，常見於小尺寸模組                   |
-| **ST7796**   | 矽創電子 Sitronix       | 320×480    | 8080 並列、RGB 並行             | 常見於 3.5 吋模組，與 ILI9486 兼容性高             |
-| **ILI9486**  | 奕力科技 Ilitek         | 320×480    | 8080 並列、RGB 並行             | 色彩與亮度表現佳，常見於中高階顯示模組             |
+除了基本的 MCU、介面與顯示器外，嵌入式圖形系統還常見以下重要模組：
 
 ---
+
+**1. 顯示控制器（Display Controller）**
+
+- 位於 MCU（Host）端  
+- 負責產生顯示所需的時序訊號（例如：VSYNC、HSYNC、DE、PCLK）  
+- 傳送像素資料至顯示器（TFT-LCD 等）  
+- STM32 中常見為 LTDC（LCD-TFT Display Controller）
+
+---
+
+**2. 外部記憶體（External Memories）**
+
+- **外部 Flash**：當內建 Flash 不足時，用於儲存程式碼、圖片、字型等大型資源  
+- **外部 RAM**：作為 frame buffer 或中介繪圖資料使用，尤其在內建 RAM 不足時必須擴充
+
+---
+
+**3. 圖形函式庫（Graphics Library）**
+
+- 常見如 **LVGL**、**TouchGFX**  
+- 提供高階 API，可快速繪製元件、動畫、圖層等 GUI 元素  
+- 抽象化硬體操作，提升開發效率並支援多樣化 UI 效果
+
+---
+
+**4. UI 設計工具（UI Designer Tool）**
+
+- 與圖形函式庫整合的視覺化工具  
+- 可透過拖拉方式設計互動式介面，快速建立 GUI 佈局與行為邏輯  
+- 範例：LVGL Studio、TouchGFX Designer
+
+---
+
+**5. 觸控模組（Touch Sensing）**
+
+- **觸控面板（Touch Panel）**：感應使用者的觸控行為（座標）  
+- **觸控控制器（Touch Controller）**：接收面板訊號，轉換為數位資訊並通知主控端（MCU）
+
+---
+
+**6. DMA（Direct Memory Access）**
+
+- 將資料從 Flash 複製至 frame buffer 或從 frame buffer 傳送到顯示器  
+- 可不經過 CPU 干預，提升效率與顯示即時性  
+- 在高頻刷新（如 60Hz）場景中特別重要，可避免 CPU 負載過高
+
+---
+
+### 5.1.3 圖像渲染流程（Rendering Pipeline）
+
+Frame buffer 是一塊專用記憶體區域，用來儲存「目前要顯示的影像畫面」的像素資料。  
+每一筆像素資料包含顏色資訊（如 RGB888），顯示器會依照畫面刷新頻率（如 60Hz）連續掃描該區域，並將畫面輸出到螢幕上。
+
+嵌入式圖形系統中，顯示影像的典型資料流程如下：
+
+```
+Flash（圖片儲存） 
+  ↓
+CPU（渲染處理，轉為像素）
+  ↓
+RAM（frame buffer）
+  ↓
+Interface（如 RGB、SPI）
+  ↓
+Display（顯示畫面）
+```
+
+也就是說，**MCU 同時扮演控制器與圖形渲染引擎**的角色，需完成圖片讀取、像素渲染與畫面輸出。
+
+---
+
+## 5.2 嵌入式 LCD 顯示開發平台與架構總覽
+
+---
+
+### 5.2.1 常見的 LCD 開發板選項
+
+#### Option 1：32F429IDISCOVERY  
+搭載 STM32F429ZI MCU
+
+- 板子上已內建 LCD 螢幕（直接連接）  
+- ST 官方推薦用來學習圖形顯示開發  
+- 提供 Mini USB 介面，可與電腦連接進行開發與燒錄  
+- 推薦使用（Recommended）
+
+#### Option 2：32F746GDISCO  
+搭載 STM32F746NG MCU
+
+- 螢幕與主板分離（模組化設計）  
+- 支援高解析度顯示與觸控功能  
+- 功能更強、資源更豐富，但開發相對複雜
+
+#### Option 3：STM32F7508-DK  
+搭載 STM32F750N8 MCU
+
+- 採用模組化 LCD 設計  
+- 支援圖形顯示與觸控功能  
+- 成本較低，功能略少於 Option 2
+
+#### Option 4：STM32F4DISCOVERY + External LCD  
+搭配 LCD Shield 使用
+
+##### 開發板與螢幕連接方式
+- STM32F4DISCOVERY 開發板 + FASTBIT 32F407DISC IoT-LCD Shield  
+- 透過排針插座接上 Shield  
+- LCD 為外接模組，並可使用 Mini USB 與電腦連接  
+
+##### 額外顯示方式（另一種組法）
+- 可改用 SPI 介面直接連接 LCD（不使用擴充板）  
+- 使用 2.4 吋 SPI 介面觸控 TFT 模組（240x320）
+
+#### Option 5：NUCLEO-F4x STM32 Nucleo-64  
+開發板型號
+
+##### 顯示模組連接方式
+- 透過 SPI 介面連接外接 LCD 模組
+
+##### 顯示模組資訊
+- 2.4 吋 SPI Interface  
+- 240x320 Touch Screen TFT  
+- 彩色顯示模組（Colour Display Module）
+
+#### 各開發板圖形顯示能力比較表
+
+| Option | 開發板名稱         | MCU           | Core       | RAM (KiB) | Flash | SDRAM     | 外部 Flash | LCD 控制器 | Chrom-ART | LCD 螢幕 |
+|--------|--------------------|---------------|------------|-----------|--------|-----------|-------------|--------------|-------------|------------|
+| 1      | 32F429IDISCOVERY   | STM32F429ZI   | Cortex-M4  | 256       | 2 MiB  | Yes (64Mbit) | No          | Yes          | Yes         | Yes 240×320 |
+| 2      | 32F746GDISCO       | STM32F746NG   | Cortex-M7  | 340       | 1 MiB  | Yes (128Mbit) | Yes (128Mbit) | Yes        | Yes         | Yes 480×272 |
+| 3      | STM32F7508-DK      | STM32F750N8   | Cortex-M7  | 340       | 64 KiB | Yes (128Mbit) | Yes (128Mbit) | Yes        | Yes         | Yes 480×272 |
+| 4      | STM32F4DISCOVERY   | STM32F407VG   | Cortex-M4  | 192       | 1 MiB  | No          | No          | No           | No          | No         |
+| 5      | NUCLEO-F4x         | ??            | Cortex-M4  | ??        | ??     | No          | No          | No           | No          | No         |
+
+### 5.2.2 圖形展示實作架構與推薦平台
+
+以下列出幾個可用於實作圖形展示專案的開發板或組合，包含內建 LCD 的開發板與透過 SPI 外接顯示模組的解決方案。
+
+---
+
+#### 32F429IDISCOVERY  
+**開發板名稱：** 32F429IDISCOVERY Discovery kit
+
+**MCU 內部模組：**
+- Cortex-M4 核心：負責執行應用程式邏輯  
+- SRAM：儲存畫面資料（可配合外部 SDRAM 使用）  
+- FLASH：儲存程式碼與靜態資源  
+- LTDC（LCD-TFT Display Controller）：控制圖形資料輸出至 LCD
+
+**LCD 顯示模組（240x320 TFT）：**
+- LCD Driver Chip：處理像素資料並驅動面板  
+- RGB display：實際顯示畫面的 TFT 彩色螢幕
+
+**開發板與 LCD 的連接介面：**
+
+| 類型             | 說明                                               |
+|------------------|----------------------------------------------------|
+| Display signals  | 22 Pins，輸出 RGB 像素資料，由 LTDC 控制         |
+| SPI 接口         | 雙線 SPI，用於設定 LCD 驅動晶片（非畫面資料）     |
+| 控制訊號         | 4 條線，例如 RESET、CS、WR、RD 等控制腳位         |
+
+---
+
+#### 32F746GDISCOVERY  
+**開發板名稱：** 32F746GDISCOVERY  
+**MCU：** STM32F746NG（Cortex-M7）
+
+**MCU 內部模組：**
+- Arm Cortex-M7 核心  
+- SRAM  
+- FLASH  
+- LTDC（LCD-TFT Display Controller）
+
+**與 LCD 之間的介面：**
+- 使用 **40-pin 並列 RGB 介面** 連接 LCD 模組
+
+**顯示模組構成：**
+- LCD Driver Chip（顯示驅動 IC）  
+- RGB Display 面板（解析度：480x272）
+
+---
+
+#### 32F407DISCOVERY + SPI-based LCD module（FASTBIT LCD Shield）  
+**開發板名稱：** STM32F407 DISC-1
+
+**LCD 模組介面：**
+- 使用 **SPI 傳輸命令與 RGB 畫面資料**
+
+**額外控制訊號：**
+- 包含 RESET、CS、DC 等常見控制腳位
+
+**接線參考：**
+| LCD 腳位   | 功能說明     |
+|------------|--------------|
+| SDI (MOSI) | 資料輸入     |
+| SCK        | SPI 時脈     |
+| DC_RS      | 資料/命令切換 |
+| CS         | 裝置選擇     |
+| RESET      | 硬體重置     |
+| GND / VCC  | 電源與接地   |
+
+---
+
+## 5.3 像素格式與圖像資料儲存原理
+
+### 5.3.1 RGB 顯示器與色彩模型介紹
+
+RGB 顯示器是一種能夠接收 **紅（Red）**、**綠（Green）**、**藍（Blue）** 三原色訊號的顯示裝置。  
+這三個顏色的強度組合決定了螢幕上每一個像素所顯示的顏色。
+
+**RGB 色彩模型（RGB Color Model）**  
+RGB 是一種 **加法色彩系統（Additive Color Model）**，透過疊加不同強度的紅、綠、藍光，  
+可產生多種顏色，包括白色、黃色、洋紅、青色等。
+
+---
+
+### 5.3.2 圖形顯示常用術語簡介
+
+以下是與嵌入式 LCD 圖形顯示相關的常見術語：
+
+- **Pixel（像素）**  
+  螢幕上最小的顯示單位，每個像素可單獨顯示一種顏色。
+
+- **Pixel Density（像素密度，PPI：Pixels Per Inch）**  
+  每英吋所包含的像素數量，用來衡量畫面的精細程度。
+
+- **Pixel Color Depth（色彩深度，Bit Depth）**  
+  每個像素所能表示的色彩位元數，例如 16-bit（RGB565）、24-bit（RGB888）。
+
+- **Pixel Format（像素格式）**  
+  定義像素資料在記憶體中的排列方式，例如 RGB565、ARGB8888 等格式。
+
+- **Resolution（解析度）**  
+  顯示器的寬度與高度的像素數，例如 240×320 表示寬 240 像素、高 320 像素。
+
+---
+
+### 5.3.3 Pixel（像素）
+
+**定義：**  
+Pixel（Picture Element）是圖像中最小的單位，代表一個獨立的顏色資訊。每個像素的色彩資料會儲存在記憶體中，圖像中的每個 pixel 對應一筆記憶體資料，用來構成整張圖像。
+
+#### 實例說明：
+
+以一張解析度為 **480×270** 的彩色圖片為例：
+
+- 寬度：480 像素  
+- 高度：270 像素  
+- 每個像素具有獨立的色彩值  
+- Bit Depth：32-bit（每個像素使用 32 位元儲存顏色資訊）
+
+當圖片放大後，可清楚看到由像素格（Pixel Grid）構成的圖像，其中每一格即為一個像素。
+
+#### Pixel 色彩組成：
+
+每個像素通常由下列三個主要色光值構成：
+
+- R（紅色強度）
+- G（綠色強度）
+- B（藍色強度）
+
+範例：
+
+- R = 255, G = 0, B = 0 → 顯示為「純紅色」
+
+不同的 R/G/B 組合可呈現出多種顏色，組合成最終的畫面。
+
+#### 像素在記憶體中的排列：
+
+圖像實際上是由數百至數百萬個像素以 **網格（Grid）** 形式排列而成。  
+每個像素儲存其 RGB 色彩值，讓螢幕能夠準確地重建原始影像。
+
+#### 像素佔用的記憶體大小
+
+每個 Pixel 佔用多少記憶體，取決於其 **像素格式（Pixel Format）** 或 **色彩深度（Color Depth）**。  
+這通常以 **bpp（bits per pixel）** 表示，例如：
+
+- **16 bpp**：每個像素佔用 2 Bytes，例如 `RGB565`
+- **24 bpp**：每個像素佔用 3 Bytes，例如 `RGB888`
+- **32 bpp**：每個像素佔用 4 Bytes，例如 `ARGB8888`（含透明度 Alpha）
+
+#### 常見 Pixel Formats（Color Formats）
+
+| Pixel Format   | 說明（Meaning）                                              |
+|----------------|--------------------------------------------------------------|
+| **ARGB8888**   | 32 bits；含 Alpha 通道；RGB 各 8 bits                         |
+| **RGB888**     | 24 bits；每個顏色 8 bits；不含 Alpha                         |
+| **RGB565**     | 16 bits；R=5 bits, G=6 bits, B=5 bits；不含 Alpha            |
+| **ARGB1555**   | 16 bits；1 bit Alpha + 5 bits R/G/B                          |
+| **ARGB4444**   | 16 bits；每通道 4 bits（含 Alpha）                           |
+| **RGB666**     | 16 bits；每通道 6 bits；不含 Alpha                           |
+| **ARGB2222**   | 8 bits；每通道 2 bits（含 Alpha）                            |
+| **ABGR2222**   | 8 bits；每通道 2 bits（Alpha + BGR）                         |
+| **L8**         | 8-bit 灰階亮度（或 LUT 色彩查表索引）                         |
+| **L8_RGB888**  | 8-bit 索引對應 RGB888 查表色彩；LUT size = 24               |
+| **L8_RGB565**  | 8-bit 索引對應 RGB565 查表色彩；LUT size = 16               |
+| **AL44**       | 4-bit Alpha + 4-bit Luminance（亮度）                         |
+| **AL88**       | 8-bit Alpha + 8-bit Luminance（亮度）                         |
+| **L4**         | 4-bit 灰階亮度                                               |
+| **A8**         | 8-bit Alpha；無 RGB                                           |
+| **A4**         | 4-bit Alpha；無 RGB                                           |
+| **GRAY4**      | 4-bit 灰階強度值                                             |
+| **GRAY2**      | 3-bit 灰階強度值                                             |
+| **BW**         | 1-bit 黑白顯示（Black & White）                               |
+
+---
+
+### 5.3.4 常見像素格式與應用場景
+
+#### ARGB8888 像素格式說明
+
+若圖像採用 **ARGB8888** 像素格式，代表每個像素會佔用 **32 bits（4 Bytes）** 記憶體空間，  
+並包含以下 **4 個分量（Component）**，每個分量各佔 8 bits：
+
+1. **Alpha（透明度）**：8 bits，用來表示像素的不透明程度（Opacity）
+2. **Red（紅色）**：8 bits，表示紅色強度
+3. **Green（綠色）**：8 bits，表示綠色強度
+4. **Blue（藍色）**：8 bits，表示藍色強度
+
+> 記憶體中每個像素以 ARGB 的順序排列（從高位元到低位元）：  
+> `0xAARRGGBB`
+
+例如：
+- `0xFFFF0000` ➝ 完全不透明的純紅色（Alpha=255, R=255, G=0, B=0）
+
+此格式常用於圖層合成與 GUI 開發，可支援透明效果與豐富色彩。
+
+#### 灰階色彩（Grayscale）與 B&W 顯示比較
+
+##### GRAY8 格式說明
+
+- GRAY8 使用 8 bits 來表示每個像素的亮度值。
+- 色彩強度從 0（黑）到 255（白）連續變化。
+- 當 `R = G = B` 時，該像素即為灰階顏色。
+
+##### 不同顯示模式對照：
+
+| 顯示模式     | 特徵與應用 |
+|--------------|------------|
+| **True Color** | RGB 每通道各 8 bits，可呈現豐富真實色彩（如 ARGB8888） |
+| **Grayscale**  | 僅儲存亮度資訊，通常使用 GRAY8；常見於影像處理與低功耗顯示 |
+| **B&W**        | 每個像素僅 1 bit（黑或白），適用於文字顯示、點陣 LCD |
+
+> B&W 不支援陰影與漸層；Grayscale 則能呈現更細膩的亮度差異。
+
+#### L8 格式的記憶體配置與應用優勢
+
+**L8** 是一種 **索引型像素格式（Indexed Pixel Format）**，  
+每個像素僅佔用 **8 bits（1 Byte）**，但不直接儲存 RGB 色彩值。  
+相反地，這 8-bit 整數是用來查找預先定義的 **色彩查找表（CLUT, Color Look-Up Table）** 中的對應顏色。  
+CLUT 最多支援 256 筆顏色，每筆通常為 **24-bit（RGB888）** 或 **32-bit（ARGB8888）**。
+
+##### 記憶體用量比較（以解析度 480 × 270 為例）
+
+- **使用 RGB888 格式：**
+  - 每像素：3 Bytes  
+  - 總記憶體使用量：480 × 270 × 3 = **388,800 Bytes ≈ 380.5 KiB**
+
+- **使用 L8 格式 + RGB888 查表：**
+  - 像素索引資料區：480 × 270 × 1 = **129,600 Bytes**
+  - 色彩查表（CLUT）：256 × 3 = **768 Bytes**
+  - 總記憶體使用量：約 129,600 + 768 = **130,368 Bytes ≈ 127.3 KiB**
+
+> **L8 格式大幅降低記憶體用量**，特別適用於色彩種類有限、資源受限的嵌入式應用場景。
+
+##### 記憶體用量與格式比較表
+
+| 項目                 | RGB888 格式           | L8 格式 + RGB CLUT         |
+|----------------------|------------------------|------------------------------|
+| 每像素大小           | 24 bits（3 Bytes）     | 8 bits（1 Byte）             |
+| 色彩儲存方式         | 每個像素儲存 RGB 值    | 每個像素儲存查表索引值       |
+| 額外記憶體需求       | 無                     | 需額外 CLUT 區域（最多 256 筆） |
+| 查表結構             | 無                     | `CLUT[256] × 3 Bytes`        |
+| 總記憶體（480×270）  | 約 380.5 KiB           | 約 127.3 KiB                 |
+| 適用情境             | 真實色彩圖像（照片）   | 色彩種類有限的 GUI、圖示等   |
+
+> L8 格式常見於嵌入式顯示系統，如圖形使用者介面（GUI）、圖示、選單等，能在有限記憶體下保有基本色彩效果。
+
+---
+
+### 5.3.5 顯示器的像素密度（Pixel Density, PPI）
+
+#### PPI 介紹
+
+- **PPI（Pixels Per Inch）** 是衡量顯示器解析度的單位，表示每英吋所擁有的像素數。
+- PPI 越高，表示單位面積內像素越多，畫面越細膩。
+- 高 PPI 可提升圖片與文字顯示的清晰度與閱讀舒適度。
+
+#### 視覺範例：
+
+- 如果 PPI = 8，表示在 1×1 英吋區域內排入 8×8 = 64 個像素。
+- 現代手機、平板等裝置通常具有 300 PPI 以上的高像素密度。
+
+#### 如何計算 PPI？
+
+若顯示器解析度為 **W × H 像素**，對角尺寸為 **D 吋**，則：
+
+```text
+PPI = √(W² + H²) / D
+```
+
+##### 範例：
+- 顯示尺寸：5.8 吋
+- 解析度：2280 × 1080
+- 計算：
+  ```text
+  PPI = √(1080² + 2280²) / 5.8 ≈ 438
+  ```
+
+#### PPI 越高的優勢：
+
+- 更細緻的圖像與文字呈現
+- 小尺寸裝置也能顯示高解析度內容
+- 適合閱讀、影片、照片與高品質 GUI
+
+> **補充：** DPI（Dots Per Inch）常用於列印領域，而 PPI 用於顯示裝置。
+
+---
+
+### 5.3.6 Alpha 通道與透明度控制（Opacity）
+
+#### Alpha Component 介紹
+
+Alpha 是像素中的「透明度（Opacity）」成分，常見於 ARGB 格式。  
+它是一個可選的分量，用來控制像素與背景色的融合程度。
+
+- 若採用 8-bit Alpha，透明度數值範圍為 0 至 255：
+  - 255 表示完全不透明（Fully Opaque）
+  - 0 表示完全透明（Fully Transparent）
+
+具有 Alpha 值的像素格式，稱為 ARGB 色彩格式。
+
+#### 透明度對照示意（以圖像為例）
+
+| Alpha 數值 | 對應透明度 | 顯示效果       |
+|------------|-------------|----------------|
+| 0          | 0%          | 完全透明       |
+| 64         | 25%         | 輕微透明       |
+| 128        | 50%         | 半透明         |
+| 192        | 75%         | 幾乎不透明     |
+| 255        | 100%        | 完全不透明     |
+
+透明度越高，像素越不受背景影響；透明度越低，背景越容易透出。
+
+#### 補充說明
+
+- 當圖片使用 ARGB8888 格式時，每個像素包含 4 個分量：Alpha、Red、Green、Blue，各佔 8 bits。
+- 透明效果常見於 GUI 介面、圖層疊加、動態淡入淡出等場景。
+
+### 5.3.7 BMP 與 JPEG 圖片格式比較與記憶體估算
+
+#### 記憶體估算（以 ARGB8888 與 480×270 為例）
+
+- 每像素佔用：32 bits（ARGB8888）
+
+計算公式：
+
+```
+記憶體 = Width × Height × (bpp ÷ 8)
+       = 480 × 270 × (32 ÷ 8)
+       = 518,400 bytes ≈ 506.25 KiB
+```
+
+#### BMP（Bitmap）圖像格式特性
+
+- 為 **未壓縮格式（Uncompressed）**，直接儲存每個像素的原始色彩資料。
+- 因為資料未壓縮，檔案較大，但方便直接顯示到螢幕。
+- BMP 檔案由 **檔頭（Header）+ 像素資料（Pixel Data）** 組成。
+
+#### JPEG 圖像格式特性
+
+- JPEG 為 **壓縮格式（Compressed）**，體積小但無法直接顯示。
+- MCU 上若要顯示 JPEG，需先經過「JPEG 解碼器」還原成像素資料。
+- 可使用 **MCU 的 JPEG 硬體外設** 或 **中介軟體（middleware）** 進行解碼。
+- 解碼後的資料為 bitmap 格式，才可傳送給顯示模組。
+
+---
+
+## 5.4 STM32F429 高效能時脈架構與初始化流程
+
+### 5.4.1 時脈架構
+
+在 STM32F429 中，系統主時脈來源為 **SYSCLK**，其最大頻率為 **180 MHz**。該時脈依序經過下列分頻機制後，提供給不同匯流排：
+
+- **AHB Prescaler**  
+  輸出為 **HCLK**，即 AHB bus 的時脈，最大為 **180 MHz**  
+  → 由 **SYSCLK** 分頻而來
+
+- **APB1 Prescaler**  
+  輸出為 **PCLK1**，供 APB1 匯流排（如 USART2、TIM2 等），最大為 **45 MHz**  
+  → 由 **HCLK** 分頻而來
+
+- **APB2 Prescaler**  
+  輸出為 **PCLK2**，供 APB2 匯流排（如 USART1、TIM1、LTDC 等），最大為 **90 MHz**  
+  → 由 **HCLK** 分頻而來
+
+這些時脈設定對 LCD 顯示功能至關重要，因為：
+
+- **LTDC（LCD-TFT 顯示控制器）**
+- **DMA2D（圖像加速器）**
+
+等模組通常依賴 AHB 或 APB 匯流排提供的時脈作為操作基準。若設定不當，可能導致畫面閃爍、顯示異常或無法驅動面板。
+
+**建議設定組合（高效能應用）**
+
+| 匯流排   | 時脈目標值 | 對應預除器  | 原始來源 |
+|----------|-------------|----------------|----------|
+| HCLK     | 180 MHz      | SYSCLK ÷ 1     | SYSCLK   |
+| PCLK1    | 45 MHz       | HCLK ÷ 4       | HCLK     |
+| PCLK2    | 90 MHz       | HCLK ÷ 2       | HCLK     |
+
+此組配置為 STM32F429 最常見且安全的高效能設定，亦為 STM32CubeMX 等初始化工具的預設輸出結果，特別適合應用於需高匯流排頻寬的場景，如 FMC SDRAM、LTDC 與 DMA2D 同時運作。
+
+---
+
+### 5.4.2 系統主時脈（SYSCLK）初始化流程
+
+為讓 STM32F429 可穩定以高頻運作，並正確提供各匯流排與外設所需時脈（尤其是與圖像處理相關的模組如 LTDC、DMA2D、FMC SDRAM 等），需依下列步驟完成主時脈來源（SYSCLK）的初始化：
+
+1. 設定主 PLL（Phase Locked Loop）參數（M、N、P 值），決定 PLL 輸出頻率。
+2. 設定 PLLSAI（另一組獨立的 PLL），主要用於 LCD、音訊等外設。
+3. 設定各匯流排的預除器（AHB / APB1 / APB2）。
+4. 啟用主 PLL 模組。
+5. 等待 PLL 鎖定完成，確認 **PLLRDY** 位元為 1。
+6. 將 PLL 輸出選作系統主時脈（SYSCLK）。
+7. 等待時脈切換完成，確認系統已使用 PLLCLK 為 SYSCLK。
+8. 設定 Flash 訪問等待週期（Flash wait state）以符合高 HCLK 存取需求。
+
+> 說明：根據 CPU 時脈（HCLK）與供電電壓，需在 FLASH_ACR 寄存器中正確設定 LATENCY 位元，否則可能導致 Flash 讀取錯誤。
+
+9. 啟用 PLLSAI。
+10. 等待 PLLSAI 鎖定完成，確認 **PLLSAIRDY** 位元為 1。
+
+---
+
+### 5.4.3 Flash 存取延遲設定（FLASH Read Latency）
+
+在 STM32F429 系列中，當系統主時脈（SYSCLK）與 CPU 時脈（HCLK）提高時，必須對內部 Flash 設定正確的「存取延遲（Wait States）」，以確保 MCU 能正確讀取 Flash 資料，避免硬體錯誤或系統不穩。
+
+Flash 存取延遲由 `FLASH_ACR` 暫存器中的 `LATENCY` 欄位控制，代表 MCU 存取內部 Flash 時需等待的 CPU 週期數。
+
+#### 為什麼需要 Flash Wait States？
+
+內部 Flash 的反應速度固定，當 HCLK 過高時，資料尚未完成準備就被 CPU 存取，將導致：
+
+- 程式執行錯誤
+- 硬體中斷（HardFault）
+- MCU 無預警重啟或系統當機
+
+因此，**必須依據供應電壓（V<sub>DD</sub>）與 HCLK 頻率，設定適當的等待週期**。
+
+> 請參考 RM0090 Reference Manual 第 3.5 節  
+> Table 12 – *Number of wait states according to CPU clock (HCLK) frequency*  
+> 適用於 STM32F42xxx 和 STM32F43xxx 系列
+
+#### 設定步驟
+
+1. **查詢目前系統的 HCLK 頻率與供應電壓 V<sub>DD</sub>**
+2. **查表取得對應的 Wait States 數值（WS）**
+3. **將該數值寫入 `FLASH->ACR` 暫存器中的 `LATENCY` 欄位**
+
+```c
+// 例：180 MHz HCLK，VDD = 3.3V（屬於 2.7V–3.6V 區間）
+// 需設定為 5 WS（等於 6 個 CPU 週期延遲）
+FLASH->ACR = (5 << FLASH_ACR_LATENCY_Pos);
+```
+
+#### 注意事項
+
+- **開機預設為 HSI 16 MHz，對應 LATENCY = 0，無需等待**
+- 一旦使用 PLL 拉高 HCLK，**必須先行設定 Wait States**
+- 若在未設定延遲前就啟用高 HCLK，會導致系統執行錯誤
+
+---
+
+### 5.4.4 Over-drive 模式啟用（以支援 180 MHz 運作）
+
+在 STM32F429 系列中，若欲讓系統時脈（HCLK）運作於最高的 180 MHz，**必須啟用 Over-drive 模式**。該模式會讓內部電源調節器提供更高壓力，支援高時脈穩定運作。
+
+STM32 提供三種 Power Scale 等級（VOS），依據設定等級與是否啟用 Over-drive 模式，可對應不同的 HCLK 上限值。
+
+| Power Scale | VOS 設定 | Over-drive 狀態 | HCLK 最大值 |
+|-------------|----------|------------------|--------------|
+| Scale 3     | 0b01     | 無法使用         | 120 MHz      |
+| Scale 2     | 0b10     | OFF / ON         | 144 / 168 MHz|
+| Scale 1     | 0b11     | OFF / ON         | 168 / **180 MHz** ✅ |
+
+> 建議使用 Power Scale 1 搭配 Over-drive 模式，為 STM32F429 達成 180 MHz 運行的必要條件。
+
+---
+
+## 5.5 LCD 顯示初始化與 LTDC/SPI 控制流程
+
+### 5.5.1 LTDC 與 LCD 顯示控制概念
+
+LTDC（LCD-TFT Display Controller）負責將 MCU 記憶體中的畫面像素資料（frame buffer）持續地轉換為 RGB 訊號，並傳送到 LCD 模組。它就像「畫布更新器」，會自動掃描 SDRAM 中的畫面內容，將其送至 LCD 面板顯示。
+
+> 前提條件：LCD 模組必須先透過 **SPI** 正確初始化，否則即使 LTDC 傳出資料，LCD 也無法顯示任何畫面。
+
+LCD 顯示模組內建如 **ILI9341**、**ST7789** 等 LCD 驅動晶片，這些晶片在開機後需要 MCU 經由 **SPI 介面**傳送指令來完成初始化動作。
+
+常見初始化設定包含：
+
+- 設定顯示方向（橫向 / 直向）
+- 開啟顯示功能（Display ON）
+- 設定顏色格式、偏壓、掃描方向等
+
+若未透過 SPI 完成這些設定，LCD 模組將無法進入工作狀態，即使 LTDC 傳送畫面資料也不會顯示內容。
+
+此外，**SPI 有時也可作為畫面資料傳輸介面**，例如當沒有使用 LTDC 或 RGB 硬體輸出時，SPI 亦可直接傳送像素資料給 LCD（但效能較低）。
+
+> 例如：STM32F407x 系列 + 外接 SPI 顯示模組，就以 SPI 同時完成初始化與畫面資料傳輸。
+
+---
+
+### 5.5.2 ILI9341 顯示模組介面概觀（STM32F429 DISC）
+
+STM32F429 驅動 ILI9341 LCD 的過程可分為兩個階段：
+
+#### Programming Interface（設定階段）
+
+使用 GPIO + SPI 傳送控制指令給 ILI9341，使 LCD 進入可用狀態。
+
+| STM32 腳位 | ILI9341 腳位功能             | 類型   |
+|------------|-------------------------------|--------|
+| PA7        | RESX（重置）                   | GPIO   |
+| PC2        | CSX（片選）                    | GPIO   |
+| PD13       | WRX_D/CX（資料 / 指令選擇）     | GPIO   |
+| PF9        | SDI / SDA（SPI MOSI）          | SPI5   |
+| PF7        | D/CX_SCL（SPI CLK）            | SPI5   |
+
+#### Data Interface（顯示階段）
+
+使用 LTDC 輸出 RGB 介面資料，將 frame buffer 中的內容實際畫出來顯示於 LCD 上。
+
+---
+
+### 5.5.3 GPIO 腳位設定為 SPI 功能模式
+
+若 MCU 使用 SPI 功能，對應的 GPIO 腳位必須設定為 Alternate Function（替代功能）模式，設定步驟如下：
+
+#### 設定步驟
+
+1. **將指定的 GPIO 腳位設為 Alternate Function 模式**
+2. **設定對應的 Alternate Function 編號（AF 編號）**
+   - 可從 STM32 的 datasheet 查表對照
+3. **不需設定 Pull-up / Pull-down**
+   - SPI 傳輸不需要內部上拉或下拉電阻，保持浮接狀態即可
+
+### SPI 設定參數建議
+
+| 設定項目       | 建議值與說明                                                                 |
+|----------------|------------------------------------------------------------------------------|
+| **SPI 模式**   | Half-duplex Controller（單向傳輸，MCU 為控制端）                            |
+| **資料格式**   | 8-bit，MSB first（高位元先傳）                                               |
+| **CPOL / CPHA**| 依據 LCD 模組 datasheet（如 ILI9341）設定正確的時脈極性與相位               |
+| **SPI 時脈**   | 小於 6 MHz（根據模組最大支援頻率設定）                                       |
+| **片選控制**   | 由軟體手動控制（Chip Select handled by software）                           |
+
+---
+
+### 5.5.4 LCD 顯示初始化流程（STM32F429 DISC）
+
+1. **設定主系統時脈（System Clock）**
+2. **設定 AHB 與 APB 匯流排時脈**
+3. **設定像素時脈（DOTCLOCK）**
+4. **啟用與設定 SPI 周邊模組**
+5. **配置 framebuffer 於 RAM 中**
+6. **透過 SPI 傳送 LCD 初始化指令**
+   - 初始化 ILI9341 或其他顯示控制器
+7. **初始化與啟用 LTDC 模組**
+8. **將 framebuffer 畫面資料透過 LTDC 傳送至 LCD**
+9. **確認中斷已正確啟用，並實作 ISR（中斷服務函式）**
+
+---
+
+### 5.5.5 LTDC 設定步驟（基本三階段）
+
+1. **LTDC 腳位初始化**  
+   根據開發板的電路圖（schematic），確認哪些 GPIO 腳位作為 LTDC 專用訊號，並設定為對應的 Alternate Function 模式。
+
+2. **LTDC 周邊模組初始化**  
+   設定 LTDC 控制器本體的參數，如同步極性、總時脈週期、顯示面積等。
+
+3. **LTDC 圖層初始化**  
+   初始化圖層（layer 1 或 layer 2，或兩者皆用），包括：
+   - 畫面緩衝區（framebuffer）起始位址
+   - 畫面尺寸
+   - 顯示格式（RGB565、ARGB8888 等）
+   - 圖層混合設定（若使用多層）
+
+---
+
+### 5.5.6 LTDC 信號腳位總覽（LCD-TFT signals）
+
+| LCD-TFT 信號   | I/O | 說明                             |
+|----------------|-----|----------------------------------|
+| **LCD_CLK**     | O   | 畫素時脈輸出（Pixel Clock）       |
+| **LCD_HSYNC**   | O   | 水平同步訊號（Horizontal Sync）   |
+| **LCD_VSYNC**   | O   | 垂直同步訊號（Vertical Sync）     |
+| **LCD_DE**      | O   | 數據有效訊號（Data Enable）       |
+| **LCD_R[7:0]**  | O   | 8-bit 紅色資料輸出（Red）         |
+| **LCD_G[7:0]**  | O   | 8-bit 綠色資料輸出（Green）       |
+| **LCD_B[7:0]**  | O   | 8-bit 藍色資料輸出（Blue）        |
+
+> 所有訊號皆為輸出（Output），由 MCU 控制並傳送至 LCD 顯示模組。
+
+---
+
+### 5.5.7 STM32F429 LTDC 對應 18-bit 顯示器（RGB565）接法說明
+
+STM32F429 DISC 開發板內建的 LTDC（LCD-TFT Display Controller）與 LCD 面板之間透過 18 條 RGB 資料線連接，對應如下：
+
+| 顏色通道 | 使用 LTDC 輸出腳位（STM32F429） | 備註                        |
+|----------|----------------------------------|-----------------------------|
+| **Red**  | R0 ~ R5（共 6 條線）             | 對應 LCD R5 ~ R0           |
+| **Green**| G0 ~ G5（共 6 條線）             | 對應 LCD G5 ~ G0           |
+| **Blue** | B0 ~ B5（共 6 條線）             | 對應 LCD B5 ~ B0           |
+
+- 合計使用 **18 條 RGB 資料線**（6-bit R + 6-bit G + 6-bit B）。
+- LCD 使用的是 **RGB565 模式**，與 24-bit RGB（888）不同。
+- STM32 LTDC 模組支援 24-bit 輸出，因此需特別設定為 16-bit RGB565 模式。
+
+---
+
+## 5.6 LCD 顯示控制與 LTDC 圖層機制解析
+
+### 5.6.1 LCD 同步時序參數與解析（以 ILI9341 為例）
+
+#### 同步時序示意圖（參考 ILI9341 顯示驅動器）
+
+下圖為典型 LCD 顯示的同步時序，主要包含以下區段：
+
+- 水平同步（HSYNC）
+- 垂直同步（VSYNC）
+- 水平與垂直消隱區（Front/Back Porch）
+- 有效顯示區域（Active Area）
+
+對應計算公式如下：
+
+```
+Total Width（總像素數）  = Hsync + HBP + Active Width + HFP  
+Total Height（總列數）   = Vsync + VBP + Active Height + VFP
+```
+
+> 實際參數需依照所用 LCD Driver（如 ILI9341）之 datasheet 設定。
+
+#### ILI9341 時序參數建議值（解析度 240 x 320）
+
+| 參數項目                    | 符號  | 建議值 | 單位     |
+|-----------------------------|--------|--------|----------|
+| 水平同步寬度               | Hsync  | 10     | DOTCLK   |
+| 水平後消隱區（Back Porch）| HBP    | 20     | DOTCLK   |
+| 有效寬度（Active Width）   | HAddr  | 240    | DOTCLK   |
+| 水平前消隱區（Front Porch）| HFP    | 10     | DOTCLK   |
+| 垂直同步寬度               | Vsync  | 2      | Line     |
+| 垂直後消隱區（Back Porch）| VBP    | 2      | Line     |
+| 有效高度（Active Height）  | VAddr  | 320    | Line     |
+| 垂直前消隱區（Front Porch）| VFP    | 4      | Line     |
+
+> 此組參數適用於 240×320（QVGA）顯示器，像素時脈約 6.25 MHz。可依實際需求調整。
+
+#### 名詞補充
+
+- **DOTCLK**：像素時脈（Pixel Clock），每個 clock 傳輸一個像素資料
+- **Line**：指一列像素的掃描時間（包含消隱區）
+- **Active Area**：實際可見的顯示範圍
+- LTDC 模組需根據這些時序參數產生正確的 RGB 信號
+
+---
+
+### 5.6.2 顯示週期計算與更新率（以 QVGA 為例）
+
+#### 一、參數定義
+
+- AW：Active Width，有效顯示寬度（像素）
+- AH：Active Height，有效顯示高度（行）
+- HSW：Horizontal Sync Width，水平同步脈波寬度
+- HBP：Horizontal Back Porch，水平後消隱區
+- HFP：Horizontal Front Porch，水平前消隱區
+- VSW：Vertical Sync Width，垂直同步脈波寬度
+- VBP：Vertical Back Porch，垂直後消隱區
+- VFP：Vertical Front Porch，垂直前消隱區
+- T_DOTCLK：每一個像素的傳輸時間（秒）
+
+#### 二、基本計算公式
+
+1. **總寬度（TW）**  
+   `TW = AW + HSW + HBP + HFP`（單位：像素）
+
+2. **傳送一列所需時間（T_line）**  
+   `T_line = TW × T_DOTCLK`（單位：秒）
+
+3. **總列數（TL）**  
+   `TL = AH + VSW + VBP + VFP`
+
+4. **傳送一幀所需時間（T_frame）**  
+   `T_frame = TL × T_line`
+
+5. **畫面更新率（Frame Rate）**  
+   `FrameRate = 1 / T_frame`
+
+#### 三、範例計算（ILI9341 + QVGA）
+
+已知參數如下：
+
+```
+DOTCLK = 6.25 MHz → T_DOTCLK = 1 / 6.25 MHz = 0.16 μs
+AW  = 320
+HSW = 10
+HBP = 20
+HFP = 10
+AH  = 240
+VSW = 2
+VBP = 4
+VFP = 2
+```
+
+代入公式計算：
+
+```
+TW = 320 + 10 + 20 + 10 = 360 pixels
+TL = 240 + 2 + 4 + 2 = 248 lines
+T_line  = 360 × 0.16 μs = 57.6 μs
+T_frame = 248 × 57.6 μs = 14.3 ms
+FrameRate ≈ 1 / 0.0143 ≈ 69.9 Hz
+```
+
+- 每幀畫面顯示時間約為 14.3 毫秒  
+- 螢幕更新率約為 69.9 Hz，適合大多數 LCD 顯示需求  
+- 若需更高更新率，可考慮調高 DOTCLK 或減少時序參數
+
+---
+
+### 5.6.3 LTDC 圖層（Layer）架構與顯示原理
+
+#### 圖層特性與控制機制
+
+LTDC（LCD-TFT Display Controller）內建 **兩個圖層（Layer 1 與 Layer 2）**，可靈活應用於不同顯示需求。其主要特性如下：
+
+- 支援 **獨立或同時啟用兩個圖層**
+- 每個圖層可設定：
+  - **預設顏色（Default Color）**
+  - **對應的 Framebuffer 起始位址**
+  - **視窗位置與大小（Windowing）**
+- 支援 **Alpha 混合（Alpha Blending）**
+  - 可指定 **常數透明度（Constant Alpha）**
+  - 或使用像素內建透明度（Pixel Alpha）
+- 大部分圖層控制暫存器屬於 **Shadow Registers**
+  - 寫入後需額外觸發 **Shadow Reload** 才會生效
+
+#### 顯示合成原理
+
+LTDC 顯示畫面由三個區域組成：
+
+1. **Background Area**：背景顏色區，為畫面預設填色（如：藍色）
+2. **Layer 1**：可顯示第一層圖像（例：左側黃色區塊）
+3. **Layer 2**：可顯示第二層圖像（例：右側黑色區塊）
+
+顯示流程採 **自上而下（Top-Down）合成**，圖層優先順序如下：
+
+```
+Layer 2 → Layer 1 → Background
+```
+
+圖層行為說明：
+
+- 若僅啟用 Layer 1：
+  - 顯示左側黃色畫面 + 其餘區域為背景色（藍色）
+- 若同時啟用 Layer 1 與 Layer 2：
+  - 左側顯示黃色、右側顯示黑色
+  - 背景顏色會被兩層圖像覆蓋，不再顯示
+
+#### 混合（Blending）選項
+
+- **啟用混合（Blending Enable）**：
+  - LTDC 依據各圖層的 Alpha 值進行色彩混合與透明度疊加
+  - 可實現漸層、透明、淡入淡出等效果
+
+- **關閉混合（Blending Disable）**：
+  - 每層圖像以不透明方式覆蓋下層畫面（無透明度效果）
+
+---
+
+### 5.6.4 LTDC 混色機制（Blending）與 Constant Alpha 實例說明
+
+#### 圖層與顏色設定
+
+| 區域               | 顏色（RGB）   | 說明                        |
+|--------------------|---------------|-----------------------------|
+| Layer-1            | rgb(0, 0, 128) | 上層圖層顯示的深藍色         |
+| Background（BG）   | rgb(0, 0, 48)  | 背景圖層顯示的黑藍色         |
+| Blended Result     | rgb(0, 0, 123) | 混合後的最終顯示顏色         |
+
+#### 混色參數定義
+
+- **Constant Alpha（固定透明度）**：  
+  Layer-1 設定為 240（8-bit 範圍內，最大為 255）
+
+- **Alpha 值換算**：  
+  ```
+  Constant Alpha = 240 / 255 ≈ 0.94
+  ```
+
+- **混合因子設定**：
+  - `BF1 = Constant Alpha` = 0.94
+  - `BF2 = 1 - Constant Alpha` = 0.06
+
+- **混合公式（每個像素通道）**：
+  ```
+  Output_Color = BF1 × Top_Color + BF2 × Background_Color
+  ```
+
+#### 實際計算（以藍色通道為例）
+
+```
+Top Color (Layer-1, Blue) = 128  
+Background Color (BG, Blue) = 48
+
+Blended Color (Blue) = 0.94 × 128 + 0.06 × 48
+                     = 120.32 + 2.88
+                     ≈ 123
+```
+
+因此，混合後顯示的藍色通道為 `rgb(0, 0, 123)`。
+
+#### 符號說明
+
+- `C`：Top Layer 顏色（例如 Layer-1）
+- `Cs`：下層或背景顏色（例如 BG）
+
+---
+
+# 6. LCD 控制實作與顯示測試
+
+## 6.1 LCD 顯示介面介紹與 STM32F429I-DISC1 架構分析
+
+### 6.1.1 LCD 控制分類與控制器晶片概述
+
+#### 常見 LCD 控制方式與 STM32 對應模組
+
+| 控制方式               | 簡介             | 使用介面                         | 對應 STM32 模組                         | 傳輸方式 | 備註                                                                 |
+|------------------------|------------------|----------------------------------|------------------------------------------|----------|----------------------------------------------------------------------|
+| **SPI**                | 最簡單且常見     | MOSI, SCK, CS, DC                | SPI                                      | 序列     | 傳輸速度較慢，通常 MCU 每畫一筆就傳送一筆資料                        |
+| **FMC（8080 並列）**   | 中階主流方案     | RD, WR, DB0~DB15                 | FMC（Flexible Memory Controller）        | 並列     | 適用於 LCD 為 MCU Interface 類型，如 ST7796、ILI9341 等              |
+| **RGB 並行介面**       | 高速顯示方案     | HSYNC, VSYNC, DOTCLK, RGB888     | **LTDC**（LCD-TFT Display Controller）   | 並行即時 | 可直接驅動 LCD 面板，類似顯示卡原理，支援即時畫面更新                 |
+| **DSI / HDMI / LVDS**  | 高階應用介面     | 差動訊號線對                     | DSI Host（僅部分 STM32 系列支援）       | 並行高速 | 多用於高解析觸控螢幕，常見於行動裝置顯示技術                         |
+
+#### 常見 LCD 控制器與製造商對照表
+
+| 控制器型號   | 製造商               | 常見解析度 | 支援介面                        | 備註                                                              |
+|--------------|----------------------|------------|----------------------------------|-------------------------------------------------------------------|
+| **ILI9341**  | 奕力科技 Ilitek       | 240×320    | SPI、8080 並列、RGB 並行        | 市面最常見型號之一，支援多種介面，相關開發資源充足                |
+| **ST7789**   | 矽創電子 Sitronix     | 240×240    | SPI                              | 僅支援序列傳輸，常見於小尺寸顯示模組                              |
+| **ST7796**   | 矽創電子 Sitronix     | 320×480    | 8080 並列、RGB 並行              | 常見於 3.5 吋顯示模組，與 ILI9486 具高相容性                      |
+| **ILI9486**  | 奕力科技 Ilitek       | 320×480    | 8080 並列、RGB 並行              | 色彩與亮度表現優異，常見於中高階顯示模組                          |
+
+---
+
+### 6.1.2 ILI9341 控制器功能與顯示模式解析
 
 #### ILI9341 控制器詳細介紹
 
@@ -1533,12 +2556,18 @@ void exti_clear_pending_flag(SYSCFG_EXTI_LINE exti_line) {
 
 - **SPI**（3 線或 4 線模式）
 - **8080 MCU 並列介面**（8-bit 或 16-bit）
-- **RGB 並行介面**（同步訊號驅動）
+- **RGB 並行介面**（同步訊號驅動，含 HSYNC / VSYNC / DOTCLK）
 
-##### 支援像素格式：
+> 若使用 RGB 並行介面，需額外提供同步訊號與像素時脈，由 MCU 或 LTDC 模組提供。
 
-- **RGB565**（16-bit，最常見格式）
-- **RGB666 / RGB888**（需配合硬體支援）
+##### 支援像素格式（Pixel Format）：
+
+- **RGB565**（16-bit，R:5bit / G:6bit / B:5bit）  
+　常見於 SPI 或 MCU 並列介面，資料量較小。
+- **RGB666**（18-bit，R/G/B 各佔 6bit）  
+　**適用於 RGB 並行介面，對應實體線制為 R0~R5、G0~G5、B0~B5，共 18 條資料線**。
+- **RGB888**（24-bit，R/G/B 各佔 8bit）  
+　需面板與控制器均支援，實務上 ILI9341 僅內部轉換並非真實 24bit 顯示。
 
 ---
 
@@ -2153,11 +3182,11 @@ SDRAM 的初始化完全由**軟體控制**。
 - 在 `FMC_SDCMR` 中設定 `MODE = 010`，並設置目標 Bank（CTB1 / CTB2）
 
 6. 發出「Auto-refresh」命令
-- 設定 `MODE = 011`，設置目標 Bank 以及自動刷新次數（`NRFS`）  
+- 在 `FMC_SDCMR` 中設定 `MODE = 011`，設置目標 Bank 以及自動刷新次數（`NRFS`）  
 - 通常需執行 **8 次 Auto-refresh**，實際值見 SDRAM datasheet
 
 7. 發出「Load Mode Register」命令
-- 設定 `MODE = 100`，在 `MRD` 欄位中填入對應值，並設置目標 Bank  
+- 在 `FMC_SDCMR` 中設定 `MODE = 100`，在 `MRD` 欄位中填入對應值，並設置目標 Bank  
 - 此命令會將資料寫入 SDRAM 的 Mode Register
 
 > 注意：  
