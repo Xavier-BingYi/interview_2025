@@ -24,9 +24,12 @@
 #include <exti.h>
 #include <ltdc.h>
 #include <fmc.h>
+#include <spi.h>
 
 void delay_us(uint32_t us) {
-    for (volatile uint32_t i = 0; i < us * 168 / 4; ++i) {}
+    for (volatile uint32_t i = 0; i < us ; ++i) {
+        __asm__("nop");
+    }
 }
 
 int main(void)
@@ -34,6 +37,13 @@ int main(void)
 	gpio_init();
 	usart_init();
 	exti_init();
+	spi_init();
+	ili9341_init();
+	//ltdc_gpio_init();
+
+	// fmc_init();
+	// sdram_self_test();
+
 
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
 	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
@@ -46,15 +56,12 @@ int main(void)
 	usart_write(USART1_BASE, '\r');
 	usart_write(USART1_BASE, '\n');
 
-	ltdc_gpio_init();
 
-	// fmc_init();
-	// sdram_self_test();
 
     while (1)
     {
     	usart_printf("enter while \r\n");
-    	delay_us(100);
+    	delay_us(1000000);
     	//for (volatile int i = 0; i < 1000000; i++); // about 1 second
 
     }

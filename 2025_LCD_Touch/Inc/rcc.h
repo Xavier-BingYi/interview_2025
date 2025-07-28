@@ -38,6 +38,7 @@ typedef enum {
 
 /* RCC APB2 bit positions */
 #define RCC_APB2EN_SYSCFG 14  // SYSCFG EN bit = bit 14
+#define RCC_APB2EN_SPI5 20  // SPI5 EN bit = bit 20
 
 /* AHB3 peripheral clock enable bit for FMC controller */
 #define RCC_AHB3ENR_FMCEN (1U << 0)

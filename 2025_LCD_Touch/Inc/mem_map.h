@@ -109,6 +109,19 @@
 
 
 
+/* SPI Group */
+//------------------------------------------------
+#define SPI_BASE 0x40015000
+
+#define SPI_CR1_OFFSET 0x00
+#define SPI_SR_OFFSET 0x08
+#define SPI_DR_OFFSET 0x0C
+
+
+
+
+
+
 /* FMC Group */
 //------------------------------------------------
 #define FMC_BASE 0xA0000000

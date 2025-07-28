@@ -5,6 +5,7 @@
 "./Src/main.o"
 "./Src/mem_io.o"
 "./Src/rcc.o"
+"./Src/spi.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Src/usart.o"

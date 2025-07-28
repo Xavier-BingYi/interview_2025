@@ -2523,6 +2523,7 @@ Blended Color (Blue) = 0.94 × 128 + 0.06 × 48
 # 6. LCD 控制實作與顯示測試
 
 ## 6.1 LCD 顯示介面介紹與 STM32F429I-DISC1 架構分析
+> LCD 類型、控制器、RGB 並行模式的特性與顯示流程概論
 
 ### 6.1.1 LCD 控制分類與控制器晶片概述
 
@@ -2569,8 +2570,6 @@ Blended Color (Blue) = 0.94 × 128 + 0.06 × 48
 - **RGB888**（24-bit，R/G/B 各佔 8bit）  
 　需面板與控制器均支援，實務上 ILI9341 僅內部轉換並非真實 24bit 顯示。
 
----
-
 #### ILI9341 的顯示介面模式比較
 
 | 模式名稱        | 說明                                                       | MCU 傳輸方式與角色                      |
@@ -2580,16 +2579,16 @@ Blended Color (Blue) = 0.94 × 128 + 0.06 × 48
 
 ---
 
-### 5.1.3 STM32F429I-DISC1 LCD 架構與顯示原理
+### 6.1.3 STM32F429I-DISC1 LCD 架構與顯示原理
 
-根據 ST 官方文件《UM1670》第 6.9 節，STM32F429I-DISC1 開發板上的 LCD 模組具備以下特性：
+根據 ST 官方文件《UM1670》第 6.9 節說明，STM32F429I-DISC1 開發板上搭載的 TFT LCD 模組具備以下特性：
 
-- **控制器**：ILI9341  
-- **解析度**：QVGA (240×320)  
-- **顯示介面**：RGB 並行介面  
-- **傳輸方式**：HSYNC、VSYNC、DOTCLK、RGB888
-
----
+- **控制器晶片**：ILI9341（內建於模組內部）
+- **顯示解析度**：QVGA（240 × 320 dots）
+- **顯示介面**：RGB 並行介面（透過 LTDC 模組驅動）
+- **同步傳輸訊號**：HSYNC、VSYNC、DOTCLK
+- **色彩深度**：262K 色（6 位元/色 → 對應 RGB666 線制）
+- **工作電壓**：典型值 2.8V
 
 #### LTDC（LCD-TFT Display Controller）模組介紹
 
@@ -2602,26 +2601,23 @@ LTDC 是 STM32F429 內建的顯示控制模組，用於驅動 RGB 並行介面�
 
 開發流程中，MCU 會先將畫面內容填入 RAM（通常為 SDRAM），再由 LTDC 依照設定的時序自動「掃描」這塊記憶體，並同步輸出資料至 LCD 控制器顯示。
 
----
-
 #### RGB 並行介面顯示原理
 
-RGB 並行介面是一種即時且不需命令控制的顯示方式，其特點如下：
+RGB 並行介面是一種即時顯示的傳輸方式，不依賴命令控制，其主要特性如下：
 
-- 每個像素以 **RGB888** 格式輸出（R/G/B 各 8-bit，共 24-bit），但實際模組多採用 **RGB565**（16-bit）
-- 畫面資料以「像素為單位」連續傳輸，並搭配時序訊號實現逐行掃描
-- MCU 不再送出 command，ILI9341 僅作為 RGB 資料流的接收與顯示裝置
-- 顯示需搭配以下同步訊號：
+- 每個像素以 **RGB666** 格式輸出（R/G/B 各 6-bit，共 18-bit），但實務上多數模組採用 **RGB565**（16-bit）作為畫面輸入格式。
+- 顯示資料以「像素為單位」連續傳輸，並透過同步訊號實現逐行掃描，達成即時顯示。
+- 雖然畫面資料不再經由 SPI 傳送，但在進入 RGB 並行顯示模式之前，仍需透過 SPI（或 8080 並列介面）傳送初始化命令（command），以設定 ILI9341 的啟動參數與顯示模式。
+- 當初始化完成並切換至 RGB 並行模式後，**MCU 將不再傳送任何控制命令**，而是持續透過 RGB 資料線與同步訊號輸出畫面內容。此時，**ILI9341 僅作為被動的顯示終端**，即時接收資料並顯示畫面。
+- 顯示所需同步訊號包括：
   - **HSYNC**（水平同步）
   - **VSYNC**（垂直同步）
   - **DOTCLK**（像素時脈）
   - **DE**（Display Enable，部分面板使用）
 
-這類機制與 VGA / HDMI 類似，畫面會由顯示控制器持續掃描顯示，而非由 MCU 傳送命令逐筆控制。
+此類顯示機制與 **VGA** 或 **HDMI** 類似，畫面更新完全依賴顯示控制器的即時掃描，而非由 MCU 傳送命令逐筆控制。
 
----
-
-#### 與 SPI 控制方式的差異比較
+#### SPI 與 RGB 顯示架構比較
 
 | 比較項目   | SPI LCD                         | LTDC RGB LCD                          |
 |------------|----------------------------------|----------------------------------------|
@@ -2633,96 +2629,968 @@ RGB 並行介面是一種即時且不需命令控制的顯示方式，其特點�
 
 ---
 
-### 5.1.4 開發流程與系統架構總結
+### 6.1.4 開發流程與系統架構總結
 
-STM32F429I-DISC1 開發板的 LCD 模組採用 **ILI9341 控制器**，並以 **RGB 並行模式**連接至 **LTDC 顯示控制模組**。整體顯示架構建立於 **LTDC + SDRAM frame buffer** 上，由 LTDC 自動掃描記憶體內容並輸出畫面資料至 LCD，**無需 MCU 手動逐筆畫圖**。
+STM32F429I-DISC1 開發板上的 LCD 模組採用 **ILI9341 控制器**，透過 **RGB 並行介面** 與 **LTDC（LCD-TFT Display Controller）模組** 連接。整體顯示系統由 LTDC 自動產生同步訊號與畫面資料，並輸出至 LCD 顯示器，**無需 MCU 逐筆傳送像素資料**。
+
+畫面資料來源於一塊記憶體區域（稱為 **frame buffer**），LTDC 會依照設定持續掃描該區域內容並更新畫面。此 frame buffer 可以配置於：
+
+- **外部 SDRAM**（適合高解析度或多圖層顯示）
+- **內部 SRAM**（適用於低解析度、靜態畫面或記憶體需求低的應用）
+
+開發者可依實際需求與系統資源，在內部 SRAM 或外部 SDRAM 中擇一配置 frame buffer，以達成平衡的效能與資源使用。
 
 #### LCD 顯示流程整理：
 
-0. **初始化 RGB 腳位**
-   - 呼叫 `ltdc_gpio_init()` → 將所有 RGB 並行輸出腳設為 Alternate Function 模式（AF14）
+1. **初始化 RGB 腳位**
+   - 呼叫 `ltdc_gpio_init()` → 將所有 RGB 並行輸出腳位設定為 Alternate Function 模式（AF14）
 
-1. **MCU 啟動後，依序初始化 FMC 與 SDRAM**
-   - 呼叫 `sdram_gpio_init()` 設定腳位 → `sdram_init()` 執行初始化序列
-   - SDRAM 初始化成功後，`0xD0000000` 即可作為可讀寫的 frame buffer 空間
-   - *若未正確初始化 SDRAM，LTDC 將無法讀取有效畫面資料，可能導致畫面無法顯示、顯示異常或出現雜訊*
+補充：**若使用 SDRAM 作為 frame buffer，MCU 啟動後需先完成 FMC 與 SDRAM 的初始化作業**
+   - 呼叫 `sdram_gpio_init()` 設定 FMC 所需的外部匯流排腳位
+   - 呼叫 `sdram_init()` 執行 SDRAM 初始化序列（包括時序與模式寄存器配置）
+   - SDRAM 初始化成功後，位址區段 `0xD0000000` 起可作為可讀寫的 frame buffer 區域
+   - *若 SDRAM 初始化失敗，LTDC 將無法正確讀取畫面資料，可能導致顯示異常或出現雜訊*
 
 2. **LTDC 初始化並指定 frame buffer 起始位址**
-   - 呼叫 `ltdc_clock_init()` → 設定 pixel clock（例如透過 PLLSAI 輸出）
-   - 呼叫 `ltdc_init()` → 設定解析度、同步時序、像素格式（通常為 RGB565）與 frame buffer 起始位址（0xD0000000）
+   - 呼叫 `ltdc_clock_init()` → 設定像素時脈來源（例如透過 PLLSAI 輸出）
+   - 呼叫 `ltdc_init()` → 設定畫面解析度、同步時序參數、像素格式（如 RGB565 或 RGB888），以及 frame buffer 的起始位址
 
-3. **MCU 將畫面資料（如純紅色）寫入 SDRAM 的 frame buffer**
-   - 呼叫 `lcd_clear_red()` → 將整塊 SDRAM 填上紅色像素資料（0xF800）
+3. **MCU 將畫面資料（如純紅色）寫入 frame buffer**
+   - 呼叫 `lcd_clear_red()` → 將 frame buffer 中的每個像素填入紅色資料（通常為固定顏色的 16-bit 或 24-bit 值）
 
-4. **LTDC 模組自動讀取 SDRAM 並透過 RGB 並行介面輸出畫面**
-   - 呼叫 `ltdc_start_display()` → 啟用 shadow reload，LTDC 開始傳送畫面
-   - 資料經由 `HSYNC`、`VSYNC`、`DOTCLK` 與 RGB 資料線輸出至 LCD 面板
-   - MCU 不需再手動傳送指令，畫面更新由硬體 LTDC 自動完成
-
----
-
-#### 顯示架構關鍵整理：
-
-- LCD 顯示流程依賴 **LTDC + SDRAM** 架構，不再透過 MCU 操作 LCD 命令
-- SDRAM frame buffer 位於 **0xD0000000**，由 LTDC 模組自動讀取並顯示
-- **顯示流程模組劃分：**
-  1. SDRAM：儲存畫面資料
-  2. LTDC：產生時序訊號與畫面輸出
-  3. RGB 並行介面：傳送畫素資料至 LCD 控制器
-  4. MCU 僅需初始化與資料填入，不負責畫面輸出時序
-
-> 備註：若使用其他 LCD 模組（如 SPI），MCU 將需負責每筆像素的傳輸，但本板為 RGB 並行架構，所有畫面輸出由 LTDC 接管。
+4. **LTDC 自動掃描 frame buffer 並透過 RGB 並行介面輸出畫面**
+   - 呼叫 `ltdc_start_display()` → 啟用 shadow reload，LTDC 開始依照設定參數驅動畫面輸出
+   - 畫面資料經由 `HSYNC`、`VSYNC`、`DOTCLK` 與 RGB 資料線傳送至 LCD 面板
+   - **MCU 不需逐筆傳送畫面資料，顯示更新由 LTDC 硬體自動完成**
 
 ---
 
-## 5.2 LTDC GPIO 腳位初始化
+## 6.2 SPI 初始化 ILI9341 控制器
+> 說明透過 SPI 傳送初始化命令、切換成 RGB 模式、設定 pixel format
 
-為了讓 LTDC 顯示模組與 SDRAM 記憶體能正常運作，必須先將相關 GPIO 腳位設定為對應的 Alternate Function 模式。STM32F429I-DISC1 所使用的 RGB LCD 採用 LTDC 模組驅動，而畫面資料則儲存在外接 SDRAM，兩者皆透過大量 GPIO 腳位與內部匯流排連接。
+### 6.2.1 SPI 模組功能總覽與傳輸邏輯
 
-### 5.2.1 LTDC 的三個時脈區域（Clock Domains）
+#### STM32F429 SPI 特性（SPI features）
 
-LTDC 顯示控制器主要劃分為三個時脈區域（Clock Domains），各自負責不同的功能：
+根據《Reference Manual》28.2.1 節所述，STM32F429 的 SPI 模組具備以下功能特性：
 
-1. **AHB Clock Domain**：資料傳輸來源
-   - 畫面資料來自 **SDRAM**（frame buffer）
-   - 透過 AHB 匯流排傳送至 LTDC 內部的 Layer FIFO 暫存區
+- **全雙工同步傳輸**（Full-duplex synchronous transfers）：透過三條線實現同步資料雙向傳輸。
+- **單向同步傳輸**（Simplex synchronous transfers）：可使用兩條線進行單向或雙向的資料傳輸。
+- 支援 **8-bit 或 16-bit 資料框格式**，可依需求設定。
+- 可配置為 **主機（Master）或從機（Slave）模式**。
+- 提供 **8 種主機時脈分頻器（baud rate prescaler）**，主機最高輸出頻率可達 `fPCLK/2`。
+- 從機可接收的時脈頻率同樣最高為 `fPCLK/2`。
+- 可程式化的 **時脈極性（CPOL）與時脈相位（CPHA）**，以支援不同裝置的時序要求。
+- 支援 **位元順序設定**：可選擇 **MSB-first** 或 **LSB-first** 資料傳送方式。
+- 具備獨立的 **傳送（Tx）與接收（Rx）旗標**，並支援中斷觸發機制。
+- 支援 **DMA 傳輸模式**：內建 1-byte 資料暫存器，支援 DMA 控制的 Tx / Rx 請求。
 
-2. **APB2 clock domain**：控制設定與中斷通知  
-   - MCU 可透過 APB2 匯流排存取 LTDC 的控制暫存器與狀態暫存器
-   - 用於設定解析度、Layer 位置、像素格式、啟用參數等
-   - 同時提供中斷通知功能（畫面更新完成、FIFO 狀態、錯誤等）
+#### STM32F429 SPI 功能描述（SPI functional description）
 
-3. **Pixel clock domain**：畫面處理與輸出核心  
-   - 含圖層混合、像素格式轉換、抖動處理等模組，搭配 Timing Generator 產生畫面同步訊號
-   - 包含以下功能：
-     - **Layer FIFO**：兩層圖層暫存（每層 64×32-bit），可獨立啟用/關閉
-     - **Pixel Format Converter（PFC）**：像素格式統一轉換（如 RGB565、ARGB8888）
-     - **Blending Unit**：混合 Layer0 / Layer1 畫素資料（支援透明度混合）
-     - **Dithering Unit**：將高位元顏色轉換為較低位元輸出，避免顏色斷層
-     - **Timing Generator**：產生畫面時序訊號，如 `HSYNC`、`VSYNC`、`DE`、`CLK`
-   - 最終輸出資料經由 RGB 並行介面（如下所示）送往 LCD 面板
+**SPI 外部腳位定義**（通常接到外部設備的四個腳位）：
+
+| 腳位       | 名稱                    | 說明                                                                 |
+|------------|-------------------------|----------------------------------------------------------------------|
+| **MISO**   | Master In / Slave Out   | 主機接收、從機傳送的資料腳位。在主機模式下用於接收資料；在從機模式下用於傳送資料。 |
+| **MOSI**   | Master Out / Slave In   | 主機傳送、從機接收的資料腳位。在主機模式下用於傳送資料；在從機模式下用於接收資料。 |
+| **SCK**    | Serial Clock            | 提供同步時脈訊號。在主機模式下輸出給從機；在從機模式下接收時脈訊號。              |
+| **NSS**    | Slave Select            | 用來選擇從機（optional）。此腳位可作為片選訊號（chip select），避免多個從機同時使用資料線。 |
+
+- 若設定 STM32 SPI 為從機模式，NSS 腳位會作為**輸入腳**使用。當主機（例如另一顆 MCU）選取 STM32 從機時，必須將 NSS 拉低；通常會接到主機端的 GPIO 腳位控制。
+
+- 若 STM32 SPI 模組處於主機模式（`MSTR=1`），並希望由硬體自動控制 NSS 腳位為輸出，則需在 `SPI_CR2` 暫存器中設定 `SSOE=1`（Slave Select Output Enable）。
+
+- 若設定 STM32 為主機（`MSTR=1`），但 NSS 腳位**以輸入方式接收到低電位**，STM32 會認為有其他主機試圖接管匯流排，此時會觸發錯誤狀態（**Master Mode Fault**）：`MSTR` 位元會自動被清除，SPI 模組將退回從機模式以避免匯流排衝突。
+
+- STM32 SPI 模組預設為 **MSB-first（最高有效位元先出）** 傳輸格式，SCK 腳提供時脈訊號，確保資料在一致的時序下同步傳送與接收。
+
+#### Clock Phase（CPHA）與 Clock Polarity（CPOL）說明
+
+SPI 傳輸的時序關係可透過軟體設定，使用 `SPI_CR1` 暫存器中的 CPOL 與 CPHA 兩個位元：
+
+**CPOL（Clock Polarity，時脈極性）**：  
+控制 SCK 腳位在閒置時的電位（資料未傳輸時的預設狀態）：
+
+- `CPOL = 0` ➜ 閒置為低電位（Low）  
+- `CPOL = 1` ➜ 閒置為高電位（High）
+
+> 此設定影響主機與從機的同步性，須一致。
+
+**CPHA（Clock Phase，時脈相位）**：  
+控制在哪一個 SCK 的邊緣取樣資料：
+
+- `CPHA = 0` ➜ 第 1 個時脈邊緣為取樣點  
+- `CPHA = 1` ➜ 第 2 個時脈邊緣為取樣點
+
+SCK 的上升/下降緣依據 CPOL 決定：
+
+| CPOL | CPHA | SCK 閒置狀態 | 資料於哪個邊緣取樣 |
+|------|------|--------------|---------------------|
+| 0    | 0    | 低電位       | 第一次上升緣        |
+| 0    | 1    | 低電位       | 第二次上升緣        |
+| 1    | 0    | 高電位       | 第一次下降緣        |
+| 1    | 1    | 高電位       | 第二次下降緣        |
+
+- SCK 閒置狀態必須符合 CPOL 設定：
+  - `CPOL = 1` ➜ 閒置時須拉高 SCK  
+  - `CPOL = 0` ➜ 閒置時須拉低 SCK
+
+#### 資料框格式（Data frame format）
+
+資料傳輸時可以設定為：
+
+- MSB-first（高位元先出）
+- LSB-first（低位元先出）  
+（由 `SPI_CR1` 暫存器中的 `LSBFIRST` 位元設定）
+
+每一個 **資料框（Data frame）** 可以是：
+
+- 8-bit 或 16-bit  
+（根據 `SPI_CR1` 中的 `DFF` 位元設定）
+
+所選的格式將同時應用於 **傳送（Tx）與接收（Rx）**。
 
 ---
 
-### 5.2.2 LTDC 的輸出訊號（通往 LCD 面板）
+### 6.2.2 SPI 主機模式設定與傳輸流程（Master Mode Configuration & Data Flow）
+
+當 SPI 被設定為主機模式時，序列時脈（serial clock）將由 **SCK 腳位輸出**。
+
+#### 配置步驟（Procedure）
+
+1. 設定 `BR[2:0]` 位元（位於 `SPI_CR1`）：  
+   定義序列時脈（SCK）的頻率（即 SPI 傳輸速度）。
+
+2. 設定 `CPOL` 與 `CPHA` 位元：  
+   用來指定資料傳輸與序列時脈之間的四種對應關係（即時序模式）。  
+   ※ 若啟用 TI 模式，此步驟可略過。
+
+3. 設定 `DFF` 位元：  
+   選擇資料框格式為 8-bit 或 16-bit。
+
+4. 設定 `LSBFIRST` 位元（位於 `SPI_CR1`）：  
+   控制資料傳輸順序為 MSB-first（預設）或 LSB-first。  
+   ※ 若啟用 TI 模式，此步驟亦可省略。
+
+5. 根據需求設定 NSS 管理模式：
+
+   - NSS 作為輸入腳（硬體管理模式）：  
+     NSS 腳需在完整傳輸期間維持高電位。
+   
+   - NSS 軟體管理模式（SSM/SSI）：  
+     設定 `SSM=1` 與 `SSI=1`，模擬 NSS 高電位。
+   
+   - NSS 作為輸出腳（主機自動控制）：  
+     設定 `SSOE=1`（位於 `SPI_CR2`），由硬體自動控制 NSS。
+
+   ※ 在 TI 模式下，NSS 控制邏輯由硬體處理，此步驟可略過。
+
+6. 設定 `FRF` 位元（位於 `SPI_CR2`）：  
+   決定是否使用 TI 協定模式。
+
+7. 啟用 SPI 模組並切換至主機模式：  
+   設定 `MSTR=1` 與 `SPE=1`。  
+   ※ 這兩個位元會保持有效，前提是 NSS 維持高電位。
+
+#### 傳送流程（Transmit Sequence）
+
+當一個位元組（byte）被寫入 Tx buffer 時，將啟動以下流程：
+
+- 資料會平行載入至移位暫存器（shift register，來源為內部匯流排）。
+- 在第一次時脈傳輸時，資料會從 MOSI 腳以串列方式傳出。
+- 傳輸順序由 `LSBFIRST` 決定，支援 MSB-first 或 LSB-first。
+- 資料從 Tx buffer 載入移位暫存器時，會自動設置 `TXE` 旗標（Tx buffer empty）。
+  - 若 `SPI_CR2` 中啟用了 `TXEIE`，則會觸發中斷。
+
+#### 接收流程（Receive Sequence）
+
+當傳輸完成後，接收方行為如下：
+
+- 收到的資料會從移位暫存器搬入 Rx buffer，並自動設置 `RXNE` 旗標（Rx buffer not empty）。
+- 若 `SPI_CR2` 中啟用了 `RXNEIE` 位元，則會觸發中斷通知。
+- 當主程式讀取 `SPI_DR` 暫存器時，資料會從 Rx buffer 被取出，並清除 `RXNE` 旗標。
+
+※ 注意：在寫入 Tx buffer 前，軟體必須先確認 `TXE=1`，否則可能覆蓋尚未傳送完成的資料。
+
+---
+
+### 6.2.3 SPI 資料傳輸與接收流程（Data Transmission and Reception Procedures）
+
+#### Rx 與 Tx 暫存器行為說明
+
+- **接收階段（Rx）**  
+  外部資料透過 MISO 腳位輸入後，會先進入內部的 **移位暫存器（Shift Register）**，接著平行搬移至 **Rx buffer**。  
+  使用 `SPI_DR` 暫存器進行讀取，即可取得此接收資料。
+
+- **傳輸階段（Tx）**  
+  寫入 `SPI_DR` 暫存器的資料，會先載入 **Tx buffer**，再傳送至移位暫存器，最終透過 MOSI 腳位串列輸出。
+
+> 簡而言之：**寫入 `SPI_DR` 表示傳送資料；讀取 `SPI_DR` 表示接收資料。**
+
+#### 主機模式下的傳輸啟動流程（Start Sequence in Master Mode）
+
+SPI 提供四種傳輸模式，透過 `BIDIMODE`、`RXONLY`、`BIDIOE` 位元組合設定：
+
+| 模式類型               | 設定條件                       | 備註說明                     |
+|------------------------|--------------------------------|------------------------------|
+| 全雙工模式             | `BIDIMODE=0`, `RXONLY=0`       | 最常見的預設模式，可同步收發 |
+| 單向接收模式           | `BIDIMODE=0`, `RXONLY=1`       | 僅啟用接收功能               |
+| 單線傳送模式           | `BIDIMODE=1`, `BIDIOE=1`       | 傳送與接收共用一條線，僅傳送 |
+| 單線接收模式           | `BIDIMODE=1`, `BIDIOE=0`       | 傳送與接收共用一條線，僅接收 |
+
+> 實務上，大多數 SPI LCD 控制器僅支援主機傳送資料至 LCD，並不回傳資料。建議直接採用預設的 **全雙工模式**，僅接出 MOSI、SCK、NSS（CS），MISO 可不接。
+
+#### 全雙工傳輸流程（Full-Duplex Mode）
+
+1. 傳送流程由主機寫入 `SPI_DR`（Tx buffer）開始。
+2. 資料從 Tx buffer 載入移位暫存器，並依據時脈（SCK）透過 MOSI 串列傳出。
+3. 若 MISO 腳位連接且從機有回傳資料，將會載入移位暫存器，並平行搬入 Rx buffer，供主機讀取。
+
+#### 狀態旗標與資料處理（Status Flags and Flow Control）
+
+##### TXE（Transmit Buffer Empty）
+
+- 當資料從 Tx buffer 傳至移位暫存器後，`TXE=1`，表示 Tx buffer 已空，可再寫入。
+- 若 `SPI_CR2.TXEIE = 1`，此事件可觸發中斷。
+- **軟體在寫入 `SPI_DR` 前，必須確認 `TXE=1`，否則可能覆蓋前一筆尚未完成傳送的資料。**
+
+##### RXNE（Receive Buffer Not Empty）
+
+- 資料由移位暫存器搬入 Rx buffer 後，`RXNE=1`。
+- 表示可透過讀取 `SPI_DR` 取得接收資料，並會自動清除 `RXNE`。
+- 若 `SPI_CR2.RXNEIE = 1`，此事件亦可觸發中斷。
+
+##### BSY（Busy）
+
+- SPI 傳輸進行中時，`BSY=1`。
+- 在停用 SPI（清除 SPE 位元）前，應等待 `BSY=0`，確保最後一筆資料傳送完成。
+
+### 6.2.4 SPI 腳位定義與 GPIO 初始化實作（SPI Pin Mapping and GPIO Setup）
+
+#### SPI 腳位連接分析（Pin Mapping for SPI）
+
+根據 LCD 模組 **FRD240C48003-B** 的 datasheet 中第 4 節 *Interface Specification*，在 SPI 模式下所使用的控制腳位如下：
+
+| 腳位編號 | LCD 模組標示 | 功能說明                                                                 |
+|----------|----------------|--------------------------------------------------------------------------|
+| 30       | `SDA`          | SPI 模式下作為 **Serial input/output signal**（序列資料輸入腳，MOSI）       |
+| 36       | `WR`           | SPI 或 SPI_RGB 模式下作為 **Data/Command 選擇腳位**                        |
+| 37       | `RS`           | SPI 模式下作為 **Serial clock signal**，對應 SPI 的 `SCK` 腳位              |
+| 38       | `CS`           | 作為 **晶片選擇（Chip Select）** 控制腳位                                  |
+
+根據 ILI9341 資料手冊《第 4 章 Pin Descriptions》所述，若使用 RGB 介面作為顯示輸出，則仍須透過序列介面（serial interface）進行初始化與控制設定。
+
+而從 **STM32F429I-DISC1 開發板原理圖**可知，ILI9341 的 `IM[3:0]` 設定為 `0110`，對應資料手冊中定義的 **4-line SPI（8-bit data serial）模式**。
+
+根據《第 7.1.8 節 Serial Interface》，此模式包含四條訊號線：MOSI、SCK、D/C（資料/命令）、CS（片選）。  
+然而從原理圖可見，僅有 MOSI 與 SCK 連接至 STM32 的 **SPI5 硬體模組**，其餘 D/C 與 CS 則透過 **GPIO 腳位控制**。
+
+| 功能別稱        | LCD 腳位標示 | 電氣名稱 | STM32F429 對應接腳         |
+|-----------------|---------------|----------|-----------------------------|
+| MOSI            | `SDA`         | PF9      | **SPI5_MOSI**               |
+| SCK（時脈）     | `RS/SCL`      | PF7      | **SPI5_SCK**                |
+| D/C（資料/命令） | `WR`          | PD13     | **GPIO 控制腳（WRX_DCX）**  |
+| CS（片選）      | `CS`          | PC2      | **GPIO 控制腳（CSX）**      |
+
+> 備註：LCD 並未使用 MISO 腳，屬於單向傳輸結構，故 SPI 模式可採用 **全雙工模式（BIDIMODE=0, RXONLY=0）**，僅實際連接 MOSI 與 SCK 兩線。
+
+#### SPI 腳位初始化程式碼
+
+以下為對應 SPI5 所需 GPIO 腳位之初始化程式，包含 MOSI、SCK、D/C、CS：
+
+````C
+void spi_gpio_init(void)
+{
+    // Enable AHB1 clocks for GPIOF, GPIOD, and GPIOC
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOF);  // for SCK, MOSI
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOD);  // for D/C (WRX)
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOC);  // for CS
+
+    // Set PF9 to SPI5_MOSI (AF5)
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_9, ALTERNATE_AF5);
+
+    // Set PF7 to SPI5_SCK (AF5)
+    gpio_set_mode(GPIOF_BASE, GPIO_PIN_7, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_7, ALTERNATE_AF5);
+
+    // Set PD13 as output for D/C (Data/Command select)
+    gpio_set_mode(GPIOD_BASE, GPIO_PIN_13, GPIO_MODE_OUTPUT);
+
+    // Set PC2 as output for CS (Chip Select)
+    gpio_set_mode(GPIOC_BASE, GPIO_PIN_2, GPIO_MODE_OUTPUT);
+}
+````
+
+### 6.2.5  STM32 SPI 硬體初始化
+
+#### 步驟一、設定 `BR[2:0]` 位元
+
+這邊需設定 SPI 的序列時脈（SCK，Serial Clock），也就是 SPI 傳輸速度。此頻率由 SPI 控制暫存器 1（`SPI_CR1`）中的 `BR[2:0]` 位元負責控制，作用是設定 **波特率預除值（baud rate prescaler）**，將 SPI 時脈來源 `fCK` 進行分頻處理。
+
+根據 STM32 的架構，`fCK` 為所屬匯流排（APB1 或 APB2）的時脈。以 STM32F429 為例，**SPI5 掛載於 APB2 匯流排**，因此：
+
+> `fCK_SPI5 = fCK_APB2`
+
+在 **裸機開發（bare-metal）** 環境下，MCU 上電後系統時脈（SYSCLK）預設採用內部高速震盪器 **HSI** 作為時脈來源，頻率為 **16 MHz**。  
+若未修改系統時脈配置，根據預設設定：
+
+- APB2 匯流排的除頻參數 `PPRE2 = 0`（未分頻）
+- 則有：`fCK_APB2 = SYSCLK / 1 = 16 MHz`
+
+所以 SPI5 的輸入時脈為：
+
+```
+fCK_SPI5 = 16 MHz
+```
+
+根據 ILI9341 的技術手冊，**SPI 模式的 Serial Clock Cycle（寫入）最小為 100 ns**，也就是完整一個高＋低的 SCK 週期不可短於 100ns，  
+換算為頻率為：
+
+```
+fSCK_max = 1 / 100 ns = 10 MHz
+```
+
+若超過該頻率，將違反時序規範，可能導致從設備無法接收資料、產生畫面亂碼或顯示異常。
+
+因此此例中，將 `BR[2:0]` 設定為 `000`，表示除以 2，即：
+
+```
+fSCK = fCK / 2 = 16 MHz / 2 = 8 MHz
+```
+
+程式碼範例：
+
+````c
+void spi_cr1_write_field(spi_cr1_field_t field, uint32_t value){
+    uint32_t addr = SPI_BASE + SPI_CR1_OFFSET;
+    uint8_t shift = 0;
+    uint8_t width = 0;
+
+    switch (field) {
+        case SPI_CR1_CPHA:         shift = 0;  width = 1; break;
+        case SPI_CR1_CPOL:         shift = 1;  width = 1; break;
+        case SPI_CR1_MSTR:         shift = 2;  width = 1; break;
+        case SPI_CR1_BR:           shift = 3;  width = 3; break;
+        case SPI_CR1_SPE:          shift = 6;  width = 1; break;
+        case SPI_CR1_LSBFIRST:     shift = 7;  width = 1; break;
+        case SPI_CR1_SSI:          shift = 8;  width = 1; break;
+        case SPI_CR1_SSM:          shift = 9;  width = 1; break;
+        case SPI_CR1_RXONLY:       shift = 10; width = 1; break;
+        case SPI_CR1_DFF:          shift = 11; width = 1; break;
+        case SPI_CR1_CRCNEXT:      shift = 12; width = 1; break;
+        case SPI_CR1_CRCEN:        shift = 13; width = 1; break;
+        case SPI_CR1_BIDIOE:       shift = 14; width = 1; break;
+        case SPI_CR1_BIDIMODE:     shift = 15; width = 1; break;
+        default: return;
+    }
+
+    uint32_t mask = ((1U << width) - 1U) << shift;
+    uint32_t data = ((uint32_t)value & ((1U << width) - 1U)) << shift;
+    io_writeMask(addr, data, mask);
+}
+
+// According to ILI9341 spec, SPI max clock = 10 MHz
+// Set SPI baud rate to fPCLK / 2 = 8 MHz (assuming default fPCLK = 16 MHz)
+spi_cr1_write_field(SPI_CR1_BR, 0b000);  // 0b000: baud rate divisor = 2
+````
+
+#### 步驟二、設定 `CPOL` 與 `CPHA` 位元：  
+
+用來指定資料傳輸與序列時脈之間的四種對應關係（即 SPI 時序模式）。  
+根據 ILI9341 資料手冊中《RM 第 7.1.8 節 Serial Interface》所附表格可觀察出，`SCL` 預設為低電位（常駐於 low），且每次資料的有效觸發點發生於 **上升緣（rising edge）**。  
+此外，在《RM 第 7.1.10 節》中亦明確說明：
+
+> *"ILI9341 latches the SDA (input data) at the rising edges of SCL (serial clock)"*
+
+此敘述進一步驗證時序邏輯，表示 ILI9341 會在時脈的上升緣擷取輸入資料。
+
+綜合以上資訊，可確認 ILI9341 所需的 SPI 時序為：
+
+````c
+// CPOL: CK=0 when idle; CPHA: capture on first clock edge
+spi_cr1_write_field(SPI_CR1_CPOL, 0);
+spi_cr1_write_field(SPI_CR1_CPHA, 0);
+````
+
+#### 步驟三、設定 `DFF` 位元：  
+
+由於ILI9341 的 `IM[3:0]` 設定為 `0110`，對應資料手冊中定義的 **4-line SPI（8-bit data serial）模式**，故將資料框格式選擇為 8-bit。
+
+````C
+// Set data frame format to 8-bit (DFF=0)
+spi_cr1_write_field(SPI_CR1_DFF, 0);
+````
+
+#### 步驟四、設定 `LSBFIRST` 位元（位於 `SPI_CR1`）： 
+
+根據 ILI9341 控制器的技術手冊〈7.1.9 Write Cycle Sequence〉，在進行寫入操作時，資料的傳輸順序為 **MSB-first（最高位元先傳）**，傳輸格式為：
+
+```
+D7 → D6 → ... → D0
+```
+
+因此，STM32 的 `LSBFIRST` 位元應設定為 `0`，採用預設的 MSB-first 傳輸模式：
+
+````c
+    // Use MSB-first format (LSBFIRST = 0, default)
+    spi_cr1_write_field(SPI_CR1_LSBFIRST, 0);
+````
+
+#### 步驟五、根據需求設定 NSS 管理模式：
+
+`CR1` 中的 Bit 9 `SSM`（Software Slave Management）負責決定是否啟用軟體從機管理模式：
+
+- 若設為 `0`，表示停用軟體從機管理，系統會依賴實體 `NSS` 腳位的電位，由外部硬體拉高或拉低 `NSS`。此模式常見於 SPI 從機的應用。
+- 若設為 `1`，表示啟用軟體從機管理，此時必須透過 Bit 8 `SSI` 來模擬 `NSS` 狀態，實體 `NSS` 腳位將被忽略。
+
+而 Bit 8 `SSI`（Internal Slave Select）僅在 `SSM = 1` 時才會生效。該位元的值會直接作用於 SPI 的從機選擇邏輯，用來模擬是否被選中的狀態。
+
+由於 STM32F429 開發板中 LCD 的 **CS（Chip Select）腳是透過 GPIO 控制**，且 LCD 的顯示資料主要透過 **LTDC 傳輸**，SPI 僅用於發送初始化指令（例如設定暫存器），因此此處採用軟體 NSS 管理模式：
+
+````c
+// Enable software slave management (SSM = 1)
+// Simulate NSS as not selected (SSI = 1)
+spi_cr1_write_field(SPI_CR1_SSM, 1);
+spi_cr1_write_field(SPI_CR1_SSI, 1);
+````
+
+#### 步驟六、啟用 SPI 模組並切換至主機模式：  
+
+設定 `MSTR = 1` 將 SPI 切換為主機（Master）模式，設定 `SPE = 1` 則啟用 SPI 周邊模組。  
+注意：這兩個位元在啟用時，**NSS 必須維持為高電位**，否則可能導致 SPI 無法正確啟動。
+
+````C
+// Configure as SPI master (MSTR = 1)
+// Enable SPI peripheral (SPE = 1)
+spi_cr1_write_field(SPI_CR1_MSTR, 1);
+spi_cr1_write_field(SPI_CR1_SPE, 1);
+````
+### 6.2.6 ILI9341 初始化流程實作
+
+若系統使用 STM32 的 LTDC 模組作為 RGB 並聯資料傳輸介面，仍需**在畫面顯示前，透過 SPI 接口對 ILI9341 LCD 進行初始化設定**。  
+該初始化過程主要包含 LCD 內部暫存器的設置，SPI 命令的傳輸時需將 **D/CX 設為 0（Command 模式）**，以區分資料類型。
+
+#### 步驟一、軟體重置（Software Reset）
+
+執行 `0x01` 指令可對 ILI9341 進行一次軟體重置，此操作會將所有暫存器還原為預設值，但 **畫面記憶體 GRAM 內容不會被清除**。
+
+重置後需延遲 **至少 5 毫秒**，以確保模組有足夠時間完成暫存器初始化程序。
+
+##### 指令格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX   |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|--------|
+| 0    | 1   | L   | XX     | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  | `0x01` |
+
+##### 程式碼範例：
+
+````c
+// Step 1: Software Reset
+spi_lcd_write_command(0x01); // 0x01 = Software Reset command (D/CX = 0)
+delay_us(5000);              // Wait ≥ 5ms as required by ILI9341 datasheet
+````
+
+#### 步驟二、退出休眠（Sleep Out）
+
+當完成軟體重置後，LCD 模組會自動進入低功耗的「休眠模式」。此時需透過額外指令 0x11（Sleep Out）將模組喚醒，以進行後續操作。執行 Sleep Out 後，應延遲至少 5 毫秒，若模組原本處於 Sleep In 模式，則建議延遲 120 毫秒，以確保內部電源與時脈穩定後再進行後續指令再執行後續初始化（例如開啟顯示）。
+
+##### 指令格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX   |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|--------|
+| 0    | 1   | L   | XX     | 0  | 0  | 0  | 1  | 0  | 0  | 0  | 1  | `0x11` |
+
+##### 程式碼範例：
+
+````c
+	spi_lcd_write_command(0x11);
+	delay_us(120000);
+````
+
+#### 步驟三、設定RGB介面控制訊號
+
+根據 ILI9341 技術手冊 §8.3.1「RGB Interface Signal Control (B0h)」與 §7.2.1「RGB Interface Selection」的說明，該控制器支援兩種 RGB 傳輸模式，可透過 `RCM[1:0]` 位元進行設定：
+
+- **RCM = "10"（DE 模式）**：以 DE 腳作為畫面資料的有效區域控制依據，適用於 STM32 LTDC 預設設計。
+- **RCM = "11"（SYNC 模式）**：不使用 DE 腳，而是透過暫存器配置開窗範圍，常見於對時序控制要求精密的應用。
+
+由於 STM32 的 LTDC 模組預設採用 DE 模式，因此本設計選擇設定為：
+
+- **ByPass_MODE（D7）**：設為 `0`，表示資料將直接傳送至內部暫存器（Direct to Shift Register），為預設值。
+- **RCM[1:0]（D6:D5）**：設為 `10`，選擇 DE 模式。
+- **D4（Reserved）**：設為 `0`。
+- **VSPL（D3）**：設為 `1`，垂直同步訊號為高電位有效。
+- **HSPL（D2）**：設為 `1`，水平同步訊號為高電位有效。
+- **DPL（D1）**：設為 `0`，資料於 DOTCLK 上升緣擷取。
+- **EPL（D0）**：設為 `0`，表示 DE 為高電位時代表有效顯示資料。
+
+##### 指令與參數格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX   |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|--------|
+| 0    | 1   | L   | XX     | 1  | 0  | 1  | 1  | 0  | 0  | 0  | 0  | `0xB0` |
+| 1    | 1   | L   | XX     | 0  | 1  | 0  | 0  | 1  | 1  | 0  | 0  | `0x4C` |
+
+##### 程式碼範例：
+
+````c
+// Step 3: Configure RGB interface signal mode
+spi_lcd_write_command(0xB0);    // RGB Interface Signal Control
+spi_lcd_write_data(0x4C);       // DE mode, VS/HS polarity high, DOTCLK rising
+````
+
+#### 步驟四、設定像素格式（Pixel Format Set）
+
+從硬體原理圖可確認，ILI9341 的 D[17:0] 腳位皆有接至 STM32 的 LTDC 模組，表示 LCD 採用 18-bit RGB 並聯輸入（262K 色）。
+因此需透過 0x3A 指令設定 RGB Interface 使用的像素格式，也就是 DPI[2:0] 位元。
+
+在使用 RGB 介面時，僅需設定 DPI[2:0] 即可，DBI[2:0] 可忽略。因為 DBI 是對應 MCU 並列匯流排（例如 8080 或 6800 模式），本設計未使用此類介面。
+
+本例設定如下：
+
+DPI[2:0] = 110：代表 18-bit RGB，1 pixel = 傳送 3 個 bytes
+
+DBI[2:0] = 110（雖設定為相同值，但實際會被忽略）
+
+此設定可確保 ILI9341 正確接收來自 STM32 LTDC 的 RGB 資料，並進行顯示。
+
+##### 指令與參數格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX  |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|------|
+| 0    | 1   | L   | XX     | 0  | 0  | 1  | 1  | 1  | 0  | 1  | 0  | 0x3A |
+| 1    | 1   | L   | XX     | 0  | 1  | 1  | 0  | 0  | 1  | 1  | 0  | 0x66 |
+
+##### 程式碼範例：
+
+````c
+// Step 4: Set pixel format to 18-bit RGB (DPI[2:0] = 110)
+spi_lcd_write_command(0x3A);     // 0x3A = Pixel Format Set
+spi_lcd_write_data(0x66);        // 0x66 = 18-bit RGB (DPI[2:0] = 110, DBI ignored)
+````
+
+#### 步驟五、設定其他介面控制參數（Interface Control）
+
+執行 `0xF6` 指令後，需連續傳送三個 data 參數，用以設定各種顯示介面與資料傳輸的行為。其中較重要的控制項如下：
+
+**RIM（RGB Interface Mode）：**
+
+- 設為 `0`：代表使用標準傳輸模式（18-bit RGB，1 transfer/pixel）
+- 設為 `1`：表示使用壓縮模式（6-bit RGB interface，3 transfer/pixel）
+
+**DM\[1:0]（Display Operation Mode）：** 控制顯示操作所使用的訊號來源。必須選擇一種顯示方式：
+
+| DM[1] | DM[0] | 顯示操作模式                                    |
+|-------|-------|--------------------------------------------------|
+| 0     | 0     | 使用 **內部時脈模式**（Internal clock operation） |
+| 0     | 1     | 使用 **RGB 介面模式**（RGB Interface Mode）       |
+| 1     | 0     | 使用 **VSYNC 介面模式**（VSYNC Interface Mode）   |
+| 1     | 1     | **關閉顯示模式**（Setting disabled）              |
+
+##### 指令格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX   |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|--------|
+| 0    | 1   | L   | XX     | 1  | 1  | 1  | 1  | 0  | 1  | 1  | 0  | `0xF6` |
+
+##### 程式碼範例：
+
+````c
+	// Step 5: Interface Control
+	spi_lcd_write_command(0xF6);   // Interface Control
+	spi_lcd_write_data(0x01);      // Data 1: WEMODE=1 (avoid overflow), others default
+	spi_lcd_write_data(0x00);      // Data 2: MDT=00, EPF=00 (default, unused in RGB)
+	spi_lcd_write_data(0x01);      // Data 3: ENDIAN=0, DM=01 (RGB mode), RIM=0
+````
+
+#### 步驟六、設定記憶體存取控制（Memory Access Control）
+
+Memory Access Control 控制了畫面「掃描方向、翻轉方向與顏色順序」。
+
+| 位元   | 名稱  | 說明                               |
+| ---- | --- | -------------------------------- |
+| D7   | MY  | Row address order（上下顛倒）          |
+| D6   | MX  | Column address order（左右顛倒）       |
+| D5   | MV  | Row/Column exchange（橫豎翻轉）        |
+| D4   | ML  | Vertical refresh order（掃描順序）     |
+| D3   | RGB | RGB/BGR 順序切換                     |
+| D2   | MH  | Horizontal refresh order（橫向掃描順序） |
+| D1–0 | X   | 保留，無作用                           |
+
+當參數值設定為 `0x00` 時，代表以下行為：
+
+- 掃描方向：從上到下、左到右（左上為起點）
+- 無翻轉、無旋轉
+- 使用 RGB 顏色順序（預設）
+
+##### 指令與參數格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX  |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|------|
+| 0    | 1   | L   | XX     | 0  | 0  | 1  | 1  | 0  | 1  | 1  | 0  | `0x36` |
+| 1    | 1   | L   | XX     | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | `0x00` |
+
+##### 程式碼範例：
+
+````c
+// Step 6: Set Memory Access Control (scan direction, RGB/BGR order)
+	spi_lcd_write_command(0x36);     // 0x36 = Memory Access Control
+	spi_lcd_write_data(0x00);        // MY=0, MX=0, MV=0, ML=0, BGR=0, MH=0
+````
+
+#### 步驟七、開啟顯示功能（Display ON）
+
+執行 `0x29` 指令可將 ILI9341 的顯示輸出功能正式啟用，使 LCD 面板開始顯示畫面內容。  
+
+在使用 **RGB 並聯介面** 並由 STM32 的 **LTDC 模組輸出資料**的情況下，此指令會啟用 ILI9341 的 **外部影像輸入功能**，讓面板開始根據來自 LTDC 的資料更新畫面。
+
+此指令應在完成所有顯示參數初始化（如掃描方向、像素格式、介面模式等）後再執行。
+
+##### 指令格式：
+
+| D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX  |
+|------|-----|-----|--------|----|----|----|----|----|----|----|----|------|
+| 0    | 1   | L   | XX     | 0  | 0  | 1  | 0  | 1  | 0  | 0  | 1  | `0x29` |
+
+##### 程式碼範例：
+
+````c
+	// Step 7: Turn on display
+	spi_lcd_write_command(0x29);     // 0x29 = Display ON
+````
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pixel Clock（DOTCLK，像素時脈）會持續運作不中斷，並在其上升緣用來觸發以下訊號的取樣：
+
+VSYNC（垂直同步）：告知顯示模組「接收到新畫面的一幀」，屬於 低有效（low enable） 訊號，並會在 DOTCLK 的上升緣時被取樣。
+
+HSYNC（水平同步）：告知顯示模組「接收到畫面中新的掃描列」，也是 低有效（low enable），同樣在 DOTCLK 上升緣取樣。
+
+
+
+在 DE 模式（Data Enable Mode） 中：
+
+DE（Data Enable）：用來告知顯示模組「此時收到的 RGB 資料有效」，為 高電位有效（high enable） 訊號。
+
+DE 為高時，模組會在 DOTCLK 的上升緣 接收 D[17:0] 的 RGB 畫素資料。
+
+D[17:0]：即畫素資料線，可為 0（Low）或 1（High），也會在 DOTCLK 上升緣取樣。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## 6.3 LTDC GPIO 腳位初始化
+> 設定 RGB 資料線、時序線為 AF14，對應 LCD_R/G/B/HSYNC 等
+
+在 STM32F429I-DISC1 開發板中，若要正確啟用 RGB 並行顯示介面並由 LTDC 模組驅動 LCD 螢幕，必須先將對應的大量 GPIO 腳位設定為 Alternate Function 模式（AF14），以正確連接至 LTDC 模組內部匯流排。
+
+---
+
+### 6.3.1 LTDC 的三個時脈區域（Clock Domains）
+
+根據《RM0090》第 16.3.1 與 16.3.2 節，LCD-TFT 顯示控制器（LTDC）內部劃分為 **三個獨立的時脈區域**，各自負責不同功能模組與資料處理流程：
+
+---
+
+#### 1. **AHB Clock Domain（HCLK）**
+
+> 由主系統匯流排 HCLK 驅動，負責圖層資料的存取與搬移，主要處理從記憶體讀取畫面資料至 FIFO，以及圖層的 frame buffer 設定。
+
+- **AHB interface**
+  - 負責從 frame buffer（配置於內部 SRAM 或外部 SDRAM）讀取畫面資料
+  - 每個圖層資料以 Layer 為單位傳入（Layer 0 / Layer 1）
+  - 控制圖層啟用、frame buffer 起始位址與大小等暫存器皆屬此區域
+  - 代表暫存器：`LTDC_LxCR`、`LTDC_LxCFBAR`、`LTDC_LxCFBLR`、`LTDC_LxCFBLNR`
+
+---
+
+#### 2. **APB2 Clock Domain（PCLK2）**
+
+> 由 APB2 匯流排提供，用於 LTDC 模組的全域設定與中斷控制，屬於低頻控制區域，所有暫存器皆由 MCU 直接存取。
+
+- **Configuration and Status Registers**
+  - 控制 LTDC 模組的所有設定，包括：
+    - 畫面解析度與同步時序參數（HSYNC / VSYNC 等）
+    - 圖層屬性、背景顏色、顯示啟用等控制項
+  - 處理 LTDC 中斷產生、狀態讀取與旗標清除
+  - 所有暫存器皆由 MCU 經由 APB2 匯流排進行存取
+- 代表暫存器：  
+  - `LTDC_SRCR`（Shadow Reload 控制）  
+  - `LTDC_IER`、`LTDC_ISR`、`LTDC_ICR`（中斷啟用 / 狀態 / 清除）
+
+---
+
+#### 3. **Pixel Clock Domain（LCD_CLK）**
+
+> 此為運作頻率最高的時脈區域，與 LCD 面板的像素刷新頻率同步。主要負責畫面輸出、時序控制、像素格式轉換與圖層混色等任務。
+
+- **Layer FIFO（Layer0 / Layer1）**
+  - 每層擁有獨立的 64 × 32-bit FIFO 暫存器
+  - 用於緩衝圖層資料，平衡記憶體存取與即時輸出之間的時序差異
+
+- **PFC（Pixel Format Converter）**
+  - 將各圖層原始像素格式（如 RGB565、ARGB8888 等）轉換為內部標準格式（通常為 RGB888）
+
+- **Blending unit**
+  - 對 Layer 0 / Layer 1 執行像素混合與透明度處理（alpha blending）
+  - 可實現多圖層合成、OSD 疊加等效果
+
+- **Dithering unit**
+  - 若目標 LCD 面板僅支援 18-bit 顏色（RGB666），則會啟用抖動演算法，將高位元色彩（如 24-bit）轉換為較低位元輸出
+  - 可減少顏色斷層，提升顯示平滑度
+
+- **Timing generator**
+  - 產生 LCD 面板所需的同步訊號：
+    - `LCD_HSYNC`（水平同步）
+    - `LCD_VSYNC`（垂直同步）
+    - `LCD_DE`（顯示啟用）
+    - `LCD_CLK`（像素時脈）
+  - 確保資料輸出與 LCD 掃描時序對齊，避免顯示錯位或撕裂
+
+- **RGB 資料輸出**
+  - 最終畫面像素資料經由下列腳位輸出至 LCD 面板：
+    - `LCD_R[7:0]`、`LCD_G[7:0]`、`LCD_B[7:0]`
+  - 若使用 RGB666 模式，實際只接每色前 6 位（低 2 位不使用）
+
+- 代表暫存器：
+  - `LTDC_SSCR`、`LTDC_BPCR`、`LTDC_AWCR`、`LTDC_TWCR`
+  - `LTDC_LxWHPCR`、`LTDC_LxDCCR`、`LTDC_LxBFCR` 等
+
+#### Pixel Clock 設定說明
+
+- `LCD_CLK` 的輸出頻率應依據 LCD 面板的刷新需求設定（通常為 6 ~ 10 MHz）
+- 此時脈由 **PLLSAI** 輸出，並透過 RCC 模組設定（參見 RCC 章節）
+
+---
+
+### 6.3.2 LCD-TFT 腳位與訊號介面（LCD-TFT pins and signal interface）
 
 以下為 LTDC 顯示輸出所使用的訊號腳位：
 
-| 訊號腳位     | 說明                             |
-|--------------|----------------------------------|
-| `LCD_HSYNC`  | 水平同步訊號                     |
-| `LCD_VSYNC`  | 垂直同步訊號                     |
-| `LCD_DE`     | Data Enable：資料傳輸使能        |
-| `LCD_CLK`    | Dot Clock：像素時脈              |
-| `LCD_R[7:0]` | 紅色通道（8 位元）               |
-| `LCD_G[7:0]` | 綠色通道（8 位元）               |
-| `LCD_B[7:0]` | 藍色通道（8 位元）               |
+| LTDC 訊號      | I/O 類型 | 說明                                 |
+|----------------|----------|--------------------------------------|
+| `LCD_CLK`      | O（輸出） | 像素時脈輸出（Clock Output）        |
+| `LCD_HSYNC`    | O（輸出） | 水平同步訊號（Horizontal Sync）     |
+| `LCD_VSYNC`    | O（輸出） | 垂直同步訊號（Vertical Sync）       |
+| `LCD_DE`       | O（輸出） | 顯示資料啟用（Not Data Enable）     |
+| `LCD_R[7:0]`   | O（輸出） | 紅色通道資料（8-bit Red data）      |
+| `LCD_G[7:0]`   | O（輸出） | 綠色通道資料（8-bit Green data）    |
+| `LCD_B[7:0]`   | O（輸出） | 藍色通道資料（8-bit Blue data）     |
 
-這些訊號對應至 STM32 GPIO 所設定的 **AF14 腳位功能**，將在 `ltdc_gpio_init()` 中統一設定，最終將畫面資料輸出至 LCD-TFT 面板。
+這些訊號對應至 STM32 GPIO 的 **AF14（Alternate Function 14）** 腳位功能，將在 `ltdc_gpio_init()` 函式中統一初始化，並用於將畫面像素資料輸出至 LCD 面板。
+
+若 LTDC 設定為輸出 **RGB888（24-bit）**，但實際面板僅支援 **RGB565（16-bit）** 或 **RGB666（18-bit）**，則必須將 RGB 資料接至 LTDC 對應通道的「**高位元（MSB）**」腳位。
+
+**RGB565 介面接法對照表：**
+
+| 顏色通道 | 面板端資料線     | LTDC 對應腳位         |
+|----------|------------------|------------------------|
+| Red      | `R[4:0]`         | `LCD_R[7:3]`           |
+| Green    | `G[5:0]`         | `LCD_G[7:2]`           |
+| Blue     | `B[4:0]`         | `LCD_B[7:3]`           |
+
+這樣接法可確保資料對齊至有效高位，避免顯示畫面偏暗或顏色異常。
 
 ---
 
-### 5.2.3 LTDC 的 RGB 資料線 GPIO 初始化設定
+### 6.3.3 LTDC 可程式化同步參數（Synchronous Timings）
+
+根據《RM0090》第 16.4.1 節 *LTDC Global configuration parameters*，LTDC 模組可透過暫存器設定 LCD 所需的水平與垂直同步時序，包括：
+
+- 同步脈衝（Sync Width）
+- 後肩（Back Porch）
+- 前肩（Front Porch）
+- 有效顯示區域（Active Area）
+
+這些參數將直接影響畫面更新的節奏與顯示解析度。
+
+#### 各時序參數與暫存器對應表
+
+| 時序參數              | 計算公式與設定說明                                             | 對應暫存器       |
+|-----------------------|---------------------------------------------------------------|------------------|
+| **HSYNC Width**       | 水平同步脈衝寬度，設定值為 `HSYNC - 1`                        | `LTDC_SSCR`      |
+| **VSYNC Width**       | 垂直同步脈衝寬度，設定值為 `VSYNC - 1`                        | `LTDC_SSCR`      |
+| **HBP（水平後肩）**   | 設定值為 `HSYNC Width + HBP - 1`                              | `LTDC_BPCR`      |
+| **VBP（垂直後肩）**   | 設定值為 `VSYNC Width + VBP - 1`                              | `LTDC_BPCR`      |
+| **Active Width**      | 水平顯示區寬度，設定值為 `HSYNC + HBP + Active Width - 1`    | `LTDC_AWCR`      |
+| **Active Height**     | 垂直顯示區高度，設定值為 `VSYNC + VBP + Active Height - 1`   | `LTDC_AWCR`      |
+| **Total Width**       | 設定值為 `HSYNC + HBP + Active Width + HFP - 1`               | `LTDC_TWCR`      |
+| **Total Height**      | 設定值為 `VSYNC + VBP + Active Height + VFP - 1`              | `LTDC_TWCR`      |
+
+- **HBP / HFP**：Horizontal Back/Front Porch（每行資料顯示前/後的空白區域）
+- **VBP / VFP**：Vertical Back/Front Porch（每幀畫面上下的同步緩衝時間）
+
+這些參數對於 LCD 顯示穩定性極為關鍵，**具體數值需依照 LCD 面板之 datasheet 提供**，並正確設定對應的 LTDC 暫存器。
+
+#### 時序參數（依據 ILI9341 datasheet）
+
+| 參數項目              | 值   | 說明                                 |
+|-----------------------|------|--------------------------------------|
+| **HSYNC Width**       | 10   | 水平同步脈衝寬度（建議設為 10）        |
+| **HBP**               | 20   | 水平 Back Porch                      |
+| **HFP**               | 10   | 水平 Front Porch                     |
+| **VSYNC Width**       | 2    | 垂直同步脈衝寬度                       |
+| **VBP**               | 4    | 垂直 Back Porch                      |
+| **VFP**               | 2    | 垂直 Front Porch                     |
+| **Active Width**      | 240  | 有效顯示寬度（橫向像素數）            |
+| **Active Height**     | 320  | 有效顯示高度（縱向像素數）            |
+
+#### 實際設定值（暫存器寫入前須減 1）
+
+| 暫存器             | 設定值                             | 說明                         |
+| --------------- | ------------------------------- | -------------------------- |
+| `HSYNC Width`   | 10 - 1 = **9**                  | `LTDC_SSCR` 的 Horizontal部分 |
+| `VSYNC Width`   | 2 - 1 = **1**                   | `LTDC_SSCR` 的 Vertical 部分  |
+| `HBP`           | 9 + 20 - 1 = **28**             | `LTDC_BPCR` 的 Horizontal部分 |
+| `VBP`           | 1 + 4 - 1 = **4**               | `LTDC_BPCR` 的 Vertical 部分  |
+| `Active Width`  | 9 + 20 + 240 - 1 = **268**      | `LTDC_AWCR` 的 Horizontal部分 |
+| `Active Height` | 1 + 4 + 320 - 1 = **324**       | `LTDC_AWCR` 的 Vertical 部分  |
+| `Total Width`   | 9 + 20 + 240 + 10 - 1 = **278** | `LTDC_TWCR` 的 Horizontal部分 |
+| `Total Height`  | 1 + 4 + 320 + 2 - 1 = **326**   | `LTDC_TWCR` 的 Vertical 部分  |
+
+---
+
+### 6.3.4 LTDC 時序起點與關閉行為說明
+
+根據 RM0090 說明，當 LTDC 模組啟用時，顯示時序的產生方式如下：
+
+- 時序從座標 **(X, Y) = (0, 0)** 開始，該點對應於：
+  - 第一行垂直同步區（VSYNC）中的第一個水平同步像素（HSYNC）
+- 接著依序輸出以下區域：
+  1. 後肩區（Back Porch）
+  2. 有效畫面區（Active Area）
+  3. 前肩區（Front Porch）
+
+#### 停用時的行為（LTDC disabled）
+
+當 LTDC 被關閉時：
+
+- Timing Generator（時序產生器）會被重設為：
+  - `X = Total Width - 1`
+  - `Y = Total Height - 1`
+- 並保持該像素直到下一次 VSYNC 起始為止
+- 同時：
+  - FIFO（畫面資料暫存器）會被清空
+  - 僅持續輸出空白區（blanking data）
+
+此機制可避免畫面殘影或誤輸出，常見於切換顯示來源或暫停顯示時。
+
+#### 同步時序設定範例（640×480 顯示器）
+
+以下為一組典型 LCD 模組（解析度 640x480）之時序設定參考：
+
+| 項目                           | 值               |
+|--------------------------------|------------------|
+| 水平 / 垂直同步寬度（Sync）     | H: 8 像素、V: 4 行 |
+| 水平 / 垂直後肩（Back Porch）   | H: 7 像素、V: 2 行 |
+| 有效畫面區（Active Area）       | 640 × 480        |
+| 水平 / 垂直前肩（Front Porch）  | H: 6 像素、V: 2 行 |
+
+#### 實際暫存器對應設定值
+
+| 暫存器         | 設定值          | 說明（括號為位元解析）                                         |
+|----------------|------------------|---------------------------------------------------------------|
+| `LTDC_SSCR`    | `0x00070003`     | HSW = 0x7、VSH = 0x3（對應 8-1 與 4-1）                         |
+| `LTDC_BPCR`    | `0x00E00005`     | AHBP = 0xE、AVBP = 0x5（8+7-1 與 4+2-1）                         |
+| `LTDC_AWCR`    | `0x028E01E5`     | AAW = 0x28E、AAH = 0x1E5（8+7+640-1 與 4+2+480-1）              |
+| `LTDC_TWCR`    | `0x029400E7`     | TOTALW = 0x294、TOTALH = 0xE7（8+7+640+6-1 與 4+2+480+2-1）     |
+| `LTDC_THCR`    | `0x000001E7`     | 最終行計數器，TOTALH 最後一行位置 = 0xE7                       |
+
+---
+
+### 6.3.5 LTDC 設定步驟（Programming Procedure）
+
+LTDC 初始化需依照下列步驟進行，以確保時序、圖層、畫面輸出等功能能正確啟動：
+
+#### 一、全域參數初始化（控制器本體）
+
+1. 啟用 LTDC 的時脈（於 RCC 設定中啟用）
+2. 設定 LCD 面板所需的 Pixel Clock（通常透過 PLLSAI 計算）
+3. 設定同步時序參數：
+   - VSYNC、HSYNC、Back Porch、Front Porch、Active Area
+   - 寫入 `LTDC_SSCR`、`LTDC_BPCR`、`LTDC_AWCR`、`LTDC_TWCR`
+4. 設定同步訊號與資料輸出極性（於 `LTDC_GCR` 中）
+5. 若需指定背景顏色，設定 `LTDC_BCCR`
+6. 若需使用中斷功能，設定 `LTDC_IER` 與 `LTDC_LIPCR`
+
+#### 二、圖層參數設定（Layer 0 / Layer 1）
+
+7. 設定圖層視窗範圍（Windowing）
+   - `LTDC_LxWHPCR`（水平位置）與 `LTDC_LxWVPCR`（垂直位置）
+8. 設定像素格式（Pixel Format）
+   - `LTDC_LxPFCR`
+9. 設定 Frame Buffer 起始位址
+   - `LTDC_LxCFBAR`
+10. 設定畫面一列的 Pitch（位元組長度）
+    - `LTDC_LxCFBLR`
+11. 設定總行數（Line Count）
+    - `LTDC_LxCFBLNR`
+12. 若使用 CLUT（Color Look-Up Table）：
+    - 設定 CLUT 內容與寫入地址：`LTDC_LxCLUTWR`
+13. 若需要 Alpha Blending 或預設底色：
+    - 設定 `LTDC_LxDCCR` 與 `LTDC_LxBFCR`
+
+#### 三、啟用圖層與控制器
+
+14. 啟用圖層與（若有）CLUT：
+    - `LTDC_LxCR`
+15. 若需啟用 Dithering 或 Color Keying：
+    - `LTDC_GCR` 與 `LTDC_LxCKCR`
+16. 載入 Shadow Registers：
+    - 透過 `LTDC_SRCR`（Immediate 或 Vertical Blank reload）
+17. 啟用 LTDC 控制器：
+    - `LTDC_GCR`
+
+#### 補充說明
+
+- 所有圖層暫存器為 **Shadow Register**，需透過 `LTDC_SRCR` 實際載入
+- 若尚未 reload，重複寫入會覆蓋尚未生效的暫存設定
+- 除 CLUT 以外，其他參數皆可「on-the-fly」修改，但修改後仍需 reload 才會生效
+
+---
+
+### 6.3.6 LTDC 的 RGB 資料線 GPIO 初始化設定
 
 根據 LCD 模組 **FRD240C48003-B** 的原理圖可知，其 RGB 各通道僅接出 6 條資料腳位（R0~R5、G0~G5、B0~B5），表示該模組採用 **RGB666（18-bit）** 顯示格式。此格式常見於嵌入式系統，能有效節省 GPIO 腳位，同時提供良好的顯示品質。
 
@@ -2843,7 +3711,7 @@ void ltdc_gpio_init(void)
 
 ---
 
-### 5.2.4 LTDC 的同步與資料控制 GPIO 初始化設定
+### 6.3.7 LTDC 的同步與資料控制 GPIO 初始化設定
 
 LCD 顯示需要除畫素資料（RGB）外，還需搭配數條 **時序控制訊號（Timing Control Signals）**，用來同步畫面掃描與資料輸出。
 
@@ -2882,16 +3750,29 @@ gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_4, ALTERNATE_AF14);
 
 ---
 
-## 5.3 SDRAM 與 FMC 控制器簡介
+## 6.4 LTDC 同步時序設定
+> AWCR, TWCR, BPCR 等暫存器設定與計算方式
+
+## 6.5 LTDC Layer 圖層參數
+> 包含視窗範圍、frame buffer 地址、alpha blending 等設定
+
+## 6.6 LTDC 初始化總流程與啟用方式
+> 所有設定整合，shadow reload、生效流程說明
+
+---
+
+# 7.
+
+---
+
+## 7.1 SDRAM 與 FMC 控制器簡介
 
 STM32F429 除了內建的 SRAM、Flash 等內部記憶體外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash 與 SDRAM。
 
 在 LCD 顯示應用中，由於 frame buffer 體積龐大，STM32 的內部 SRAM 通常無法容納完整畫面資料。  
 為了確保畫面顯示的流暢與穩定，系統常將圖像內容暫存於 **SDRAM**，再由 **LTDC（LCD-TFT Controller）模組** 自動掃描該記憶體區塊並輸出至 LCD 螢幕。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
 
----
-
-### 5.3.1 FMC 系統架構概述
+### 7.1.1 FMC 系統架構概述
 
 根據參考手冊第 37.1 節（FMC main features）與 37.2 節（Block diagram）描述，**FMC（Flexible Memory Controller）** 提供一個高度整合的外部記憶體控制模組，整體系統可分為三個主要區塊：
 
@@ -2931,7 +3812,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 5.3.2 SDRAM 控制器功能說明
+### 7.1.2 SDRAM 控制器功能說明
 
 根據 37.7.1（SDRAM controller main features），STM32 所內建的 SDRAM 控制器具備下列特性：
 
@@ -2945,7 +3826,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 5.3.3 SDRAM 對外介面腳位說明
+### 7.1.3 SDRAM 對外介面腳位說明
 
 根據 RM0090 第 37.7.2 節（**SDRAM External Memory Interface Signals**），  
 STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊。
@@ -2975,9 +3856,9 @@ STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊�
 
 ---
 
-## 5.4 SDRAM 初始化
+## 7.2 SDRAM 初始化
 
-### 5.4.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
+### 7.2.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
 
 #### SDRAM 與 GPIO 對應關係整理（依原理圖）
 
@@ -3135,7 +4016,7 @@ void fmc_sdram_gpio_init(void)
 
 ---
 
-### 5.4.2 SDRAM 初始化步驟
+### 7.2.2 SDRAM 初始化步驟
 
 #### 開啟 AHB3 時脈
 
@@ -3214,7 +4095,7 @@ SDRAM 的初始化完全由**軟體控制**。
 
 ---
 
-### 5.4.4 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
+### 7.2.3 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
 
 從 FMC 的觀點來看，外部記憶體被劃分為 6 個固定大小為 256 MByte 的 bank，FMC 控制器分配記憶體空間來對應不同種類的外部記憶體
 
@@ -3307,7 +4188,7 @@ void fmc_init(void){
 }
 ````
 
-### 5.4.5 依序送出五個 JEDEC 初始化指令至 SDRAM
+### 7.2.4 依序送出五個 JEDEC 初始化指令至 SDRAM
 
 | 動作                                                                | 解釋                      | 對應章節                                               |
 | ----------------------------------------------------------------- | ----------------------- | -------------------------------------------------- |
