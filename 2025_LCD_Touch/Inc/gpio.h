@@ -54,11 +54,19 @@ typedef enum {
     ALTERNATE_AF15 = 15  // SYS
 } GPIO_AlternateFunction;
 
+typedef enum {
+    GPIO_SPEED_LOW = 0,      // 00
+    GPIO_SPEED_MEDIUM,       // 01
+    GPIO_SPEED_HIGH,         // 10
+    GPIO_SPEED_VERY_HIGH     // 11
+} gpio_ospeedr_field_t;
+
+
 
 void gpio_init(void);
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode);
 void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction func);
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val);
-
+void gpio_set_speed(uint32_t gpio_base, uint8_t pin, gpio_ospeedr_field_t speed);
 
 #endif /* GPIO_H_ */

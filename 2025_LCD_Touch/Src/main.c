@@ -32,6 +32,7 @@ void delay_us(uint32_t us) {
     }
 }
 
+
 int main(void)
 {
 	gpio_init();
@@ -39,7 +40,11 @@ int main(void)
 	exti_init();
 	spi_init();
 	ili9341_init();
-	//ltdc_gpio_init();
+	ltdc_init();
+
+	usart_printf("LTDCEN = %d\r\n", (io_read(LTDC_BASE + LTDC_GCR_OFFSET) >> 0) & 1);
+	usart_printf("SRCR = 0x%x\r\n", io_read(LTDC_BASE + LTDC_SRCR_OFFSET));
+
 
 	// fmc_init();
 	// sdram_self_test();
@@ -57,12 +62,10 @@ int main(void)
 	usart_write(USART1_BASE, '\n');
 
 
-
     while (1)
     {
     	usart_printf("enter while \r\n");
     	delay_us(1000000);
-    	//for (volatile int i = 0; i < 1000000; i++); // about 1 second
 
     }
 }

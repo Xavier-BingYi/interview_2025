@@ -3149,9 +3149,9 @@ spi_lcd_write_data(0x4C);       // DE mode, VS/HS polarity high, DOTCLK rising
 
 本例設定如下：
 
-DPI[2:0] = 110：代表 18-bit RGB，1 pixel = 傳送 3 個 bytes
+DPI[2:0] = 101：代表 16-bit RGB，1 pixel
 
-DBI[2:0] = 110（雖設定為相同值，但實際會被忽略）
+DBI[2:0] = 101（雖設定為相同值，但實際會被忽略）
 
 此設定可確保 ILI9341 正確接收來自 STM32 LTDC 的 RGB 資料，並進行顯示。
 
@@ -3160,14 +3160,14 @@ DBI[2:0] = 110（雖設定為相同值，但實際會被忽略）
 | D/CX | RDX | WRX | D17–8 | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | HEX  |
 |------|-----|-----|--------|----|----|----|----|----|----|----|----|------|
 | 0    | 1   | L   | XX     | 0  | 0  | 1  | 1  | 1  | 0  | 1  | 0  | 0x3A |
-| 1    | 1   | L   | XX     | 0  | 1  | 1  | 0  | 0  | 1  | 1  | 0  | 0x66 |
+| 1    | 1   | L   | XX     | 0  | 1  | 0  | 1  | 0  | 1  | 0 | 1  | 0x55 |
 
 ##### 程式碼範例：
 
 ````c
-// Step 4: Set pixel format to 18-bit RGB (DPI[2:0] = 110)
+// Step 4: Set pixel format to 18-bit RGB (DPI[2:0] = 101)
 spi_lcd_write_command(0x3A);     // 0x3A = Pixel Format Set
-spi_lcd_write_data(0x66);        // 0x66 = 18-bit RGB (DPI[2:0] = 110, DBI ignored)
+spi_lcd_write_data(0x55);        // 0x55 = 16-bit RGB (DPI[2:0] = 101, DBI ignored)
 ````
 
 #### 步驟五、設定其他介面控制參數（Interface Control）
@@ -3259,64 +3259,6 @@ Memory Access Control 控制了畫面「掃描方向、翻轉方向與顏色順�
 	// Step 7: Turn on display
 	spi_lcd_write_command(0x29);     // 0x29 = Display ON
 ````
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Pixel Clock（DOTCLK，像素時脈）會持續運作不中斷，並在其上升緣用來觸發以下訊號的取樣：
-
-VSYNC（垂直同步）：告知顯示模組「接收到新畫面的一幀」，屬於 低有效（low enable） 訊號，並會在 DOTCLK 的上升緣時被取樣。
-
-HSYNC（水平同步）：告知顯示模組「接收到畫面中新的掃描列」，也是 低有效（low enable），同樣在 DOTCLK 上升緣取樣。
-
-
-
-在 DE 模式（Data Enable Mode） 中：
-
-DE（Data Enable）：用來告知顯示模組「此時收到的 RGB 資料有效」，為 高電位有效（high enable） 訊號。
-
-DE 為高時，模組會在 DOTCLK 的上升緣 接收 D[17:0] 的 RGB 畫素資料。
-
-D[17:0]：即畫素資料線，可為 0（Low）或 1（High），也會在 DOTCLK 上升緣取樣。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ---
 
@@ -3438,56 +3380,107 @@ D[17:0]：即畫素資料線，可為 0（Low）或 1（High），也會在 DOTC
 
 根據《RM0090》第 16.4.1 節 *LTDC Global configuration parameters*，LTDC 模組可透過暫存器設定 LCD 所需的水平與垂直同步時序，包括：
 
-- 同步脈衝（Sync Width）
-- 後肩（Back Porch）
-- 前肩（Front Porch）
+- 同步脈衝寬度（Sync Width）
+- 後沿（Back Porch）
+- 前沿（Front Porch）
 - 有效顯示區域（Active Area）
 
 這些參數將直接影響畫面更新的節奏與顯示解析度。
 
-#### 各時序參數與暫存器對應表
+#### 同步參數定義說明
 
-| 時序參數              | 計算公式與設定說明                                             | 對應暫存器       |
-|-----------------------|---------------------------------------------------------------|------------------|
-| **HSYNC Width**       | 水平同步脈衝寬度，設定值為 `HSYNC - 1`                        | `LTDC_SSCR`      |
-| **VSYNC Width**       | 垂直同步脈衝寬度，設定值為 `VSYNC - 1`                        | `LTDC_SSCR`      |
-| **HBP（水平後肩）**   | 設定值為 `HSYNC Width + HBP - 1`                              | `LTDC_BPCR`      |
-| **VBP（垂直後肩）**   | 設定值為 `VSYNC Width + VBP - 1`                              | `LTDC_BPCR`      |
-| **Active Width**      | 水平顯示區寬度，設定值為 `HSYNC + HBP + Active Width - 1`    | `LTDC_AWCR`      |
-| **Active Height**     | 垂直顯示區高度，設定值為 `VSYNC + VBP + Active Height - 1`   | `LTDC_AWCR`      |
-| **Total Width**       | 設定值為 `HSYNC + HBP + Active Width + HFP - 1`               | `LTDC_TWCR`      |
-| **Total Height**      | 設定值為 `VSYNC + VBP + Active Height + VFP - 1`              | `LTDC_TWCR`      |
+| 英文縮寫        | 中文名稱                          | 說明                                       |
+|-----------------|-----------------------------------|--------------------------------------------|
+| HSYNC           | 水平同步脈衝寬度                   | 控制每一行掃描起始點的脈衝寬度             |
+| VSYNC           | 垂直同步脈衝寬度                   | 控制每一幀掃描起始點的脈衝寬度             |
+| HBP             | 水平後沿（Horizontal Back Porch） | 同步脈衝結束後到資料開始顯示的空白區段     |
+| HFP             | 水平前沿（Horizontal Front Porch）| 資料顯示完畢後到下次同步脈衝的空白區段     |
+| VBP             | 垂直後沿（Vertical Back Porch）   | 垂直同步結束後到畫面開始顯示前的空白區段   |
+| VFP             | 垂直前沿（Vertical Front Porch）  | 畫面顯示結束後到下次垂直同步的空白區段     |
+| Active Area     | 有效顯示區域                       | LCD 上真正顯示像素的畫面區域               |
 
-- **HBP / HFP**：Horizontal Back/Front Porch（每行資料顯示前/後的空白區域）
-- **VBP / VFP**：Vertical Back/Front Porch（每幀畫面上下的同步緩衝時間）
+#### 暫存器設定公式與對應說明
 
-這些參數對於 LCD 顯示穩定性極為關鍵，**具體數值需依照 LCD 面板之 datasheet 提供**，並正確設定對應的 LTDC 暫存器。
+- **HSYNC 與 VSYNC 寬度**：  
+  設定於 `LTDC_SSCR` 暫存器：  
+  `HSYNC Width - 1` 與 `VSYNC Width - 1`
 
-#### 時序參數（依據 ILI9341 datasheet）
+- **HBP 與 VBP（後沿）**：  
+  設定於 `LTDC_BPCR` 暫存器：  
+  `HSYNC Width + HBP - 1` 與 `VSYNC Width + VBP - 1`
 
-| 參數項目              | 值   | 說明                                 |
-|-----------------------|------|--------------------------------------|
-| **HSYNC Width**       | 10   | 水平同步脈衝寬度（建議設為 10）        |
-| **HBP**               | 20   | 水平 Back Porch                      |
-| **HFP**               | 10   | 水平 Front Porch                     |
-| **VSYNC Width**       | 2    | 垂直同步脈衝寬度                       |
-| **VBP**               | 4    | 垂直 Back Porch                      |
-| **VFP**               | 2    | 垂直 Front Porch                     |
-| **Active Width**      | 240  | 有效顯示寬度（橫向像素數）            |
-| **Active Height**     | 320  | 有效顯示高度（縱向像素數）            |
+- **Active Width 與 Active Height（有效顯示區域）**：  
+  設定於 `LTDC_AWCR` 暫存器：  
+  `HSYNC Width + HBP + Active Width - 1`  
+  `VSYNC Width + VBP + Active Height - 1`  
+  （支援最大解析度：1024x768）
 
-#### 實際設定值（暫存器寫入前須減 1）
+- **Total Width（總寬度）**：  
+  設定於 `LTDC_TWCR` 暫存器：  
+  `HSYNC Width + HBP + Active Width + HFP - 1`  
+  其中 HFP 為水平前沿時間
+
+- **Total Height（總高度）**：  
+  設定於 `LTDC_TWCR` 暫存器：  
+  `VSYNC Height + VBP + Active Height + VFP - 1`  
+  其中 VFP 為垂直前沿時間
+
+#### 備註與實務說明
+
+- **HBP / HFP**：分別為每行畫面資料顯示前與顯示後的水平方向緩衝區（空白區域）
+- **VBP / VFP**：分別為每幀畫面上下方的垂直方向緩衝時間（等待區段）
+
+當 LTDC 被啟用後，顯示時序會以 `(X,Y) = (0,0)` 為起點，此點對應於垂直同步期間的第一個水平同步像素。畫面資料依序經過後沿、有效區域與前沿時間。
+
+這些參數對 LCD 顯示穩定性極為關鍵，**具體數值需依據 LCD 面板的 datasheet 提供，並正確對應至上述暫存器配置**。
+
+#### 時序參數
+
+此顯示器為 2.4 吋 QVGA（240×320 dots），使用 ILI9341 控制器，依據 ILI9341 datasheet 所建議的典型參數，設定如下：
+
+| 參數項目              | 值   | 說明                                  |
+|-----------------------|------|---------------------------------------|
+| **HSYNC Width**       | 10   | 水平同步脈衝寬度（Horizontal Sync Pulse Width） |
+| **HBP**               | 20   | 水平後沿（Horizontal Back Porch）     |
+| **HFP**               | 10   | 水平前沿（Horizontal Front Porch）    |
+| **VSYNC Width**       | 2    | 垂直同步脈衝寬度（Vertical Sync Pulse Width） |
+| **VBP**               | 2    | 垂直後沿（Vertical Back Porch）       |
+| **VFP**               | 4    | 垂直前沿（Vertical Front Porch）      |
+| **Active Width**      | 240  | 有效顯示寬度（水平解析度）            |
+| **Active Height**     | 320  | 有效顯示高度（垂直解析度）            |
+
+
+##### 更新頻率計算（以 DOTCLK = 8 MHz 為例）
+
+- **水平總週期（Horizontal Total）**：  
+  `HSYNC + HBP + Active Width + HFP = 10 + 20 + 240 + 10 = 280 DOTCLK`
+
+- **垂直總週期（Vertical Total）**：  
+  `VSYNC + VBP + Active Height + VFP = 2 + 2 + 320 + 4 = 328 行`
+
+- **畫面更新頻率（Frame Rate）**：
+  ```
+  Frame Rate = DOTCLK / (Horizontal Total × Vertical Total)
+             = 8,000,000 / (280 × 328)
+             = 8,000,000 / 91,840
+             ≒ 87.1 Hz
+  ```
+
+此更新頻率約為 **87.1 Hz**，符合 ILI9341 顯示控制器的建議更新範圍（典型為 70 Hz，最大不超過 100 Hz），  
+可確保畫面穩定顯示且無閃爍、花屏等異常現象。
+
+#### 實際設定值
 
 | 暫存器             | 設定值                             | 說明                         |
 | --------------- | ------------------------------- | -------------------------- |
 | `HSYNC Width`   | 10 - 1 = **9**                  | `LTDC_SSCR` 的 Horizontal部分 |
 | `VSYNC Width`   | 2 - 1 = **1**                   | `LTDC_SSCR` 的 Vertical 部分  |
-| `HBP`           | 9 + 20 - 1 = **28**             | `LTDC_BPCR` 的 Horizontal部分 |
-| `VBP`           | 1 + 4 - 1 = **4**               | `LTDC_BPCR` 的 Vertical 部分  |
-| `Active Width`  | 9 + 20 + 240 - 1 = **268**      | `LTDC_AWCR` 的 Horizontal部分 |
-| `Active Height` | 1 + 4 + 320 - 1 = **324**       | `LTDC_AWCR` 的 Vertical 部分  |
-| `Total Width`   | 9 + 20 + 240 + 10 - 1 = **278** | `LTDC_TWCR` 的 Horizontal部分 |
-| `Total Height`  | 1 + 4 + 320 + 2 - 1 = **326**   | `LTDC_TWCR` 的 Vertical 部分  |
+| `HBP`           | 10 + 20 - 1 = **29**             | `LTDC_BPCR` 的 Horizontal部分 |
+| `VBP`           | 2 + 2 - 1 = **3**               | `LTDC_BPCR` 的 Vertical 部分  |
+| `Active Width`  | 10 + 20 + 240 - 1 = **269**      | `LTDC_AWCR` 的 Horizontal部分 |
+| `Active Height` | 2 + 2 + 320 - 1 = **323**       | `LTDC_AWCR` 的 Vertical 部分  |
+| `Total Width`   | 10 + 20 + 240 + 10 - 1 = **279** | `LTDC_TWCR` 的 Horizontal部分 |
+| `Total Height`  | 2 + 2 + 320 + 4 - 1 = **327**   | `LTDC_TWCR` 的 Vertical 部分  |
 
 ---
 
@@ -3498,9 +3491,9 @@ D[17:0]：即畫素資料線，可為 0（Low）或 1（High），也會在 DOTC
 - 時序從座標 **(X, Y) = (0, 0)** 開始，該點對應於：
   - 第一行垂直同步區（VSYNC）中的第一個水平同步像素（HSYNC）
 - 接著依序輸出以下區域：
-  1. 後肩區（Back Porch）
+  1. 後沿區（Back Porch）
   2. 有效畫面區（Active Area）
-  3. 前肩區（Front Porch）
+  3. 前沿區（Front Porch）
 
 #### 停用時的行為（LTDC disabled）
 
@@ -3523,9 +3516,9 @@ D[17:0]：即畫素資料線，可為 0（Low）或 1（High），也會在 DOTC
 | 項目                           | 值               |
 |--------------------------------|------------------|
 | 水平 / 垂直同步寬度（Sync）     | H: 8 像素、V: 4 行 |
-| 水平 / 垂直後肩（Back Porch）   | H: 7 像素、V: 2 行 |
+| 水平 / 垂直後沿（Back Porch）   | H: 7 像素、V: 2 行 |
 | 有效畫面區（Active Area）       | 640 × 480        |
-| 水平 / 垂直前肩（Front Porch）  | H: 6 像素、V: 2 行 |
+| 水平 / 垂直前沿（Front Porch）  | H: 6 像素、V: 2 行 |
 
 #### 實際暫存器對應設定值
 
@@ -3750,14 +3743,634 @@ gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_4, ALTERNATE_AF14);
 
 ---
 
-## 6.4 LTDC 同步時序設定
-> AWCR, TWCR, BPCR 等暫存器設定與計算方式
+## 6.4
 
-## 6.5 LTDC Layer 圖層參數
-> 包含視窗範圍、frame buffer 地址、alpha blending 等設定
+完成 ILI9341 顯示控制器所需的 SPI 初始化設定與 LTDC 所用 GPIO 腳位配置之後，即可正式進入 LTDC 的初始化流程。
 
-## 6.6 LTDC 初始化總流程與啟用方式
-> 所有設定整合，shadow reload、生效流程說明
+#### 步驟一、啟用 LTDC 模組時脈
+
+在啟用任何 STM32 模組功能之前，第一步通常都是先啟用該模組的時脈。根據《RM0090 Reference Manual》2.3 節 *Memory map*，LTDC 模組掛載於 APB2 匯流排，對應 `RCC_APB2ENR` 暫存器的 bit 26。
+
+````c
+#define RCC_APB2EN_LTDC 26  // LTDC EN bit = bit 26
+
+// Enable LTDC clock on APB2
+rcc_enable_apb2_clock(RCC_APB2EN_LTDC);
+````
+
+#### 步驟二、設定像素時脈（Pixel Clock）
+
+##### LTDC 像素時脈來源與 PLLSAI 組成邏輯
+
+根據《RM0090 Reference Manual》第 6.2 節 *Clocks*，LTDC 的像素時脈（Pixel Clock）**不是來自 SYSCLK**，而是透過一組獨立於主 PLL 的專用時脈模組 —— **PLLSAI** 所產生。
+
+雖然 PLLSAI 是一組獨立的 PLL，但它與主 PLL 共享相同的輸入來源與前段除頻器設定，包含：
+
+- `PLLSRC`：輸入時脈來源選擇，可為 HSI（預設，16 MHz）或 HSE（外部晶體振盪器）
+- `PLLM[5:0]`：前段除頻器，用於將輸入時脈降至 1–2 MHz 之間（VCO 要求）
+
+上述兩者皆在 `RCC_PLLCFGR` 中設定。
+
+另一方面，PLLSAI 則擁有獨立的啟用開關（`PLLSAION`）與輸出設定參數，包括：
+
+- `PLLSAIN`：VCO 倍頻因子
+- `PLLSAIR`：/R 分支除頻因子（供 LCD 使用）
+
+這些參數則在 `RCC_PLLSAICFGR` 中設定。
+
+因此，即使主系統運行於 HSI、HSE，或由主 PLL 所產生的 SYSCLK，LTDC 的像素時脈仍需**額外透過 PLLSAI 的 `/R` 分支單獨產生**。
+
+為簡化流程，本範例暫以預設的 HSI 作為 PLLSAI 的輸入來源。實務上若需更穩定、精準的顯示品質，建議改用 HSE 並搭配高精度晶體振盪器。
+
+當輸入時脈決定後（透過 `PLLSRC` + `PLLM`），時脈會經過除頻後進入 PLLSAI 模組，通過 **VCO（Voltage-Controlled Oscillator）** 倍頻後，產生內部高頻輸出，計算公式為：
+
+```
+f(VCO) = f(input) × PLLSAIN / PLLM
+```
+
+接著，VCO 的輸出經由 `/R` 分支，再由 `RCC_DCKCFGR` 設定的 `DIVR` 進行最終除頻，產生 **`PLLLCDCLK`**，提供給 LTDC 作為像素時脈來源（Pixel Clock）。
+
+##### ILI9341 顯示時序與建議 Pixel Clock 頻率
+
+根據 ILI9341 手冊第 244 頁的時序規格表，`tCYCD`（DOTCLK 時脈週期）的最小值為 100ns，這代表 Pixel Clock 的最大頻率約為 **10 MHz**。  
+若超過此頻率，將違反 LCD 控制器的時序要求，可能導致畫面抖動或資料錯誤。
+
+另外，在第 54 頁所提供的顯示時序範例中，當解析度為 320x240，畫面更新率為 70Hz 時：
+
+- 一行總點數 = 2（前緣）+ 320（有效像素）+ 2（後緣） = 324
+- 一幀總行數 = 10（前緣）+ 20（Sync Pulse）+ 240（有效畫素）+ 10（後緣） = 280
+
+故一幀所需的總像素時脈（dot clocks）為：
+```
+324 × 280 = 90,720 dots/frame
+```
+
+以 70Hz 更新頻率計算，所需的 DOTCLK 頻率約為：
+```
+90,720 × 70 = 6.35 MHz
+```
+
+這代表 ILI9341 在典型顯示設定下，Pixel Clock 頻率需求約為 **6.35 MHz**。
+
+因此，綜合最小實務需求與最大時序限制，建議將 Pixel Clock 設定在 **6.5 MHz 到 9 MHz** 之間，能有效避開邊界條件問題，確保時序合法且畫面顯示穩定流暢。
+
+##### 範例程式：
+
+根據《RM0090 Reference Manual》第 6.3.2 節的建議，為降低 PLL 抖動（jitter），VCO 的輸入頻率建議設定為 **2 MHz**。  
+若輸入時脈來源使用預設的 **HSI（16 MHz）**，則應將 `PLLM` 設定為 **8**（16 ÷ 8 = 2 MHz）。
+
+接著根據第 6.3.24 節，VCO 的輸出頻率必須介於 **100 ~ 432 MHz** 間。此範例設定 `PLLSAIN = 128`，剛好對應：
+
+```
+f(VCO) = 2 MHz × 128 = 256 MHz（合法範圍內）
+```
+
+接著透過 `PLLSAIR = 4` 除頻，再透過 `PLLSAIDIVR = 2`（代表除以 8）產生最終的 LCD Pixel Clock：
+
+```
+PLLLCDCLK = 256 ÷ 4 ÷ 8 = 8 MHz
+```
+
+此頻率落於 ILI9341 可接受的 DOTCLK 範圍（最大 10 MHz），符合時序要求。
+
+````c
+// Step 2: Configure PLLSAI to generate Pixel Clock for LTDC
+//         VCO = 2 MHz (HSI / 8) × 128 = 256 MHz
+//         PLLLCDCLK = 256 / 4 / 8 = 8 MHz (via /R and DIVR)
+
+rcc_pllcfgr_write_field(LTDC_PLLCFGR_PLLSRC, 0x0);           // 0 = HSI
+rcc_pllcfgr_write_field(LTDC_PLLCFGR_PLLM,   8);             // PLL input clock / 8
+
+rcc_pllsaicfgr_write_field(LTDC_PLLSAICFGR_PLLSAIN, 128);    // PLLSAI VCO multiplier
+rcc_pllsaicfgr_write_field(LTDC_PLLSAICFGR_PLLSAIR, 4);      // PLLSAI /R division
+
+rcc_dckcfgr_write_field(LTDC_DCKCFGR_PLLSAIDIVR, 0b10);      // DIVR = /8 for final LCD clock
+
+rcc_cr_write_field(LTDC_CR_PLLSAION, 1);                     // Enable PLLSAI
+````
+
+#### 步驟三、設定同步時序參數
+
+VSYNC、HSYNC、垂直與水平的後沿 / 前沿（Back Porch / Front Porch）、有效顯示區（Active Area）等前置時序需依照面板規格書與 **16.4 LTDC programmable parameters** 所描述的方式進行設定。
+
+````c
+//LTDC Timing Configuration Parameters
+#define LTDC_HSYNC        10    // Horizontal Sync Pulse Width (HSW)
+#define LTDC_HBP          20    // Horizontal Back Porch (HBP)
+#define LTDC_ACTIVE_WIDTH 240   // Active Pixels per Line
+#define LTDC_HFP          10    // Horizontal Front Porch (HFP)
+
+#define LTDC_VSYNC        2     // Vertical Sync Height (VSH)
+#define LTDC_VBP          2     // Vertical Back Porch (VBP)
+#define LTDC_ACTIVE_HEIGHT 320  // Active Lines per Frame
+#define LTDC_VFP          4     // Vertical Front Porch (VFP)
+
+
+// Derived Register Values (Based on RM0090 Formulas)
+// Synchronization Size Configuration Register (SSCR)
+#define LTDC_SSCR_HSW     (LTDC_HSYNC  - 1)
+#define LTDC_SSCR_VSH     (LTDC_VSYNC  - 1)
+
+// Back Porch Configuration Register (BPCR)
+#define LTDC_BPCR_AHBP    (LTDC_HSYNC + LTDC_HBP - 1)
+#define LTDC_BPCR_AVBP    (LTDC_VSYNC + LTDC_VBP - 1)
+
+// Active Width Configuration Register (AWCR)
+#define LTDC_AWCR_AAW     (LTDC_HSYNC + LTDC_HBP + LTDC_ACTIVE_WIDTH - 1)
+#define LTDC_AWCR_AAH     (LTDC_VSYNC + LTDC_VBP + LTDC_ACTIVE_HEIGHT - 1)
+
+// Total Width Configuration Register (TWCR)
+#define LTDC_TWCR_TOTALW  (LTDC_HSYNC + LTDC_HBP + LTDC_ACTIVE_WIDTH + LTDC_HFP - 1)
+#define LTDC_TWCR_TOTALH  (LTDC_VSYNC + LTDC_VBP + LTDC_ACTIVE_HEIGHT + LTDC_VFP - 1)
+
+// Step 3: Configure LTDC timing registers
+ltdc_sscr_set_field(LTDC_SSCR_FIELD_HSW, LTDC_SSCR_HSW);
+ltdc_sscr_set_field(LTDC_SSCR_FIELD_VSH, LTDC_SSCR_VSH);
+
+ltdc_bpcr_set_field(LTDC_BPCR_FIELD_AHBP, LTDC_BPCR_AHBP);
+ltdc_bpcr_set_field(LTDC_BPCR_FIELD_AVBP, LTDC_BPCR_AVBP);
+
+ltdc_awcr_set_field(LTDC_AWCR_FIELD_AAW, LTDC_AWCR_AAW);
+ltdc_awcr_set_field(LTDC_AWCR_FIELD_AAH, LTDC_AWCR_AAH);
+
+ltdc_twcr_set_field(LTDC_TWCR_FIELD_TOTALH, LTDC_TWCR_TOTALH);
+ltdc_twcr_set_field(LTDC_TWCR_FIELD_TOTALW, LTDC_TWCR_TOTALW);
+````
+
+#### 步驟四、設定 LTDC 同步訊號與時脈極性（對應 ILI9341 SPI 設定）
+
+根據 ILI9341 控制器的 SPI 初始化設定，本系統選擇 **DE 模式** 作為顯示介面，因此在設定 `LTDC_GCR` 暫存器時，需對應各同步訊號與時脈的極性配置如下：
+
+| ILI9341 SPI 初始化位元 | 意義說明                                   | 設定值 | 對應 LTDC_GCR 位元 | LTDC 設定值 |
+|------------------------|--------------------------------------------|--------|---------------------|--------------|
+| **VSPL（D3）**         | 垂直同步訊號極性，`1 = 高電位有效`         | `1`    | `VSPOL`（bit 30）   | `1`          |
+| **HSPL（D2）**         | 水平同步訊號極性，`1 = 高電位有效`         | `1`    | `HSPOL`（bit 31）   | `1`          |
+| **EPL（D0）**          | DE 訊號極性，`0 = 高電位有效`              | `0`    | `DEPOL`（bit 29）  | `1`          |
+| **DPL（D1）**          | 資料擷取時機，`0 = DOTCLK 上升緣擷取`      | `0`    | `PCPOL`（bit 28）   | `0`          |
+
+> 補充 : `DPL = 0` 代表資料在 DOTCLK 上升緣擷取，對應 `PCPOL = 0`（表示不反相，保持原始時脈方向）
+
+````c
+// Step 4: Configure polarity settings in LTDC_GCR
+//         Match the ILI9341 SPI initialization parameters:
+//         - VSPL = 1 → VSYNC is active high   → VSPOL = 1
+//         - HSPL = 1 → HSYNC is active high   → HSPOL = 1
+//         - EPL  = 0 → DE is active high      → DEPOL = 1
+//         - DPL  = 0 → Data on DOTCLK rising  → PCPOL = 0
+ltdc_gcr_set_field(LTDC_GCR_FIELD_VSPOL, 1);   // VSYNC polarity: active high
+ltdc_gcr_set_field(LTDC_GCR_FIELD_HSPOL, 1);   // HSYNC polarity: active high
+ltdc_gcr_set_field(LTDC_GCR_FIELD_DEPOL, 1);   // DE polarity: active high
+ltdc_gcr_set_field(LTDC_GCR_FIELD_PCPOL, 0);   // Pixel clock polarity: normal (rising edge latch)
+````
+
+---
+
+#### 步驟五、設定背景色（BCCR）
+
+根據《RM0090 Reference Manual》第 16.3.3 節 *LCD-TFT pins and signal interface* 所述，  
+若 LCD 面板僅支援 RGB666 且透過 18-bit 並聯介面與 LTDC 相連，則面板端的 RGB 資料線需接至 LTDC 輸出的高位元（MSB），  
+也就是說：紅色應接 `LTDC_R[7:2]`、綠色應接 `LTDC_G[7:2]`、藍色應接 `LTDC_B[7:2]`。
+
+因此，儘管 `LTDC_BCCR` 寫入的格式仍為 RGB888（每通道 8-bit），  
+但為了確保色彩正確顯示於 RGB666 面板上，**需將每通道的顏色值限制在高 6 bits，低 2 bits 清零**，如下所示：
+
+````c
+uint8_t to_rgb565_r(uint8_t r8) {
+    return r8 >> 3; // R: 8-bit to 5-bit
+}
+
+uint8_t to_rgb565_g(uint8_t g8) {
+    return g8 >> 2; // G: 8-bit to 6-bit
+}
+
+uint8_t to_rgb565_b(uint8_t b8) {
+    return b8 >> 3; // B: 8-bit to 5-bit
+}
+
+void ltdc_bccr_set_rgb565_color(uint8_t red, uint8_t green, uint8_t blue) {
+    uint32_t addr = LTDC_BASE + LTDC_BCCR_OFFSET;
+
+    uint32_t r = to_rgb565_r(red) << 3;
+    uint32_t g = to_rgb565_g(green) << 2;
+    uint32_t b = to_rgb565_b(blue) << 3;
+
+    uint32_t data = (r << 16) | (g << 8) | b;
+    uint32_t mask = 0x00FFFFFFU;
+
+    io_writeMask(addr, data, mask);
+}
+
+// Step 5: Set LTDC background color (BCCR)
+ltdc_bccr_set_rgb565_color(255,0,0);  // Set background to red (R=255, G=0, B=0)
+````
+
+---
+
+#### 步驟六、設定 LTDC 中斷功能（IER / LIPCR）
+
+設定 `LTDC_IER` 與 `LTDC_LIPCR` 暫存器中的中斷（如有需要）
+
+- **`LTDC_IER`（LTDC Interrupt Enable Register）**：  
+  用於啟用 LTDC 的各種中斷功能，例如行中斷（Line Interrupt）、FIFO 欠載中斷、傳輸錯誤中斷、暫存器重載完成中斷等。當應用情境中需要對這些事件即時回應（如動態更新畫面）時，才需啟用對應的中斷來源。
+
+- **`LTDC_LIPCR`（Line Interrupt Position Configuration Register）**：  
+  此暫存器可設定在哪一行產生行中斷，常用於在畫面掃描至特定位置時進行操作，例如雙緩衝切換或 frame buffer 更新，以避免畫面撕裂（tearing）問題。
+
+**備註**：  
+目前僅需顯示一個滿版紅色畫面（靜態畫面），無需進行動態更新或中斷處理。因此，本步驟中的中斷設定可暫時略過。LTDC 將自動且持續地從 frame buffer 掃描資料至 LCD，無需額外干預。
+
+如需後續進行畫面更新或雙緩衝處理，再考慮啟用相關中斷機制即可。
+
+---
+
+#### 步驟七、設定 LTDC 圖層參數（Layer 設定）
+
+##### 7.1 LTDC Layerx（x = 1 或 2）水平與垂直視窗位置設定暫存器（LTDC_LxWHPCR / LTDC_LxWVPCR）
+
+這兩個暫存器分別用來設定圖層 Layer1 或 Layer2 在畫面中的**水平與垂直顯示區域**（即：第一個與最後一個像素/掃描線的位置），此區域應包含於由 `AWCR` 定義的有效顯示範圍（Active Area）內。
+
+- **水平視窗位置設定（LTDC_LxWHPCR）**
+
+畫面中第一個可見像素的位置為：
+```
+WHSTPOS[11:0] = AHBP + 1 = 29 + 1 = 30
+```
+
+畫面中最後一個可見像素的位置為：
+```
+WHSPPOS[11:0] = AAW = 269
+```
+
+- **垂直視窗位置設定（LTDC_LxWVPCR）**
+
+畫面中第一條可見掃描線的位置為：
+```
+WVSTPOS[10:0] = AVBP + 1 = 3 + 1 = 4
+```
+
+畫面中最後一條可見掃描線的位置為：
+```
+WVSPPOS[10:0] = AAH = 323
+```
+
+````c
+// 7.1 Set Layer 1 window position within the active display area (defined by AWCR)
+
+// Set horizontal window start and stop positions (in pixel clocks)
+ltdc_lxwhpcr_set_field(1, LTDC_LXWHPCR_FIELD_WHSTPOS, LTDC_LAYER_WHSTPOS);  // Start = AHBP + 1 (first visible pixel)
+ltdc_lxwhpcr_set_field(1, LTDC_LXWHPCR_FIELD_WHSPPOS, LTDC_LAYER_WHSPPOS);  // Stop  = AAW (last visible pixel)
+
+// Set vertical window start and stop positions (in scan lines)
+ltdc_lxwvpcr_set_field(1, LTDC_LXWVPCR_FIELD_WVSTPOS, LTDC_LAYER_WVSTPOS);  // Start = AVBP + 1 (first visible line)
+ltdc_lxwvpcr_set_field(1, LTDC_LXWVPCR_FIELD_WVSPPOS, LTDC_LAYER_WVSPPOS);  // Stop  = AAH (last visible line)
+````
+
+##### 7.2 設定 Layer1 的像素格式（LTDC_LxPFCR）與 RGB666 面板對應說明
+
+LTDC Layerx 像素格式設定暫存器（LTDC_LxPFCR）用來設定圖層（Layer 1 或 Layer 2）使用的像素格式（Pixel Format）。  
+LTDC 會從指定的 Frame Buffer 中讀取畫素資料，並將其轉換為內部統一格式 **ARGB8888**，以供後續顯示處理。
+
+由於 LCD 面板僅接收 **18 條資料線**（6R + 6G + 6B，即 RGB666），  
+而 STM32 的 LTDC 並**不支援 RGB666** 作為 framebuffer 像素格式，因此選擇設定為 **RGB565**（PF[2:0] = `010`）。
+
+````c
+#define LTDC_PIXEL_FORMAT_RGB888     0x1
+#define LTDC_PIXEL_FORMAT_RGB565     0x2
+
+void ltdc_lxpfcr_set_field(uint8_t layerx, uint32_t pixel_format) {
+    uint32_t addr = LTDC_BASE + LTDC_LXPFCR_OFFSET(layerx);
+    uint32_t mask = 0x07U;
+    uint32_t data = pixel_format & mask;
+    io_writeMask(addr, data, mask);
+}
+
+ltdc_lxpfcr_set_field(1, LTDC_PIXEL_FORMAT_RGB565);
+````
+
+##### 7.3 設定圖層 Frame Buffer 起始位址（LTDC_LxCFBAR）
+
+**LTDC Layerx Color Frame Buffer Address Register（LTDC_LxCFBAR）**
+
+此暫存器用來設定圖層（Layer 1 或 Layer 2）對應的影像資料起始位址（Frame Buffer Start Address）。  
+該位址需指向圖層畫面中「左上角像素的記憶體位置」，LTDC 將從此位址開始依序讀取圖層顯示用的像素資料。
+
+**注意**：若未在 linker script 中另外保留此區域空間，該記憶體位置仍會被視為「可用 RAM」，可能會被以下使用者覆蓋：
+
+- stack（堆疊）
+- global / static 變數
+- heap（malloc 配置）
+- 其他 DMA 裝置
+
+若要確保該區域安全，建議於 linker script 中手動保留，或使用 `__attribute__((section()))` 搭配 `.ld` 進行配置。
+
+````c
+#define FRAMEBUFFER_ADDR  0x20000000
+
+void ltdc_lxcfbar_set_field(uint8_t layerx, uint32_t ram_addr) {
+    uint32_t addr = LTDC_BASE + LTDC_LXCFBAR_OFFSET(layerx);
+    io_writeMask(addr, ram_addr, 0xFFFFFFFF);
+}
+
+// 7.3 Set Layer 1 frame buffer start address
+ltdc_lxcfbar_set_field(1, FRAMEBUFFER_ADDR);
+````
+
+##### 7.4 設定圖層影像緩衝列長度與間距（Line Length & Pitch）
+
+LTDC Layerx 顏色影像緩衝區長度設定暫存器（`LTDC_LxCFBLR`）  
+用來定義圖層（Layer 1 或 Layer 2）中，每一列像素資料的長度（Line Length）與列與列之間的記憶體間距（Pitch）。
+
+- **CFBLL[12:0]**：Color Frame Buffer Line Length  
+  設定每列像素資料的實際長度（位元組），需加上固定偏移量 `+3`  
+  ➝ 計算方式：`LineLength = width × bytesPerPixel + 3`
+
+- **CFBP[12:0]**：Color Frame Buffer Pitch  
+  設定每列結束後跳到下一列資料起點的偏移量（位元組）  
+  ➝ 計算方式：`Pitch = width × bytesPerPixel`
+
+以 **RGB565（每像素 2 bytes）**，畫面寬度為 **240 像素** 為例：
+
+```
+LineLength = 240 × 2 + 3 = 483 = 0x01E3
+Pitch      = 240 × 2     = 480 = 0x01E0
+暫存器值   = 0x01E001E3
+```
+
+````c
+void ltdc_lxcfblr_set_field(uint8_t layerx, ltdc_lxcfblr_field_t field, uint32_t lcd_width) {
+    uint32_t addr = LTDC_BASE + LTDC_LXCFBLR_OFFSET(layerx);
+    uint32_t shift = 0, data = 0;
+
+    switch (field) {
+        case LTDC_LXCFBLR_FIELD_CFBLL:
+            shift = 0;
+            data = (lcd_width * 2 + 3) << shift;
+            break;
+        case LTDC_LXCFBLR_FIELD_CFBP:
+            shift = 16;
+            data = (lcd_width * 2) << shift;
+            break;
+        default: return;
+    }
+
+    uint32_t mask = 0x1FFF << shift;
+    io_writeMask(addr, data, mask);
+}
+
+// 7.4 Set frame buffer line length and pitch (in bytes)
+ltdc_lxcfblr_set_field(1, LTDC_LXCFBLR_FIELD_CFBLL, LTDC_ACTIVE_WIDTH); // Line length = width * bytes per pixel + 3
+ltdc_lxcfblr_set_field(1, LTDC_LXCFBLR_FIELD_CFBP, LTDC_ACTIVE_WIDTH);  // Pitch = width * bytes per pixel
+````
+
+---
+
+##### 7.5 設定圖層掃描線數量（Frame Buffer Line Number）
+
+LTDC Layerx Color Frame Buffer Line Number Register（`LTDC_LxCFBLNR`）  
+用來設定圖層對應的影像緩衝區掃描線數量（Frame Buffer Line Number），即圖層的垂直解析度（Active Height）。
+
+此設定決定了 LTDC 每次顯示更新時，從影像記憶體中讀取多少條掃描線作為顯示內容。
+
+- **CFBLNBR[10:0]**：Frame Buffer Line Number  
+  設定圖層的有效掃描線數量，亦即畫面高度。例如當顯示高度為 320 行時，應設定為 `320`（十進位）。
+
+````c
+void ltdc_lxcfblnr_set_field(uint8_t layerx, uint32_t height) {
+    uint32_t addr = LTDC_BASE + LTDC_LXCFBLNR_OFFSET(layerx);
+    uint32_t mask = 0x7FF;
+    io_writeMask(addr, height, mask);
+}
+
+// 7.5 Set number of active display lines (height)
+ltdc_lxcfblnr_set_field(1, LTDC_ACTIVE_HEIGHT);
+````
+
+##### 7.6 色彩查找表（CLUT）、預設顏色與圖層混色設定
+
+在 LTDC 模組中，當使用某些像素格式（如 **L8（8-bit 色彩索引格式）**）時，需透過 CLUT（Color Look-Up Table，色彩查找表）將像素值對應至實際顯示的 RGB 顏色。此時，需透過暫存器 `LTDC_LxCLUTWR` 將 CLUT 表格內容寫入。
+
+對於像素格式為 **L8、AL44、AL88** 等使用色彩索引的格式，LTDC 從 Frame Buffer 中讀取的是色彩的索引編號，而非 RGB 顏色值。顯示時，LTDC 會利用 CLUT 查表轉換為對應的 RGB 色彩。
+
+例如：
+
+- Frame Buffer 中的值為 `0x05`
+- CLUT 中第 5 項對應的顏色為 `{Red=255, Green=0, Blue=0}`（紅色）
+- 則該像素最終顯示為紅色
+
+然而，本專案採用的像素格式為 **RGB565**，其像素資料中已直接包含紅、綠、藍的實際色彩值（R：5-bit，G：6-bit，B：5-bit），因此**不需使用 CLUT**，可略過 `LTDC_LxCLUTWR` 的設定。
+
+暫存器 `LTDC_LxDCCR`（Default Color Configuration Register）可用於設定圖層中未顯示區域的預設顏色，例如圖層未覆蓋的畫面區域或透明區域。在圖層未完全覆蓋顯示區域時，此預設色將會顯示。不過，若圖層已完整覆蓋畫面，則預設色並不會出現，通常情況下**不需設定**該暫存器。
+
+暫存器 `LTDC_LxBFCR`（Blending Factors Configuration Register）則用於設定圖層的混色（Blending）行為，例如多圖層重疊時的混色方式，或是含 Alpha 透明度的圖像合成效果。
+
+然而，考量到本專案僅使用單一圖層（Layer 1），且無透明圖像顯示的需求，LTDC 模組將自動套用預設的混色行為，**不需進行任何額外的混色設定**，因此可略過對 `LTDC_LxBFCR` 的操作。
+
+---
+
+#### 步驟八、設定圖層控制暫存器（LTDC_LxCR）
+
+當使用 L8、AL44 等需要 CLUT（Color Look-Up Table）的像素格式時，需在 `LTDC_LxCR`（Layer Control Register）中啟用對應功能，讓 LTDC 能夠透過色彩查找表正確顯示畫面。
+
+除此之外，此暫存器亦可啟用色彩鍵值（Color Keying）功能，使指定顏色成為「透明區域」，用於圖層合成處理。
+
+最重要的是，**需將圖層啟用（Layer Enable）功能打開，否則 LTDC 將不會顯示該圖層的內容**。
+
+以下為 `LTDC_LxCR` 對應欄位的設定函式與範例：
+
+````c
+void ltdc_lxcr_set_field(uint8_t layerx, ltdc_lxcr_field_t field, uint32_t value) {
+    uint32_t addr = LTDC_BASE + LTDC_LXCR_OFFSET(layerx);
+    uint32_t shift = 0;
+
+    switch (field) {
+        case LTDC_LXCR_FIELD_LEN:    shift = 0; break; // Layer Enable
+        case LTDC_LXCR_FIELD_COLKEN: shift = 1; break; // Color Keying Enable
+        case LTDC_LXCR_FIELD_CLUTEN: shift = 4; break; // CLUT Enable
+        default: return;
+    }
+
+    uint32_t mask = 1U << shift;
+    uint32_t data = value << shift;
+
+    io_writeMask(addr, data, mask);
+}
+
+// Step 8: Enable Layer1
+ltdc_lxcr_set_field(1, LTDC_LXCR_FIELD_LEN, 1);
+ltdc_lxcr_set_field(2, LTDC_LXCR_FIELD_LEN, 0);
+````
+
+---
+
+#### 步驟九、觸發 Shadow Register Reload（畫面更新觸發）
+
+若需使用色彩抖動（dithering）以改善低色彩深度（如 RGB565）造成的漸層色帶問題，可透過 `LTDC_GCR` 暫存器啟用 Dither 功能。若需使用色鍵（color keying），將某個特定顏色設為透明區域，以實現多圖層合成效果，則可透過 `LTDC_LxCKCR` 設定透明顏色，並在 `LTDC_LxCR` 中啟用對應功能。目前專案進度尚未使用上述功能，因此這些設定可暫時略過。
+
+STM32 LTDC 採用 **Shadow Register（陰影暫存器）** 機制，以避免畫面撕裂（tearing）現象。  
+大部分圖層設定（如圖層開啟、座標、像素格式等）在寫入時，僅儲存在 shadow register 中，**不會立刻套用至硬體顯示器**。  
+必須透過 `LTDC_SRCR`（Shadow Reload Register）顯式觸發，才會將 shadow register 的內容更新至顯示控制器。
+
+> **所有圖層暫存器皆為 shadowed**，寫入後若未立即 reload，再次寫入會直接覆蓋暫存值，先前的設定也會遺失，導致顯示異常或設定無效。
+
+##### Reload 模式說明
+
+| 模式 | 說明 | 使用時機 |
+|------|------|----------|
+| **IMR**（Immediate Reload） | 立即套用 shadow register 內容 | 初始化階段或不在意撕裂時使用 |
+| **VBR**（Vertical Blanking Reload） | 等待畫面顯示區結束，再套用設定，避免撕裂 | 用於動畫或切換畫面時需避免閃爍 |
+
+目前為單層 RGB565 初始化階段，使用 `IMR` 即可：
+
+````c
+typedef enum {
+    LTDC_SRCR_FIELD_IMR = 0,  // Immediate Reload
+    LTDC_SRCR_FIELD_VBR = 1   // Vertical Blanking Reload
+} ltdc_srcr_field_t;
+
+void ltdc_srcr_set_field(ltdc_srcr_field_t field, uint32_t value) {
+    uint32_t addr = LTDC_BASE + LTDC_SRCR_OFFSET;
+    uint32_t mask = 1U << field;
+    uint32_t data = value << field;
+
+    io_writeMask(addr, data, mask);
+}
+
+// Step 9: Reload shadow registers immediately
+ltdc_srcr_set_field(LTDC_SRCR_FIELD_IMR, 1);
+````
+
+---
+
+#### 步驟十、啟用 LTDC 控制器（LTDC Enable）
+
+完成所有圖層參數與時序設定後，需透過 `LTDC_GCR` 暫存器啟用整體 LCD-TFT 控制器。
+
+設定 `LTDCEN` 位元（bit 0）為 1，即可正式啟動 LTDC 硬體邏輯與畫面更新。
+
+````c
+// Step 10: Enable LTDC controller (LTDC_GCR bit 0 = 1)
+ltdc_gcr_set_field(LTDC_GCR_FIELD_LTDCEN, 1);
+````
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 

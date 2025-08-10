@@ -11,6 +11,7 @@
 #include <gpio.h>
 #include <rcc.h>
 #include <spi.h>
+#include <ltdc.h>
 
 void spi_gpio_init(void)
 {
@@ -22,10 +23,12 @@ void spi_gpio_init(void)
     // Set PF9 to SPI5_MOSI (AF5)
     gpio_set_mode(GPIOF_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
     gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_9, ALTERNATE_AF5);
+    gpio_set_speed(GPIOF_BASE, 9, GPIO_SPEED_VERY_HIGH);
 
     // Set PF7 to SPI5_SCK (AF5)
     gpio_set_mode(GPIOF_BASE, GPIO_PIN_7, GPIO_MODE_ALTERNATE);
     gpio_set_alternate_function(GPIOF_BASE, GPIO_PIN_7, ALTERNATE_AF5);
+    gpio_set_speed(GPIOF_BASE, 7, GPIO_SPEED_VERY_HIGH);
 
     // Set PD13 as output for D/C (Data/Command select)
     gpio_set_mode(GPIOD_BASE, GPIO_PIN_13, GPIO_MODE_OUTPUT);
@@ -41,6 +44,8 @@ void spi_init(void) {
     // Initialize GPIO pins for SPI5 (SCK, MOSI, CS, D/C)
     spi_gpio_init();
 
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 0); // CS = 0, always selected
+    gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 0); // D/C = 0, always command
 
     // According to ILI9341 spec, SPI max clock = 10 MHz
     // Set SPI baud rate to fPCLK / 2 = 8 MHz (assuming default fPCLK = 16 MHz)
@@ -66,6 +71,7 @@ void spi_init(void) {
     spi_cr1_write_field(SPI_CR1_MSTR, 1);
     spi_cr1_write_field(SPI_CR1_SPE, 1);
 
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 1);  // CS = 1 (idle high)
 }
 
 void spi_cr1_write_field(spi_cr1_field_t field, uint32_t value){
@@ -103,19 +109,27 @@ uint8_t spi_sr_read_field(spi_sr_field_t field) {
 void spi_lcd_write_command(uint32_t data) {
     uint32_t addr = SPI_BASE + SPI_DR_OFFSET;
 
-    gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 0); // D/CX = 0 for command
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 0); // CS low
+    gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 0); // D/C = 0 (command)
+
     while (spi_sr_read_field(SPI_SR_TXE) == 0);
     io_write(addr, data);
-    while (spi_sr_read_field(SPI_SR_BSY) == 1); // Wait until SPI not busy
+    while (spi_sr_read_field(SPI_SR_BSY) == 1);
+
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 1); // CS high
 }
 
 void spi_lcd_write_data(uint32_t data) {
     uint32_t addr = SPI_BASE + SPI_DR_OFFSET;
 
-    gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 1); // D/CX = 1 for data
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 0); // CS low
+    gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 1); // D/C = 1 (data)
+
     while (spi_sr_read_field(SPI_SR_TXE) == 0);
     io_write(addr, data);
-    while (spi_sr_read_field(SPI_SR_BSY) == 1); // Wait until SPI not busy
+    while (spi_sr_read_field(SPI_SR_BSY) == 1);
+
+    gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 1); // CS high
 }
 
 void ili9341_init(void){
@@ -127,27 +141,109 @@ void ili9341_init(void){
 	spi_lcd_write_command(0x11);   // 0x11 = Sleep Out command (D/CX = 0)
 	delay_us(120000);              // Wait ≥120ms to allow power/clocks to stabilize
 
+
+
+
+	// Power Control 1
+	spi_lcd_write_command(0xC0);
+	spi_lcd_write_data(0x26);
+
+	// Power Control 2
+	spi_lcd_write_command(0xC1);
+	spi_lcd_write_data(0x11);
+
+	// VCOM Control 1
+	spi_lcd_write_command(0xC5);
+	spi_lcd_write_data(0x31);
+	spi_lcd_write_data(0x3C);
+
+	// VCOM Control 2
+	spi_lcd_write_command(0xC7);
+	spi_lcd_write_data(0xB0);
+
+
+
+
+
 	// Step 3: Configure RGB interface signal mode
 	spi_lcd_write_command(0xB0);    // RGB Interface Signal Control
-	spi_lcd_write_data(0x4C);       // DE mode, VS/HS polarity high, DOTCLK rising
+	spi_lcd_write_data(0x4C);       // DE mode, DOTCLK rising
 
-	// Step 4: Set pixel format to 18-bit RGB (DPI[2:0] = 110)
+	// Step 4: Set pixel format to 16-bit RGB (DPI[2:0] = 101)
 	spi_lcd_write_command(0x3A);     // 0x3A = Pixel Format Set
-	spi_lcd_write_data(0x66);        // 0x66 = 18-bit RGB (DPI[2:0] = 110, DBI ignored)
+	spi_lcd_write_data(0x55);        // 0x55 = 16-bit RGB (DPI[2:0] = 101, DBI ignored)
 
 	// Step 5: Interface Control
 	spi_lcd_write_command(0xF6);   // Interface Control
 	spi_lcd_write_data(0x01);      // Data 1: WEMODE=1 (avoid overflow), others default
 	spi_lcd_write_data(0x00);      // Data 2: MDT=00, EPF=00 (default, unused in RGB)
-	spi_lcd_write_data(0x01);      // Data 3: ENDIAN=0, DM=01 (RGB mode), RIM=0
+	spi_lcd_write_data(0x06);      // Data 3: DM=01 (RGB mode)、RM=1、RIM=0
 
 	// Step 6: Set Memory Access Control (scan direction, RGB/BGR order)
 	spi_lcd_write_command(0x36);     // 0x36 = Memory Access Control
 	spi_lcd_write_data(0x00);        // MY=0, MX=0, MV=0, ML=0, BGR=0, MH=0
 
-	// Step 7: Turn on display
+
+
+
+
+
+
+
+	// Positive Gamma Correction
+	spi_lcd_write_command(0xE0);
+	spi_lcd_write_data(0x0F);
+	spi_lcd_write_data(0x31);
+	spi_lcd_write_data(0x2B);
+	spi_lcd_write_data(0x0C);
+	spi_lcd_write_data(0x0E);
+	spi_lcd_write_data(0x08);
+	spi_lcd_write_data(0x4E);
+	spi_lcd_write_data(0xF1);
+	spi_lcd_write_data(0x37);
+	spi_lcd_write_data(0x07);
+	spi_lcd_write_data(0x10);
+	spi_lcd_write_data(0x03);
+	spi_lcd_write_data(0x0E);
+	spi_lcd_write_data(0x09);
+	spi_lcd_write_data(0x00);
+
+	// Negative Gamma Correction
+	spi_lcd_write_command(0xE1);
+	spi_lcd_write_data(0x00);
+	spi_lcd_write_data(0x0E);
+	spi_lcd_write_data(0x14);
+	spi_lcd_write_data(0x03);
+	spi_lcd_write_data(0x11);
+	spi_lcd_write_data(0x07);
+	spi_lcd_write_data(0x31);
+	spi_lcd_write_data(0xC1);
+	spi_lcd_write_data(0x48);
+	spi_lcd_write_data(0x08);
+	spi_lcd_write_data(0x0F);
+	spi_lcd_write_data(0x0C);
+	spi_lcd_write_data(0x31);
+	spi_lcd_write_data(0x36);
+	spi_lcd_write_data(0x0F);
+
+	// Display Function Control
+	spi_lcd_write_command(0xB6);
+	spi_lcd_write_data(0x0A);
+	spi_lcd_write_data(0x82);
+	spi_lcd_write_data(0x27);
+
+
+
+
+
+
+
+
+	// Step 7: Normal Display Mode ON
+	spi_lcd_write_command(0x13);     // 0x13 = Normal Display Mode ON
+	delay_us(10000);
+
+	// Step 8: Turn on display
 	spi_lcd_write_command(0x29);     // 0x29 = Display ON
-
-
-
+	delay_us(10000);
 }

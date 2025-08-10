@@ -8,6 +8,8 @@
 #ifndef MEM_MAP_H_
 #define MEM_MAP_H_
 
+#define FRAMEBUFFER_ADDR  0x20000000
+
 
 #define AHB1PERIPH_BASE 0x40020000
 #define APB2PERIPH_BASE 0x40010000
@@ -21,10 +23,14 @@
 #define RCC_BASE       0x40023800UL
 
 /* RCC register address offset */
+#define RCC_CR         0x00
+#define RCC_PLLCFGR    0x04
 #define RCC_AHB1ENR    0x30
 #define RCC_AHB3ENR    0x38
 #define RCC_APB1ENR    0x40
 #define RCC_APB2ENR    0x44
+#define RCC_PLLSAICFGR 0x88
+#define RCC_DCKCFGR    0x8C
 
 
 
@@ -47,7 +53,7 @@
 /* GPIO register offsets (from GPIOx_BASE)*/
 #define GPIO_MODER_OFFSET    0x00  // Mode register
 //#define GPIO_OTYPER_OFFSET   0x04  // Output type register
-//#define GPIO_OSPEEDR_OFFSET  0x08  // Output speed register
+#define GPIO_OSPEEDR_OFFSET  0x08  // Output speed register
 //#define GPIO_PUPDR_OFFSET    0x0C  // Pull-up/pull-down register
 //#define GPIO_IDR_OFFSET      0x10  // Input data register
 #define GPIO_ODR_OFFSET      0x14  // Output data register
@@ -120,6 +126,24 @@
 
 
 
+/* LTDC Group */
+//------------------------------------------------
+#define LTDC_BASE 0x40016800
+
+#define LTDC_SSCR_OFFSET  0x08
+#define LTDC_BPCR_OFFSET  0x0C
+#define LTDC_AWCR_OFFSET  0x10
+#define LTDC_TWCR_OFFSET  0x14
+#define LTDC_GCR_OFFSET   0x18
+#define LTDC_SRCR_OFFSET  0x24
+#define LTDC_BCCR_OFFSET  0x2C
+#define LTDC_LXCR_OFFSET(layerx)    (0x84 + 0x80 * (layerx - 1))
+#define LTDC_LXWHPCR_OFFSET(layerx) (0x88 + 0x80 * (layerx - 1))
+#define LTDC_LXWVPCR_OFFSET(layerx) (0x8C + 0x80 * (layerx - 1))
+#define LTDC_LXPFCR_OFFSET(layerx)  (0x94 + 0x80 * (layerx - 1))
+#define LTDC_LXCFBAR_OFFSET(layerx) (0xAC + 0x80 * (layerx - 1))
+#define LTDC_LXCFBLR_OFFSET(layerx) (0xB0 + 0x80 * (layerx - 1))
+#define LTDC_LXCFBLNR_OFFSET(layerx)(0xB4 + 0x80 * (layerx -1))
 
 
 /* FMC Group */

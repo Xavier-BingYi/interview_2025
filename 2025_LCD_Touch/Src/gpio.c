@@ -56,3 +56,13 @@ void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val){
 	uint32_t mask = 1U << shift;
 	io_writeMask(reg_addr, data, mask);
 }
+
+void gpio_set_speed(uint32_t gpio_base, uint8_t pin, gpio_ospeedr_field_t speed)
+{
+    if (pin > 15) return;                       // guard
+    uint32_t addr  = gpio_base + GPIO_OSPEEDR_OFFSET;
+    uint32_t shift = (uint32_t)pin * 2U;
+    uint32_t mask  = (0x3U << shift);
+    uint32_t data  = ((uint32_t)speed << shift);
+    io_writeMask(addr, data, mask);             // RMW：只改該腳兩個 bit
+}
