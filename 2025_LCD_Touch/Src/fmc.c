@@ -147,22 +147,6 @@ void fmc_init(void){
 	sdram_sdrtr_write_field(SDRAM_SDRTR_COUNT, 683);
 }
 
-void sdram_self_test(void) {
-    volatile uint32_t *sdram = (uint32_t*)0xD0000000; // SDRAM base address (Bank2)
-    usart_printf("1");
-    uint32_t test_val = 0xA5A5A5A5;
-    usart_printf("2");
-    // Write
-    sdram[0] = test_val;
-    usart_printf("3");
-    // Read back and verify
-    if (sdram[0] == test_val) {
-    	usart_printf("SDRAM test passed!\n");
-    } else {
-    	usart_printf("SDRAM test FAILED! Read: %x \n", sdram[0]);
-    }
-    usart_printf("4");
-}
 
 void sdram_sdcr_write_field(uint8_t bank, sdram_sdcr_field_t field, uint32_t value){
     uint32_t addr = FMC_BASE + SDRAM_SDCR_OFFSET(bank);

@@ -9,16 +9,16 @@
 #define LTDC_H_
 
 //LTDC Timing Configuration Parameters
+#define LTDC_ACTIVE_WIDTH 240   // Active Pixels per Line
+#define LTDC_ACTIVE_HEIGHT 320  // Active Lines per Frame
+
 #define LTDC_HSYNC        10    // Horizontal Sync Pulse Width (HSW)
 #define LTDC_HBP          20    // Horizontal Back Porch (HBP)
-#define LTDC_ACTIVE_WIDTH 240   // Active Pixels per Line
 #define LTDC_HFP          10    // Horizontal Front Porch (HFP)
 
 #define LTDC_VSYNC        2     // Vertical Sync Height (VSH)
 #define LTDC_VBP          2     // Vertical Back Porch (VBP)
-#define LTDC_ACTIVE_HEIGHT 320  // Active Lines per Frame
 #define LTDC_VFP          4     // Vertical Front Porch (VFP)
-
 
 // Derived Register Values (Based on RM0090 Formulas)
 // Synchronization Size Configuration Register (SSCR)
@@ -122,15 +122,22 @@ uint8_t to_rgb565_g(uint8_t g8);
 uint8_t to_rgb565_b(uint8_t b8);
 void ltdc_bccr_set_rgb565_color(uint8_t red, uint8_t green, uint8_t blue);
 void ltdc_lxwhpcr_set_field(uint8_t layerx, ltdc_lxwhpcr_field_t field, uint32_t value);
+void ltdc_lxwhpcr_set_window(uint8_t layerx, uint16_t whstpos, uint16_t whsppos);
 void ltdc_lxwvpcr_set_field(uint8_t layerx, ltdc_lxwvpcr_field_t field, uint32_t value);
+void ltdc_lxwvpcr_set_window(uint8_t layerx, uint16_t wvstpos, uint16_t wvsppos);
 void ltdc_lxpfcr_set_field(uint8_t layerx, uint32_t pixel_format);
 void ltdc_lxcfbar_set_field(uint8_t layerx, uint32_t ram_addr);
 void ltdc_lxcfblr_set_field(uint8_t layerx, ltdc_lxcfblr_field_t field, uint32_t lcd_width);
+void ltdc_lxcfblr_set_window(uint8_t layerx, uint16_t cfbllpos, uint16_t cfbppos);
 void ltdc_lxcfblnr_set_field(uint8_t layerx, uint32_t height);
+void ltdc_lxcacr_set_field(uint8_t layerx, uint8_t const_alpha);
+void ltdc_lxbfcr_set_field(uint8_t layerx, uint32_t bf1, uint32_t bf2);
 void ltdc_lxcr_set_field(uint8_t layerx, ltdc_lxcr_field_t field, uint32_t value);
 void ltdc_srcr_set_field(ltdc_srcr_field_t field, uint32_t value);
 
 
+void fill_framebuffer_rgb888(uint32_t rgb888);
+void bsp_lcd_fill_rect(uint32_t rgb888, uint32_t x_start, uint32_t x_width, uint32_t y_start, uint32_t y_height);
 
 
 

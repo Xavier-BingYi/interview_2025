@@ -12,6 +12,7 @@
 #include <mem_io.h>
 #include <mem_map.h>
 #include <exti.h>
+#include <ltdc.h>
 
 void exti_gpio_init(void){
 	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
@@ -88,6 +89,7 @@ void nvic_enable_irq(IRQn irqn) {
     uint32_t bit_mask = 1U << ((uint32_t)irqn % 32);
     io_writeMask(reg_addr, bit_mask, bit_mask);
 }
+
 
 void EXTI0_IRQHandler(void) {
     exti_clear_pending_flag(SYSCFG_EXTI0);

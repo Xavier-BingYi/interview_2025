@@ -1,3 +1,4 @@
+"./Src/clock.o"
 "./Src/exti.o"
 "./Src/fmc.o"
 "./Src/gpio.o"

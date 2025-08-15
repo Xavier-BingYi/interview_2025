@@ -9,6 +9,8 @@
 #define USART_H_
 
 #include <stdbool.h>
+#include <mem_io.h>
+#include <mem_map.h>
 
 /* USART SR bit position */
 #define USART_SR_TXE 7

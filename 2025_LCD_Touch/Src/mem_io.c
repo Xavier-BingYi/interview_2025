@@ -32,3 +32,10 @@ uint32_t io_read(register uint32_t addr) {
 void io_writeMask(uint32_t addr, uint32_t data, uint32_t mask) {
 	io_write(addr, (io_read(addr) & ~mask) | (data & mask));
 }
+
+void io_write8(uint32_t addr, uint8_t val) {
+    *(volatile uint8_t *)addr = val;  // 8-bit store
+}
+uint8_t io_read8(uint32_t addr) {
+    return *(volatile uint8_t *)addr; // 8-bit load
+}

@@ -61,6 +61,10 @@ typedef enum {
     GPIO_SPEED_VERY_HIGH     // 11
 } gpio_ospeedr_field_t;
 
+typedef enum {
+    GPIO_OTYPE_PUSHPULL = 0U,  // push-pull
+    GPIO_OTYPE_OPENDRAIN = 1U  // open-drain
+} gpio_otype_t;
 
 
 void gpio_init(void);
@@ -68,5 +72,6 @@ void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode);
 void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction func);
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val);
 void gpio_set_speed(uint32_t gpio_base, uint8_t pin, gpio_ospeedr_field_t speed);
+void gpio_set_output_type(uint32_t gpio_base, uint8_t pin, gpio_otype_t type);
 
 #endif /* GPIO_H_ */

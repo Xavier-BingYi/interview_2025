@@ -18,6 +18,7 @@
 
 #include <stdint.h>
 #include <mem_io.h>
+#include <clock.h>
 #include <gpio.h>
 #include <rcc.h>
 #include <usart.h>
@@ -27,7 +28,7 @@
 #include <spi.h>
 
 void delay_us(uint32_t us) {
-    for (volatile uint32_t i = 0; i < us ; ++i) {
+    for (volatile uint32_t i = 0; i < us * 8 ; ++i) {
         __asm__("nop");
     }
 }
@@ -35,6 +36,7 @@ void delay_us(uint32_t us) {
 
 int main(void)
 {
+	system_clock_setup();
 	gpio_init();
 	usart_init();
 	exti_init();
@@ -42,8 +44,36 @@ int main(void)
 	ili9341_init();
 	ltdc_init();
 
-	usart_printf("LTDCEN = %d\r\n", (io_read(LTDC_BASE + LTDC_GCR_OFFSET) >> 0) & 1);
-	usart_printf("SRCR = 0x%x\r\n", io_read(LTDC_BASE + LTDC_SRCR_OFFSET));
+	usart_printf("== LTDC core ==\r\n");
+	usart_printf("GCR   = 0x%08X\r\n",  io_read(LTDC_BASE + 0x18));
+	usart_printf("SSCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x08));
+	usart_printf("BPCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x0C));
+	usart_printf("AWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x10));
+	usart_printf("TWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x14));
+	usart_printf("BCCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x2C));
+	usart_printf("SRCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x24));
+
+	usart_printf("== Layer1 ==\r\n");
+	usart_printf("L1CR   = 0x%08X\r\n",   io_read(LTDC_BASE + 0x84));
+	usart_printf("L1WHPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x88));
+	usart_printf("L1WVPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x8C));
+	usart_printf("L1PFCR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x94));
+	usart_printf("L1CACR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x98));
+	usart_printf("L1CFBAR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xAC));
+	usart_printf("L1CFBLR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xB0));
+	usart_printf("L1CFBLNR= 0x%08X\r\n",  io_read(LTDC_BASE + 0xB4));
+
+
+
+
+	bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
+	bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
+	bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
+	bsp_lcd_fill_rect(0x008000, 0, 240, 46*3, 46); // Green
+	bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
+	bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
+	bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
+
 
 
 	// fmc_init();
@@ -66,6 +96,5 @@ int main(void)
     {
     	usart_printf("enter while \r\n");
     	delay_us(1000000);
-
     }
 }

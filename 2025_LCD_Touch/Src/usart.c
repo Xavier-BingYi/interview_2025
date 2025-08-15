@@ -5,7 +5,7 @@
  *      Author: Xavier
  */
 
-
+#include <stdarg.h>
 #include <stdint.h>
 #include <rcc.h>
 #include <gpio.h>
@@ -86,9 +86,10 @@ void usart_brr(uint32_t usart_base,  uint32_t usart_div_x100){
 
 void usart_set_baudrate(uint32_t usart_base, uint32_t fck, uint32_t baudrate){
 	uint32_t cr1_over8 = (io_read(usart_base + USART_CR1_OFFSET) >> USART_CR1_OVER8) & 0x01;
-	uint32_t usart_div_x100 = (fck*100) / (baudrate * 8 * (2 - cr1_over8));
+    uint32_t denom = 8U * (2U - cr1_over8) * baudrate;
+    uint64_t usart_div_x100 = ((uint64_t)fck * 100ULL + (denom/2)) / denom;
 
-	usart_brr(usart_base, usart_div_x100);
+	usart_brr(usart_base, (uint32_t)usart_div_x100);
 }
 
 bool usart_SR_read_bit(uint32_t usart_base, uint8_t bit_pos) {
@@ -140,87 +141,149 @@ void usart_print(uint32_t usart_base, const char *str){
     usart_wait_complete(usart_base);
 }
 
-void usart_printint(int data, int base, int is_signed)
-{
-	static char digits[] = "0123456789ABCDEF";
-	char buf[16];
-	int count = 0;
-	int is_negative = 0;
-	int abs_data;
-
-	if(is_signed && data < 0){
-		is_negative = 1;
-		abs_data = -data;
-	} else {
-		abs_data = data;
-	}
-	if (abs_data == 0){
-		buf[count++] = digits[0];
-	}else{
-		while (abs_data != 0){
-			buf[count++] = digits[abs_data % base];
-			abs_data = abs_data / base;
-		}
-	}
-
-	if(is_negative)
-		buf[count++] = '-';
-
-	while(--count >= 0)
-		usart_write(USART1_BASE, buf[count]);
+static void usart_putc(uint32_t usart_base, char c){
+    usart_write(usart_base, (uint8_t)c);
 }
 
-void usart_printfloat(float xx) // Not working: float is not supported.
-{
-  int beg = (int)(xx);
-  int fin = (int)(xx*100)-beg*100;
-  usart_printint(xx, 10, 1);
-  usart_write(USART1_BASE, '.');
-  if (fin < 10){
-	  usart_write(USART1_BASE, '0');
-  }
-  usart_printint(fin, 10, 1);
+static void usart_puts(uint32_t usart_base, const char *s){
+    while (*s) usart_putc(usart_base, *s++);
+    usart_wait_complete(usart_base);
 }
 
-// Mini printf function for USART: supports %d, %x, %p, %s, %c, %%
-void usart_printf(const char *fmt, ...)	// TODO, https://github.com/shreshthtuli/xv6/blob/master/printf.charactor
+void usart_printf(const char *fmt, ...)
 {
-	int state = 0;  // 0 = normal text, 1 = after '%' waiting for format specifier
-	int *arg_ptr = (int*)(void*)&fmt + 1;  // == (int*)((void*)&fmt + 4);pointer to the first variable argument
+    uint32_t usart_base = USART1_BASE;
 
-    for (int i = 0; fmt[i] != '\0'; i++){  // walk through each character in format string
-        if (state == 0){
-            if (fmt[i] == '%'){
-                state = 1;  // enter format mode
-            }else{
-                usart_write(USART1_BASE, fmt[i]);
-            }
-        }else if (state == 1){
-            if (fmt[i] == 'd'){
-                usart_printint(*arg_ptr, 10, 1);
-                arg_ptr = arg_ptr + 1;
-            } else if (fmt[i] == 'x' || fmt[i] == 'p'){
-                usart_printint(*arg_ptr, 16, 1);
-                arg_ptr = arg_ptr + 1;
-            } else if (fmt[i] == 's'){
-                char *string = (char*)*arg_ptr;  // get string pointer from argument
-                if (string == 0)
-                    string = "(null)";
-                for (int c = 0; *string != '\0'; c++){
-                    usart_write(USART1_BASE, *string);
-                    string = string + 1;  // move to next char
-                }
-                arg_ptr = arg_ptr + 1;  // move to next argument
-            } else if (fmt[i] == 'c'){
-                usart_write(USART1_BASE, (char)*arg_ptr);
-                arg_ptr = arg_ptr + 1;
-            } else if (fmt[i] == '%'){
-                usart_write(USART1_BASE, '%');
-            } else{  // Unrecognized specifier: output as % + character
-                usart_write(USART1_BASE, '%');
-                usart_write(USART1_BASE, fmt[i]);
-            }
-            state = 0;
+    va_list ap;
+    va_start(ap, fmt);
+
+    for (const char *p = fmt; *p; ++p) {
+        if (*p != '%') {
+            usart_putc(usart_base, *p);
+            continue;
+        }
+
+        // ---- 解析格式 ----
+        ++p;
+        int pad_zero = 0;
+        int width = 0;
+
+        // 補零旗標
+        if (*p == '0') {
+            pad_zero = 1;
+            ++p;
+        }
+        // 讀取寬度數字
+        while (*p >= '0' && *p <= '9') {
+            width = width * 10 + (*p - '0');
+            ++p;
+        }
+
+        // ---- 處理格式符號 ----
+        switch (*p) {
+        case '%':
+            usart_putc(usart_base, '%');
+            break;
+
+        case 'd': { // 有號十進位
+            int x = va_arg(ap, int);
+            char buf[32];
+            int len = 0;
+            int neg = (x < 0);
+            uint64_t u = (neg) ? (uint64_t)(-(x + 1)) + 1u : (uint64_t)x;
+
+            // 轉字串
+            do {
+                buf[len++] = '0' + (u % 10);
+                u /= 10;
+            } while (u);
+            if (neg) buf[len++] = '-';
+
+            // 補零或空格
+            while (len < width)
+                usart_putc(usart_base, pad_zero ? '0' : ' '), width--;
+
+            // 輸出數字（倒序）
+            while (len--)
+                usart_putc(usart_base, buf[len]);
+            break;
+        }
+
+        case 'u': { // 無號十進位
+            unsigned x = va_arg(ap, unsigned);
+            char buf[32];
+            int len = 0;
+            do {
+                buf[len++] = '0' + (x % 10);
+                x /= 10;
+            } while (x);
+
+            while (len < width)
+                usart_putc(usart_base, pad_zero ? '0' : ' '), width--;
+
+            while (len--)
+                usart_putc(usart_base, buf[len]);
+            break;
+        }
+
+        case 'x':
+        case 'X': { // 十六進位
+            unsigned x = va_arg(ap, unsigned);
+            static const char digits_low[] = "0123456789abcdef";
+            static const char digits_up[]  = "0123456789ABCDEF";
+            const char *digits = (*p == 'x') ? digits_low : digits_up;
+
+            char buf[32];
+            int len = 0;
+            do {
+                buf[len++] = digits[x % 16];
+                x /= 16;
+            } while (x);
+
+            while (len < width)
+                usart_putc(usart_base, pad_zero ? '0' : ' '), width--;
+
+            while (len--)
+                usart_putc(usart_base, buf[len]);
+            break;
+        }
+
+        case 'p': { // 指標
+            uintptr_t ptr = (uintptr_t)va_arg(ap, void*);
+            usart_puts(usart_base, "0x");
+            char buf[32];
+            int len = 0;
+            do {
+                buf[len++] = "0123456789ABCDEF"[ptr % 16];
+                ptr /= 16;
+            } while (ptr);
+
+            while (len < width)
+                usart_putc(usart_base, pad_zero ? '0' : ' '), width--;
+
+            while (len--)
+                usart_putc(usart_base, buf[len]);
+            break;
+        }
+
+        case 's': {
+            const char *s = va_arg(ap, const char*);
+            usart_puts(usart_base, s ? s : "(null)");
+            break;
+        }
+
+        case 'c': {
+            int ch = va_arg(ap, int);
+            usart_putc(usart_base, (char)ch);
+            break;
+        }
+
+        default:
+            usart_putc(usart_base, '%');
+            usart_putc(usart_base, *p);
+            break;
         }
     }
+
+    va_end(ap);
 }
