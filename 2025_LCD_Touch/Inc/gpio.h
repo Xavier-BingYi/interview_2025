@@ -9,6 +9,7 @@
 #define GPIO_H_
 
 #include <mem_map.h>
+#include <stdbool.h>
 
 /* GPIO pins */
 #define GPIO_PIN_0   0
@@ -70,6 +71,7 @@ typedef enum {
 void gpio_init(void);
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode);
 void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_AlternateFunction func);
+bool gpio_read_idr(uint32_t gpio_base_addr, uint8_t pin);
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val);
 void gpio_set_speed(uint32_t gpio_base, uint8_t pin, gpio_ospeedr_field_t speed);
 void gpio_set_output_type(uint32_t gpio_base, uint8_t pin, gpio_otype_t type);

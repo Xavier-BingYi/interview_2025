@@ -8,7 +8,7 @@
 #ifndef MEM_MAP_H_
 #define MEM_MAP_H_
 
-#define FRAMEBUFFER_ADDR  0x20000000
+#define FRAMEBUFFER_ADDR  (0x20000000 + 0x5400)
 
 
 #define AHB1PERIPH_BASE 0x40020000
@@ -58,7 +58,7 @@
 #define GPIO_OTYPER_OFFSET   0x04  // Output type register
 #define GPIO_OSPEEDR_OFFSET  0x08  // Output speed register
 //#define GPIO_PUPDR_OFFSET    0x0C  // Pull-up/pull-down register
-//#define GPIO_IDR_OFFSET      0x10  // Input data register
+#define GPIO_IDR_OFFSET      0x10  // Input data register
 #define GPIO_ODR_OFFSET      0x14  // Output data register
 //#define GPIO_BSRR_OFFSET     0x18  // Bit set/reset register
 #define GPIO_AFRL_OFFSET     0x20  // Alternate function low register

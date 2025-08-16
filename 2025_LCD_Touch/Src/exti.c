@@ -24,7 +24,7 @@ void exti_init(void) {
 
 	rcc_enable_apb2_clock(RCC_APB2EN_SYSCFG);
 	exti_select_port(SYSCFG_EXTI0, SYSCFG_EXTICR_PORTA);
-	exti_enable_falling_trigger(SYSCFG_EXTI0);
+	exti_enable_rising_trigger(SYSCFG_EXTI0);
 	exti_set_interrupt_mask(SYSCFG_EXTI0, EXTI_INTERRUPT_ENABLE);
 	nvic_enable_irq(EXTI0);
 }
@@ -90,8 +90,21 @@ void nvic_enable_irq(IRQn irqn) {
     io_writeMask(reg_addr, bit_mask, bit_mask);
 }
 
+volatile uint8_t lcd_button_state = 0;
 
 void EXTI0_IRQHandler(void) {
     exti_clear_pending_flag(SYSCFG_EXTI0);
-    usart_printf("Button Pressed!\r\n");
+
+    delay_us(100000);
+
+    if (lcd_button_state == 0){
+    	lcd_button_state++;}
+
+
+	if (gpio_read_idr(GPIOG_BASE, GPIO_PIN_14) == 1)
+		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 0);
+	else
+		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+
+    // usart_printf("Button Pressed!\r\n");
 }

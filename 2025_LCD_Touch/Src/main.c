@@ -39,10 +39,10 @@ int main(void)
 	system_clock_setup();
 	gpio_init();
 	usart_init();
-	exti_init();
 	spi_init();
 	ili9341_init();
 	ltdc_init();
+	exti_init();
 
 	usart_printf("== LTDC core ==\r\n");
 	usart_printf("GCR   = 0x%08X\r\n",  io_read(LTDC_BASE + 0x18));
@@ -63,9 +63,6 @@ int main(void)
 	usart_printf("L1CFBLR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xB0));
 	usart_printf("L1CFBLNR= 0x%08X\r\n",  io_read(LTDC_BASE + 0xB4));
 
-
-
-
 	bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
 	bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
 	bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
@@ -73,15 +70,6 @@ int main(void)
 	bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
 	bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
 	bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
-
-
-
-	// fmc_init();
-	// sdram_self_test();
-
-
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
 
 	usart_print(USART1_BASE, "USART\r\n");
 	usart_write(USART1_BASE, 't');
@@ -91,10 +79,38 @@ int main(void)
 	usart_write(USART1_BASE, '\r');
 	usart_write(USART1_BASE, '\n');
 
+	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
+	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
 
-    while (1)
-    {
-    	usart_printf("enter while \r\n");
-    	delay_us(1000000);
+	uint8_t lcd_change_color = 0;
+	uint32_t led_blink_state = 0;
+    while (1) {
+
+
+    	if (lcd_button_state) {
+    		lcd_button_state = 0;
+        	switch (lcd_change_color) {
+        		case 0: fill_framebuffer_rgb888(0x000000); break;
+        		case 1: fill_framebuffer_rgb888(0x0000FF); break;
+        		case 2: fill_framebuffer_rgb888(0x00FF00); break;
+        		case 3: fill_framebuffer_rgb888(0xFF0000); break;
+        		case 4: fill_framebuffer_rgb888(0xFFFFFF); break;
+        	}
+        	lcd_change_color = (lcd_change_color + 1) % 5;
+    	}
+
+
+    	if (led_blink_state < 400000) {
+    		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 0);
+    	}else if (led_blink_state >= 400000) {
+    		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
+    	}
+
+		if (led_blink_state == 799999) {
+			led_blink_state = 0;
+		} else {
+	    	led_blink_state++;
+		}
+    	delay_us(1);
     }
 }

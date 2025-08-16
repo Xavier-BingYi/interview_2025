@@ -6,6 +6,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <rcc.h>
 #include <gpio.h>
 #include <mem_io.h>
@@ -47,6 +48,12 @@ void gpio_set_alternate_function(uint32_t port_base, uint8_t pin, GPIO_Alternate
     mask = 0x0F << shift;
 
 	io_writeMask(reg_addr, data, mask);
+}
+
+bool gpio_read_idr(uint32_t gpio_base_addr, uint8_t pin) {
+    if (pin >= 16) return false;
+    uint32_t data = io_read(gpio_base_addr + GPIO_IDR_OFFSET);
+    return ((data >> pin) & 0x01) != 0;
 }
 
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val){
