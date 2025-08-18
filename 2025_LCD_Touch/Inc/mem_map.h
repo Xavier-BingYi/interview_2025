@@ -106,6 +106,19 @@
 
 
 
+/* TIMER Group */
+//------------------------------------------------
+#define TIM_2_TO_7_BASE(id)    (0x40000000UL + 0x0400UL * ((id) - 2))
+#define TIM_12_TO_14_BASE(id)  (0x40001800UL + 0x0400UL * ((id) - 12))
+
+#define TIMx_CR1_OFFSET    0x00
+#define TIMx_EGR_OFFSET    0x14
+#define TIMx_PSC_OFFSET    0x28
+#define TIMx_CNT_OFFSET    0x24
+#define TIMx_ARR_OFFSET    0x2C
+
+
+
 /* EXTI Group */
 //------------------------------------------------
 #define EXTI_BASE 0x40013C00

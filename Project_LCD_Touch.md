@@ -4254,88 +4254,253 @@ ltdc_gcr_set_field(LTDC_GCR_FIELD_LTDCEN, 1);
 
 ---
 
+# 7. 計時器 (Timer)
 
+為了讓 MCU 能自行計數時間，可以利用 **Timer**。  
+在 STM32F429 中，計時器分成幾大類：  
 
+- **Advanced-control timers (TIM1、TIM8)**：具備 PWM、死區時間、互補輸出等功能，常用於馬達控制。  
+- **General-purpose timers (TIM2–TIM5、TIM9–TIM14)**：功能較完整，可做輸出比較、輸入捕捉、PWM，也能當基本定時器使用。  
+- **Basic timers (TIM6、TIM7)**：僅具備最基本的時間基準產生功能，適合用於週期性中斷。  
 
+若只是要實現 **週期性中斷（例如 1 ms tick）** 來閃 LED 或觸發事件，而不需要 PWM、死區時間、互補輸出等進階功能，只要參考 **第 20 章 Basic timers (TIM6/TIM7)** 即可。這兩個定時器專門用來做 **基本定時中斷**。
 
+---
 
+## 7.1 基本計時器 (Basic timers)
 
+在 STM32F429 中，**TIM6** 與 **TIM7** 為基本計時器，由以下組成：  
+- **16 位元自動重載計數器 (Auto-reload counter, CNT)**  
+- **16 位元可程式化預分頻器 (Prescaler, PSC)**  
 
+它們可以作為 **通用的時間基準產生器 (time-base generation)**，且兩者是 **完全獨立的**，不會共用任何資源。  
 
+---
 
+### TIM6 和 TIM7 的主要特性
 
+- **16 位元自動重載向上計數器 (Up-counter)**  
+- **16 位元可程式化預分頻器 (Prescaler)**，可將輸入時脈 (counter clock) 做分頻，範圍為 1–65536，並且可「即時 (on-the-fly)」修改。  
+- 在 **更新事件 (Update event, UEV)** 發生時（亦即 **計數器溢位 overflow**），可觸發 **中斷或 DMA 請求**。  
 
+---
 
+### TIM6 和 TIM7 的工作流程
 
+1. 定時器的時脈來源由 **RCC** 提供，稱為 **CK_INT**。  
+   - 對於 TIM6/TIM7，來源是 **APB1 timer clock**。  
+   - CK_INT 會直接送入 **PSC (Prescaler)**，有時也稱為 CK_PSC。  
 
+2. **PSC 分頻**  
+   - CK_INT 經過 PSC 分頻後，輸出 **CK_CNT**，作為計數器 CNT 的計數時脈。  
 
+3. **CNT 遞增**  
+   - CNT 以 CK_CNT 為週期加 1，直到達到 **ARR (Auto-reload Register)** 所設定的上限值。  
 
+4. **更新事件 (UEV)**  
+   - 當 CNT 達到 ARR 時，會自動產生 **更新事件 (UEV)**，並將 CNT 重置為 0，開始新一輪計數。  
 
+透過這個流程，定時器就能週期性地產生 **tick**，作為系統的時間基準，或用來驅動外設（例如 DAC、LED 閃爍、週期性任務）。  
 
+#### 控制位元
 
+- **CEN 位元**（位於 `TIMx_CR1` 暫存器）  
+  - 控制計數器啟動。  
+  - `CEN = 1` → 啟動計數器，PSC 開始由 CK_INT 提供時脈。  
+  - `CEN = 0` → 停止計數。 
 
+- **UG 位元**（位於 `TIMx_EGR` 暫存器）  
+  - 軟體觸發更新事件的控制位元。  
+  - `UG = 1` → 立即強制產生一次 **更新事件 (UEV)**，將 PSC/ARR 的預載值載入，並在設定後自動清除。  
 
+- **UIF 位元**（位於 `TIMx_SR` 暫存器）  
+  - 狀態旗標，用來標記 **更新事件 (UEV)** 是否發生。  
+  - 會在以下情況由硬體自動設為 1：  
+    1. **計數器 CNT 溢位**（達到 ARR 並回到 0）。  
+    2. **軟體觸發 UG**（`TIMx_EGR.UG = 1`，且 `URS=0`）。  
+    3. 其他會產生 UEV 的情境（例如觸發模式下）。  
+  - UIF 必須由 **軟體寫 0** 來清除（寫 1 無效）。  
+  - 若 `UIE=1`，UIF=1 時會產生 **更新中斷**。
 
+#### 更新事件 (UEV)
 
+更新事件 (Update event, UEV) 是一種「狀態／行為」，其來源可以是：  
+- **CNT 達到 ARR 溢位**  
+- **UG 被軟體觸發**  
 
+當 UEV 發生時，硬體會自動執行以下動作：  
 
+- 將 **PSC / ARR 的預載值** 寫入實際暫存器。  
+- 將 **CNT 重置為 0**（若為向上計數模式）。  
+- 設定 **UIF 旗標**（位於 `TIMx_SR` 狀態暫存器）。  
+- 若啟用了 `UIE`，則觸發 **中斷**；若啟用了 DMA，則觸發 **DMA 請求**。  
 
+---
 
+## 7.2 功能描述  
 
+### 時間基準單元 (Time-base unit)
 
+時間基準單元主要由以下三個暫存器組成：  
 
+- **計數器暫存器 (Counter register, TIMx_CNT)**  
+- **預分頻器暫存器 (Prescaler register, TIMx_PSC)**  
+- **自動重載暫存器 (Auto-reload register, TIMx_ARR)**  
 
+---
 
+#### Buffered register（具緩衝的暫存器）
 
+**Buffered register**，也就是常說的 **預載式暫存器 (preloaded register)**。  
+當軟體寫入時，數值會先存放在 **preload register**，並不會立即影響硬體運作；只有在特定的 **事件（例如 Update Event, UEV）**、**同步信號**，或 **觸發 reload 動作**時，才會搬移至 **shadow register**，並真正生效。  
 
+典型例子包括 Timer 的 **ARR、PSC**，以及 LTDC 的部分設定暫存器。這些暫存器具有 **preload register** 與 **shadow register** 的雙層結構：  
 
+- **Preload register**：程式寫入時的暫存空間，等待同步事件觸發。  
+- **Shadow register**：硬體實際運作時所使用的暫存器值。  
 
+這種設計可避免外設在運作過程中因數值立即變動而造成不穩定，確保系統行為的連續性與可靠性。  
+因此，**軟體讀取到的值（preload）** 與 **硬體實際使用的值（shadow）** 在某些時刻可能不同步，直到同步事件發生後才會一致。  
 
+---
 
+#### 自動重載暫存器 (ARR)
 
+ARR 是 **預載式 (preloaded)** 暫存器。  
 
+- 當程式讀寫 ARR 時，實際上訪問的是 **preload register**。  
+- 預載值會在「更新事件 (UEV)」發生時，或根據 `TIMx_CR1` 中 **ARPE 位元**的設定，轉移到 **shadow register** 才會生效。  
+- 更新事件來源可能是 **計數器溢位 (overflow)**，或是軟體觸發（若 `UDIS` 位元允許）。  
 
+---
 
+#### 計數器與啟動條件
 
+- 計數器由 **PSC 分頻後的時脈 (CK_CNT)** 驅動。  
+- 只有當 `TIMx_CR1` 中的 **CEN = 1** 時，CK_CNT 才會啟用並推動 CNT 遞增。  
 
+---
 
+#### 預分頻器描述 (Prescaler description)
 
+- 預分頻器本身是一個 **16 位元計數器**，由 **TIMx_PSC 暫存器**設定分頻值。  
+- 分頻範圍為 **1 到 65536**。  
+- 計算公式：  
 
+  ```
+  CK_CNT = fCK_PSC / (PSC[15:0] + 1)
+  ```
 
+- 由於 PSC 具備 **buffered 機制**，因此分頻值可以「即時 (on-the-fly)」更改。  
+- 新的分頻值會在下一個 **更新事件 (UEV)** 發生時才真正生效。  
 
+---
 
+### 時鐘來源 (Clock source)
 
+在 STM32 的 Timer 架構裡，**CK_INT** 是定時器的內部時鐘來源 (internal clock)。  
+它不是獨立震盪器，而是由 **RCC** 提供的 **APB1/APB2 匯流排時鐘 (PCLK1/PCLK2)**。  
+其中 **TIM6/TIM7** 掛在 **APB1**，因此其 CK_INT 來自 **APB1 的計時器時鐘**。
 
+在 RCC 的 *Clocks* 小節（7.2）有明文規則：定時器時鐘頻率由硬體自動決定，分為兩種情況：  
+- **APB 預分頻器 = 1**：`TIMxCLK = PCLKx`  
+- **APB 預分頻器 ≠ 1**：`TIMxCLK = 2 × PCLKx`  （此規則只適用 **Timer**，如 TIM1/…；USART/SPI/I2C 等一般外設仍用 PCLK 本身）
 
+#### 範例
 
+若系統時脈 **System clock = 180 MHz**  
 
+- AHB 分頻 = 1 → **HCLK = 180 MHz**  
+- APB1 分頻 = 4 → **PCLK1 = 45 MHz**  
+- 由於 APB1 分頻 ≠ 1 → **Timer clock = PCLK1 × 2 = 90 MHz**  
 
+因此，這個 **90 MHz** 就是 TIM6/TIM7 的 **CK_INT**（內部時鐘來源）。
 
+---
 
+### 計數模式 (Counting mode)
 
+#### 計數流程
+- 計數器從 **0** 開始遞增 → 達到 **ARR (Auto-reload Register)** 的值 → 產生 **計數器溢位事件 (counter overflow event)** → CNT 重新歸零並繼續計數。
 
+---
 
+#### 更新事件 (Update Event, UEV)
 
+- **自動產生**：計數器 CNT 溢位時自動產生 UEV。  
+- **軟體觸發**：`TIMx_EGR.UG = 1` 會強制產生一次 UEV。  
+- **禁止條件**：若 `TIMx_CR1.UDIS = 1`，則 UEV 不會更新 shadow register。  
+  - 此時 **counter 與 prescaler counter** 仍會從 0 重新開始。  
+  - 但 **PSC 的分頻比** 不會重新載入，維持不變。  
 
+---
 
+#### URS (Update request selection)
 
+- `URS = 0` → 每次 UEV 都會設置 **UIF 旗標**，並可能觸發 **中斷 / DMA**。  
+- `URS = 1` → 軟體透過 **UG** 產生的 UEV 不會設置 UIF，因此不會觸發中斷 / DMA。  
 
+---
 
+#### 更新事件的效果
 
+當 **UEV** 發生時，硬體會執行以下動作：  
 
+1. **PSC shadow register** ← 載入 **PSC preload 值 (TIMx_PSC)**  
+2. **ARR shadow register** ← 載入 **ARR preload 值 (TIMx_ARR)**  
+3. **UIF 旗標**（位於 `TIMx_SR`）會被設置（是否設置取決於 `URS` 位元）。  
 
+---
 
+## 7.3 實作：以 TIM2 建立 1 µs 時基與時間差量測
 
+本專案希望建立一個 **1 µs 解析度** 的時基，並提供可隨時讀取目前計數值的 API：  
+`uint32_t timer_micros_now(void)`。  
+設計目標是在每次進入主迴圈時讀取一次時間戳，並以「**本次 − 上次**」的**無號差值**計算經過時間（microseconds）：
+```c
+delta_us = (uint32_t)(now - prev);  // 使用無號減法，自然處理回繞
+```
+之後以 LED 閃爍作為示例應用。
 
+原本考慮使用 **Basic timer（TIM6/TIM7）**；然而其 **ARR/CNT 為 16-bit**，即使把計數時脈設為 1 MHz（1 tick=1 µs），也會在 **約 65.536 ms** 回繞一次。若在主迴圈以「環形差值」累積時間，就必須 **保證迴圈 < 65.536 ms** 才不會漏掉回繞。
 
+因此本節改採 **General-purpose timer 的 TIM2**。TIM2 之 **CNT/ARR 為 32-bit**，同樣設為 1 MHz 時計數在 **約 4294.967 秒（約 71.6 分）** 才回繞：  
+- 主迴圈無需頻繁讀取，也較不易遺漏回繞。  
+- 無號減法 `(uint32_t)(now - prev)` 天然處理回繞，邏輯更單純。
 
+> 具體作法：以 **APB1 計時器時鐘**（本專案為 90 MHz）驅動 TIM2，設定 `PSC=89` → `CK_CNT=90 MHz/(89+1)=1 MHz`、`ARR=0xFFFFFFFF`，讓計數器自由運行作為全域微秒時間戳來源。
 
+````c
+void timer_init(void) {
+	rcc_enable_apb1_clock(RCC_APB1EN_TIM2EN);
 
+    timer_set_psc(TIMER2, 89);            // CK_CNT = 1 MHz
+    timer_set_arr(TIMER2, 0xFFFFFFFFu);   // 32-bit free-running
 
+    timer_cr1_set_field(TIMER2, TIMx_CR1_URS, 1); // avoid set UIF
+    timer_egr_set_field(TIMER2, TIMx_EGR_UG, 1);  // update the PSC & ARR
+    timer_cr1_set_field(TIMER2, TIMx_CR1_URS, 0);
 
+    timer_cr1_set_field(TIMER2, TIMx_CR1_CEN, 1); // start
+}
 
+uint8_t  led_state = 0;
+uint32_t last_toggle_us = micros_now(TIMER2);
+while (1) {
+  uint32_t now_us = micros_now(TIMER2);
 
+  if ((uint32_t)(now_us - last_toggle_us) >= 2000000){
+    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, led_state);
+    if (led_state == 0)
+      fill_framebuffer_rgb888(0x4B0082);
+    else
+      fill_framebuffer_rgb888(0x0000FF);
 
+    led_state ^= 1;
+    last_toggle_us = now_us;
+  }
+}
+````
 
 
 
@@ -4358,6 +4523,103 @@ ltdc_gcr_set_field(LTDC_GCR_FIELD_LTDCEN, 1);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --- 初始化：TIM2 變成 1 MHz 32-bit 計數器 ---
+static inline void tim2_init_1mhz(void) {
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    TIM2->PSC = 89;                // 1 MHz
+    TIM2->ARR = 0xFFFFFFFFu;       // 32-bit 最大
+    TIM2->EGR = TIM_EGR_UG;        // 載入 & 清 CNT
+    TIM2->CR1 = TIM_CR1_CEN;
+}
+
+// 直接把 CNT 視為微秒時間戳
+static inline uint32_t micros_now(void) {
+    return TIM2->CNT;  // 單位: us
+}
+
+void loop(void) {
+    tim2_init_1mhz();
+    uint32_t t0 = micros_now();
+
+    for (;;) {
+        uint32_t now = micros_now();
+        if ((uint32_t)(now - t0) >= 1000000UL) {  // 經過 1 秒
+            t0 += 1000000UL;                      // 抗抖更新基準（避免漂移）
+            gpio_toggle(LED_PORT, LED_PIN);
+        }
+        // 其它非阻塞工作...
+    }
+}
+
+
+
+
+
+
+### 極簡用法（預告）
+- `timer2_init_1mhz()`：啟用 TIM2、`PSC=89`、`ARR=0xFFFFFFFF`、`EGR.UG` 載入、`CEN=1` 開跑。
+- `uint32_t timer_micros_now(void)`：直接回傳 `TIM2->CNT`（單位：µs）。
+- LED 範例（每 1 秒反轉）：
+```c
+uint32_t t0 = timer_micros_now();
+for (;;) {
+    uint32_t now = timer_micros_now();
+    if ((uint32_t)(now - t0) >= 1000000UL) { // 1 s
+        t0 += 1000000UL;                     // 抗漂移基準更新
+        gpio_toggle(LED_PORT, LED_PIN);
+    }
+}
 
 
 
@@ -4374,7 +4636,7 @@ ltdc_gcr_set_field(LTDC_GCR_FIELD_LTDCEN, 1);
 
 ---
 
-# 7.
+# 8.
 
 ---
 

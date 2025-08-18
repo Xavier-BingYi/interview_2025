@@ -8,7 +8,7 @@
 #ifndef EXTI_H_
 #define EXTI_H_
 
-volatile extern uint8_t lcd_button_state;
+volatile extern uint8_t exti0_button_flag;
 
 /* EXTI line numbers for mapping PxN to EXTIx (N = 0~15) */
 typedef enum {

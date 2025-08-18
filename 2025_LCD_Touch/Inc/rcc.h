@@ -99,15 +99,18 @@ void rcc_pllcfgr_write_field(rcc_pllcfgr_field_t field, uint32_t value);
 void rcc_pllsaicfgr_write_field(rcc_pllsaicfgr_field_t field, uint32_t value);
 void rcc_dckcfgr_write_field(rcc_dckcfgr_field_t field, uint32_t value);
 
-/* RCC APB2 bit positions */
-#define RCC_APB2EN_SYSCFG 14  // SYSCFG EN bit = bit 14
-#define RCC_APB2EN_SPI5 20  // SPI5 EN bit = bit 20
-#define RCC_APB2EN_LTDC 26  // LTDC EN bit = bit 26
-#define RCC_APB1EN_PWREN 28
 
+/* RCC APB1 enable bit */
+#define RCC_APB1EN_TIM2EN 0   // TIM2
+#define RCC_APB1EN_PWREN  28  // PWR
 
+/* RCC APB2 enable bit */
+#define RCC_APB2EN_SYSCFG 14  // SYSCFG
+#define RCC_APB2EN_SPI5   20  // SPI5
+#define RCC_APB2EN_LTDC   26  // LTDC
 
-#define RCC_APB2RSTR_LTDC  26
+/* RCC APB2 reset bit */
+#define RCC_APB2RSTR_LTDC 26  // LTDC
 
 
 

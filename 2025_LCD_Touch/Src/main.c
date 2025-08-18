@@ -26,6 +26,7 @@
 #include <ltdc.h>
 #include <fmc.h>
 #include <spi.h>
+#include <timer.h>
 
 void delay_us(uint32_t us) {
     for (volatile uint32_t i = 0; i < us * 8 ; ++i) {
@@ -36,81 +37,101 @@ void delay_us(uint32_t us) {
 
 int main(void)
 {
-	system_clock_setup();
-	gpio_init();
-	usart_init();
-	spi_init();
-	ili9341_init();
-	ltdc_init();
-	exti_init();
+    // --- state variables ---
+    static uint32_t last_press_us = 0;           // last accepted button time
+    static uint8_t red_led_on = 0;            // red LED state
+    static uint8_t green_led_on = 0;          // green LED state
+    static const uint32_t GREEN_LED_PERIOD_US = 2000000U; // green LED toggle every 2s
+    static const uint32_t BUTTON_DEBOUNCE_US   = 30000U;   // button debounce 30ms
 
-	usart_printf("== LTDC core ==\r\n");
-	usart_printf("GCR   = 0x%08X\r\n",  io_read(LTDC_BASE + 0x18));
-	usart_printf("SSCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x08));
-	usart_printf("BPCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x0C));
-	usart_printf("AWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x10));
-	usart_printf("TWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x14));
-	usart_printf("BCCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x2C));
-	usart_printf("SRCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x24));
+    uint32_t next_deadline = micros_now(TIMER2) + GREEN_LED_PERIOD_US;
 
-	usart_printf("== Layer1 ==\r\n");
-	usart_printf("L1CR   = 0x%08X\r\n",   io_read(LTDC_BASE + 0x84));
-	usart_printf("L1WHPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x88));
-	usart_printf("L1WVPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x8C));
-	usart_printf("L1PFCR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x94));
-	usart_printf("L1CACR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x98));
-	usart_printf("L1CFBAR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xAC));
-	usart_printf("L1CFBLR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xB0));
-	usart_printf("L1CFBLNR= 0x%08X\r\n",  io_read(LTDC_BASE + 0xB4));
+    // --- system init ---
+    system_clock_setup();
+    timer_init();
+    gpio_init();
+    usart_init();
+    spi_init();
+    ili9341_init();
+    ltdc_init();
+    exti_init();
 
-	bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
-	bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
-	bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
-	bsp_lcd_fill_rect(0x008000, 0, 240, 46*3, 46); // Green
-	bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
-	bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
-	bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
+    // initial LED output
+    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_on);
+    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_on);
 
-	usart_print(USART1_BASE, "USART\r\n");
-	usart_write(USART1_BASE, 't');
-	usart_write(USART1_BASE, 'e');
-	usart_write(USART1_BASE, 'x');
-	usart_write(USART1_BASE, 't');
-	usart_write(USART1_BASE, '\r');
-	usart_write(USART1_BASE, '\n');
+    // debug print LTDC registers
+    usart_printf("== LTDC core ==\r\n");
+    usart_printf("GCR   = 0x%08X\r\n",  io_read(LTDC_BASE + 0x18));
+    usart_printf("SSCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x08));
+    usart_printf("BPCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x0C));
+    usart_printf("AWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x10));
+    usart_printf("TWCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x14));
+    usart_printf("BCCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x2C));
+    usart_printf("SRCR  = 0x%08X\r\n",  io_read(LTDC_BASE + 0x24));
 
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
-	gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+    usart_printf("== Layer1 ==\r\n");
+    usart_printf("L1CR   = 0x%08X\r\n",   io_read(LTDC_BASE + 0x84));
+    usart_printf("L1WHPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x88));
+    usart_printf("L1WVPCR= 0x%08X\r\n",   io_read(LTDC_BASE + 0x8C));
+    usart_printf("L1PFCR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x94));
+    usart_printf("L1CACR = 0x%08X\r\n",   io_read(LTDC_BASE + 0x98));
+    usart_printf("L1CFBAR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xAC));
+    usart_printf("L1CFBLR= 0x%08X\r\n",   io_read(LTDC_BASE + 0xB0));
+    usart_printf("L1CFBLNR= 0x%08X\r\n",  io_read(LTDC_BASE + 0xB4));
 
-	uint8_t lcd_change_color = 0;
-	uint32_t led_blink_state = 0;
-    while (1) {
-
-
-    	if (lcd_button_state) {
-    		lcd_button_state = 0;
-        	switch (lcd_change_color) {
-        		case 0: fill_framebuffer_rgb888(0x000000); break;
-        		case 1: fill_framebuffer_rgb888(0x0000FF); break;
-        		case 2: fill_framebuffer_rgb888(0x00FF00); break;
-        		case 3: fill_framebuffer_rgb888(0xFF0000); break;
-        		case 4: fill_framebuffer_rgb888(0xFFFFFF); break;
-        	}
-        	lcd_change_color = (lcd_change_color + 1) % 5;
-    	}
+    // initial rainbow bars
+    bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
+    bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
+    bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
+    bsp_lcd_fill_rect(0x008000, 0, 240, 46*3, 46); // Green
+    bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
+    bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
+    bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
 
 
-    	if (led_blink_state < 400000) {
-    		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 0);
-    	}else if (led_blink_state >= 400000) {
-    		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, 1);
-    	}
+	while (1) {
+    	uint32_t now_us = micros_now(TIMER2);
+        int32_t  diff = (int32_t)(now_us - next_deadline);
 
-		if (led_blink_state == 799999) {
-			led_blink_state = 0;
-		} else {
-	    	led_blink_state++;
-		}
-    	delay_us(1);
+        // --- periodic task with deadline scheduling ---
+        if (diff >= 0) {
+            uint32_t missed = (uint32_t)diff / GREEN_LED_PERIOD_US + 1U;
+            next_deadline  += missed * GREEN_LED_PERIOD_US;
+
+            // toggle green LED
+            green_led_on ^= 1;
+            gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_on);
+
+            // change screen color
+            if (green_led_on == 0)
+                fill_framebuffer_rgb888(0x4B0082); // Indigo
+            else
+                fill_framebuffer_rgb888(0x0000FF); // Blue
+        }
+
+        // --- handle button event (from EXTI) ---
+        if (exti0_button_flag) {
+            // check debounce window
+            if ((uint32_t)(now_us - last_press_us) >= BUTTON_DEBOUNCE_US) {
+                last_press_us = now_us;
+
+                // toggle red LED
+                red_led_on ^= 1;
+                gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_on);
+
+                // redraw color bars
+                bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
+                bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
+                bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
+                bsp_lcd_fill_rect(0x008000, 0, 240, 46*3, 46); // Green
+                bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
+                bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
+                bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
+            }
+
+            // clear event flag
+            exti0_button_flag = 0;
+        }
     }
 }

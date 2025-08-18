@@ -90,21 +90,9 @@ void nvic_enable_irq(IRQn irqn) {
     io_writeMask(reg_addr, bit_mask, bit_mask);
 }
 
-volatile uint8_t lcd_button_state = 0;
+volatile uint8_t exti0_button_flag = 0;  // event flag shared with main loop
 
 void EXTI0_IRQHandler(void) {
-    exti_clear_pending_flag(SYSCFG_EXTI0);
-
-    delay_us(100000);
-
-    if (lcd_button_state == 0){
-    	lcd_button_state++;}
-
-
-	if (gpio_read_idr(GPIOG_BASE, GPIO_PIN_14) == 1)
-		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 0);
-	else
-		gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
-
-    // usart_printf("Button Pressed!\r\n");
+    exti_clear_pending_flag(SYSCFG_EXTI0); // clear EXTI line0 pending
+    exti0_button_flag = 1;                      // set event flag (button pressed)
 }

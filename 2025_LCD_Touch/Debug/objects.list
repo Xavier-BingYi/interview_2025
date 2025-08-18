@@ -9,5 +9,6 @@
 "./Src/spi.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
+"./Src/timer.o"
 "./Src/usart.o"
 "./Startup/startup_stm32f429zitx.o"

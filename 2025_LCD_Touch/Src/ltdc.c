@@ -241,9 +241,6 @@ void ltdc_init(void){
     // Step 10: Enable LTDC controller (LTDC_GCR bit 0 = 1)
     ltdc_gcr_set_field(LTDC_GCR_FIELD_LTDCEN, 1);
     ltdc_srcr_set_field(LTDC_SRCR_FIELD_IMR, 1);
-
-
-    fill_framebuffer_rgb888(0x00F000);
 }
 
 void bsp_lcd_fill_rect(uint32_t rgb888,
