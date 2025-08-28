@@ -57,7 +57,7 @@
 #define GPIO_MODER_OFFSET    0x00  // Mode register
 #define GPIO_OTYPER_OFFSET   0x04  // Output type register
 #define GPIO_OSPEEDR_OFFSET  0x08  // Output speed register
-//#define GPIO_PUPDR_OFFSET    0x0C  // Pull-up/pull-down register
+#define GPIO_PUPDR_OFFSET    0x0C  // Pull-up/pull-down register
 #define GPIO_IDR_OFFSET      0x10  // Input data register
 #define GPIO_ODR_OFFSET      0x14  // Output data register
 //#define GPIO_BSRR_OFFSET     0x18  // Bit set/reset register
@@ -112,6 +112,8 @@
 #define TIM_12_TO_14_BASE(id)  (0x40001800UL + 0x0400UL * ((id) - 12))
 
 #define TIMx_CR1_OFFSET    0x00
+#define TIMx_DIER_OFFSET   0x0C
+#define TIMx_SR_OFFSET   0x10
 #define TIMx_EGR_OFFSET    0x14
 #define TIMx_PSC_OFFSET    0x28
 #define TIMx_CNT_OFFSET    0x24
@@ -166,6 +168,29 @@
 #define LTDC_LXCFBAR_OFFSET(layerx) (0xAC + 0x80 * (layerx - 1))
 #define LTDC_LXCFBLR_OFFSET(layerx) (0xB0 + 0x80 * (layerx - 1))
 #define LTDC_LXCFBLNR_OFFSET(layerx)(0xB4 + 0x80 * (layerx -1))
+
+
+
+
+/* I2C Group */
+//------------------------------------------------
+#define I2C3_BASE 0x40005C00
+
+
+#define I2C_CR1_OFFSET     0x00
+#define I2C_CR2_OFFSET     0x04
+#define I2C_OAR1_OFFSET    0x08
+#define I2C_OAR2_OFFSET    0x0C
+#define I2C_DR_OFFSET      0x10
+#define I2C_SR1_OFFSET     0x14
+#define I2C_SR2_OFFSET     0x18
+#define I2C_CCR_OFFSET     0x1C
+#define I2C_TRISE_OFFSET   0x20
+#define I2C_FLTR_OFFSET    0x24
+
+
+
+
 
 
 /* FMC Group */

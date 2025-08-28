@@ -33,6 +33,13 @@ typedef enum {
 } timer_cr1_field_t;
 
 typedef enum {
+    //TIMX_DIER_UIE = 0U,
+    //TIMX_DIER_UDE = 0x100U,
+	TIMX_DIER_UIE = (1U << 0),
+	TIMX_DIER_UDE = (1U << 8),
+} timer_dir_field_t;
+
+typedef enum {
     TIMx_EGR_UG   = 0,  // Update event
     TIMx_EGR_CC1G = 1,  // CC1 event (not in TIM6/7)
     TIMx_EGR_CC2G = 2,  // CC2 event (not in TIM6/7)
@@ -45,9 +52,12 @@ typedef enum {
 
 
 void timer_init(void);
+void timer7_start_oneshot_ms(uint16_t ms);
 void timer_cr1_set_field(timer_id_t id, timer_cr1_field_t field, uint32_t value);
+void timer_set_dier(timer_id_t id, timer_dir_field_t bit);
+void timer_set_sr(timer_id_t id, uint32_t bit);
 void timer_egr_set_field(timer_id_t id, timer_egr_field_t field, uint32_t value);
-void timer_set_psc(timer_id_t id, uint16_t psc_value);
+void timer_set_psc(timer_id_t id, uint32_t psc_value);
 void timer_set_arr(timer_id_t id, uint32_t arr_value);
 uint32_t micros_now(timer_id_t id);
 

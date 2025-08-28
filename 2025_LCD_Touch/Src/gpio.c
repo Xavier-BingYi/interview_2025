@@ -83,3 +83,12 @@ void gpio_set_output_type(uint32_t gpio_base, uint8_t pin, gpio_otype_t type)
     uint32_t data  = ((uint32_t)type << shift);
     io_writeMask(addr, data, mask);
 }
+
+void gpio_set_pupdr(uint32_t gpio_base, uint8_t pin, gpio_pupdr_t type) {
+    if (pin > 15) return;
+    uint32_t addr  = gpio_base + GPIO_PUPDR_OFFSET;
+    uint32_t shift = (uint32_t)pin * 2;
+    uint32_t mask  = (0x3U << shift);
+    uint32_t data  = ((uint32_t)type << shift);
+    io_writeMask(addr, data, mask);
+}

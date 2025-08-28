@@ -4484,142 +4484,707 @@ void timer_init(void) {
     timer_cr1_set_field(TIMER2, TIMx_CR1_CEN, 1); // start
 }
 
-uint8_t  led_state = 0;
-uint32_t last_toggle_us = micros_now(TIMER2);
-while (1) {
-  uint32_t now_us = micros_now(TIMER2);
+	uint8_t  led_state = 0;
+	static const uint32_t LED_PERIOD_US = 2000000U;
+	uint32_t next_deadline = micros_now(TIMER2) + LED_PERIOD_US;
+  while (1) {
+    uint32_t now_us = micros_now(TIMER2);
+    int32_t  diff = (int32_t)(now_us - next_deadline);
 
-  if ((uint32_t)(now_us - last_toggle_us) >= 2000000){
-    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, led_state);
-    if (led_state == 0)
-      fill_framebuffer_rgb888(0x4B0082);
-    else
-      fill_framebuffer_rgb888(0x0000FF);
+    if (diff >= 0) {
+      uint32_t missed = (uint32_t)diff / LED_PERIOD_US + 1u;
 
-    led_state ^= 1;
-    last_toggle_us = now_us;
-  }
+      next_deadline += missed * LED_PERIOD_US;
+      led_state ^= 1;
+      gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, led_state);
+
+      if (led_state == 0)
+        fill_framebuffer_rgb888(0x4B0082);
+      else
+        fill_framebuffer_rgb888(0x0000FF);
+    }
+
 }
 ````
 
+---
 
+# 8. 觸控面板（Touch Panel）— STMPE811
 
+## 8.1 GPIO 與 EXTI 初始化
 
+- **I2C3**：  
+  - **PA8 = SCL**、**PC9 = SDA** → 皆設 **AF4 / Open-Drain / High speed / 無內部上拉**（板上已有 4.7 kΩ 上拉）。  
+- **中斷 INT**：  
+  - **PA15 = TP_INT1** → 設 **Input / 無內部上拉**，**EXTI falling-edge** 觸發。  
+  - 注意：STMPE811 的 INT 為 **active-low**，直到 I²C 讀並清除控制器的中斷狀態才會釋放。 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --- 初始化：TIM2 變成 1 MHz 32-bit 計數器 ---
-static inline void tim2_init_1mhz(void) {
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-    TIM2->PSC = 89;                // 1 MHz
-    TIM2->ARR = 0xFFFFFFFFu;       // 32-bit 最大
-    TIM2->EGR = TIM_EGR_UG;        // 載入 & 清 CNT
-    TIM2->CR1 = TIM_CR1_CEN;
-}
-
-// 直接把 CNT 視為微秒時間戳
-static inline uint32_t micros_now(void) {
-    return TIM2->CNT;  // 單位: us
-}
-
-void loop(void) {
-    tim2_init_1mhz();
-    uint32_t t0 = micros_now();
-
-    for (;;) {
-        uint32_t now = micros_now();
-        if ((uint32_t)(now - t0) >= 1000000UL) {  // 經過 1 秒
-            t0 += 1000000UL;                      // 抗抖更新基準（避免漂移）
-            gpio_toggle(LED_PORT, LED_PIN);
-        }
-        // 其它非阻塞工作...
-    }
-}
-
-
-
-
-
-
-### 極簡用法（預告）
-- `timer2_init_1mhz()`：啟用 TIM2、`PSC=89`、`ARR=0xFFFFFFFF`、`EGR.UG` 載入、`CEN=1` 開跑。
-- `uint32_t timer_micros_now(void)`：直接回傳 `TIM2->CNT`（單位：µs）。
-- LED 範例（每 1 秒反轉）：
 ```c
-uint32_t t0 = timer_micros_now();
-for (;;) {
-    uint32_t now = timer_micros_now();
-    if ((uint32_t)(now - t0) >= 1000000UL) { // 1 s
-        t0 += 1000000UL;                     // 抗漂移基準更新
-        gpio_toggle(LED_PORT, LED_PIN);
-    }
+// I2C3 GPIO: PA8=SCL, PC9=SDA
+void i2c3_gpio_init(void) {
+    // GPIOA / GPIOC clock
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+    rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOC);
+
+    // PA8 -> I2C3_SCL (AF4, OD, High, no pull)
+    gpio_set_mode(GPIOA_BASE, GPIO_PIN_8, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOA_BASE, GPIO_PIN_8, ALTERNATE_AF4);
+    gpio_set_output_type(GPIOA_BASE, GPIO_PIN_8, GPIO_OTYPE_OPENDRAIN);
+    gpio_set_pupdr(GPIOA_BASE, GPIO_PIN_8, GPIO_PUPD_NONE);
+    gpio_set_speed(GPIOA_BASE, GPIO_PIN_8, GPIO_SPEED_HIGH);
+
+    // PC9 -> I2C3_SDA (AF4, OD, High, no pull)
+    gpio_set_mode(GPIOC_BASE, GPIO_PIN_9, GPIO_MODE_ALTERNATE);
+    gpio_set_alternate_function(GPIOC_BASE, GPIO_PIN_9, ALTERNATE_AF4);
+    gpio_set_output_type(GPIOC_BASE, GPIO_PIN_9, GPIO_OTYPE_OPENDRAIN);
+    gpio_set_pupdr(GPIOC_BASE, GPIO_PIN_9, GPIO_PUPD_NONE);
+    gpio_set_speed(GPIOC_BASE, GPIO_PIN_9, GPIO_SPEED_HIGH);
 }
+
+void exti_gpio_init(void) {
+	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
+	gpio_set_mode(GPIOA_BASE, GPIO_PIN_15, GPIO_MODE_INPUT);
+  gpio_set_pupdr(GPIOA_BASE, GPIO_PIN_15, GPIO_PUPD_NONE);
+}
+
+void exti_init(void) {
+	exti_gpio_init();
+
+  // Map EXTI line15 to port A, enable falling trigger
+  exti_select_port(SYSCFG_EXTI15, SYSCFG_EXTICR_PORTA);
+  exti_enable_falling_trigger(SYSCFG_EXTI15);
+  exti_set_interrupt_mask(SYSCFG_EXTI15, EXTI_INTERRUPT_ENABLE);
+  exti_clear_pending_flag(SYSCFG_EXTI15); // clear EXTI line15 pending
+
+  // NVIC for EXTI lines 10..15
+  nvic_enable_irq(EXTI15_10_IRQn);
+}
+```
+
+---
+
+## 8.2 STM32F429 I²C 介紹  
+
+STM32F429 的 I²C 介面可以同時支援 **Master** 與 **Slave** 模式，具備多主機能力 (Multimaster Capability)。  
+
+---
+
+### 8.2.1 I²C 基本特性  
+
+#### 1. 匯流排連接與傳輸速度  
+I²C 介面透過資料腳位 **SDA** 與時脈腳位 **SCL** 連接至匯流排，支援：  
+- **標準模式 (Standard Mode, Sm)：最高 100 kHz**  
+- **快速模式 (Fast Mode, Fm)：最高 400 kHz**  
+
+#### 2. 狀態旗標 (Status Flags)  
+- 傳送器 / 接收器模式旗標  
+- End-of-Byte 傳輸完成旗標  
+- I²C 忙碌旗標  
+
+#### 3. 中斷向量 (Interrupt Vectors)  
+I²C 共有 **2 種中斷來源**：  
+- 位址 / 資料傳輸成功中斷  
+- 錯誤狀態中斷  
+
+#### 4. 工作模式 (Operating Modes)  
+I²C 介面可運作於下列四種模式之一：  
+- **Slave transmitter** (從機傳送器)  
+- **Slave receiver** (從機接收器)  
+- **Master transmitter** (主機傳送器)  
+- **Master receiver** (主機接收器)  
+
+預設情況下，I²C 介面運作於 **Slave 模式**。  
+- 當產生 **START 條件** 時，會自動從 Slave 切換為 Master。  
+- 若發生仲裁失敗或 Stop 條件產生，則會切回 Slave 模式。
+
+#### 5. Master 功能  
+- 所有資料與位址皆以 **8-bit byte** 傳送，並以 **MSB (最高位元)** 先行。  
+- 負責產生資料傳輸所需的 **時脈 (Clock generation)**。  
+- 每次傳輸必須以 **Start condition** 開始，並以 **Stop condition** 結束：  
+  - **Start condition**：SCL 保持高電位，SDA 由 **高 → 低**。  
+  - **Stop condition**：SCL 保持高電位，SDA 由 **低 → 高**。  
+
+在 I²C 匯流排中，每個 **Slave 裝置** 都需要一個唯一的位址 (**7-bit / 10-bit**)。  
+Master 透過該位址指定要與哪個 Slave 溝通，並且支援 **General Call (廣播呼叫)**。
+
+#### 6. 7-bit 位址模式  
+在 **7-bit 模式** 下：  
+- 第一個 byte 在 Start 條件後即為位址 (由 Master 傳送)。  
+- 每一個 byte 傳輸需要 **8 個 SCL 週期**。  
+- 傳送完 8 bits 後，會有第 **9 個 SCL 週期**，此時 Slave 需回覆 **ACK (確認位元)**。  
+
+資料框架 (Frame) 組成：  
+```
+[7-bit Slave Address] + [R/W bit]
+```
+- R/W bit：最後一個 bit 表示 **讀取 (1)** 或 **寫入 (0)**。  
+
+---
+
+### 8.2.2 I²C Master 模式  
+
+當匯流排上透過 **START 位元** 產生 Start 條件時，I²C 介面會進入 **Master 模式**。  
+
+在此模式下，外設輸入時脈頻率至少需為：  
+- **2 MHz**（標準模式 Sm）  
+- **4 MHz**（快速模式 Fm）  
+
+#### Master 模式設定流程  
+
+1. 在 **I2C_CR2** 暫存器中設定外設輸入時脈，確保定時正確。  
+2. 設定 **CCR (Clock Control Register)**，定義 SCL 高低電平時間。  
+3. 設定 **TRISE 暫存器**，配置最大上升時間。  
+4. 設定 **I2C_CR1** 暫存器，啟用外設。  
+5. 在 **I2C_CR1** 暫存器中設置 **START 位元**，產生 Start 條件。  
+
+#### SCL 主時脈產生 (SCL Master Clock Generation)  
+
+**CCR 位元** 用於產生 SCL 的高電平與低電平，分別由上升沿與下降沿控制。  
+
+由於 Slave 可能進行 **Clock Stretching**（拉低 SCL 延遲傳輸），因此 MCU 會在 **TRISE 暫存器** 所設定的時間後，檢查匯流排上的 SCL 狀態：  
+- **若 SCL 為低電位**：表示有 Slave 正在拉住匯流排，高電平計數器會暫停，直到偵測到 SCL 為高電位，以確保 **SCL 最小高電平時間**。  
+- **若 SCL 為高電位**：高電平計數器持續運行。  
+
+SCL 時脈產生過程中會有 **迴路延遲**，即使沒有 Slave 進行 Clock Stretching 也存在。延遲來源包括：  
+- **SCL 上升時間**（影響 VIH 偵測）  
+- **SCL 輸入端濾波器延遲**  
+- **內部 SCL 與 APB 時脈同步延遲**  
+
+**TRISE 暫存器** 設定最大允許延遲，確保 SCL 頻率穩定，不受實際 SCL 上升時間影響。  
+
+#### 起始條件 (Start Condition)  
+
+設定 **START 位元** 會使 I²C 介面產生 Start 條件，並在 **BUSY 位元清除**時切換到 **Master 模式 (MSL 位元設置)**。  
+
+一旦 Start 條件送出：  
+- **SB 位元** 會由硬體自動設置。  
+- 若 **ITEVFEN 位元** 已啟用，則會觸發中斷。  
+- 接著 Master 需先讀取 **SR1 暫存器**，然後將 **Slave 位址** 寫入 **DR 暫存器**。  
+
+#### Slave 位址傳送 (Slave Address Transmission)  
+
+Slave 位址會透過內部移位暫存器 (Shift Register) 傳送至 SDA 線，在 **7-bit 位址模式** 下：  
+1. 傳送一個位址 byte。  
+2. 當位址傳送完成後，**ADDR 位元** 由硬體自動設置。
+3. Master 需先讀取 **SR1 暫存器**，再讀取 **SR2 暫存器**。  
+
+Master 會依據 **Slave 位址的 LSB 位元** 決定進入哪種模式：  
+- **LSB = 0** → 進入 **Transmitter 模式**。  
+- **LSB = 1** → 進入 **Receiver 模式**。  
+
+**TRA 位元** 用來指示 Master 當前處於 **Transmitter** 還是 **Receiver 模式**。  
+
+#### Master 傳送模式 (Master Transmitter)  
+
+1. 在位址傳送完成並清除 **ADDR** 後，Master 將資料寫入 **DR 暫存器**，再透過內部移位暫存器傳送到 **SDA 線**。  
+2. Master 會等待第一個資料位元組寫入 **I2C_DR**。  
+3. 當接收到 **ACK 應答** 後，**TxE 位元** 會由硬體自動設置。  
+4. 若 **TxE 已設置** 但新資料尚未寫入 **DR**，而前一筆資料傳輸已完成，則 **BTF 位元** 會被設置，介面會停住，直到新資料寫入 **I2C_DR**。  
+   - 在此期間，SCL 會被拉低（**Clock Stretching**）。  
+
+當最後一個資料位元組寫入 **DR** 後：  
+- 軟體必須將 **STOP 位元** 設置以產生 **Stop 條件**。  
+- 此時介面會自動返回 **Slave 模式 (MSL 位元清除)**。  
+- 只要再次送出 **START 條件** (設定 START 位元)，硬體就會重新進入 **Master 模式**，開始新的一次傳輸。  
+
+##### Master 傳送模式傳輸時序 (Master Transmitter Sequence)  
+
+```
+S → EV5 → Address → A → EV6 → EV8_1 → Data1/EV8 → A → Data2/EV8 → A → … → DataN/EV8 → A → EV8_2 → P
+```
+- **Legend**：S= Start, P= Stop, A= Acknowledge, EVx= Event (with interrupt if ITEVFEN = 1)
+- **EV5**：SB=1，由讀取 SR1 並寫入 DR (地址) 清除。  
+- **EV6**：ADDR=1，由讀取 SR1 與 SR2 清除。  
+- **EV8_1**：TxE=1，移位暫存器為空，資料暫存器為空，寫入 Data1 至 DR。  
+- **EV8**：TxE=1，移位暫存器非空，資料暫存器為空，由寫入 DR 清除。  
+- **EV8_2**：TxE=1，BTF=1，必須由程式設定 **Stop**；TxE 與 BTF 會由 **Stop 條件** 自動清除。  
+
+**Clock Stretching**：  
+- EV5、EV6、EV8_1 與 EV8_2 事件在軟體處理完成前，SCL 會保持拉低。  
+- 若 EV8 事件在下一個位元組傳輸開始前尚未完成，SCL 也會保持拉低，直到處理完成。  
+
+#### Master 接收模式 (Master Receiver)  
+
+當 Master 發出 **從機位址 (Slave address)** 並成功收到從機的應答 (即 **ADDR 旗標清除**)，I²C 介面便進入 **Master 接收模式**。  
+此時資料會透過 **SDA 線** 傳入，並存放到 **資料暫存器 (DR, Data Register)**。  
+
+每當 Master 接收 1 byte，必須在第 9 個 clock 週期送出回應：  
+- **ACK**：表示「還要更多資料」，Slave 會繼續傳送下一個 byte。  
+- **NACK**：表示「不要再傳了」，Slave 會在收到 NACK 後結束傳輸。  
+
+當 **DR 暫存器** 有新資料可讀時，**RxNE (Receive Buffer Not Empty)** 旗標會被設置 (RxNE=1)。  
+此時程式必須在下一筆資料到來前，讀出 DR 的內容。  
+
+若 **DR 尚未讀出 (RxNE=1 未清除)**，而新的資料又到達，則 **BTF (Byte Transfer Finished)** 旗標會被設置 (BTF=1)。  
+為避免 DR 中的資料被覆蓋，硬體會啟動 **Clock Stretching**，將 **SCL 拉低**，直到 CPU 讀走資料為止。  
+
+##### 結束通訊 (Closing the Communication)  
+
+Master 在接收最後一個 byte 時，會送出 **NACK**，通知 Slave 傳輸結束。  
+Slave 收到 NACK 後，會釋放對 **SCL** 與 **SDA** 的控制權。  
+通常 Master 在送出 NACK 後，會緊接著產生 **STOP** 或 **REPEATED START**，以結束或重新啟動本次通訊。  
+
+具體流程：  
+1. **倒數第二個 byte**：軟體需清除 **ACK 位元**，使最後一個 byte 自動回應 **NACK**。  
+2. **倒數第二個 byte 讀取後**：軟體應設置 **STOP 或 START 位元**，以便在最後一個 byte 完成後，自動產生 STOP/RESTART。  
+3. **若僅接收單一 byte**：需在 **EV6 (ADDR=1)** 事件時清除 ACK，並在 EV6 後立即設置 STOP。  
+
+當 STOP 條件產生後，介面會自動回到 **Slave 模式** (MSL 位元清除)。  
+
+##### Master 接收模式接收時序 (Master Receiver Sequence)  
+
+```
+S → EV5 → Address → A → EV6 → Data1 → A(1) → Data2/EV7 → A → Data3/EV7 → A → … → DataN/EV7_1 → NA → P/EV7
+```
+
+- Legend: S= Start, P= Stop, A= Acknowledge, NA= Non-acknowledge,
+EVx= Event (with interrupt if ITEVFEN=1)
+- **EV5**：SB=1，由讀取 SR1 後寫入 DR (地址) 清除  
+- **EV6**：ADDR=1，由讀取 SR1 後讀取 SR2 清除  
+- **EV7**：RxNE=1，由讀取 DR 清除，同時送出 ACK  
+- **EV7_1**：RxNE=1，由讀取 DR 清除，並送出 NACK 與 STOP  
+- **EV9**：ADD10=1，由讀取 SR1 並寫入 DR 清除（僅 10-bit 位址模式使用）  
+
+補充：  
+- **EV5、EV6、EV9** 在軟體處理完成前，SCL 會被拉低 (Clock Stretching)。  
+- **EV7** 若未在下一個 byte 到來前處理完成，SCL 會保持拉低。  
+- **EV7_1** 軟體動作必須在當前 byte 的 ACK 脈衝之前完成。   
+
+##### 接收規則與特殊情況 (Reception Rules and Special Cases)  
+
+- 在最後一個 byte 之前，必須清除 **ACK**。  
+- **STOP 位元** 必須在最後一個 byte 接收完成後設置。  
+
+**單一 byte 接收 (1-byte Reception)**
+- 在進入接收模式（EV6，ADDR=1）之後，程式必須 清除 ACK 位元，並立即設置 **STOP**。  
+- 當唯一的 byte 到來時，硬體就會在第 9 個 clock 自動送出 NACK，完成接收。  
+
+**兩個 byte 接收 (2-byte Reception)**  
+1. 等待 **ADDR=1**（SCL 保持拉低，直到 ADDR 清除）。  
+2. 清除 **ACK**，並設置 **POS 位元**。  
+3. 讀取 **SR1、SR2**，清除 ADDR。  
+4. 等待 **BTF=1**（Data1 在 DR，Data2 在移位暫存器，SCL 拉低直到 Data1 被讀走）。  
+5. 設置 **STOP**。  
+6. 依序讀取 **Data1、Data2**。  
+
+**多於兩個 byte 接收 (N > 2-byte Reception)**  
+1. 等待 **BTF=1**（例如 Data N-2 在 DR，Data N-1 在移位暫存器，SCL 拉低直到 Data N-2 被讀走）。  
+2. 清除 **ACK**。  
+3. 讀取 **Data N-2**。  
+4. 再次等待 **BTF=1**（Data N-1 在 DR，Data N 在移位暫存器）。  
+5. 設置 **STOP**。  
+6. 依序讀取 **Data N-1、Data N**。  
+
+---
+
+### 8.2.3 I²C 初始化與資料傳輸實作
+
+#### I²C 初始化
+
+首先，必須先開啟 **I2C3 所需的 RCC APB1 Clock**。  
+接著，將 **CR1.PE** 暫時清零，關閉 I²C 外設，以便安全設定定時暫存器。  
+
+依照 **Master 模式初始化流程**，設定步驟如下：
+
+1. **I2C_CR2.FREQ**  
+   - 設定外設輸入時脈頻率 (MHz)。  
+   - 本專案 APB1 = 45 MHz，因此設為 **45**。  
+
+2. **CCR (Clock Control Register)**  
+   - 定義 SCL 高低電平時間。  
+   - 選擇 **Fm 模式 (F/S=1)**，並設定 **DUTY=0**。  
+   - 依公式：  
+     ```
+     Thigh = CCR × T_PCLK1
+     Tlow  = 2 × CCR × T_PCLK1
+     f_SCL = 1 / (3 × CCR × T_PCLK1)
+     ```  
+     帶入 fPCLK1 = 45 MHz，目標 fSCL = 300 kHz：  
+     ```
+     CCR = 45 MHz / (3 × 300 kHz) = 50
+     ```  
+     因此 **CCR = 50**。  
+
+3. **TRISE (Rise Time Register)**  
+   - 設定最大允許上升時間，公式為：  
+     ```
+     TRISE = (允許的最大上升時間 / PCLK1 週期) + 1
+     ```  
+   - Fm 模式規範最大允許的 SCL 上升時間是 **300 ns**。  
+   - I2C_CR2 的 FREQ = 45（APB1=45 MHz），則：  
+     ```
+     T_PCLK1 = 1 / 45 MHz ≈ 22.2 ns
+     TRISE = (300 ns / 22.2 ns) + 1 ≈ 13.5 + 1 ≈ 14.5 → 設為 15
+     ```  
+     因此 **TRISE = 15**。  
+
+4. **CR1.PE**  
+   - 設定完成後，將 **PE=1**，重新啟用 I²C 外設。  
+
+5. **啟動傳輸 (Start Condition)**  
+   - 當需要開始一次通訊時，在 **I2C_CR1** 中設置 **START=1**，即可產生 Start 條件，並自動切換至 Master 模式。 
+
+````c
+void i2c_init(void) {
+    const uint32_t PCLK1_MHZ  = 45u;        // APB1 peripheral clock in MHz (I2C input clock)
+    const uint32_t I2C_SCL_HZ = 300000u;    // Target SCL frequency (Fast-mode 300 kHz)
+
+    // TRISE: configure with maximum SCL rise time + 1 (Fast-mode uses 300 ns)
+    // TRISE = (t_r_max / T_PCLK1) + 1 = 0.3 * PCLK1_MHz + 1
+    const uint32_t I2C_TRISE_REG = 15u;     // TRISE register value for Fast-mode (APB1=45 MHz)
+
+    // CCR formula (Fast-mode, duty=0): CCR = PCLK1 / (3 * Fscl)
+    uint32_t ccr = (PCLK1_MHZ * 1000000u) / (3u * I2C_SCL_HZ);
+
+    i2c3_gpio_init();
+
+    // Enable I2C3 peripheral clock on APB1 bus
+    rcc_enable_apb1_clock(RCC_APB1EN_I2C3EN);
+
+    // Disable I2C before configuring timing registers
+    i2c_cr1_write_field(I2C3_BASE, I2C_CR1_PE, 0);
+
+    // CR2.FREQ must be set to APB1 clock in MHz (valid range: 2..50)
+    i2c_cr2_write_field(I2C3_BASE, I2C_CR2_FREQ, PCLK1_MHZ);
+
+    // Configure Fast-mode (FS=1), DUTY=0, CCR[11:0] = divider value
+    i2c_ccr_write_field(I2C3_BASE, I2C_CCR_FS, 1);
+    i2c_ccr_write_field(I2C3_BASE, I2C_CCR_DUTY, 0);
+    i2c_ccr_write_field(I2C3_BASE, I2C_CCR_CCR, ccr);
+
+    // Configure maximum rise time
+    i2c_trise_write_field(I2C3_BASE, I2C_TRISE_REG);
+
+    // Enable I2C peripheral
+    i2c_cr1_write_field(I2C3_BASE, I2C_CR1_PE, 1);
+}
+````
+
+#### Master Transmit，單一位元組
+
+目標：Master 對 7-bit Slave 傳送 1 byte（無 Repeated START）。
+對應時序：`S → EV5 → Address → A → EV6 → EV8_1 → Data1/EV8 → A → EV8_2 → P`
+Legend：S=Start、P=Stop、A=ACK、EVx=事件（SR1/SR2 旗標）
+
+**依照 Master 傳送模式，步驟如下：**
+
+1. **確認匯流排空閒（BUSY=0）**
+
+   * 檢查 `SR2.BUSY`；為 0 表示匯流排可用。
+
+2. **產生 Start（EV5）**
+
+   * 設 `CR1.START=1` 產生 Start。
+   * 等待 `SR1.SB=1`（EV5 成立），表示已進入 Master 狀態並可送出位址。
+
+3. **送出從裝置位址（Write）與地址回應（EV6）**
+
+   * 寫入 `DR = (slave_addr << 1) | 0`（LSB=0 代表寫入）。
+   * 等待 `SR1.ADDR=1`（EV6），代表 Slave 已回 ACK。
+   * 以「**讀 `SR1` → 讀 `SR2`**」清除 `ADDR`。
+   * 若偵測到 `SR1.AF=1`（NACK on address），應立刻：`CR1.STOP=1`、清 `AF`，並結束此次通訊。
+
+4. **資料階段：寫入資料（EV8\_1 / EV8）**
+
+   * 等 `SR1.TXE=1`（資料暫存器空，EV8\_1/EV8）。
+   * 寫入 1 個資料位元組到 `DR`（本案例為單一位元組）。
+   * 在資料階段亦需監看 `SR1.AF`：若為 1（NACK on data），立即 `STOP` 並清 `AF`。
+
+5. **傳輸完成判定（EV8\_2）**
+
+   * 等待 `SR1.TXE=1` **且** `SR1.BTF=1`（EV8\_2），代表該位元組已完成移位/送出。
+
+6. **結束通訊（Stop）**
+
+   * 設 `CR1.STOP=1` 產生 Stop 條件，結束此次傳輸。
+   * 視需求可再等待 `SR2.BUSY=0`，確認匯流排釋放（若下一步要 Repeated START，則不必等待）。
+
+**注意事項（實務建議）：**
+
+* **EV6 清除順序固定為「讀 `SR1` → 讀 `SR2`」**，否則狀態機會卡住。
+* **NACK 監控（`SR1.AF`）**：位址或資料任一階段出現 NACK，都應 `STOP` 並清 `AF`。
+* **多位元組寫入延伸**：中間每個位元組以 `TXE=1` 節奏寫入；**最後一個位元組**等到 `EV8_2（TXE=1 且 BTF=1）` 再送 `STOP`，確保資料完整推出匯流排。
+* **錯誤防護**（可選）：同時監看 `SR1.BERR`（Bus error）、`SR1.ARLO`（Arbitration lost），並在異常時送 `STOP` 清旗標。
+
+````c
+int8_t i2c_master_write(uint32_t i2c_base, uint8_t slave_addr7, uint8_t reg, uint8_t data) {
+	const int8_t I2C_ERR_NACK_ADDR  = -1;
+	const int8_t I2C_ERR_NACK_DATA  = -2;
+
+	// Ensure 7-bit address
+    slave_addr7 &= 0x7Fu;
+
+    // 1) Wait until bus is free
+    while (i2c_sr2_read_field(i2c_base, I2C_SR2_BUSY));
+
+    // 2) Generate START, wait EV5 (SB=1)
+    i2c_cr1_write_field(i2c_base, I2C_CR1_START, 1);
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_SB) == 0);
+
+    // 3) Send slave address (write : LSB = 0)
+    io_write(i2c_base + I2C_DR_OFFSET, (slave_addr7 << 1) | 0u);
+
+    // 4) Wait EV6 (ADDR=1) then clear by SR1->SR2 read
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_ADDR) == 0) {
+        if (i2c_sr1_read_field(i2c_base, I2C_SR1_AF)) {
+            i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+            i2c_sr1_write_field(i2c_base, I2C_SR1_AF, 0); // clear flag
+            return I2C_ERR_NACK_ADDR;
+        }
+    }
+    (void)io_read(i2c_base + I2C_SR1_OFFSET);
+    (void)io_read(i2c_base + I2C_SR2_OFFSET);
+
+    // 5) Wait EV8_1 (TxE=1), write reg
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_TXE) == 0) {
+        if (i2c_sr1_read_field(i2c_base, I2C_SR1_AF)) {
+            i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+            i2c_sr1_write_field(i2c_base, I2C_SR1_AF, 0);
+            return I2C_ERR_NACK_DATA;
+        }
+    }
+    io_write(i2c_base + I2C_DR_OFFSET, reg);
+
+    // 6) Wait EV8 (TxE=1), write data
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_TXE) == 0) {
+        if (i2c_sr1_read_field(i2c_base, I2C_SR1_AF)) {
+            i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+            i2c_sr1_write_field(i2c_base, I2C_SR1_AF, 0);
+            return I2C_ERR_NACK_DATA;
+        }
+    }
+    io_write(i2c_base + I2C_DR_OFFSET, data);
+
+    // 7) Wait EV8_2 (TxE=1 && BTF=1) then STOP
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_TXE) == 0) {
+        if (i2c_sr1_read_field(i2c_base, I2C_SR1_AF)) {
+            i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+            i2c_sr1_write_field(i2c_base, I2C_SR1_AF, 0); // clear flag
+            return I2C_ERR_NACK_DATA;
+        }
+    }
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_BTF) == 0) {
+        if (i2c_sr1_read_field(i2c_base, I2C_SR1_AF)) {
+            i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+            i2c_sr1_write_field(i2c_base, I2C_SR1_AF, 0);
+            return I2C_ERR_NACK_DATA;
+        }
+    }
+
+    // 8) Generate STOP
+    i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+
+    // 9) wait bus released (BUSY=0)
+    while (i2c_sr2_read_field(i2c_base, I2C_SR2_BUSY));
+
+    return 0;
+}
+````
+
+#### Master Receiver，多位元組讀取
+
+目標：Master 從 7-bit Slave 連續接收多個位元組，並在最後一個位元組送出 **NACK + STOP** 以結束通訊。
+對應時序：
+`S → EV5 → Address → A → EV6 → Data1 → A → Data2/EV7 → A → Data3/EV7 → A → … → DataN/EV7_1 → NA → P`
+Legend：S=Start、P=Stop、A=ACK、NA=NACK、EVx=事件（SR1/SR2 旗標）
+
+**依照 Master 接收模式，步驟如下：**
+
+1. **確認匯流排空閒（BUSY=0）**
+
+   * 檢查 `SR2.BUSY`；為 0 表示匯流排可用。
+
+2. **產生 Start（EV5）**
+
+   * 設 `CR1.START=1` 產生 Start。
+   * 等待 `SR1.SB=1`（EV5 成立），表示已進入 Master 狀態並可送出位址。
+
+3. **送出從裝置位址（Read）與地址回應（EV6）**
+
+   * 寫入 `DR = (slave_addr << 1) | 1`（LSB=1 代表讀取）。
+   * 等待 `SR1.ADDR=1`（EV6）。
+   * 清除方式為 **讀 `SR1` → 讀 `SR2`**。
+
+4. **資料接收流程**
+
+   * 根據欲接收的長度 `len` 分為以下三種情況：
+
+   **(A) 單一位元組（len==1）**
+
+   * 在清除 `EV6` 前，先設 `ACK=0`，再設 `STOP=1`。
+   * 清除 `ADDR` 後等待 `RXNE=1`，讀取一個位元組。
+   * 因為 `ACK=0`，硬體會在最後一個 byte 自動送 NACK 並產生 STOP。
+
+   **(B) 兩個位元組（len==2，不使用 POS）**
+
+   * 在清除 `EV6` 前，設 `ACK=0`。
+   * 清除 `ADDR` 後，等待 `BTF=1`（兩個資料位元組已到位）。
+   * 設 `STOP=1`，再**連續讀兩次 DR**，即完成接收。
+
+   **(C) 多於兩個位元組（len>2）**
+
+   * 清除 `EV6` 前，設 `ACK=1`，確保中間資料自動回 ACK。
+   * 持續以 `RXNE=1` 節奏讀取，直到剩下 **3 個位元組**。
+   * **最後 3 bytes 序列：**
+
+     1. 等 `BTF=1` → 設 `ACK=0` → 讀取一個位元組（第 N-2）。
+     2. 再等 `BTF=1` → 設 `STOP=1` → 連續讀兩次 DR（第 N-1 與 N）。
+   * 此時最後一個 byte 會自動回 NACK 並產生 STOP。
+
+5. **結束通訊（Stop）**
+
+   * STOP 條件送出後，介面會自動回到 Slave 模式（MSL=0）。
+   * 視需求可等待 `SR2.BUSY=0` 確認匯流排釋放（若要 Repeated START，則可省略）。
+
+**注意事項（實務建議）：**
+
+* **ACK/STOP 的配置必須提早在清 ADDR 之前完成**，否則硬體會在錯誤的 byte 送出 NACK。
+* **len>2 使用「剩 3 bytes」策略**，確保最後三個位元組在正確時機切換 ACK=0 與 STOP。
+* **EV6 清除順序固定為「讀 `SR1` → 讀 `SR2`」**，否則狀態機會卡住。
+* 建議在應用層額外監控 `AF`（Acknowledge Failure）、`BERR`（Bus Error）、`ARLO`（Arbitration Lost），並在異常情況下送 `STOP` 收尾。
+
+````c
+int8_t i2c_master_read(uint32_t i2c_base, uint8_t slave_addr, uint8_t *data, uint16_t len) {
+    if (len == 0) return 0;
+    slave_addr &= 0x7Fu;
+
+    // 1) Wait until bus is free
+    while (i2c_sr2_read_field(i2c_base, I2C_SR2_BUSY));
+
+    // 2) Generate START, wait EV5 (SB=1)
+    i2c_cr1_write_field(i2c_base, I2C_CR1_START, 1);
+    while (i2c_sr1_read_field(i2c_base, I2C_SR1_SB) == 0);
+
+    // 3) Send slave address (read : LSB = 1)
+    io_write(i2c_base + I2C_DR_OFFSET, (slave_addr << 1) | 1u);
+
+    if (len == 1) {
+        // Single byte: ACK=0, STOP=1 before clearing ADDR
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_ADDR) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_ACK, 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+        (void)io_read(i2c_base + I2C_SR1_OFFSET);
+        (void)io_read(i2c_base + I2C_SR2_OFFSET);
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_RXNE) == 0);
+        data[0] = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+    }
+    else if (len == 2) {
+        // Two bytes: ACK=0 before clearing ADDR
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_ADDR) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_ACK, 0);
+        (void)io_read(i2c_base + I2C_SR1_OFFSET);
+        (void)io_read(i2c_base + I2C_SR2_OFFSET);
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_BTF) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+        data[0] = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+        data[1] = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+    }
+    else {
+        // More than two bytes
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_ADDR) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_ACK, 1);
+        (void)io_read(i2c_base + I2C_SR1_OFFSET);
+        (void)io_read(i2c_base + I2C_SR2_OFFSET);
+
+        uint16_t remaining = len;
+
+        while (remaining > 3) {
+            while (i2c_sr1_read_field(i2c_base, I2C_SR1_RXNE) == 0);
+            *data++ = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+            remaining--;
+        }
+
+        // Last 3 bytes sequence
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_BTF) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_ACK, 0);
+        *data++ = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+        remaining--;
+
+        while (i2c_sr1_read_field(i2c_base, I2C_SR1_BTF) == 0);
+        i2c_cr1_write_field(i2c_base, I2C_CR1_STOP, 1);
+        *data++ = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+        *data++ = (uint8_t)io_read(i2c_base + I2C_DR_OFFSET);
+        remaining -= 2;
+    }
+
+    // Optional: wait until BUSY=0
+    while (i2c_sr2_read_field(i2c_base, I2C_SR2_BUSY));
+
+    return 0;
+}
+````
+
+---
+
+### 8.2.4 STMPE811 Initialization
+
+以下為觸控螢幕控制器（TSC）的初始化步驟：  
+
+1. **Clock Enable**  
+   在 `SYS_CTRL2` 暫存器中，開啟與觸控相關的時脈：  
+   - **GPIO**（用於 TP_INT1 中斷腳）  
+   - **TSC**（觸控螢幕控制器本體）  
+   - **ADC**（觸控座標轉換需要 ADC）  
+   > 不需要的 **TS (temperature sensor)** 建議保持關閉以節省電力。  
+
+2. **Operating Mode / Tracking Index**  
+   透過 `TSC_CTRL` 設定觸控螢幕的操作模式：  
+   - **OP_MOD = 000** → X, Y, Z acquisition（取得座標與壓力值）  
+   - **TRACK = 010** → window tracking index 設為 8，可抑制微小抖動並保持靈敏度。  
+   > 注意：`OP_MOD` 與 `TRACK` 必須在 **EN=0** 狀態下設定，最後再打開 EN。  
+
+3. **Interrupt Configuration**  
+   啟用觸控偵測狀態回報：  
+   - 偵測到觸控時 → **TOUCH_DET flag = 1**，`INT` pin 由高轉低觸發中斷。  
+   - 觸控結束時 → flag 清除，`INT` pin 回復高電位。  
+   > 主機可透過中斷接收觸控狀態，而不需要持續 polling。  
+
+   設定方式：  
+   - `INT_CTRL`：  
+     - **INT_POLARITY = 0** → active-low（對應電路圖中的上拉電阻）  
+     - **INT_TYPE = 1** → edge-triggered  
+     - **GLOBAL_INT = 1** → 啟用全域中斷  
+   - `INT_EN`：開啟 **TOUCH_DET** (bit0)  
+   - `INT_STA`：寫入 `0xFF` 清除所有中斷旗標（write-1-to-clear）。  
+
+4. **TSC Configuration**  
+   在 `TSC_CFG` 設定觸控取樣與延遲：  
+   - **Panel Settling Time = 100 µs**（確保面板電壓穩定）  
+   - **Touch Detect Delay = 100 µs**（避免誤觸，但反應速度快）  
+   - **Averaging Method = 4 samples**（抗雜訊且不影響反應速度）  
+
+5. **Enable TSC**  
+   將 `TSC_CTRL.EN` 置 1，開始觸控偵測與資料擷取。  
+
+---
+
+**補充：**
+- **Windowing Mode**：預設情況下，視窗覆蓋整個觸控面板；若只想偵測部分區域，可設定 `TSCWdwTRX`、`TSCWdwTRY`、`TSCWdwBLX` 與 `TSCWdwBLY`。  
+- **FIFO Buffer**：STMPE811 內建 FIFO（最多 128 筆座標資料）。若需支援滑動/手寫筆跡，可設定 `TSC_FIFO_TH` 作為中斷門檻。FIFO 狀態可由 `TSC_FIFO_CTRL_STA` 或中斷旗標檢查，大小可從 `TSC_FIFO_Sz` 讀取。  
+  > 初始化時 FIFO 預設為 reset 狀態，啟用 TSC 後會自動解除；重新修改 TSC/ADC 參數前，建議先停用 TSC 並 reset FIFO。  
+- **Auto-Hibernate**：在自動休眠模式下，觸控偵測可喚醒裝置，但僅限於 **TSC 已啟用** 且 **TOUCH_DET 中斷已啟用** 的情況。  
+- **Data Access**：座標資料可透過 `TSC_DATA_X/Y/Z` 或一次性讀取 `TSC_DATA_XYZ` / `TSC_DATA` 取得，不屬於初始化流程，而是在中斷或 polling 階段使用。  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4636,7 +5201,7 @@ for (;;) {
 
 ---
 
-# 8.
+# 9.
 
 ---
 

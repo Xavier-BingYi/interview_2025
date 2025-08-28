@@ -11,6 +11,9 @@
 /* USART bus frequency（MCU default value）*/
 #define FCK_APB2 90000000U  // USART1/6
 
+/* I2C bus frequency（MCU default value）*/
+#define FCK_APB1 45000000U  // I2C3
+
 /* RCC AHB1 bit positions */
 #define RCC_AHB1EN_GPIOA 0
 #define RCC_AHB1EN_GPIOB 1
@@ -102,6 +105,8 @@ void rcc_dckcfgr_write_field(rcc_dckcfgr_field_t field, uint32_t value);
 
 /* RCC APB1 enable bit */
 #define RCC_APB1EN_TIM2EN 0   // TIM2
+#define RCC_APB1EN_TIM7EN 5   // TIM7
+#define RCC_APB1EN_I2C3EN 23  // I2C3
 #define RCC_APB1EN_PWREN  28  // PWR
 
 /* RCC APB2 enable bit */

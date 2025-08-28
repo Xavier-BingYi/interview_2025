@@ -67,6 +67,12 @@ typedef enum {
     GPIO_OTYPE_OPENDRAIN = 1U  // open-drain
 } gpio_otype_t;
 
+typedef enum {
+    GPIO_PUPD_NONE     = 0x0,  // 00: No pull-up, no pull-down
+    GPIO_PUPD_PULLUP   = 0x1,  // 01: Pull-up
+    GPIO_PUPD_PULLDOWN = 0x2,  // 10: Pull-down
+    GPIO_PUPD_RESERVED = 0x3   // 11: Reserved
+} gpio_pupdr_t;
 
 void gpio_init(void);
 void gpio_set_mode(uint32_t port_base, uint8_t pin, uint8_t mode);
@@ -75,5 +81,6 @@ bool gpio_read_idr(uint32_t gpio_base_addr, uint8_t pin);
 void gpio_set_outdata(uint32_t port_base, uint8_t pin, uint8_t val);
 void gpio_set_speed(uint32_t gpio_base, uint8_t pin, gpio_ospeedr_field_t speed);
 void gpio_set_output_type(uint32_t gpio_base, uint8_t pin, gpio_otype_t type);
+void gpio_set_pupdr(uint32_t gpio_base, uint8_t pin, gpio_pupdr_t type);
 
 #endif /* GPIO_H_ */

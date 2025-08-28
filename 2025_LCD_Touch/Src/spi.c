@@ -48,7 +48,6 @@ void spi_gpio_init(void)
     gpio_set_output_type(GPIOA_BASE, GPIO_PIN_10, GPIO_OTYPE_PUSHPULL);
     gpio_set_speed(GPIOA_BASE, GPIO_PIN_10, GPIO_SPEED_HIGH);
 
-
     // Safe idle levels BEFORE touching SPI: CS=1 (inactive), D/C=0 (command)
     gpio_set_outdata(GPIOD_BASE, GPIO_PIN_13, 0); // D/C = command
     gpio_set_outdata(GPIOC_BASE, GPIO_PIN_2, 1);  // CS idle high

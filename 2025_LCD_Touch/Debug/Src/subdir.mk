@@ -5,10 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/button.c \
 ../Src/clock.c \
 ../Src/exti.c \
 ../Src/fmc.c \
 ../Src/gpio.c \
+../Src/i2c.c \
+../Src/lcd_render.c \
 ../Src/ltdc.c \
 ../Src/main.c \
 ../Src/mem_io.c \
@@ -20,10 +23,13 @@ C_SRCS += \
 ../Src/usart.c 
 
 OBJS += \
+./Src/button.o \
 ./Src/clock.o \
 ./Src/exti.o \
 ./Src/fmc.o \
 ./Src/gpio.o \
+./Src/i2c.o \
+./Src/lcd_render.o \
 ./Src/ltdc.o \
 ./Src/main.o \
 ./Src/mem_io.o \
@@ -35,10 +41,13 @@ OBJS += \
 ./Src/usart.o 
 
 C_DEPS += \
+./Src/button.d \
 ./Src/clock.d \
 ./Src/exti.d \
 ./Src/fmc.d \
 ./Src/gpio.d \
+./Src/i2c.d \
+./Src/lcd_render.d \
 ./Src/ltdc.d \
 ./Src/main.d \
 ./Src/mem_io.d \
@@ -57,7 +66,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/clock.cyclo ./Src/clock.d ./Src/clock.o ./Src/clock.su ./Src/exti.cyclo ./Src/exti.d ./Src/exti.o ./Src/exti.su ./Src/fmc.cyclo ./Src/fmc.d ./Src/fmc.o ./Src/fmc.su ./Src/gpio.cyclo ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/ltdc.cyclo ./Src/ltdc.d ./Src/ltdc.o ./Src/ltdc.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/mem_io.cyclo ./Src/mem_io.d ./Src/mem_io.o ./Src/mem_io.su ./Src/rcc.cyclo ./Src/rcc.d ./Src/rcc.o ./Src/rcc.su ./Src/spi.cyclo ./Src/spi.d ./Src/spi.o ./Src/spi.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/usart.cyclo ./Src/usart.d ./Src/usart.o ./Src/usart.su
+	-$(RM) ./Src/button.cyclo ./Src/button.d ./Src/button.o ./Src/button.su ./Src/clock.cyclo ./Src/clock.d ./Src/clock.o ./Src/clock.su ./Src/exti.cyclo ./Src/exti.d ./Src/exti.o ./Src/exti.su ./Src/fmc.cyclo ./Src/fmc.d ./Src/fmc.o ./Src/fmc.su ./Src/gpio.cyclo ./Src/gpio.d ./Src/gpio.o ./Src/gpio.su ./Src/i2c.cyclo ./Src/i2c.d ./Src/i2c.o ./Src/i2c.su ./Src/lcd_render.cyclo ./Src/lcd_render.d ./Src/lcd_render.o ./Src/lcd_render.su ./Src/ltdc.cyclo ./Src/ltdc.d ./Src/ltdc.o ./Src/ltdc.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/mem_io.cyclo ./Src/mem_io.d ./Src/mem_io.o ./Src/mem_io.su ./Src/rcc.cyclo ./Src/rcc.d ./Src/rcc.o ./Src/rcc.su ./Src/spi.cyclo ./Src/spi.d ./Src/spi.o ./Src/spi.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/usart.cyclo ./Src/usart.d ./Src/usart.o ./Src/usart.su
 
 .PHONY: clean-Src
 

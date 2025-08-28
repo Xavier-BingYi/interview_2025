@@ -27,6 +27,9 @@
 #include <fmc.h>
 #include <spi.h>
 #include <timer.h>
+#include <i2c.h>
+#include <lcd_render.h>
+#include <button.h>
 
 void delay_us(uint32_t us) {
     for (volatile uint32_t i = 0; i < us * 8 ; ++i) {
@@ -34,18 +37,8 @@ void delay_us(uint32_t us) {
     }
 }
 
-
 int main(void)
 {
-    // --- state variables ---
-    static uint32_t last_press_us = 0;           // last accepted button time
-    static uint8_t red_led_on = 0;            // red LED state
-    static uint8_t green_led_on = 0;          // green LED state
-    static const uint32_t GREEN_LED_PERIOD_US = 2000000U; // green LED toggle every 2s
-    static const uint32_t BUTTON_DEBOUNCE_US   = 30000U;   // button debounce 30ms
-
-    uint32_t next_deadline = micros_now(TIMER2) + GREEN_LED_PERIOD_US;
-
     // --- system init ---
     system_clock_setup();
     timer_init();
@@ -55,10 +48,8 @@ int main(void)
     ili9341_init();
     ltdc_init();
     exti_init();
-
-    // initial LED output
-    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_on);
-    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_on);
+    i2c_init();
+    i2c_touch_init();
 
     // debug print LTDC registers
     usart_printf("== LTDC core ==\r\n");
@@ -89,49 +80,29 @@ int main(void)
     bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
     bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
 
+    // --- Initial LED output setup ---
+    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_state);   // green LED initial state
+    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_state);     // red LED initial state
 
-	while (1) {
-    	uint32_t now_us = micros_now(TIMER2);
-        int32_t  diff = (int32_t)(now_us - next_deadline);
-
-        // --- periodic task with deadline scheduling ---
-        if (diff >= 0) {
-            uint32_t missed = (uint32_t)diff / GREEN_LED_PERIOD_US + 1U;
-            next_deadline  += missed * GREEN_LED_PERIOD_US;
-
-            // toggle green LED
-            green_led_on ^= 1;
-            gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_on);
-
-            // change screen color
-            if (green_led_on == 0)
-                fill_framebuffer_rgb888(0x4B0082); // Indigo
-            else
-                fill_framebuffer_rgb888(0x0000FF); // Blue
+    while (1) {
+        if (button_event_pending) {                    // flag set by EXTI ISR
+            button_event_pending = 0;                  // clear button flag
+            button_handle_event();                     // process button press
         }
 
-        // --- handle button event (from EXTI) ---
-        if (exti0_button_flag) {
-            // check debounce window
-            if ((uint32_t)(now_us - last_press_us) >= BUTTON_DEBOUNCE_US) {
-                last_press_us = now_us;
+        if (touch_event_pending) {
+            touch_event_pending = 0;                   // clear touch flag
+            i2c_master_write(I2C3_BASE, SLAVE_ADDR7, INT_STA_ADDR, 0xFF); // clear touch IC interrupt
+            touch_handle_event();                      // process touch event
+        }
 
-                // toggle red LED
-                red_led_on ^= 1;
-                gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_on);
-
-                // redraw color bars
-                bsp_lcd_fill_rect(0xEE82EE, 0, 240, 46*0, 46); // Violet
-                bsp_lcd_fill_rect(0x4B0082, 0, 240, 46*1, 46); // Indigo
-                bsp_lcd_fill_rect(0x0000FF, 0, 240, 46*2, 46); // Blue
-                bsp_lcd_fill_rect(0x008000, 0, 240, 46*3, 46); // Green
-                bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
-                bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
-                bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
+        if (touch_state) {
+            uint32_t now = micros_now(TIMER2);
+            if ((int32_t)(now - touch_until_us) >= 0) { // check if timeout reached
+                touch_state = 0;                        // exit touch mode
             }
-
-            // clear event flag
-            exti0_button_flag = 0;
         }
+
+        lcd_update();                                  // update LCD display
     }
 }
