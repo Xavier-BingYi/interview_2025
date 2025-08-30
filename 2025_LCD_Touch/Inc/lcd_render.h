@@ -8,9 +8,10 @@
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
+#include <i2c.h>
 #include <lcd_render.h>
 
-#define TOUCH_DEBOUNCE_US 300000U            // debounce time (300 ms)
+#define TOUCH_DEBOUNCE_US 50000U            // debounce time (50 ms)
 
 #define X0 0
 #define X1 120
@@ -35,6 +36,7 @@
 extern volatile uint8_t lcd_rotation_state; // current rotation frame
 extern volatile uint8_t touch_state;        // 0=rotation mode, 1=touch mode
 extern volatile uint32_t touch_until_us;    // touch mode deadline (us)
+extern TouchPoint touch_coord;
 
 void lcd_update(void);                    // update LCD display
 void touch_handle_event(void);            // process touch event

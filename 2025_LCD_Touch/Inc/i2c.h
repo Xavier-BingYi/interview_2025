@@ -88,6 +88,12 @@ typedef enum {
 #define INT_STA_ADDR    0x0Bu
 #define TSC_CTRL_ADDR   0x40u
 #define TSC_CFG_ADDR    0x41u
+#define FIFO_TH_ADDR    0x4Au
+#define FIFO_STA_ADDR   0x4Bu
+#define FIFO_SIZE_ADDR  0x4Cu
+#define TSC_DATA_X      0x4Du
+#define TSC_DATA_Y      0x4Fu
+#define TSC_DATA_Z      0x51u
 #define TSC_DATA_XYZ_ADDR 0x52
 
 // SYS_CTRL2 bits: [3]=TS_OFF, [2]=GPIO_OFF, [1]=TSC_OFF, [0]=ADC_OFF (1 = clock OFF)
@@ -113,6 +119,15 @@ typedef enum {
 #define TSC_CFG_AVE_SHIFT   6   // 00=1, 01=2, 10=4, 11=8 samples
 #define TSC_CFG_TDLY_SHIFT  3   // 000=10us ... 111=50ms
 // SETTLING (bits [2:0]): 000=10us,001=100us,010=500us,011=1ms,100=5ms,101=10ms,110=50ms,111=100ms
+
+// TSC_FIFO_CTRL_STA bits (FIFO status and control)
+#define FIFO_OFLOW   (1u << 7)  // FIFO overflow flag: set when new data arrives while FIFO is full
+#define FIFO_FULL    (1u << 6)  // FIFO full flag: set when FIFO has reached maximum capacity
+#define FIFO_EMPTY   (1u << 5)  // FIFO empty flag: set when FIFO has no valid data
+#define FIFO_TH_TRIG (1u << 4)  // FIFO threshold trigger flag: set when FIFO size >= threshold
+#define FIFO_RESET   (1u << 0)  // FIFO reset control: write 1 to clear FIFO, then write 0 to release
+
+
 
 typedef struct {
     uint16_t x;

@@ -13,6 +13,13 @@
 #include <usart.h>
 #include <rcc.h>
 #include <i2c.h>
+#include <ltdc.h>
+
+// Calibration range (measured raw min/max from your panel)
+static const uint16_t CAL_X0 = 6;    // raw_x min (left side)
+static const uint16_t CAL_X1 = 237;  // raw_x max (right side)
+static const uint16_t CAL_Y0 = 4;    // raw_y min (top side)
+static const uint16_t CAL_Y1 = 239;  // raw_y max (bottom side)
 
 void i2c3_gpio_init(void) {
     // GPIOA / GPIOC clock
@@ -316,23 +323,93 @@ void i2c_touch_init(void)
                   (0b001));                         // SETTLING = 100 us
     i2c_master_write(I2C3_BASE, SLAVE_ADDR7, TSC_CFG_ADDR, tsc_cfg_value);
 
-    // 5) Enable TSC after programming OP_MOD/TRACK.
+    // 5) Configure FIFO threshold: trigger interrupt when 1 sample is available
+    i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_TH_ADDR, 1);
+
+    // 6) Reset FIFO once during init, ensure it's empty before enabling TSC
+    i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, FIFO_RESET);
+    i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, 0x00); // release reset
+
+    // 7) Enable TSC after programming OP_MOD/TRACK.
     tsc_ctrl_value |= TSC_CTRL_EN; // set EN=1
     i2c_master_write(I2C3_BASE, SLAVE_ADDR7, TSC_CTRL_ADDR, tsc_ctrl_value);
 
 }
 
+// Tiny median for n <= 5
+static uint16_t median_u16(uint16_t *a, uint8_t n) {
+    for (uint8_t i = 0; i < n; i++) {
+        uint8_t m = i;
+        for (uint8_t j = i + 1; j < n; j++) {
+            if (a[j] < a[m]) m = j;
+        }
+        uint16_t t = a[i]; a[i] = a[m]; a[m] = t;
+    }
+    return a[n / 2];
+}
+
 TouchPoint i2c_touch_read_xyz(void) {
-    uint8_t data[4];
-    TouchPoint coord = {0};
+    uint8_t data[5];
+    TouchPoint coord = (TouchPoint){0};
 
-    // Read 4 bytes (X,Y,Z packed)
-    i2c_master_read(I2C3_BASE, SLAVE_ADDR7, TSC_DATA_XYZ_ADDR, data, 4);
+    // Read one sample: [XH, XL, YH, YL, Z]
+    i2c_master_read(I2C3_BASE, SLAVE_ADDR7, TSC_DATA_X, data, 5);
 
-    // Unpack data according to datasheet Table 16
-    coord.x = ((uint16_t)data[0] << 4) | (data[1] & 0x0F);              // X[11:0]
-    coord.y = ((uint16_t)(data[1] & 0xF0) << 4) | (uint16_t)data[2];    // Y[11:0]
-    coord.z = data[3];                                                  // Z[7:0]
+    // Collect up to 5 samples from FIFO for smoothing
+	uint16_t xs[5], ys[5];
+	uint8_t  zs[5];
+	uint8_t  cnt = 0;
 
-	return coord;
+	xs[cnt] = ((uint16_t)data[0] << 4) | (data[1] & 0x0F);
+	ys[cnt] = ((uint16_t)data[2] << 4) | (data[3] & 0x0F);
+	zs[cnt] = data[4];
+	cnt++;
+
+    // Read remaining samples (at most 4 more) from FIFO
+    uint8_t left = 0;
+    i2c_master_read(I2C3_BASE, SLAVE_ADDR7, FIFO_SIZE_ADDR, &left, 1);
+    while (left > 0 && cnt < 5) {
+        uint8_t b[5];
+        i2c_master_read(I2C3_BASE, SLAVE_ADDR7, TSC_DATA_X, b, 5);
+        xs[cnt] = ((uint16_t)b[0] << 4) | (b[1] & 0x0F);
+        ys[cnt] = ((uint16_t)b[2] << 4) | (b[3] & 0x0F);
+        zs[cnt] = b[4];
+        cnt++;
+        left--;
+    }
+
+    // Median on X/Y for jitter reduction; Z take max (or average if you prefer)
+    uint16_t raw_x = median_u16(xs, cnt);
+    uint16_t raw_y = median_u16(ys, cnt);
+    uint8_t  raw_z = 0;
+    for (uint8_t i = 0; i < cnt; i++) if (zs[i] > raw_z) raw_z = zs[i];
+
+    // Clamp to calibration range
+    if (raw_x < CAL_X0) raw_x = CAL_X0;
+    if (raw_x > CAL_X1) raw_x = CAL_X1;
+    if (raw_y < CAL_Y0) raw_y = CAL_Y0;
+    if (raw_y > CAL_Y1) raw_y = CAL_Y1;
+
+    // Map calibrated raw (range -> 0..4095)
+    const uint16_t dx = (CAL_X1 > CAL_X0) ? (CAL_X1 - CAL_X0) : 1;
+    const uint16_t dy = (CAL_Y1 > CAL_Y0) ? (CAL_Y1 - CAL_Y0) : 1;
+    const uint16_t cal_x = (uint16_t)(((uint32_t)(raw_x - CAL_X0) * 4095u) / dx);
+    const uint16_t cal_y = (uint16_t)(((uint32_t)(raw_y - CAL_Y0) * 4095u) / dy);
+
+    // Map 12-bit (0..4095) to pixel coordinates
+    uint16_t px = (uint16_t)(((uint32_t)cal_x * LTDC_ACTIVE_WIDTH) / 4096u);
+    uint16_t py = (uint16_t)(((uint32_t)cal_y * LTDC_ACTIVE_HEIGHT) / 4096u);
+
+    // axis invert to make left/top
+    px = (LTDC_ACTIVE_WIDTH - 1) - px;
+    py = (LTDC_ACTIVE_HEIGHT - 1) - py;
+
+    // Clamp to screen bounds
+    if (px >= LTDC_ACTIVE_WIDTH) px = LTDC_ACTIVE_WIDTH - 1;
+    if (py >= LTDC_ACTIVE_HEIGHT) py = LTDC_ACTIVE_HEIGHT - 1;
+
+    coord.x = px;
+    coord.y = py;
+    coord.z = raw_z;
+    return coord;
 }

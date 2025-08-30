@@ -31,6 +31,10 @@ void touch_handle_event(void) {
 void touch_lock_for_ms(uint32_t ms) {
     uint32_t now = micros_now(TIMER2);        // current time (us)
     touch_state    = 1;                       // enable touch mode
+
+    touch_coord = i2c_touch_read_xyz();     // read touch coordinates
+    usart_printf("%d  %d  %d  \r\n", touch_coord.x, touch_coord.y, touch_coord.z); // log coordinates
+
     touch_until_us = now + ms * 1000u;        // time of touch mode end
 }
 
@@ -55,9 +59,6 @@ void lcd_update(void) {
         bsp_lcd_fill_rect(0xFFFF00, 0, 240, 46*4, 46); // Yellow
         bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
         bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
-
-        touch_coord = i2c_touch_read_xyz();     // read touch coordinates
-        usart_printf("%d  %d  %d  \r\n", touch_coord.x, touch_coord.y, touch_coord.z); // log coordinates
     } else {                                    // rotation mode screen
         switch (lcd_rotation_state) {
         case 0:

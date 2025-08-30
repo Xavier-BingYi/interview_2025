@@ -5153,30 +5153,38 @@ int8_t i2c_master_read(uint32_t i2c_base, uint8_t slave_addr, uint8_t *data, uin
    - **Touch Detect Delay = 100 µs**（避免誤觸，但反應速度快）  
    - **Averaging Method = 4 samples**（抗雜訊且不影響反應速度）  
 
-5. **Enable TSC**  
+5. **FIFO Threshold**  
+   在 `TSC_FIFO_TH` 暫存器設定 FIFO 門檻值，用來決定當 FIFO 中累積多少筆觸控資料時觸發中斷。  
+   - 設定為 **1** → 只要有一筆新的觸控資料就觸發中斷，能立即回覆觸控座標。  
+   - 設定為 **大於 1** → 等到累積多筆資料後才觸發，可減少中斷次數。  
+   由於此應用需要在每次觸碰後立即回應座標，因此設定為 **1**。  
+
+6. **FIFO Reset / Status**  
+   在 `TSC_FIFO_CTRL_STA` 暫存器中有 **FIFO_RESET** 位元：  
+   - **預設**：FIFO 保持在 reset 狀態。  
+   - 當 `TSC_CTRL.EN = 1`（啟用 TSC）後，FIFO reset 會 **自動解除**，FIFO 開始正常運作。  
+
+   **實務建議**（重新上電或重新配置 TSC/ADC 後）：  
+   - 先將 `FIFO_RESET = 1` 清空 FIFO，再寫回 `0` 釋放 reset，確保 FIFO 為乾淨狀態。  
+   - 之後正常運作期間，僅在偵測到異常（如 overflow）或變更關鍵參數時再執行一次 reset。  
+
+   **狀態監控**：  
+   - `TSC_FIFO_CTRL_STA` 亦提供 **EMPTY / FULL / TH_TRIG** 等旗標，可用 **polling** 或 **中斷** 方式監控 FIFO 狀態。
+
+10. **Enable TSC**  
    將 `TSC_CTRL.EN` 置 1，開始觸控偵測與資料擷取。  
 
 ---
 
 **補充：**
 - **Windowing Mode**：預設情況下，視窗覆蓋整個觸控面板；若只想偵測部分區域，可設定 `TSCWdwTRX`、`TSCWdwTRY`、`TSCWdwBLX` 與 `TSCWdwBLY`。  
+
 - **FIFO Buffer**：STMPE811 內建 FIFO（最多 128 筆座標資料）。若需支援滑動/手寫筆跡，可設定 `TSC_FIFO_TH` 作為中斷門檻。FIFO 狀態可由 `TSC_FIFO_CTRL_STA` 或中斷旗標檢查，大小可從 `TSC_FIFO_Sz` 讀取。  
   > 初始化時 FIFO 預設為 reset 狀態，啟用 TSC 後會自動解除；重新修改 TSC/ADC 參數前，建議先停用 TSC 並 reset FIFO。  
+
 - **Auto-Hibernate**：在自動休眠模式下，觸控偵測可喚醒裝置，但僅限於 **TSC 已啟用** 且 **TOUCH_DET 中斷已啟用** 的情況。  
+
 - **Data Access**：座標資料可透過 `TSC_DATA_X/Y/Z` 或一次性讀取 `TSC_DATA_XYZ` / `TSC_DATA` 取得，不屬於初始化流程，而是在中斷或 polling 階段使用。  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -92,8 +92,11 @@ int main(void)
 
         if (touch_event_pending) {
             touch_event_pending = 0;                   // clear touch flag
-            i2c_master_write(I2C3_BASE, SLAVE_ADDR7, INT_STA_ADDR, 0xFF); // clear touch IC interrupt
-            touch_handle_event();                      // process touch event
+            if (touch_state == 0) {
+            	touch_handle_event();}                      // process touch event
+            i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, FIFO_RESET);
+            i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, 0x00);  // release reset
+            i2c_master_write(I2C3_BASE, SLAVE_ADDR7, INT_STA_ADDR, 0xFF);   // clear touch INT
         }
 
         if (touch_state) {
