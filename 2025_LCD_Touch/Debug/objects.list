@@ -1,5 +1,6 @@
 "./Src/FreeRTOS/event_groups.o"
 "./Src/FreeRTOS/heap_4.o"
+"./Src/FreeRTOS/hooks.o"
 "./Src/FreeRTOS/list.o"
 "./Src/FreeRTOS/queue.o"
 "./Src/FreeRTOS/tasks.o"

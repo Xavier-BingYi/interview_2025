@@ -5334,6 +5334,13 @@ extern uint32_t SystemCoreClock;
 #endif /* FREERTOS_FREERTOSCONFIG_H_ */
 ```
 
+並在`clock.c`定義HCLK 值：
+
+```c
+/* 把數值改成實際的 HCLK 頻率（Hz） */
+uint32_t SystemCoreClock = 180000000u;
+```
+
 ---
 
 ### 9.1.3 設定 Compiler Include Paths
@@ -5369,7 +5376,254 @@ extern uint32_t SystemCoreClock;
 
 ---
 
-## 9.2
+## 9.2 FreeRTOS Bring-up（無 HAL）：Handler 映射、NVIC 優先權與 Smoke Test
+
+### 9.2.1 Handler 對應（臨時橋接）
+
+> 目的：把 **SVC/PendSV/SysTick** 導到 FreeRTOS 的處理器，同時**確保 SysTick 只給 RTOS 使用**，不與其他實作衝突。  
+> 本專案未導入 HAL，因此臨時橋接時不呼叫 `HAL_IncTick()`，而是自行維護軟體計數 `uwTick`；若未來導入 HAL 或改用硬體 timebase（例如 TIM6）時，再把 Tick Hook 內改為 `HAL_IncTick()` 或關閉 Tick Hook 即可。
+
+#### 1. 確認啟動檔的向量表名稱
+
+確保 FreeRTOS 會用到的三個中斷入口點：`SVC_Handler` / `PendSV_Handler` / `SysTick_Handler` 已經在啟動檔（`startup_stm32f429zitx.s`）定義好。  
+打開 `startup_stm32f429zitx.s`，搜尋 `Vectors`（或向量表段落），確認清單裡有 `SVC_Handler`、`PendSV_Handler`、`SysTick_Handler`。如果這三個名稱已經存在，則**無需修改**。  
+若發現名稱不同（例如 `SVC_IRQHandler`、`SysTickIRQHandler`），就需在 FreeRTOS porting 時做**對應修改**（可在啟動檔改名，或改用 wrapper）。
+
+#### 2. 映射三個 Handler 到 CMSIS 名稱
+打開 `Inc/FreeRTOS/FreeRTOSConfig.h`，先搜尋檔案是否已有相同巨集，避免重複定義；若有就直接改成下列值。
+```c
+#define vPortSVCHandler     SVC_Handler
+#define xPortPendSVHandler  PendSV_Handler
+#define xPortSysTickHandler SysTick_Handler
+```
+> 補充：同檔案需有 `extern uint32_t SystemCoreClock;`，且專案中需**定義**此變數（在時鐘初始化的 `.c` 檔賦值為實際 HCLK），以供 `port.c` 設定 SysTick 之用。
+
+#### 3. 開啟 Tick Hook（臨時橋接）
+```c
+#define configUSE_TICK_HOOK 1   /* 臨時橋接用；未來改用硬體 timebase（如 TIM6）或導入 HAL 後可關回 0 */
+```
+
+#### 4. 實作最小版 vApplicationTickHook（先可為空）
+> `configUSE_TICK_HOOK` 設為 1 之後，必須在任一個 `.c` 檔提供此函式以避免連結錯誤。可先為空，下一步再填入 `uwTick` 邏輯。  
+> 例如新建 `Src/FreeRTOS/hooks.c`（或任何方便的檔案）加入：
+```c
+#include "FreeRTOS.h"
+#include "task.h"
+
+void vApplicationTickHook(void)
+{
+    /* no-op for now; 下一步會加入自增 uwTick */
+}
+```
+
+#### 5. 無 HAL 的系統 Tick：自管 `uwTick` 與簡易延遲
+因為本專案為純裸機開發，沒有引入 STM32Cube HAL，所以無法使用 `HAL_IncTick()`，而是需要自己維護一個 `uwTick`。HAL 其實也是用這個全域計數來提供 `HAL_GetTick()`/`HAL_Delay()`。你可以手動模擬它：
+
+**(a) 在同一個 `.c` 檔（例如 `hooks.c`）內定義 `uwTick` 與 Hook：**
+```c
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* 模擬 HAL 的系統 tick counter */
+volatile uint32_t uwTick = 0;
+
+#if ( configUSE_TICK_HOOK == 1 )
+void vApplicationTickHook(void)
+{
+    /* 每次 FreeRTOS SysTick 來時，自增 1ms */
+    uwTick++;
+}
+#endif
+
+/* 提供類似 HAL_GetTick 的功能 */
+uint32_t GetSysTick(void)
+{
+    return uwTick;
+}
+```
+
+**(b) 如需要簡易延遲，可提供一個忙等＋讓出 CPU 的版本：**
+```c
+void DelayMs(uint32_t delay)
+{
+    uint32_t start = GetSysTick();
+    while ((GetSysTick() - start) < delay)
+    {
+        taskYIELD();  /* 建議呼叫 FreeRTOS 讓出 CPU */
+    }
+}
+```
+
+> 提醒：  
+> 1) `uwTick` 應只在一個 `.c` 檔內定義；若其他檔案要用，請在對應的 `.h` 宣告 `extern volatile uint32_t uwTick;` 與 `uint32_t GetSysTick(void);`。  
+> 2) `uwTick` 的時間基準與 `configTICK_RATE_HZ` 一致；若把 `configTICK_RATE_HZ` 設成 1000，則 `uwTick` 單位即為 ms。
+
+---
+
+### 9.2.2 NVIC 與 FreeRTOS 優先權設定（無 CMSIS 版）
+
+不論有沒有 HAL，都要先把 **NVIC／優先權** 配置好，才能安全使用 FreeRTOS 的 **FromISR** 介面。
+
+因為本專案「沒有 CMSIS 的 `stm32f4xx.h`」，這裡改用「**不需要 CMSIS**」的版本，直接用工程裡已有的工具（`io_writeMask()`、`nvic_set_priority()` 等）來完成 NVIC 設定。  
+> 提醒：請確認 `FreeRTOSConfig.h` 與此處一致：`#define configPRIO_BITS 4`。若不是 4，`NVIC_PRIO()` 的位移也要同步修改（`<< (8 - configPRIO_BITS)`）。
+
+並在 `main.c`（**時鐘就緒後**、**建立 tasks 前**、**啟用 IRQ 之前**）呼叫一次：
+
+```c
+/* 寫 AIRCR：把優先權分組設成 4 個 preempt bits（= PRIGROUP=3）
+   注意：寫入 AIRCR 時一定要帶 VECTKEY=0x5FA，否則硬體會忽略 */
+static void nvic_set_priority_grouping_4bits(void)
+{
+    const uint32_t SCB_AIRCR_ADDR   = 0xE000ED0CUL;
+    const uint32_t VECTKEY_FIELD    = 0xFFFFUL << 16;
+    const uint32_t PRIGROUP_FIELD   = 0x7UL    << 8;
+    const uint32_t VECTKEY_WRITE    = 0x5FAUL  << 16;  // 必須帶入的 key
+    const uint32_t PRIGROUP_4BITS   = 3UL      << 8;   // 等價 NVIC_PRIORITYGROUP_4
+
+    io_writeMask(SCB_AIRCR_ADDR,
+                 VECTKEY_WRITE | PRIGROUP_4BITS,
+                 VECTKEY_FIELD | PRIGROUP_FIELD);
+}
+
+/* 把「人類看得懂的優先權數字 0..15」換成 NVIC 寄存器實際要寫的 8-bit 值
+    MCU 有 4 個優先權位（configPRIO_BITS=4），所以左移 (8-4)=4 bits */
+static inline NVIC_Priority NVIC_PRIO(uint32_t p /*0..15*/)
+{
+    return (NVIC_Priority)( (p & 0x0F) << 4 );
+}
+
+static void NVIC_ConfigForFreeRTOS(void)
+{
+    nvic_set_priority_grouping_4bits();
+
+    /* 目前使用的 IRQ：EXTI0、EXTI15_10、TIM7
+       凡是 ISR 會呼叫 FreeRTOS 的 ...FromISR()，preempt priority 要 >= 5 */
+    nvic_set_priority(EXTI0_IRQn,     NVIC_PRIO(5));
+    nvic_set_priority(EXTI15_10_IRQn, NVIC_PRIO(5));
+    nvic_set_priority(TIM7_IRQn,      NVIC_PRIO(6));
+}
+
+int main(void)
+{
+    SystemInit();
+    // SystemClock_Config(); // 若有做時鐘設定
+
+    NVIC_ConfigForFreeRTOS(); // <<< 建 task 之前先呼叫
+
+    // 建立 tasks…
+    // vTaskStartScheduler();
+}
+```
+
+---
+
+### 9.2.3 Smoke Test：建立最小 Tasks 並暫停 super-loop
+
+在 `Src/main.c` 的 `#include` 區塊底下加這些宣告（與 hooks.c 對齊）：
+```c
+#include "FreeRTOS.h"
+#include "task.h"
+extern volatile uint32_t uwTick;  // 在 hooks.c 裡有定義這個全域 tick
+```
+
+把「這三段」貼進 `main.c`：
+
+**A. 兩個 Task**（放在 `main.c` 上方，函式區即可）
+```c
+static void vBlink500(void *arg)
+{
+    (void)arg;
+    static uint8_t red = 0; // PG14
+    for (;;)
+    {
+        red ^= 1;
+        gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red);
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+static void vBeat1000(void *arg)
+{
+    (void)arg;
+    for (;;)
+    {
+        // 用軟體 tick 當心跳觀察值
+        usart_printf("[beat] uwTick=%lu\r\n", (unsigned long)uwTick);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+```
+
+**B. 在 `main()` 初始化結束後、原本 `while(1)` 之前加入「建立 Task + 啟動排程器」**
+```c
+    // --- FreeRTOS smoke test ---
+    xTaskCreate(vBlink500,  "Blink", 256, NULL, tskIDLE_PRIORITY + 2, NULL);
+    xTaskCreate(vBeat1000,  "Beat",  256, NULL, tskIDLE_PRIORITY + 1, NULL);
+    vTaskStartScheduler();
+```
+
+**C. 先把原本的 super-loop 暫時停用**（避免和 RTOS 併行；之後你可以把那段搬成一個 Task）
+```c
+#if 0
+    while (1) {
+        ... // 原本的主循環
+    }
+#endif
+
+    for(;;){} // 一般到不了這裡；若到了通常是 heap 不足或 ISR 優先權不當
+```
+
+並在 `Inc/FreeRTOS/FreeRTOSConfig.h` 補 **API 開關**，在文件末端（或合適區塊）加入：
+
+```c
+/*-----------------------------------------------------------
+ * FreeRTOS API 開關（至少要這兩個）
+ *----------------------------------------------------------*/
+#define INCLUDE_vTaskDelay        1
+#define INCLUDE_vTaskDelayUntil   1
+```
+
+> 驗收重點：  
+> 1) 專案可編譯／連結；2) 上電後不 HardFault；3) LED 以 500ms 節拍閃爍；  
+> 4) `uwTick` 每秒在 log 中遞增；5) 若後續計畫在 ISR 內使用 FromISR API，請確保該 IRQ 的 preempt priority **數值 ≥ 5**。
+
+## 9.3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5399,298 +5653,39 @@ extern uint32_t SystemCoreClock;
    - `configMAX_SYSCALL_INTERRUPT_PRIORITY = 5`（建議）  
    - **凡會呼叫 `…FromISR()` 的 IRQ**，其**優先權數值**要 **≥ 5**（數值越大＝優先序越低）。
 
-## 9.2 檔案與路徑（Files & Include Paths）
+## 里程碑 M2：三個 handler 接管 + HAL timebase 改 TIM6
 
-**把 STM32CubeF4 套件裡的 FreeRTOS 源碼加入你的專案：**
+### A. Handler 對應（擇一方案）
+- **建議：映射法（FreeRTOSConfig.h）**  
+  ```c
+  #define vPortSVCHandler     SVC_Handler
+  #define xPortPendSVHandler  PendSV_Handler
+  #define xPortSysTickHandler SysTick_Handler
+  ```
+- **或：wrapper 法**（不採映射時，自己提供同名函式轉呼叫 vPort/xPort…）。兩者不可同時使用。
 
-- `Middlewares/Third_Party/FreeRTOS/Source/`
-  - 必要：`tasks.c`, `queue.c`, `list.c`, `timers.c`, `event_groups.c`
-  - 視使用：`stream_buffer.c`（用到 StreamBuffer 才加）
-- `Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/`
-  - `port.c`, `portmacro.h`
-- 記憶體配置（擇一，建議 `heap_4.c` 或 `heap_5.c`）  
-  - `Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c`
-- （**若要** CMSIS-RTOS v2 介面）
-  - `Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c`
-  - `…/CMSIS_RTOS_V2/cmsis_os2.h`
+### B. HAL timebase 改 TIM6
+- 新增 `Src/stm32f4xx_hal_timebase_tim.c`，讓 `HAL_InitTick()` 使用 **TIM6 1 kHz**。  
+- 設 `TIM6_DAC_IRQn` 優先權 **5**（與 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY = 5` 對齊）。  
+- 目的：**SysTick 專供 FreeRTOS**，`HAL_GetTick()` 由 TIM6 推動。
 
-**專案 Include Paths 增加：**
-- `…/FreeRTOS/Source/include`
-- `…/FreeRTOS/Source/portable/GCC/ARM_CM4F`
-- （若用 CMSIS-RTOS v2）`…/FreeRTOS/Source/CMSIS_RTOS_V2`
+### C. NVIC 與 FreeRTOS 優先權
+- `HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);`（對齊 `configPRIO_BITS=4`）。  
+- **任何會觸發 FreeRTOS FromISR API 的中斷**，其 preempt priority **數值 ≥ 5**。  
+- `configKERNEL_INTERRUPT_PRIORITY` 與 `configMAX_SYSCALL_INTERRUPT_PRIORITY` 請依你現行的 `FreeRTOSConfig.h` 設定（上一版模板已對齊）。
 
-**新增 `FreeRTOSConfig.h`**（放在你自己的 `Inc/` 或 `Core/Inc/`）
-
----
-
-## 9.3 編譯 / 連結設定（Toolchain）
-
-**C 語言編譯旗標（至少）：**
-- `-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard`
-- 若任務會用到 `printf` 浮點：可加 `-u _printf_float`（可選，檔案體積會變大）
-
-**Linker script（.ld）檢查：**
-- RAM 空間足以擺 `FreeRTOS heap`（`configTOTAL_HEAP_SIZE`）與各 Task stack。  
-- **不要**再使用 C 標準庫的 `malloc` 給任務；FreeRTOS 自己的 `pvPortMalloc` 才是主力。  
-- 若會在多 Task 中使用 newlib（printf 等），建議 `configUSE_NEWLIB_REENTRANT = 1`。
+### D. Smoke Test
+- 兩個最小 Tasks（如 `Blink` 500 ms、`Beat` 1000 ms）＋ `vTaskStartScheduler()`。  
+- **驗收**：  
+  1. 可編譯、可連結、上電不卡住；  
+  2. `HAL_GetTick()` 跳動；  
+  3. LED 依期閃爍，`vTaskDelay()` 節拍穩定；  
+  4. **SysTick 僅被 FreeRTOS 使用**，HAL 不再佔用；  
+  5. 無 HardFault／未觸發 `configASSERT`。
 
 ---
 
-## 9.4 三個 Handler 接管（Startup / IT 對接）
 
-**方式 A｜改啟動檔 `startup_stm32f429xx.s`**  
-把向量表中的：
-- `SVC_Handler`      → `vPortSVCHandler`
-- `PendSV_Handler`   → `xPortPendSVHandler`
-- `SysTick_Handler`  → `xPortSysTickHandler`
-
-**方式 B｜在 `stm32f4xx_it.c` 包裝（Wrapper）**  
-> 若你不想改啟動檔，可在 IT 檔案中包裝三個同名函式：
-
-````c
-void SVC_Handler(void)    { vPortSVCHandler(); }
-void PendSV_Handler(void) { xPortPendSVHandler(); }
-void SysTick_Handler(void){ xPortSysTickHandler(); }
-````
-
-> ⚠️ 注意：**不要**同時存在兩份 `SysTick_Handler`（HAL 舊 timebase + RTOS），否則會衝突。
-
----
-
-## 9.5 HAL Timebase 改 TIM6（讓 SysTick 專心給 RTOS）
-
-作法一（推薦）：新增檔案 `stm32f4xx_hal_timebase_tim.c`，內容參考 ST 範本，讓 HAL 用 TIM6 每 1ms 觸發：
-
-````c
-/* 範例語意：初始化 TIM6 為 1kHz，並在 TIM6_DAC_IRQHandler 呼叫 HAL_IncTick() */
-HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority) {
-  __HAL_RCC_TIM6_CLK_ENABLE();
-  TIM_HandleTypeDef htim6;
-  htim6.Instance = TIM6;
-  htim6.Init.Prescaler = (SystemCoreClock / 1000000) - 1; // 1 MHz
-  htim6.Init.Period    = 1000 - 1;                        // 1 kHz
-  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  HAL_TIM_Base_Init(&htim6);
-  HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 15, 0);
-  HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
-  HAL_TIM_Base_Start_IT(&htim6);
-  return HAL_OK;
-}
-
-void TIM6_DAC_IRQHandler(void){
-  if (__HAL_TIM_GET_FLAG(&htim6, TIM_FLAG_UPDATE) != RESET){
-    __HAL_TIM_CLEAR_FLAG(&htim6, TIM_FLAG_UPDATE);
-    HAL_IncTick(); // 交回 HAL 1ms 計數
-  }
-}
-````
-
-作法二：覆寫 `HAL_InitTick()` 令其使用 TIM6；**勿再用 SysTick 當 HAL timebase**。
-
----
-
-## 9.6 `FreeRTOSConfig.h`（最小可用版 + 建議強化）
-
-````c
-#pragma once
-#include "stm32f4xx.h"
-
-/* --- 核心行為 --- */
-#define configUSE_PREEMPTION            1
-#define configCPU_CLOCK_HZ              ( SystemCoreClock )
-#define configTICK_RATE_HZ              ( 1000 )
-#define configMAX_PRIORITIES            7
-#define configMINIMAL_STACK_SIZE        128        /* 單位：words */
-#define configTOTAL_HEAP_SIZE           ( ( size_t )( 32 * 1024 ) )
-
-/* --- 同步/計時 --- */
-#define configUSE_MUTEXES               1
-#define configUSE_COUNTING_SEMAPHORES   1
-#define configUSE_TIMERS                1
-#define configTIMER_TASK_PRIORITY       2
-#define configTIMER_QUEUE_LENGTH        5
-#define configTIMER_TASK_STACK_DEPTH    256
-
-/* --- 中斷優先權（F429=4 bits）--- */
-#define configPRIO_BITS                 4
-#define configKERNEL_INTERRUPT_PRIORITY      ( 15 << (8 - configPRIO_BITS) )
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY ( 5  << (8 - configPRIO_BITS) )
-
-/* --- Hook/Debug（建議打開）--- */
-#define configCHECK_FOR_STACK_OVERFLOW  2
-#define configASSERT(x)                 if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
-#define configUSE_MALLOC_FAILED_HOOK    1
-/* 若多 Task 使用 newlib 函式庫（printf 等），打開這個： */
-// #define configUSE_NEWLIB_REENTRANT      1
-
-/* --- Cortex-M4F Port 對應 --- */
-#define xPortPendSVHandler  PendSV_Handler
-#define vPortSVCHandler     SVC_Handler
-/* SysTick 由 RTOS 使用；HAL timebase 請改 TIM6。 */
-````
-
-> **Heap 選擇**：  
-> - `heap_4.c`：最佳化連續配置/釋放（一般建議）  
-> - `heap_5.c`：支援多區域存放（若你要把 heap 放到多塊 RAM）
-
----
-
-## 9.7 最小 `main()` 骨架（拆你的 while(1) 成 Tasks）
-
-> **重點**：stack size 參數單位是 **words**（非 bytes）。M4F 一個 word=4 bytes。
-
-````c
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
-
-/* IPC */
-SemaphoreHandle_t semTouch, semButton;
-SemaphoreHandle_t i2cMutex;
-
-/* Tasks */
-static void Task_Touch(void* arg){
-  for(;;){
-    xSemaphoreTake(semTouch, portMAX_DELAY);
-    xSemaphoreTake(i2cMutex, portMAX_DELAY);
-    /* 讀 I2C 觸控、清 FIFO/INT、更新狀態 */
-    xSemaphoreGive(i2cMutex);
-  }
-}
-
-static void Task_UI(void* arg){
-  TickType_t t = xTaskGetTickCount();
-  const TickType_t per = pdMS_TO_TICKS(33); // ~30Hz
-  for(;;){
-    /* 觸控超時邏輯、lcd_update() 重繪 */
-    vTaskDelayUntil(&t, per);
-  }
-}
-
-static void Task_Button(void* arg){
-  for(;;){
-    xSemaphoreTake(semButton, portMAX_DELAY);
-    /* 去彈跳 + 模式切換 */
-  }
-}
-
-int main(void){
-  HAL_Init();
-  SystemClock_Config();
-  /* init GPIO/USART/SPI/I2C/LTDC/EXTI/TIM6(timebase)/TIM7(if used)… */
-
-  /* 建 IPC */
-  semTouch  = xSemaphoreCreateBinary();
-  semButton = xSemaphoreCreateBinary();
-  i2cMutex  = xSemaphoreCreateMutex();
-
-  /* 建 Tasks（stack=words, prio 越大越高） */
-  xTaskCreate(Task_Touch,  "touch",   768,  NULL, 3, NULL);
-  xTaskCreate(Task_UI,     "ui",     1280,  NULL, 2, NULL);
-  xTaskCreate(Task_Button, "button",  512,  NULL, 2, NULL);
-
-  vTaskStartScheduler(); /* 啟動後不應返回 */
-  for(;;){}              /* 若跑到這裡，多半是 heap 不夠或 handlers 未接 */
-}
-````
-
----
-
-## 9.8 IRQ 端改 `…FromISR()`（僅送訊號，不做重活）
-
-````c
-void EXTI0_IRQHandler(void){
-  BaseType_t hpw = pdFALSE;
-  /* 清 EXTI 狀態位 … */
-  xSemaphoreGiveFromISR(semButton, &hpw);
-  portYIELD_FROM_ISR(hpw);
-}
-
-void EXTI15_10_IRQHandler(void){
-  BaseType_t hpw = pdFALSE;
-  /* 清 EXTI 狀態位 / 讀觸控 INT pin … */
-  xSemaphoreGiveFromISR(semTouch, &hpw);
-  portYIELD_FROM_ISR(hpw);
-}
-
-/* 若保留 TIM7 作節拍，也請改成 FromISR 通知/給信號即可 */
-````
-
----
-
-## 9.9 NVIC 優先權設定範例（F429）
-
-> 原則：**會呼叫 `…FromISR()` 的 IRQ**，**優先權數值**要 ≥ 5。  
->（數值越大＝優先序越低；Kernel=15 最低）
-
-````c
-/* 範例：EXTI 與 TIM7 都可能 FromISR → 設成 5（或更低優先序，如 6~15） */
-HAL_NVIC_SetPriority(EXTI0_IRQn,      5, 0);
-HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
-HAL_NVIC_SetPriority(EXTI15_10_IRQn,  5, 0);
-HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
-HAL_NVIC_SetPriority(TIM7_IRQn,       6, 0); // 若用 FromISR，數值也需 ≥ 5
-HAL_NVIC_EnableIRQ(TIM7_IRQn);
-
-/* 不會呼叫 FromISR 的高頻/關鍵 IRQ（如 LTDC 畫面同步）可用較高優先序（數值小於 5），
-   但請避免在這些高優先序 IRQ 內呼叫任何 RTOS API。 */
-````
-
----
-
-## 9.10 Smoke Test（上電快速驗證：排程 + FromISR）
-
-````c
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
-
-static SemaphoreHandle_t semButton;
-
-static void TaskBlink(void *arg){
-  TickType_t t0 = xTaskGetTickCount();
-  const TickType_t period = pdMS_TO_TICKS(500);
-  for(;;){
-    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-    vTaskDelayUntil(&t0, period);
-  }
-}
-
-static void TaskButton(void *arg){
-  for(;;){
-    xSemaphoreTake(semButton, portMAX_DELAY);
-    for(int i=0;i<3;i++){
-      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-      vTaskDelay(pdMS_TO_TICKS(100));
-    }
-  }
-}
-
-int main(void){
-  HAL_Init(); SystemClock_Config();
-  /* 確保 HAL timebase 已改 TIM6；SysTick 給 RTOS */
-  /* 初始化 LED 與按鍵 EXTI（並把 EXTI 優先權數值設 >= 5） */
-
-  semButton = xSemaphoreCreateBinary();
-  xTaskCreate(TaskBlink,  "blink",  256, NULL, 1, NULL);
-  xTaskCreate(TaskButton, "button", 256, NULL, 2, NULL);
-  vTaskStartScheduler();
-  for(;;){}
-}
-
-void EXTI0_IRQHandler(void){
-  BaseType_t hpw = pdFALSE;
-  __HAL_GPIO_EXTI_CLEAR_IT(BUTTON_Pin);
-  xSemaphoreGiveFromISR(semButton, &hpw);
-  portYIELD_FROM_ISR(hpw);
-}
-````
-
-**預期：** 上電 LED 每 500ms 閃；按鍵觸發後快速閃 3 下。
-
----
 
 ## 9.11 常見故障與排查（Checklist）
 

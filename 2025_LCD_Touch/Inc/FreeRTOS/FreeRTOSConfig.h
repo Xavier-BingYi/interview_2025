@@ -29,7 +29,7 @@ extern uint32_t SystemCoreClock;
  * Hooks（先全部關掉，之後需要再開）
  *----------------------------------------------------------*/
 #define configUSE_IDLE_HOOK                     0
-#define configUSE_TICK_HOOK                     0
+#define configUSE_TICK_HOOK                     1   /* 臨時橋接用；改 TIM6 後可再關回 0 */
 #define configUSE_MALLOC_FAILED_HOOK            0
 #define configCHECK_FOR_STACK_OVERFLOW          0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
@@ -88,5 +88,11 @@ extern uint32_t SystemCoreClock;
  *----------------------------------------------------------*/
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
+
+/*-----------------------------------------------------------
+ * FreeRTOS API 開關（至少要這兩個）
+*----------------------------------------------------------*/
+#define INCLUDE_vTaskDelay        1
+#define INCLUDE_vTaskDelayUntil   1
 
 #endif /* FREERTOS_FREERTOSCONFIG_H_ */

@@ -30,6 +30,9 @@
 #include <i2c.h>
 #include <lcd_render.h>
 #include <button.h>
+#include "FreeRTOS.h"
+#include "task.h"
+extern volatile uint32_t uwTick;
 
 void delay_us(uint32_t us) {
     for (volatile uint32_t i = 0; i < us * 8 ; ++i) {
@@ -37,10 +40,68 @@ void delay_us(uint32_t us) {
     }
 }
 
+/* 寫 AIRCR：把優先權分組設成 4 個 preempt bits（= PRIGROUP=3）
+   注意：寫入 AIRCR 時一定要帶 VECTKEY=0x5FA，否則硬體會忽略 */
+static void nvic_set_priority_grouping_4bits(void)
+{
+    const uint32_t SCB_AIRCR_ADDR   = 0xE000ED0CUL;
+    const uint32_t VECTKEY_FIELD    = 0xFFFFUL << 16;
+    const uint32_t PRIGROUP_FIELD   = 0x7UL    << 8;
+    const uint32_t VECTKEY_WRITE    = 0x5FAUL  << 16;  // 必須帶入的 key
+    const uint32_t PRIGROUP_4BITS   = 3UL      << 8;   // 等價 NVIC_PRIORITYGROUP_4
+
+    io_writeMask(SCB_AIRCR_ADDR,
+                 VECTKEY_WRITE | PRIGROUP_4BITS,
+                 VECTKEY_FIELD | PRIGROUP_FIELD);
+}
+
+/* 把「人類看得懂的優先權數字 0..15」換成 NVIC 寄存器實際要寫的 8-bit 值
+    MCU 有 4 個優先權位（configPRIO_BITS=4），所以左移 (8-4)=4 bits */
+static inline NVIC_Priority NVIC_PRIO(uint32_t p /*0..15*/)
+{
+    return (NVIC_Priority)( (p & 0x0F) << 4 );
+}
+
+static void NVIC_ConfigForFreeRTOS(void)
+{
+    nvic_set_priority_grouping_4bits();
+
+    /* 目前使用的 IRQ：EXTI0、EXTI15_10、TIM7
+       凡是 ISR 會呼叫 FreeRTOS 的 ...FromISR()，preempt priority 要 >= 5 */
+    nvic_set_priority(EXTI0_IRQn,     NVIC_PRIO(5));
+    nvic_set_priority(EXTI15_10_IRQn, NVIC_PRIO(5));
+    nvic_set_priority(TIM7_IRQn,      NVIC_PRIO(6));
+}
+
+static void vBlink500(void *arg)
+{
+    (void)arg;
+    static uint8_t red = 0; // PG14
+    for (;;)
+    {
+        red ^= 1;
+        gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red);
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+static void vBeat1000(void *arg)
+{
+    (void)arg;
+    for (;;)
+    {
+        // 用你的軟體 tick 當心跳觀察值
+        usart_printf("[beat] uwTick=%lu\r\n", (unsigned long)uwTick);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+
 int main(void)
 {
     // --- system init ---
     system_clock_setup();
+    NVIC_ConfigForFreeRTOS();
     timer_init();
     gpio_init();
     usart_init();
@@ -84,6 +145,12 @@ int main(void)
     gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_state);   // green LED initial state
     gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_state);     // red LED initial state
 
+
+    // --- FreeRTOS smoke test ---
+    xTaskCreate(vBlink500,  "Blink", 256, NULL, tskIDLE_PRIORITY + 2, NULL);
+    xTaskCreate(vBeat1000,  "Beat",  256, NULL, tskIDLE_PRIORITY + 1, NULL);
+    vTaskStartScheduler();
+	#if 0
     while (1) {
         if (button_event_pending) {                    // flag set by EXTI ISR
             button_event_pending = 0;                  // clear button flag
@@ -107,5 +174,7 @@ int main(void)
         }
 
         lcd_update();                                  // update LCD display
+
     }
+	#endif
 }
