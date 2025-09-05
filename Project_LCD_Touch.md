@@ -5587,233 +5587,194 @@ static void vBeat1000(void *arg)
 > 1) 專案可編譯／連結；2) 上電後不 HardFault；3) LED 以 500ms 節拍閃爍；  
 > 4) `uwTick` 每秒在 log 中遞增；5) 若後續計畫在 ISR 內使用 FromISR API，請確保該 IRQ 的 preempt priority **數值 ≥ 5**。
 
-## 9.3
+---
 
+## 9.3 把 EXTI 事件改成 RTOS 同步 + 移除 super-loop 依賴
 
+### 9.3.1 將 EXTI 旗標改為 RTOS 同步（FromISR → Semaphore）
 
+**目的**：super-loop 已停用，原本 `button_event_pending` / `touch_event_pending` 的旗標沒人輪詢。改為在 ISR 內用 `xSemaphoreGiveFromISR()` 喚醒對應任務。
 
+#### 修改 `exti.c` 檔頭（加入 RTOS 標頭 & 外部 handle）
 
+> **更正**：`exti.c` 需要「看得到」在 `main.c` 內建立的 semaphore，所以 `exti.c` 要保留 `extern` 聲明；而 `main.c` 的 `semButton/semTouch` 不能加 `static`（否則符號只在檔內可見）。
 
+```c
+#include "FreeRTOS.h"
+#include "semphr.h"
 
+extern SemaphoreHandle_t semButton;  // 由 main.c 建立（非 static）
+extern SemaphoreHandle_t semTouch;   // 由 main.c 建立（非 static）
+```
 
+#### exti.c 內改 ISR：以 give 取代設旗標
 
+```c
+void EXTI0_IRQHandler(void) {
+    exti_clear_pending_flag(SYSCFG_EXTI0);
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xSemaphoreGiveFromISR(semButton, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
 
+void EXTI15_10_IRQHandler(void) {
+    exti_clear_pending_flag(SYSCFG_EXTI15);
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xSemaphoreGiveFromISR(semTouch, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+```
 
+> 小抄：確保這兩個 EXTI 的 **NVIC preempt priority 數值 ≥ 5**（與 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY=5` 相容），才可安全呼叫 `…FromISR()`。
 
+---
 
+### 9.3.2 心跳任務：改用 RTOS tick（避免依賴 `uwTick`）
 
+現在 vBeat1000() 仍印 uwTick，但這個變數不一定有在 tick hook 裡自增，容易看起來「不動」。直接用 RTOS 的 tick 最穩。
 
+把原本印 `uwTick` 的心跳改用 `xTaskGetTickCount()`：
 
+```c
+static void vBeat1000(void *arg)
+{
+    (void)arg;
+    for (;;)
+    {
+        usart_printf("[beat] tick=%lu\r\n", (unsigned long)xTaskGetTickCount());
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+```
 
+> 提醒：刪掉檔頭的 `extern volatile uint32_t uwTick;`；  
+> `FreeRTOSConfig.h` 需開 `#define INCLUDE_xTaskGetTickCount 1`（多數預設就有）。
 
+---
 
+### 9.3.3 把 super-loop 的邏輯改成任務
 
+#### 在 `main.c` 檔頭（或全域區）宣告 semaphore
 
+> **更正**：請宣告為**全域（非 static）**，讓 `exti.c` 的 `extern` 能連結到。
 
+```c
+SemaphoreHandle_t semButton = NULL;
+SemaphoreHandle_t semTouch  = NULL;
+```
 
+### 新增 UI 任務：固定更新 LCD、處理觸控模式 timeout
 
+```c
+/* 每 16ms 更新一次畫面 + 檢查觸控模式是否該結束 */
+static void TaskUI(void *arg)
+{
+    (void)arg;
+    TickType_t last = xTaskGetTickCount();
 
+    for (;;)
+    {
+        /* 原本 super-loop 的 timeout 判斷 */
+        if (touch_state) {  /* 1=觸控模式, 0=旋轉模式 */
+            uint32_t now = micros_now(TIMER2);
+            if ((int32_t)(now - touch_until_us) >= 0) {
+                touch_state = 0;  // 退出觸控模式
+            }
+        }
 
+        /* 原本 super-loop 的畫面刷新 */
+        lcd_update();
 
+        vTaskDelayUntil(&last, pdMS_TO_TICKS(16)); // 約 60 FPS
+    }
+}
+```
 
+### 在 `main()`（啟動 scheduler 之前）建立同步物件與任務
 
+```c
+/* --- RTOS 同步物件 --- */
+semButton = xSemaphoreCreateBinary();
+semTouch  = xSemaphoreCreateBinary();
 
+/* --- 中斷事件對應的任務（已經有函式本體）--- */
+xTaskCreate(TaskButton, "Button", 256, NULL, tskIDLE_PRIORITY + 2, NULL);
+xTaskCreate(TaskTouch,  "Touch",  512, NULL, tskIDLE_PRIORITY + 2, NULL);
 
+/* --- 畫面刷新任務 --- */
+xTaskCreate(TaskUI, "UI", 512, NULL, tskIDLE_PRIORITY + 1, NULL);
 
+/* --- 心跳任務（可留作觀察系統節拍）--- */
+xTaskCreate(vBeat1000, "Beat", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
 
+/* 最後啟動排程器 */
+vTaskStartScheduler();
+```
 
+> 事件流程：  
+> EXTI0/15 進中斷 → `xSemaphoreGiveFromISR()` → `TaskButton` / `TaskTouch` 被喚醒處理一次；  
+> 螢幕持續亮與刷新 → `TaskUI` 週期性呼叫 `lcd_update()`；  
+> 觸控模式 2 秒超時 → `TaskUI` 內檢查 `touch_state` 與 `touch_until_us`。
 
+---
 
+## 9.3.4 刪除 `vBlink500()`（避免搶同一顆 LED）
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 9.1 先看三個「必須條件」（Must-have）
-
-1. **三個例外接到 RTOS**：  
-   `SVC_Handler → vPortSVCHandler`、`PendSV_Handler → xPortPendSVHandler`、`SysTick_Handler → xPortSysTickHandler`
-2. **SysTick 給 RTOS、HAL 改 TIM6**（建議）：避免 HAL 與 RTOS 抢 Tick。  
-3. **NVIC 優先權規則**（F429 為 4 bits）：  
-   - `configKERNEL_INTERRUPT_PRIORITY = 15（最低）`  
-   - `configMAX_SYSCALL_INTERRUPT_PRIORITY = 5`（建議）  
-   - **凡會呼叫 `…FromISR()` 的 IRQ**，其**優先權數值**要 **≥ 5**（數值越大＝優先序越低）。
-
-## 里程碑 M2：三個 handler 接管 + HAL timebase 改 TIM6
-
-### A. Handler 對應（擇一方案）
-- **建議：映射法（FreeRTOSConfig.h）**  
-  ```c
-  #define vPortSVCHandler     SVC_Handler
-  #define xPortPendSVHandler  PendSV_Handler
-  #define xPortSysTickHandler SysTick_Handler
-  ```
-- **或：wrapper 法**（不採映射時，自己提供同名函式轉呼叫 vPort/xPort…）。兩者不可同時使用。
-
-### B. HAL timebase 改 TIM6
-- 新增 `Src/stm32f4xx_hal_timebase_tim.c`，讓 `HAL_InitTick()` 使用 **TIM6 1 kHz**。  
-- 設 `TIM6_DAC_IRQn` 優先權 **5**（與 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY = 5` 對齊）。  
-- 目的：**SysTick 專供 FreeRTOS**，`HAL_GetTick()` 由 TIM6 推動。
-
-### C. NVIC 與 FreeRTOS 優先權
-- `HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);`（對齊 `configPRIO_BITS=4`）。  
-- **任何會觸發 FreeRTOS FromISR API 的中斷**，其 preempt priority **數值 ≥ 5**。  
-- `configKERNEL_INTERRUPT_PRIORITY` 與 `configMAX_SYSCALL_INTERRUPT_PRIORITY` 請依你現行的 `FreeRTOSConfig.h` 設定（上一版模板已對齊）。
-
-### D. Smoke Test
-- 兩個最小 Tasks（如 `Blink` 500 ms、`Beat` 1000 ms）＋ `vTaskStartScheduler()`。  
-- **驗收**：  
-  1. 可編譯、可連結、上電不卡住；  
-  2. `HAL_GetTick()` 跳動；  
-  3. LED 依期閃爍，`vTaskDelay()` 節拍穩定；  
-  4. **SysTick 僅被 FreeRTOS 使用**，HAL 不再佔用；  
-  5. 無 HardFault／未觸發 `configASSERT`。
+`vBlink500()` 只是早期 smoke test；現在 `TaskButton` 會快閃同一顆 LED（PG14）。移除 `vBlink500()` 及其 `xTaskCreate()` 可避免兩個任務互相覆蓋 LED 狀態。
 
 ---
 
 
 
-## 9.11 常見故障與排查（Checklist）
-
-- **`vTaskStartScheduler()` 後立刻回到 `for(;;){}`**  
-  → 不是正常現象。多半是：  
-  1) **heap 不夠** → 調大 `configTOTAL_HEAP_SIZE` 或減少 Task stack。  
-  2) **三個 handler 未接** → SVC/PendSV/SysTick 仍指向舊 handler。  
-  3) **沒有成功建立任何 Task** → 檢查 `xTaskCreate` 回傳值或加 `configASSERT`。
-
-- **跑一陣子 HardFault**  
-  → 可能：  
-  1) **Port/FPU 旗標錯** → 確認 `ARM_CM4F` + `-mfpu=fpv4-sp-d16 -mfloat-abi=hard`。  
-  2) 有 IRQ **優先序高於 `MAX_SYSCALL`** 卻呼叫了 `…FromISR()`。  
-  3) 某 Task stack 太小 → 打開 `configCHECK_FOR_STACK_OVERFLOW=2`，觀察水位。
-
-- **時間/延遲不準**  
-  → HAL 仍在用 SysTick；請改 TIM6 當 HAL timebase。
-
-- **printf 亂序/卡頓**  
-  → 把大量列印放到 **Logger Task**；或開 `configUSE_NEWLIB_REENTRANT=1`。
-
----
-
-## 9.12 把你現有程式搬到 RTOS（對照你專案）
-
-- **Task_Touch（prio=3, 768 words）**  
-  等 `semTouch` → `i2cMutex` 保護 → 讀座標/清 FIFO & INT → 更新狀態。
-- **Task_UI（prio=2, 1280 words）**  
-  `vTaskDelayUntil(33ms)` 設定固定刷新 → `lcd_update()` → 處理觸控超時。
-- **Task_Button（prio=2, 512 words）**  
-  等 `semButton` → `button_handle_event()` 去彈跳與模式切換。
-- **互斥鎖**：所有 I²C 交易（包含觸控）一律 `xSemaphoreTake(i2cMutex)` 包住。  
-- **IRQ 改 FromISR**：`EXTI0`/`EXTI15_10`/（若用）`TIM7`。  
-- **移除 busy-wait**：任務用 `vTaskDelay/Until`；ISR 不延遲、不印 log。
-
----
-
-## 9.13 可選強化（之後再加）
-
-- **Software Timers**：把週期性任務換 RTOS Timer，減少 Task 數。  
-- **DMA**：I²C/SPI 搭配 DMA + 二重緩衝（double buffer），降低 CPU 佔用。  
-- **Cache（若換到 F7/H7）**：記得 DMA 前後做 D-Cache Clean/Invalidate。  
-- **斷言/Hook**：實作 `vApplicationMallocFailedHook()`、`vApplicationStackOverflowHook()` 輔助除錯。
-
----
-
-### 一句話總結
-> **把   做齊 + 三個 Must-have 檢查到位**（handlers、TIM6 timebase、NVIC 優先權），先用 **Smoke Test** 亮燈驗證，接著把 `while(1)` 拆成 `Touch/UI/Button` 三個 Task，再把 EXTI 改成 `…FromISR()` 丟信號——**你的 FreeRTOS 就會順利跑起來**。  
-> 有卡關，回到「三個必須條件」對表檢查，十之八九在那裡。
 
 
 
 
 
 
-# 最短路徑（Zero→Run）
 
-## 里程碑 M0：備份與分支
 
-* 建新分支：`feat/rtos-bringup`
-* 保留現在可正常跑的裸機版本（隨時可回退）
 
-## 里程碑 M1：匯入檔案與編譯通過（未啟動排程）
 
-* 加入 `tasks.c/queue.c/list.c/timers.c/event_groups.c/heap_4.c`、`portable/GCC/ARM_CM4F/port.c`、必要 headers。
-* 加入 include paths（`Source/include`、`portable/GCC/ARM_CM4F`）。
-* 編譯旗標：`-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard`。
-* 新增 `FreeRTOSConfig.h`（用我給你的最小版）。
-  **✅ 成功判定**：專案能完整編譯連結（尚未啟動 RTOS）。
 
-## 里程碑 M2：三個 handler 接管 + HAL timebase 改 TIM6
 
-* `SVC/PendSV/SysTick` 導到 `vPortSVCHandler/xPortPendSVHandler/xPortSysTickHandler`（啟動檔或 wrapper 二選一）。
-* 新增 `stm32f4xx_hal_timebase_tim.c` 或覆寫 `HAL_InitTick()`，讓 **HAL 用 TIM6 1kHz**。
-  **✅ 成功判定**：仍可編譯；上電後無異常卡住；`HAL_GetTick()` 正常跳動、且 **SysTick 沒被 HAL 佔用**。
 
-## 里程碑 M3：Smoke Test（驗證排程 + FromISR）
 
-* 建兩個任務：`TaskBlink` 每 500ms 閃 LED；`TaskButton` 等 `semButton` 後快閃 3 下。
-* EXTI 按鍵 IRQ 用 `xSemaphoreGiveFromISR(...); portYIELD_FROM_ISR(...)`。
-* NVIC：`configPRIO_BITS=4`；`KERNEL_PRIORITY=15`；`MAX_SYSCALL_PRIORITY=5`；**所有會呼叫 `…FromISR()` 的 IRQ 優先權數值 ≥ 5**。
-  **✅ 成功判定**：
 
-  * 上電 LED 規律閃爍（證明 `vTaskStartScheduler()`、SysTick、排程 OK）。
-  * 按鍵能喚醒 task（證明 FromISR + 優先權配置 OK）。
 
-## 里程碑 M4：把你的 `while(1)` 拆成 Tasks
 
-* 建 `Task_UI`（\~30Hz，用 `vTaskDelayUntil` 呼叫 `lcd_update()`，含觸控超時計時邏輯）。
-* 建 `Task_Touch`（等 `semTouch` → 進 I²C 讀座標/清 FIFO/清 INT → 更新狀態；用 `i2cMutex` 保護）。
-* 建 `Task_Button`（等 `semButton` → 原 `button_handle_event()` 去彈跳/模式切換）。
-* EXTI0/EXTI15\_10 IRQ 改成只送 semaphore；**ISR 不做重活、不列印**。
-  **✅ 成功判定**：畫面正常更新；觸控/按鍵行為與裸機版本一致或更順。
 
-## 里程碑 M5：清理 busy-wait 與收尾
 
-* 任務裡的 `delay_us()/忙等` 改 `vTaskDelay()/vTaskDelayUntil()`。
-* 若保留 TIM7 作節拍：改為 FromISR 通知某個 Task，而非在 IRQ 內改狀態。
-* 開啟 `configCHECK_FOR_STACK_OVERFLOW=2`、`configASSERT`；檢查各 Task 高水位。
-  **✅ 成功判定**：連跑一段時間無 HardFault/無卡死，堆疊水位安全。
 
----
 
-## 典型 Commit 切點（方便回退）
 
-* `chore(rtos): add FreeRTOS core files and heap_4.c; config & includes`
-* `feat(core): hook SVC/PendSV/SysTick to FreeRTOS; move HAL timebase to TIM6`
-* `test(rtos): add blink/button smoke test with FromISR`
-* `feat(app): split main loop into UI/Touch/Button tasks; add i2c mutex`
-* `refactor(isr): EXTI uses semaphore only; remove busy-wait`
-* `chore(cfg): tune priorities and stacks; enable overflow/malloc hooks`
 
----
 
-## 風險熱點與快速排查
 
-* **一開機就卡住**：三個 handler 沒接、或沒任何 task 建成功、或 heap 太小。
-* **跑一會兒 HardFault**：用錯 `ARM_CM4F` port、FPU 旗標錯、或有 IRQ 優先序高於 `MAX_SYSCALL` 卻呼叫了 `…FromISR()`。
-* **時間感怪怪的**：HAL 仍用 SysTick；改 TIM6。
-* **printf 造成抖動**：集中到低優先權 Logger Task；必要時 `configUSE_NEWLIB_REENTRANT=1`。
 
----
 
-## 小抄（優先權數字觀念）
 
-* **數值越大＝優先序越低**；`Kernel=15` 最低。
-* 會呼叫 `…FromISR()` 的 IRQ（EXTI/TIM7…）**數值 ≥ 5**。
-* 不用 RTOS API 的高頻 IRQ（如 LTDC 同步）可設更高優先序（數值小），**但 ISR 內不得碰 RTOS**。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5902,7 +5863,7 @@ static void vBeat1000(void *arg)
 
 ---
 
-# 9.
+# 10.
 
 ---
 

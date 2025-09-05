@@ -32,7 +32,10 @@
 #include <button.h>
 #include "FreeRTOS.h"
 #include "task.h"
-extern volatile uint32_t uwTick;
+#include "semphr.h"
+SemaphoreHandle_t semButton = NULL;
+SemaphoreHandle_t semTouch  = NULL;
+
 
 void delay_us(uint32_t us) {
     for (volatile uint32_t i = 0; i < us * 8 ; ++i) {
@@ -73,26 +76,84 @@ static void NVIC_ConfigForFreeRTOS(void)
     nvic_set_priority(TIM7_IRQn,      NVIC_PRIO(6));
 }
 
-static void vBlink500(void *arg)
-{
-    (void)arg;
-    static uint8_t red = 0; // PG14
-    for (;;)
-    {
-        red ^= 1;
-        gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red);
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
-}
-
 static void vBeat1000(void *arg)
 {
     (void)arg;
     for (;;)
     {
-        // 用你的軟體 tick 當心跳觀察值
-        usart_printf("[beat] uwTick=%lu\r\n", (unsigned long)uwTick);
+        usart_printf("[beat] tick=%lu\r\n", (unsigned long)xTaskGetTickCount());
         vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+/* 每 16ms 更新一次畫面 + 檢查觸控模式是否該結束 */
+static void TaskUI(void *arg)
+{
+    (void)arg;
+    TickType_t last = xTaskGetTickCount();
+
+    for (;;)
+    {
+        /* === 原本 super-loop 的 timeout 區塊 === */
+        if (touch_state) {  /* 1=觸控模式, 0=旋轉模式 */
+            uint32_t now = micros_now(TIMER2);
+            if ((int32_t)(now - touch_until_us) >= 0) {  // 到期了
+                touch_state = 0;                         // 退出觸控模式
+            }
+        }
+
+        /* === 原本 super-loop 的 lcd_update() === */
+        lcd_update();
+
+        /* 16ms 一次，約 60 FPS；你也可改 33ms(30 FPS) */
+        vTaskDelayUntil(&last, pdMS_TO_TICKS(16));
+    }
+}
+
+static void TaskButton(void *arg)
+{
+    (void)arg;
+    for (;;)
+    {
+        /* 由 EXTI0_IRQHandler 給 semaphore 後才會醒來 */
+        xSemaphoreTake(semButton, portMAX_DELAY);  // EXTI0 → giveFromISR
+        vTaskDelay(pdMS_TO_TICKS(30));             // 簡易去抖
+
+        for (int i = 0; i < 3; ++i) {
+            gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 1);
+            vTaskDelay(pdMS_TO_TICKS(100));
+            gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, 0);
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+
+        /* 如果你想沿用原先的去抖 + 切紅燈邏輯，也可改成：
+           button_handle_event();  // 你已有這個函式（含去抖與紅燈切換） */
+    }
+}
+
+static void TaskTouch(void *arg)
+{
+    (void)arg;
+    for (;;)
+    {
+    	/* 由 EXTI15_10_IRQHandler 給 semaphore 後才會醒來 */
+	    xSemaphoreTake(semTouch, portMAX_DELAY);   // EXTI15 → giveFromISR
+
+
+        /* 把你原本 super-loop 裡 touch 的處理搬過來 */
+        /* 進入觸控模式 2s、讀一次座標（你現有的流程） */
+        if (touch_state == 0) {
+            touch_handle_event();                  // 會設定 touch_state=1、touch_until_us += 2s 並讀座標
+        }
+
+        /* 清掉 FIFO / 釋放 reset、清中斷狀態（你原本 while(1) 的三步） */
+        i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, FIFO_RESET);
+        i2c_master_write(I2C3_BASE, SLAVE_ADDR7, FIFO_STA_ADDR, 0x00);
+        i2c_master_write(I2C3_BASE, SLAVE_ADDR7, INT_STA_ADDR, 0xFF);
+
+        /* 讓出一下 CPU；是否等到 timeout 結束要不要輪詢看你需求
+           最小實作：做完一次就回去等下一個中斷 */
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
 
@@ -108,6 +169,21 @@ int main(void)
     spi_init();
     ili9341_init();
     ltdc_init();
+
+    /* --- RTOS 同步物件 --- */
+    semButton = xSemaphoreCreateBinary();
+    semTouch  = xSemaphoreCreateBinary();
+
+    /* --- 中斷事件對應的任務（已經有函式本體）--- */
+    xTaskCreate(TaskButton, "Button", 256, NULL, tskIDLE_PRIORITY + 2, NULL);
+    xTaskCreate(TaskTouch,  "Touch",  512, NULL, tskIDLE_PRIORITY + 2, NULL);
+
+    /* --- 畫面刷新任務 --- */
+    xTaskCreate(TaskUI, "UI", 512, NULL, tskIDLE_PRIORITY + 1, NULL);
+
+    /* --- 心跳任務（可留作觀察系統節拍）--- */
+    xTaskCreate(vBeat1000, "Beat", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
+
     exti_init();
     i2c_init();
     i2c_touch_init();
@@ -141,15 +217,12 @@ int main(void)
     bsp_lcd_fill_rect(0xFFA500, 0, 240, 46*5, 46); // Orange
     bsp_lcd_fill_rect(0xFF0000, 0, 240, 46*6, 44); // Red
 
-    // --- Initial LED output setup ---
-    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_state);   // green LED initial state
-    gpio_set_outdata(GPIOG_BASE, GPIO_PIN_14, red_led_state);     // red LED initial state
 
 
-    // --- FreeRTOS smoke test ---
-    xTaskCreate(vBlink500,  "Blink", 256, NULL, tskIDLE_PRIORITY + 2, NULL);
-    xTaskCreate(vBeat1000,  "Beat",  256, NULL, tskIDLE_PRIORITY + 1, NULL);
+
+    /* 最後啟動排程器 */
     vTaskStartScheduler();
+
 	#if 0
     while (1) {
         if (button_event_pending) {                    // flag set by EXTI ISR
