@@ -22,4 +22,5 @@
 "./Src/sysmem.o"
 "./Src/timer.o"
 "./Src/usart.o"
+"./Src/watchdog.o"
 "./Startup/startup_stm32f429zitx.o"

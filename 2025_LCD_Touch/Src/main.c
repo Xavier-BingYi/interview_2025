@@ -30,6 +30,7 @@
 #include <i2c.h>
 #include <lcd_render.h>
 #include <button.h>
+#include <watchdog.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
@@ -102,6 +103,11 @@ static void TaskUI(void *arg)
             }
         }
 
+        if (!touch_state && lcd_rotate_tick) {
+        	lcd_rotate_tick = 0;
+            if (++lcd_rotation_state > 3) lcd_rotation_state = 0;
+        }
+
         /* === 原本 super-loop 的 lcd_update() === */
         lcd_update();
 
@@ -157,6 +163,18 @@ static void TaskTouch(void *arg)
     }
 }
 
+static void vIwdgFeedTask(void *arg)
+{
+    (void)arg;
+    TickType_t last = xTaskGetTickCount();
+
+    for (;;)
+    {
+        iwdg_feed();  // feed watchdog
+        vTaskDelayUntil(&last, pdMS_TO_TICKS(5000U)); // repeat every 5s
+    }
+}
+
 
 int main(void)
 {
@@ -169,6 +187,7 @@ int main(void)
     spi_init();
     ili9341_init();
     ltdc_init();
+    iwdg_init();
 
     /* --- RTOS 同步物件 --- */
     semButton = xSemaphoreCreateBinary();
@@ -183,6 +202,9 @@ int main(void)
 
     /* --- 心跳任務（可留作觀察系統節拍）--- */
     xTaskCreate(vBeat1000, "Beat", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
+
+    /* --- feed the watchdog regularly --- */
+    xTaskCreate(vIwdgFeedTask, "FeedIwdg", 128, NULL, tskIDLE_PRIORITY + 1, NULL);
 
     exti_init();
     i2c_init();

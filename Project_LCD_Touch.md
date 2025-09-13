@@ -1,3 +1,18 @@
+# 目錄
+1. [新增專案與硬體初始化（STM32F429ZI）](#1-新增專案與硬體初始化stm32f429zi)  
+2. [使用 ST-LINK 與 Makefile 自行處理編譯與燒錄流程](#2-使用-st-link-與-makefile-自行處理編譯與燒錄流程)  
+3. [UART 傳輸與 printf 功能實作](#3-uart-傳輸與-printf-功能實作)  
+4. [外部中斷（EXTI）與中斷控制器（NVIC）](#4-外部中斷exti與中斷控制器nvic)  
+5. [LCD 圖形架構與顯示流程](#5-lcd-圖形架構與顯示流程)  
+6. [LCD 控制實作與顯示測試](#6-lcd-控制實作與顯示測試)  
+7. [計時器（Timer）](#7-計時器-timer)  
+8. [觸控面板（Touch Panel） STMPE811](#8-觸控面板touch-panel--stmpe811)  
+9. [即時作業系統（RTOS）](#9-即時作業系統-rtos)  
+10. [FreeRTOS 整合實作](#10-freertos-整合實作)  
+11. [Watchdog 定時器（IWDG）](#11-watchdog-定時器iwdg)  
+   
+---   
+
 # 1. 新增專案與硬體初始化（STM32F429ZI）
 
 ## 1.1 新增 STM32 專案
@@ -1493,7 +1508,7 @@ void exti_clear_pending_flag(SYSCFG_EXTI_LINE exti_line) {
 
 ---
 
-# 5. LCD 圖形架構與 LTDC 顯示流程
+# 5. LCD 圖形架構與顯示流程
 
 ## 5.1 簡介嵌入式圖形系統
 
@@ -4509,7 +4524,7 @@ void timer_init(void) {
 
 ---
 
-# 8. 觸控面板（Touch Panel）— STMPE811
+# 8. 觸控面板（Touch Panel）- STMPE811
 
 ## 8.1 GPIO 與 EXTI 初始化
 
@@ -7348,7 +7363,7 @@ FreeRTOS 在 Cortex-M 平台上，必須依靠三個「特殊例外中斷」才�
 
 ---
 
-# 10. FreeRTOS 整合實作（空專案／無 .ioc 版）
+# 10. FreeRTOS 整合實作
 
 > 目標：加檔、編譯／連結與 NVIC 設定、HAL timebase 改 TIM6、三個 handler 接管、Smoke Test 驗證，以及把現有 `while(1)` 拆成 Tasks 的落地建議。  
 
@@ -7884,23 +7899,117 @@ vTaskStartScheduler();
 
 ---
 
+# 11. Watchdog 定時器（IWDG）
 
+## 11.1 Watchdog 基本概念
 
+**Watchdog** 是系統最後一道硬體保護機制。  
+在傳統架構中，系統通常依靠 **主迴圈 + 中斷** 運作；若主迴圈陷入無窮迴圈，或中斷服務程式出現 bug，系統就可能完全「死當」。沒有 Watchdog 時，只能依靠人工斷電重啟，無法自動復原。
 
+即使在 **RTOS 架構**下，系統穩定性雖然大幅提升，但仍無法避免某些「不可預期的例外狀況」，例如：記憶體越界、驅動程式死鎖、優先權反轉或中斷異常等。  
+這些狀況一旦發生，系統可能完全喪失回應。此時，Watchdog 的作用就是在系統長時間無法回應時，自動觸發 **reset**，讓裝置回到可運作狀態，避免系統永久卡死。
 
+在 **STM32F4 系列**中提供兩種 Watchdog： 
 
+- **IWDG (Independent Watchdog)**  
+  - 採用獨立的低速時鐘 (LSI)，不依賴主系統時脈，即使主時鐘故障也能正常工作。  
+  - 內部為自由運行的遞減計數器，當計數器值下降到 **0x000** 時，若看門狗已啟用，會觸發系統重置。  
+  - 系統重置後：CPU 會跳回 **Reset Handler**（向量表的起始點）；CPU、暫存器（GPIO、USART、SPI…）、時鐘回到初始狀態；SRAM 內容則可能保留（依晶片設計而定）。  
+  - 適合需要最高可靠性的應用。  
 
+- **WWDG (Window Watchdog)**  
+  - 採用 APB1 分頻時鐘，可偵測「過早或過晚餵狗」的異常情況，並支援早期警告中斷。  
+  - 適合對時間控制要求嚴謹的應用。  
 
+在本專案中選擇 **IWDG**，因為它獨立於主時鐘，能提供更高的安全性與可靠性，確保系統即使在最壞情境下，也能自動復原。
 
+## 11.2 IWDG 運作原理
 
+當獨立看門狗 (IWDG) 被啟動時，需先在 **Key 暫存器 (IWDG_KR)** 中寫入值 **0xCCCC**，此時計數器會從重載值 (**IWDG_RLR** 的內容，預設為 0xFFF) 開始向下遞減。當計數器遞減到 **0x000** 時，會產生一個 **IWDG reset**。  
 
+若在計數過程中將值 **0xAAAA** 寫入 IWDG_KR 暫存器（feed the watchdog，「餵狗」），則會將 **IWDG_RLR** 的重載值(預設是 0xFFF)重新載入計數器，避免觸發重置。  
 
+如果透過裝置的選項位元 (option bits) 啟用了「硬體看門狗」功能，上電後 IWDG 會自動啟動，不需要再寫入 0xCCCC。此時若程式未定期餵狗（寫 0xAAAA），MCU 將會被自動重置。  
 
+**LSI (Low Speed Internal oscillator)** 是 MCU 內建的低速 RC 振盪器，  
+頻率通常標稱在 **32 kHz ~ 40 kHz** 左右（依不同晶片系列而定），但會受到製程、電壓、溫度 (PVT) 影響，實際可能有 **±30% 誤差範圍**。  
 
+LSI 輸出會先經過一個可程式化的 **8 位元預分頻器 (IWDG_PR)**，支援分頻值：/4, /8, /16, …, /256，用來調整 IWDG 計數速度（決定倒數時間長短）。
 
+---
 
+## 11.3 IWDG 初始化與程式設計
 
+在程式上，設定與啟用 IWDG 需要經過三個步驟：  
 
+1. **設定預分頻值 (Prescaler, IWDG_PR)**  
+   - 決定 LSI 輸入時鐘如何分頻，以控制計數器遞減速度。  
+   - 僅能寫入 `PR[2:0]`，其值需在更新保護旗標 `PVU` 清除後才能修改。  
+
+2. **設定重載值 (Reload, IWDG_RLR)**  
+   - 決定倒數最大值（最多 0x0FFF）。  
+   - 每次餵狗時，計數器會被重新載入這個數值。  
+   - 修改前需等待 `RVU` 清除。  
+
+3. **啟動 IWDG**  
+   - 在 `IWDG_KR` 寫入 **0xCCCC** 啟動 IWDG。  
+   - 寫入 **0xAAAA** 表示餵狗（reload）。  
+   - 若選項位元啟用了「硬體模式」，上電後會自動啟動，軟體無法關閉。
+
+### 初始化程式碼範例
+
+```c
+
+void iwdg_write_pr(IWDG_Prescaler prescaler) {
+    iwdg_write_kr(IWDG_KEY_ACCESS);
+    iwdg_wait_pvu_clear();
+    io_write(IWDG_BASE + IWDG_PR_OFFSET, prescaler & 0x07U);     // PR[2:0]
+}
+
+void iwdg_write_rlr(uint32_t reload_12bit) {
+    iwdg_write_kr(IWDG_KEY_ACCESS);
+    iwdg_wait_rvu_clear();
+    io_write(IWDG_BASE + IWDG_RLR_OFFSET, reload_12bit & 0x0FFFU); // RL[11:0]
+}
+
+void iwdg_init(void) {
+    // Set prescaler (clock divider) for IWDG counter
+    iwdg_write_pr(IWDG_PRESCALER_128);
+
+    // Set reload value (maximum: 0x0FFF)
+    iwdg_write_rlr(0x0FFFU);
+
+    // Start the independent watchdog
+    iwdg_start();
+
+    // Feed the watchdog once after starting
+    iwdg_feed();
+}
+```
+
+此初始化流程確保 IWDG 會以 **LSI/128** 的時基運作，並在計數器從 `0xFFF` 遞減到 `0x000` 前，程式需定期呼叫 `iwdg_feed()`，否則系統將自動觸發 Reset。  
+
+### 在 FreeRTOS 中的餵狗任務範例
+
+通常會建立一個週期性任務，專門負責餵狗：
+
+```c
+static void vIwdgFeedTask(void *arg)
+{
+    (void)arg;
+    TickType_t last = xTaskGetTickCount();
+
+    for (;;)
+    {
+        iwdg_feed();  // feed watchdog
+        vTaskDelayUntil(&last, pdMS_TO_TICKS(5000U)); // repeat every 5s
+    }
+}
+
+xTaskCreate(vIwdgFeedTask, "FeedIwdg", 128, NULL, tskIDLE_PRIORITY + 1, NULL);
+```
+
+---
 
 
 
@@ -8082,18 +8191,18 @@ vTaskStartScheduler();
 
 ---
 
-# 11.
+# 12.
 
 ---
 
-## 11.1 SDRAM 與 FMC 控制器簡介
+## 12.1 SDRAM 與 FMC 控制器簡介
 
 STM32F429 除了內建的 SRAM、Flash 等內部記憶體外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash 與 SDRAM。
 
 在 LCD 顯示應用中，由於 frame buffer 體積龐大，STM32 的內部 SRAM 通常無法容納完整畫面資料。  
 為了確保畫面顯示的流暢與穩定，系統常將圖像內容暫存於 **SDRAM**，再由 **LTDC（LCD-TFT Controller）模組** 自動掃描該記憶體區塊並輸出至 LCD 螢幕。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
 
-### 11.1.1 FMC 系統架構概述
+### 12.1.1 FMC 系統架構概述
 
 根據參考手冊第 37.1 節（FMC main features）與 37.2 節（Block diagram）描述，**FMC（Flexible Memory Controller）** 提供一個高度整合的外部記憶體控制模組，整體系統可分為三個主要區塊：
 
@@ -8133,7 +8242,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 11.1.2 SDRAM 控制器功能說明
+### 12.1.2 SDRAM 控制器功能說明
 
 根據 37.7.1（SDRAM controller main features），STM32 所內建的 SDRAM 控制器具備下列特性：
 
@@ -8147,7 +8256,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 11.1.3 SDRAM 對外介面腳位說明
+### 12.1.3 SDRAM 對外介面腳位說明
 
 根據 RM0090 第 37.7.2 節（**SDRAM External Memory Interface Signals**），  
 STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊。
@@ -8177,9 +8286,9 @@ STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊�
 
 ---
 
-## 11.2 SDRAM 初始化
+## 12.2 SDRAM 初始化
 
-### 11.2.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
+### 12.2.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
 
 #### SDRAM 與 GPIO 對應關係整理（依原理圖）
 
@@ -8337,7 +8446,7 @@ void fmc_sdram_gpio_init(void)
 
 ---
 
-### 11.2.2 SDRAM 初始化步驟
+### 12.2.2 SDRAM 初始化步驟
 
 #### 開啟 AHB3 時脈
 
@@ -8416,7 +8525,7 @@ SDRAM 的初始化完全由**軟體控制**。
 
 ---
 
-### 11.2.3 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
+### 12.2.3 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
 
 從 FMC 的觀點來看，外部記憶體被劃分為 6 個固定大小為 256 MByte 的 bank，FMC 控制器分配記憶體空間來對應不同種類的外部記憶體
 
@@ -8509,7 +8618,7 @@ void fmc_init(void){
 }
 ````
 
-### 11.2.4 依序送出五個 JEDEC 初始化指令至 SDRAM
+### 12.2.4 依序送出五個 JEDEC 初始化指令至 SDRAM
 
 | 動作                                                                | 解釋                      | 對應章節                                               |
 | ----------------------------------------------------------------- | ----------------------- | -------------------------------------------------- |

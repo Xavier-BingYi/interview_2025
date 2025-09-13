@@ -25,6 +25,7 @@ extern SemaphoreHandle_t semTouch;
 
 volatile uint8_t button_event_pending = 0;
 volatile uint8_t touch_event_pending = 0;
+volatile uint8_t lcd_rotate_tick = 0;
 
 void exti_gpio_init(void) {
 	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
@@ -154,8 +155,7 @@ void EXTI0_IRQHandler(void) {
 void TIM7_IRQHandler(void) {
     timer_set_sr(TIMER7, 0);                  // Clear TIM7 interrupt flag
 
-    if (++lcd_rotation_state > 3)             // update rotation state (0–3)
-        lcd_rotation_state = 0;
+    lcd_rotate_tick = 1;
 
     green_led_state ^= 1;                     // toggle LED state
     gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_state); // update LED output

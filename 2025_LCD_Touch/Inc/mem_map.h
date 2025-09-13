@@ -191,6 +191,18 @@
 
 
 
+/* WATCHDOG Group */
+//------------------------------------------------
+#define IWDG_BASE 0x40003000U
+
+#define IWDG_KR_OFFSET   0x00U
+#define IWDG_PR_OFFSET   0x04U
+#define IWDG_RLR_OFFSET  0x08U
+#define IWDG_SR_OFFSET   0x0CU
+
+
+
+
 
 
 /* FMC Group */
