@@ -5188,22 +5188,2182 @@ int8_t i2c_master_read(uint32_t i2c_base, uint8_t slave_addr, uint8_t *data, uin
 
 ---
 
-# 9. FreeRTOS 整合實作（空專案／無 .ioc 版）
+# 9. 即時作業系統 (RTOS)
+
+## 9.1 即時應用程式 (Real-Time Application, RTA)
+
+### 9.1.1 基本觀念
+「Real-Time」不是指越快越好，而是指**在限定時間內一定能完成**。  
+
+舉例：假設氣囊系統需要在 50 毫秒內展開，不管 CPU 再快，只要無法保證 50 毫秒內一定完成，就不算 Real-Time。  
+
+所以 Real-Time 的核心是 **確定性（Determinism）**，而不是單純的速度。  
+
+在一般電腦或伺服器（GPOS）中，「效能高 (performance)」很重要，但在即時系統中更關心的是**能否準時完成工作**。  
+
+舉例：  
+- **音樂播放** → 即使 CPU 使用率低，但如果聲音延遲 2 秒，體驗就算失敗。  
+- **飛彈控制** → 就算運算結果正確，如果計算時間過長，飛彈已經偏離目標。  
+
+因此 Real-Time 系統設計時，通常會**犧牲部分效能，換取時間上的可預測性**。  
+
+簡單來說：  
+**Real-Time ≠ 快速 ≠ 高效能，而是能保證時間限制。**
+
+---
+
+### 9.1.2 保證性 vs 速度
+即時系統 (Real-Time System) 強調的是**保證**，而不是**純粹速度**。  
+
+- 一個 Web Server 可能很快回應 1 個 request，但無法保證每次都在 100ms 內完成。  
+- 相比之下，RTOS 的目標是：「即使系統很忙，也能確保最重要的任務在時間內完成」。  
+
+在即時系統中，**正確答案 + 準時產出**才算正確。  
+
+- **NRTA (Non-Real-Time Application)**：回應時間差異大，不可預測。  
+- **RTA (Real-Time Application)**：回應時間穩定，幾乎固定。  
+
+即時系統的關鍵在於：**Response time 不大幅波動，即使不是最快，也要穩定。**
+
+---
+
+### 9.1.3 Time Deterministic 與應用分類
+**Time Deterministic**：Real-Time 系統的核心特徵，代表其**反應時間可預測，不會隨機波動**。  
+
+- **Hard Real-Time（無法容忍延誤）**
+  - Missile Guidance and Control System（飛彈導引控制）  
+  - Anti-Lock Braking System (ABS，自動防鎖死煞車系統)  
+  - Airbag Deployment（氣囊展開）  
+
+- **Soft Real-Time（允許小延遲）**
+  - Stock Market Website（股市網站，允許些許延遲）  
+  - VOIP（網路語音，延遲小可接受，但不宜過大）  
+
+---
+
+## 9.2 即時作業系統 (Real-Time Operating System, RTOS)
+
+### 9.2.1 基本觀念
+RTOS 是一種專門設計來執行**具備精準時間控制**與**高可靠度**的應用程式的作業系統。  
+
+不同於一般作業系統（Windows、Linux），RTOS 不只要求功能正確，更要求**在限定時間內保證完成**。  
+
+三個核心要點：  
+- **Interrupt & Exception Handling** → 中斷必須在固定時間內響應，不能無限延遲。  
+- **Critical Section Handling** → 進入臨界區時，RTOS 必須控制鎖定時間不可過長。  
+- **Scheduling** → 必須確保高優先權任務能即時被排程。  
+
+---
+
+### 9.2.2 類型比較
+- **GPOS (General Purpose OS，一般用途作業系統)**  
+  範例：Linux、Windows 10、iOS、Android  
+  設計重點：使用者體驗、功能豐富、資源管理、效能。  
+
+- **RTOS (Real-Time OS，即時作業系統)**  
+  範例：VxWorks、QNX、FreeRTOS、INTEGRITY  
+  設計重點：時間確定性、快速響應、可靠性。  
+
+- **Embedded OS（嵌入式作業系統）**  
+  範例：iOS、Android  
+  針對嵌入式裝置設計（手機、平板），但不一定保證即時性。  
+
+- **Real-Time OS（即時作業系統）**  
+  範例：VxWorks、QNX、FreeRTOS  
+  強調任務在特定時間內必須完成。  
+
+- **Embedded Real-Time OS（嵌入式即時作業系統）**  
+  結合嵌入式與即時性，例如 FreeRTOS、QNX（能在嵌入式平台運作，並提供即時性）。  
+
+---
+
+### 9.2.3 Task Scheduling
+- **GPOS**  
+  - 排程追求**高吞吐量 (Throughput)**。  
+  - 系統可能延遲高優先權任務，先處理多個低優先權任務。  
+  - **吞吐量**：單位時間內完成的任務數量總和。  
+  - 採用 **公平策略 (Fairness Policy)**，讓所有任務都有機會執行，避免「餓死 (Starvation)」。  
+  - 例子：  
+    - Linux/Windows 常用公平排程或時間片輪轉。  
+    - 桌機同時跑 Chrome、Word、Spotify → 系統會平衡資源，而不是專注在某一程式。  
+    - 玩遊戲時，若系統同時在背景更新，遊戲反應可能延遲。  
+
+- **RTOS**  
+  - 任務排程永遠依照**優先權 (priority)**。  
+  - **高優先權任務**只有在遇到更高優先權任務時才會被中斷。  
+  - 大多數 RTOS 使用 **Preemptive Scheduling（搶佔式排程）**：高優先權任務可隨時中斷低優先權任務。  
+
+---
+
+### 9.2.4 Latency（延遲）
+- **Latency**：從事件發生到系統回應的時間差。  
+- **Task Switching Latency**：事件觸發 → 任務實際開始在 CPU 上執行的時間差。  
+
+例子：  
+- **t1**：事件發生（例：車禍偵測）。  
+- **t2**：對應任務開始執行（例：氣囊展開）。  
+- **Task Switching Latency = t2 – t1**。  
+
+特徵：  
+- 越短、越穩定 → 系統越能滿足即時性。  
+- **GPOS** → 延遲不可預測，隨負載增加而變動。  
+- **RTOS** → 延遲有上限 (bounded)，即使系統忙碌，也能保證在時間內切換。  
+
+---
+
+### 9.2.5 Priority Inversion 與 Preemption
+- **Priority Inversion（優先權反轉）**  
+  - 高優先權任務被低優先權任務阻塞，導致系統延誤。  
+  - **GPOS** → 不重要，系統偏重公平性與 throughput。  
+  - **RTOS** → 大問題，會破壞即時性。  
+  - **解法**：Priority Inheritance（低優先權任務暫時繼承高優先權，避免阻塞）。  
+
+- **Preemption（搶佔）**  
+  - 定義：強制將一個任務移出 CPU，讓另一個任務執行，即使前者未完成。  
+  - **RTOS**  
+    - 任務依照優先權執行。  
+    - 高優先權任務就緒時，可在有限且可預測的時間內搶下 CPU。  
+    - 低優先權任務會被強制讓出 CPU。  
+    - RTOS 的 Kernel 幾乎所有操作都**可搶佔**，確保高優先權任務即時執行。  
+  - **GPOS**  
+    - 當 Kernel 處理系統呼叫（如檔案 I/O、排程）時，通常不可被中斷。  
+    - 可能導致高優先權任務被延誤。  
+
+---
+
+## 9.3 多工 (Multi-Tasking)
+
+### 9.3.1 基本觀念
+- **Multi-Tasking**：在單一系統中同時處理多個任務的能力。  
+- 實際上 CPU 在某一瞬間只能執行一個任務，多工是靠 **快速切換 (Context Switching)** 來實現的，讓使用者產生「同時執行」的錯覺。  
+
+---
+
+### 9.3.2 多工運作方式
+- 多工透過 **時間分片 (Time Slicing)** 讓 CPU 輪流分配時間給不同任務。  
+- 一個應用程式 (Application) 可以分成多個子任務 (Tasks)。  
+- CPU 在 t1、t2、t3… 不斷切換不同任務。  
+- 使用者角度 → Task1、Task2、Task3 像是同時在執行。  
+- 實際情況 → CPU 交錯分配時間，造成「同時」的假象。  
+
+**單核心 vs 多核心差異**  
+- **單核心處理器**：任一時刻只能執行一個任務，多工靠快速切換。  
+- **雙核心 / 四核心處理器**：可在同一時間真正執行 2 個或 4 個任務。  
+- 核心數越多 → **並行 (Parallelism)** 程度越高。  
+
+---
+
+### 9.3.3 Scheduler（排程器）
+- **Scheduler**：負責決定「什麼任務該執行、何時執行」。  
+- 任務不會自己跑，必須由 Scheduler 按照 **排程政策 (Scheduling Policy)** 來調度。  
+
+**常見的 Scheduling Policy**  
+- **Round Robin（時間片輪轉）**  
+- **Priority Based（優先權導向）**  
+
+---
+
+## 9.4 FreeRTOS 介紹與檔案結構
+
+### 9.4.1 FreeRTOS 簡介
+- FreeRTOS 是一個 **開源 (Open Source)**、**即時作業系統 (RTOS)**。  
+- 特點：小巧、可移植、易於使用，專門設計給嵌入式系統。  
+
+#### 支援的處理器架構 (Supported Architectures)
+- **ARM**：ARM7、ARM9、Cortex-M0/M3/M4/M7、Cortex-A  
+- **Atmel**：AVR、SAM 系列 (SAM3、SAM4、SAM7、SAM9)  
+- **Intel**：x86、8052  
+- **STMicroelectronics**：STM32、STR7  
+- **Texas Instruments (TI)**：MSP430、Hercules、RM42、Stellaris  
+- **Espressif**：ESP8266、ESP32  
+- **NXP**：LPC1000、LPC2000、LPC4000  
+- **Microchip PIC**：PIC18、PIC24、dsPIC、PIC32  
+- 其他：Renesas (RX, H8S)、Fujitsu、Freescale、Xilinx (MicroBlaze, Zynq) 
+
+---
+
+### 9.4.2 檔案結構與層級關係
+- **核心入口檔案**：`FreeRTOS.h`  
+  - 包含 `projdefs.h`、`FreeRTOSConfig.h`、`portable.h`、`stddef.h`  
+  - `portable.h` 會再 include `portmacro.h`、`mpu_wrappers.h`  
+- **核心功能檔**：`tasks.c`、`queue.c`、`timers.c`、`heap_x.c` 都會 include `FreeRTOS.h`  
+- **移植相關檔案**：  
+  - 每個架構 (ARM Cortex-M0/M3、AVR、MSP430 ...) 都有自己的 **port.c**  
+  - **port.c 功能**：  
+    - Context Switch（任務切換，儲存/恢復暫存器）  
+    - SysTick Timer 設定（產生系統 tick）  
+    - 中斷優先權配置  
+
+---
+
+### 9.4.3 FreeRTOS 資料夾架構
+- **安裝後主要資料夾**：
+  1. **Demo**：各種 IDE/MCU 的範例專案，方便移植  
+  2. **Source**：核心程式碼（最重要）  
+  3. **License**：授權資訊  
+
+- **Source 資料夾內容**：
+  - **核心檔案**：RTOS kernel code  
+  - **include**：RTOS 核心 header files  
+  - **Portable**：架構相關程式碼（CPU / Compiler）  
+  - **Compiler x/y**：不同編譯器對應的移植  
+  - **MemMang**：不同的 heap 管理策略 (heap_1.c ~ heap_5.c)  
+
+- **分層架構**：
+  - **核心層**（portable 無關）：通用 RTOS 功能  
+  - **移植層**（portable）：處理硬體/編譯器差異  
+
+- **使用者最常修改的檔案**：`FreeRTOSConfig.h`  
+  - 設定 Task 數量、Stack 大小、Tick 頻率、API 啟用/關閉等  
+
+---
+
+### 9.4.4 FreeRTOS Kernel 功能
+
+FreeRTOS Kernel 提供的功能涵蓋 **任務管理、時間管理、通訊同步、除錯與安全機制**，這些都是在嵌入式開發中常用的核心特性。  
+
+#### 任務管理
+- **Pre-emptive 或 Co-operative Operation**  
+  支援搶佔式（Pre-emptive）或合作式（Co-operative）多工模式。  
+- **Flexible Task Priority Assignment**  
+  任務優先權可靈活設定，支援不同等級的即時需求。  
+
+#### 時間管理
+- **Software Timers**  
+  提供軟體計時器，讓任務能依時間事件觸發。  
+- **Tick Hook Functions**  
+  系統時脈中斷 (Tick interrupt) 觸發時的回呼函式，可用於週期性檢查或統計。  
+- **Idle Hook Functions**  
+  CPU 閒置時的回呼函式，可用於省電或背景任務。  
+
+#### 通訊與同步
+- **Queues**  
+  提供佇列機制，用於任務間或任務與中斷之間的通訊。  
+- **Binary Semaphores**  
+  二元信號量，常用於事件通知或簡單的資源同步。  
+- **Counting Semaphores**  
+  計數型信號量，用於管理多個相同資源的存取。  
+- **Recursive Semaphores**  
+  支援同一任務多次鎖定同一資源（遞迴信號量）。  
+- **Mutexes (Mutual Exclusion)**  
+  提供互斥鎖，避免資源競爭問題。  
+
+#### 安全與除錯
+- **Stack Overflow Checking**  
+  支援堆疊溢出檢查，提高系統穩定性。  
+- **Trace Hook Macros**  
+  提供除錯與追蹤的鉤子 (hook)，方便開發者分析任務行為。  
+
+---
+
+### 9.4.5 Task 狀態 (Task States)
+
+在 FreeRTOS 中，每個 Task（任務）在不同時間點可能會處於以下狀態：
+
+#### Ready
+- **定義**：Task 已經準備好執行，但正在等待 CPU 排程器分配執行時間。  
+- **轉換方式**：  
+  - 當 Scheduler 選中它時 → 轉換到 **Running**。  
+  - 當被 `vTaskSuspend()` 呼叫 → 轉換到 **Suspended**。  
+
+#### Running
+- **定義**：Task 正在 CPU 上執行。  
+- **轉換方式**：  
+  - 被搶佔 (Preemption) 或時間片用完 → 回到 **Ready**。  
+  - 呼叫阻塞 API（例如 `vTaskDelay()`、等待 Queue/Semaphore） → 進入 **Blocked**。  
+  - 呼叫 `vTaskSuspend()` → 進入 **Suspended**。  
+
+#### Blocked
+- **定義**：Task 正在等待某事件或資源，例如：  
+  - 等待 Queue/Semaphore  
+  - 等待延遲時間結束  
+- **轉換方式**：  
+  - 當事件發生或資源可用 → 回到 **Ready**。  
+
+#### Suspended
+- **定義**：Task 被明確暫停（`vTaskSuspend()`），完全不會被 Scheduler 考慮。  
+- **轉換方式**：  
+  - 當 `vTaskResume()` 被呼叫 → 回到 **Ready**。  
+
+---
+
+### 9.4.6 Idle Task 與 Hook Functions
+
+#### Idle Task 特性
+- **Idle Task 自動建立**：當 RTOS 的 Scheduler 啟動時，自動建立 Idle Task，確保隨時至少有一個任務可執行。  
+- **最低優先權**：Idle Task 永遠是系統中最低優先權的任務。  
+- **不搶 CPU**：若有更高優先權的任務在 Ready 狀態，Idle Task 會讓出 CPU。  
+
+#### Idle Task 的用途
+1. **釋放記憶體**：回收被刪除任務所佔用的記憶體。  
+2. **CPU 空閒時執行**：當沒有其他任務可跑時，Idle Task 會執行。  
+3. **低功耗模式**：可在 Idle Task 加入 Hook Function，把 MCU 切換到低功耗模式。  
+
+#### Idle Task Hook Function
+- **定義**：Idle Task Hook 是一個回呼函式，允許開發者在 Idle Task 執行時插入自訂程式。  
+- **啟用方式**：在 `FreeRTOSConfig.h` 中設定：  
+  ```c
+  #define configUSE_IDLE_HOOK 1
+  ```
+- **實作方式**：  
+  ```c
+  void vApplicationIdleHook(void) {
+      // 例如：將 MCU 切換到低功耗模式
+  }
+  ```
+- **注意事項**：Idle Hook Function 不能呼叫可能阻塞 (block) 的 API。  
+
+#### Tick Hook Function
+- **定義**：Tick Hook 是隨系統 Tick Interrupt 執行的回呼函式。  
+- **用途**：常用來實作週期性功能（例如軟體計時器）。  
+- **Tick 頻率**：由 `configTICK_RATE_HZ` 設定，例如 1000Hz = 每 1ms 一次 Tick。  
+- **啟用方式**：在 `FreeRTOSConfig.h` 中設定：  
+  ```c
+  #define configUSE_TICK_HOOK 1
+  ```
+- **實作方式**：  
+  ```c
+  void vApplicationTickHook(void) {
+      // 週期性工作，必須短小、不可使用大量堆疊
+  }
+  ```
+- **注意事項**：  
+  - `vApplicationTickHook()` 在中斷服務例程 (ISR) 內執行。  
+  - 需保持執行時間極短，避免影響整體即時性。  
+
+---
+
+## 9.5 FreeRTOS task.c 任務管理解析
+
+### 9.5.1 TCB 結構（tskTaskControlBlock）
+
+#### 任務建立與清單掛載流程
+- **prvInitialiseNewTask()**  
+  初始化 TCB 的主要欄位，包含任務名稱、優先權、堆疊起始位置，並建立初始堆疊框架（模擬任務第一次被切入執行的上下文）。  
+  這個函式可以看到每個 TCB 欄位為何存在，以及如何被設定。
+
+- **prvAddTaskToReadyList() / prvAddNewTaskToReadyList()**  
+  將 TCB 的 `xStateListItem` 插入對應優先權的 Ready List。  
+  Ready List 採用尾插入方式，確保同優先權任務之間能以 round-robin 方式時間分片（受 `configUSE_TIME_SLICING` 影響）。
+
+- **prvAddCurrentTaskToDelayedList()**  
+  當任務呼叫 `vTaskDelay()` 或等待資源時，會將其 `xStateListItem` 插入 Delayed List。  
+  插入時會依「喚醒 tick」排序，以便系統 Tick 來時能正確搬回 Ready。  
+  由於 Tick 計數可能溢出，FreeRTOS 使用「兩個 Delayed List」交替管理，以正確處理溢出情況。
+
+看懂這三個函式後，就能將 **TCB 欄位** 與 **任務生命週期** 對應起來。  
+其他如 **vTaskSwitchContext()**（切換當前任務）、**xTaskIncrementTick()**（處理 Tick 更新與延遲到期任務）則可再逐一檢視，補齊完整流程。
+
+#### TCB 欄位解說
+
+`typedef struct tskTaskControlBlock { ... } tskTCB` 中的主要欄位：
+
+- **volatile StackType_t *pxTopOfStack**  
+  指向任務目前的堆疊頂端，用於保存與還原任務的上下文（CPU 寄存器狀態）。  
+  在內容切換（context switch）時，排程器會把 CPU 暫存器推入 `pxTopOfStack` 指向的堆疊；恢復時則從此處彈出寄存器。
+
+- **ListItem_t xStateListItem**  
+  任務狀態清單節點，用來將任務掛入不同狀態清單（Ready / Delayed / Suspended）。  
+  任務在不同狀態間切換時，主要是透過這個欄位移動。
+
+- **ListItem_t xEventListItem**  
+  任務事件等待清單節點，用於將任務掛入 Queue、Semaphore、EventGroup 或 Notification 的等待清單。  
+  當事件就緒時，清單會依排序決定喚醒順序。常見做法是將「反相後的優先權」存入 `xItemValue`，確保高優先權任務優先出列。
+
+- **UBaseType_t uxPriority**  
+  任務目前的有效優先權（數值越大優先權越高，0 為最低）。  
+  排程器依據此欄位決定任務應插入的 Ready List，以及是否觸發搶佔。
+
+- **StackType_t *pxStack**  
+  指向任務堆疊的起始位址，用於計算與管理任務堆疊範圍。
+
+- **char pcTaskName[configMAX_TASK_NAME_LEN]**  
+  任務名稱字串，主要用於除錯與觀察（例如透過 trace 或 debug 工具）。  
+
+- **其他依設定條件存在的欄位**  
+  例如當 `configUSE_TASK_NOTIFICATIONS == 1` 時，會額外定義以下欄位：  
+  - `volatile uint32_t ulNotifiedValue[configTASK_NOTIFICATION_ARRAY_ENTRIES]`  
+  - `volatile uint8_t ucNotifyState[configTASK_NOTIFICATION_ARRAY_ENTRIES]`  
+  這些欄位用於 **Task Notification** 機制，作為比 Queue 更輕量的 IPC／喚醒方式，用於事件同步或簡單資料傳遞，可取代部分 semaphore / queue 的使用場景。
+
+#### 欄位初始化與使用位置對照
+
+**欄位在哪裡被設定**
+- **pcTaskName、uxPriority、pxStack、pxTopOfStack**  
+  在 `prvInitialiseNewTask()` 中初始化：設定任務名稱、優先權、堆疊起始位址，並建立初始堆疊框架（模擬第一次切入時的 context）。
+
+- **xStateListItem**  
+  在 `prvAddNewTaskToReadyList()` 或 `prvAddTaskToReadyList()` 中，將 `xStateListItem` 插入對應優先權的 Ready List。
+
+- **xEventListItem**  
+  建立任務時會設定其 owner（指向對應的 TCB）。實際插入事件等待清單發生於 Queue / Semaphore / EventGroup 等等待操作（對應程式碼在 `queue.c` 等模組）。
+
+**欄位與清單的使用**
+- **Ready 清單**  
+  由 `pxReadyTasksLists[]` 管理。  
+  - 插入：`prvAddTaskToReadyList()`，採尾插入以實現同優先權任務的 round-robin 輪轉（受 `configUSE_TIME_SLICING` 影響）。  
+  - 選任務：`taskSELECT_HIGHEST_PRIORITY_TASK()` 會選擇 Ready 清單中最高優先權的任務。
+
+- **Delayed 清單**  
+  若系統有多個任務，**通常建議適度用 delay 或阻塞等待**，否則任務會一直佔用 CPU，其他任務可能得不到執行機會。
+  任務延遲或等待資源時，`prvAddCurrentTaskToDelayedList()` 會將 `xStateListItem` 依「喚醒 tick」排序插入 Delayed List。  
+  在系統 Tick 更新時，`xTaskIncrementTick()` 檢查到期任務，並將其移回 Ready List。  
+  由於 Tick 可能溢出，系統維護兩個 Delayed List 以正確處理溢出情況。
+
+- **目前執行任務**  
+  由 `pxCurrentTCB` 指向當前執行中的任務。  
+  在 `vTaskSwitchContext()` 中透過排程演算法更新此指標，完成任務切換。
+
+- **通知欄位**  
+  `ulNotifiedValue[]` 與 `ucNotifyState[]` 由 Task Notification API 使用。  
+  這些欄位會在 `tasks.c` 與 `queue.c` 中被讀寫，用於事件同步與資料傳遞。
+
+#### TCB 與任務生命週期流程圖
+
+「小地圖」把 TCB 放進生命週期（只看主流程，不追枝節）
+
+**建立 → Ready**
+- `xTaskCreate()`  
+  → `prvInitialiseNewTask()`  
+    - 設定 `pcTaskName / uxPriority / pxStack / pxTopOfStack`  
+    - 建立初始堆疊框架（模擬任務第一次執行的 context）  
+  → `prvAddNewTaskToReadyList()`  
+    - 將 `TCB.xStateListItem` 以尾插入方式放入 `pxReadyTasksLists[uxPriority]`  
+    - 同優先權清單採尾插，以利 round-robin  
+
+**執行 → 休眠（延遲或等資源）→ 回到 Ready**
+- 任務執行中呼叫 `vTaskDelay()` / `vTaskDelayUntil()` 或等待資源失敗  
+  → `prvAddCurrentTaskToDelayedList()`  
+    - 將 `xStateListItem` 依「喚醒 tick」排序插入 Delayed List  
+    - 使用 `list item value = 喚醒 tick` 做排序  
+- `xTaskIncrementTick()`  
+  - 每個 Tick 檢查到期任務，將到期項目從 Delayed List 移回 Ready List  
+  - 系統維護兩個 Delayed List（當前清單與溢出清單），以正確處理 Tick 溢出  
+
+**換人（排程切換）**
+- `vTaskSwitchContext()`  
+  → `taskSELECT_HIGHEST_PRIORITY_TASK()`  
+    - 依 `uxTopReadyPriority` 取出最高優先權的 Ready 清單  
+  → `listGET_OWNER_OF_NEXT_ENTRY()`  
+    - 取得下一個 TCB  
+    - 同優先權透過「走訪 + 尾插」達成 round-robin（受 `configUSE_TIME_SLICING` 影響）  
+  → 更新 `pxCurrentTCB` 指向被選中的任務  
+
+**補充說明**
+- **Ready**：`pxReadyTasksLists[]`（每個優先權一條 list），插入用 `vListInsertEnd()`（尾插）。  
+- **Delayed**：以喚醒 tick 排序，插入用 `vListInsert()`；兩個 Delayed List 處理 tick 溢出。  
+- **等待事件**：任務等待 Queue / Semaphore / EventGroup 時，使用 `xEventListItem` 掛入事件等待清單；事件就緒後由對應 API 將任務移回 Ready。  
+- **讓出 CPU**：顯式 yield（`taskYIELD` / `portYIELD_WITHIN_API`）會把同優先權的目前任務移至該 Ready 清單末端，以利時間片輪轉。  
+
+---
+
+### 9.5.2 就緒/延遲清單 (Ready/Delayed Lists)
+
+說明 **FreeRTOS 如何透過「清單 (list)」管理不同狀態的任務**，並讓 TCB 的 `xStateListItem` 在清單之間移動，完成 **就緒、延遲、喚醒** 等流程。
+
+#### 找到清單的定義
+
+在 `tasks.c` 裡有幾個全域清單變數：
+
+- **`pxReadyTasksLists[]`**  
+  儲存每個優先權層級的 Ready List。陣列大小 = `configMAX_PRIORITIES`。  
+
+- **`xDelayedTaskList1 / xDelayedTaskList2`**  
+  兩個延遲任務清單，用來處理「延遲到期」與「tick 溢出」的情況。  
+
+- **`pxDelayedTaskList / pxOverflowDelayedTaskList`**  
+  指標，分別指向「目前使用的延遲清單」與「溢出清單」。  
+  Tick 遞增時，如果發生溢出，兩個清單會交換角色。  
+
+- **`xPendingReadyList`**  
+  暫存「即將轉回 Ready，但當前還不能切換」的任務清單（例如中斷中解除阻塞的任務，會先放這裡，等退出中斷後再搬回 Ready List）。
+
+#### Ready List 怎麼用
+- 任務要變成 Ready 狀態時，呼叫 **`prvAddTaskToReadyList()`**：  
+  1. 依據 `uxPriority` 找到對應的 Ready List（`pxReadyTasksLists[prio]`）。  
+  2. 用 **`listINSERT_END()`** 把該任務的 `xStateListItem` 尾插入清單。  
+  3. 這樣同優先權任務就能形成「先進先出」的隊列。  
+
+- 執行時，排程器用 **`listGET_OWNER_OF_NEXT_ENTRY()`** 走訪 Ready List，實現 **round-robin（時間片輪轉）**。
+
+---
+
+### 9.5.3 目前任務指標（pxCurrentTCB）
+
+- **`pxCurrentTCB`**  
+  在單核心 FreeRTOS 系統中，這是一個 **指標**，指向當前正在執行的任務的 TCB。  
+  換句話說，排程器決定誰要執行時，會把 `pxCurrentTCB` 指向那個任務的 TCB。  
+
+- **用途**  
+  - **內容切換（context switch）**：  
+    在切換任務時，系統會先把目前任務的上下文（CPU 暫存器等）存回 `pxCurrentTCB->pxTopOfStack`，  
+    再把新的 `pxCurrentTCB` 所指的堆疊內容載回 CPU，完成切換。  
+  - **API 呼叫時找到自己**：  
+    許多 FreeRTOS API（例如 `xTaskGetCurrentTaskHandle()`）其實就是回傳 `pxCurrentTCB`，讓任務知道「我是誰」。  
+
+- **限制**  
+  在多核 SMP 版本的 FreeRTOS 裡，每個核心都會有自己的 `pxCurrentTCB`（通常是一個陣列），因為每個核心同時可能在執行不同的任務。  
+  在單核版本中，只有一個 `pxCurrentTCB`。
+
+---
+
+### 9.5.4 加入 Ready（prvAddTaskToReadyList）
+
+- **`prvAddTaskToReadyList()`**  
+  這個函式（實際上是巨集）會把任務的 `xStateListItem` 插入到對應優先權的 **Ready List**。  
+
+- **核心動作：`listINSERT_END()`**  
+  採用「尾插入」，也就是把任務放到該優先權 Ready List 的最後。  
+  這麼做的效果是：  
+  - 多個同優先權任務時，能形成 FIFO 隊列。  
+  - 配合 `listGET_OWNER_OF_NEXT_ENTRY()`，實現 **round-robin 輪轉**。  
+
+- **附帶處理**  
+  在插入之前，FreeRTOS 會：  
+  1. 透過 `taskRECORD_READY_PRIORITY()` 更新「最高優先權 bitmap」，確保排程器能快速找到 Ready 任務。  
+  2. 呼叫 trace hook（若啟用），用於除錯或追蹤分析。 
+
+---
+
+### 9.5.5 選最高優先權任務（taskSELECT_HIGHEST_PRIORITY_TASK）
+
+- **`taskSELECT_HIGHEST_PRIORITY_TASK()`**  
+  這個巨集/函式會做兩件事：  
+  1. 利用 **`uxTopReadyPriority`** 找出目前 Ready 任務中最高優先權的清單。  
+     - `uxTopReadyPriority` 是由 Ready 任務的優先權 bitmap 快速計算出來的。  
+  2. 從該優先權的 Ready List 取出下一個任務（owner）。  
+
+- **如何取任務？**  
+  使用 `listGET_OWNER_OF_NEXT_ENTRY()` 從清單裡依序取出下一個 TCB，並把 `pxCurrentTCB` 指向它。  
+  - 如果清單裡只有一個任務，就一直回到自己。  
+  - 如果有多個任務，因為 Ready List 採「尾插 + 走訪」策略，就會形成 **round-robin**（時間片輪轉）。  
+
+- **Round-robin 的理解**  
+  - 多個同優先權任務時，系統不會只讓其中一個一直執行。  
+  - 每個 Tick 中斷（若 `configUSE_TIME_SLICING = 1`），排程器會讓目前任務移到尾端，換下一個。  
+  - 這樣能確保公平性，每個同優先權任務都能輪流使用 CPU。
+
+---
+
+### 9.5.6 建立任務（xTaskCreate / xTaskCreateStatic）
+
+- **API 層**  
+  - `xTaskCreate()`：動態配置堆疊與 TCB，然後呼叫內部初始化流程。  
+  - `xTaskCreateStatic()`：使用使用者提供的靜態記憶體（堆疊與 TCB），不依賴動態配置。  
+
+- **內部流程**
+  1. **`prvInitialiseNewTask()`**  
+     - 初始化 TCB 欄位（任務名稱、優先權、堆疊起始位址等）。  
+     - 建立「初始堆疊框架」（模擬任務第一次執行時 CPU 暫存器的狀態）。  
+  2. **`prvAddNewTaskToReadyList()`**  
+     - 把這個新建立的任務插入對應優先權的 Ready List（尾插）。  
+     - 同時更新 Ready bitmap，確保排程器能找到它。  
+
+- **結果**  
+  新任務被放進 Ready 狀態，等待排程器挑選。  
+  如果它的優先權比目前任務還高，則可能立刻觸發搶佔，馬上開始執行。
+
+---
+
+### 9.5.7 延遲 / 睡眠（vTaskDelay 等阻塞 API）
+
+- **API 層**  
+  - `vTaskDelay()`：讓任務睡眠指定的 Tick 數。  
+  - `vTaskDelayUntil()`：週期性延遲，確保固定週期執行。  
+  - 其他阻塞 API（如 `xQueueReceive()`、`xSemaphoreTake()` 帶 block time）也可能讓任務進入延遲狀態。  
+
+- **內部流程**
+  1. 呼叫 **`prvAddCurrentTaskToDelayedList()`**  
+     - 計算「喚醒 tick」= `xTickCount + 延遲時間`。  
+     - 將任務的 `xStateListItem` 插入 Delayed List，並以喚醒 tick 作為排序 key。  
+  2. 把當前任務從 Ready 狀態移除，排程器改去執行其他 Ready 任務。  
+
+- **xTaskIncrementTick() 的角色**  
+  - 每個 Tick 中斷時，系統檢查 Delayed List。  
+  - 如果有任務的喚醒 tick 到期，就將它從 Delayed List 移回 Ready List。  
+  - 因為 tick 計數可能溢出，系統維護兩個 Delayed List，避免 tick 值比較出錯。  
+
+- **結果**  
+  任務會進入 **Blocked/Delayed 狀態**，直到：  
+  - 延遲時間到期 → 自動被移回 Ready List。  
+  - 或者等待的資源在超時前可用 → 提前移回 Ready List。
+
+---
+
+### 9.5.8 刪除任務（vTaskDelete + Idle 任務回收）
+
+- **API 層**  
+  - `vTaskDelete( TaskHandle_t xTask )`：刪除指定任務。  
+  - `vTaskDelete(NULL)`：刪除自己（自殺）。  
+
+- **內部流程**
+  1. **將任務移除執行路徑**  
+     - 任務被刪除後，會先從所有狀態清單（Ready/Delayed/事件清單）中移除。  
+     - 然後放入 **`xTasksWaitingTermination`** 清單，等待後續回收。  
+  2. **為什麼不馬上 free？**  
+     - 如果任務自己呼叫 `vTaskDelete(NULL)`，此時它仍在使用自己的堆疊執行。  
+     - 若立即釋放 TCB 與堆疊，會導致系統崩潰。  
+     - 因此 FreeRTOS 採用「延後釋放」設計。  
+  3. **Idle 任務回收**  
+     - Idle 任務會週期性呼叫 **`prvCheckTasksWaitingTermination()`**。  
+     - 它會檢查 `xTasksWaitingTermination` 清單，釋放任務的堆疊與 TCB（若為動態配置）。  
+
+- **結果**  
+  被刪除的任務不會立刻釋放，而是掛到 `xTasksWaitingTermination`。  
+  Idle 任務在安全的時機回收資源，避免任務「自殺」時直接 free 記憶體導致崩潰。  
+
+---
+
+### 9.5.9 任務生命週期與核心觀念
+
+#### 任務在 FreeRTOS 的典型生命週期
+
+1. **建立**  
+   - 由 API `xTaskCreate()` 建立任務。  
+   - 內部呼叫 `prvInitialiseNewTask()` 初始化 TCB 與堆疊框架。  
+   - 接著 `prvAddNewTaskToReadyList()` 把任務掛入對應優先權的 Ready List（`pxReadyTasksLists[prio]`）。  
+   → 任務此時進入 **Ready 狀態**。
+
+2. **選人（排程）**  
+   - 在 `vTaskSwitchContext()` 中，排程器呼叫 `taskSELECT_HIGHEST_PRIORITY_TASK()`。  
+   - 依 `uxTopReadyPriority` 找出最高優先權 Ready List，選擇下一個任務。  
+   - 更新 `pxCurrentTCB = next`，並完成 context switch。  
+   → 任務此時進入 **Running 狀態**。
+
+3. **睡覺（延遲/阻塞）**  
+   - 任務主動呼叫 `vTaskDelay()` / `vTaskDelayUntil()`，或等待 Queue/Semaphore 等資源。  
+   - 內部透過 `prvAddCurrentTaskToDelayedList()`，把任務插入 Delayed List（依喚醒 tick 排序）。  
+   - 同時從 Ready List 移除，讓出 CPU。  
+   → 任務此時進入 **Blocked/Delayed 狀態**。
+
+4. **到點（喚醒）**  
+   - 每次 Tick 中斷，`xTaskIncrementTick()` 會檢查 Delayed List。  
+   - 如果任務的喚醒 tick 到期，將其從 Delayed List 移回 Ready List。  
+   - 或者當事件發生（Queue/Semaphore 可用），任務也會被移回 Ready List。  
+   - 如果喚醒的任務優先權比當前任務高，會觸發搶佔切換。  
+   → 任務此時回到 **Ready 狀態**，等待再次執行。
+
+---
+
+#### Q1. 什麼是 TCB？請解釋 TCB。
+
+- **定義**  
+  TCB（Task Control Block，任務控制塊）是 FreeRTOS 用來管理任務的核心資料結構。  
+  每個任務都對應一個 TCB，排程器透過它來追蹤任務狀態。
+
+- **主要內容**  
+  - `pxTopOfStack`：任務堆疊頂指標，用於保存/恢復上下文。  
+  - `xStateListItem`：任務狀態節點，決定任務目前掛在哪個清單（Ready / Delayed / Suspended）。  
+  - `xEventListItem`：事件等待節點，當任務在 Queue/Semaphore/EventGroup 等等待時使用。  
+  - `uxPriority`：任務優先權。  
+  - `pxStack`：任務堆疊的起始位址。  
+  - `pcTaskName`：任務名稱，用於除錯。  
+  - （可選）Task Notification 欄位：`ulNotifiedValue[]`、`ucNotifyState[]`。  
+
+- **角色**  
+  - 相當於「任務的身份證 + 狀態紀錄」。  
+  - 排程器依靠 TCB 決定：這個任務目前在做什麼、該不該換成它執行。  
+
+- **一句話總結**  
+  **TCB 是任務在 FreeRTOS 裡的核心資料結構，排程器透過它管理任務的狀態、堆疊與優先權。**
+
+---
+
+#### Q2. 為什麼任務裡的 `while(1)` 輪詢要改成 `vTaskDelay()`？
+- 如果任務單純 `while(1)` 不延遲，它會 **永遠處於 Ready 狀態**，排程器每次都會選到它。  
+- 結果就是這個任務獨佔 CPU，其他任務可能完全沒機會執行。  
+- 用 `vTaskDelay()`（或阻塞等待 Queue / Semaphore）可以讓任務進入 **Blocked/Delayed 狀態**，把 CPU 還給其他任務。  
+- 核心原因：**FreeRTOS 採用 Ready/Delayed 清單來管理任務，必須靠阻塞或延遲來釋放 CPU 時間片**。  
+
+---
+
+#### Q3. 為什麼 ISR（中斷服務程序）要用「通知 / Queue」來喚醒任務？
+- 中斷是系統裡最高即時性的事件，但 **ISR 不能直接切換任務**，因為它不會完整做排程器需要的上下文切換流程。  
+- 正確做法：  
+  - ISR 用 **Task Notification / Queue / Semaphore** 將事件傳遞給對應的任務。  
+  - 這些 API 會把等待的任務從 **Delayed/Event 清單** 移到 **Ready 清單**。  
+  - 等 ISR 結束後，系統會呼叫 `portYIELD_FROM_ISR()`（或類似機制），由排程器決定是否立即切換到那個任務。  
+- 核心原因：**ISR 本身不能直接進行任務切換，必須透過清單操作（Ready/Delayed）讓排程器接手**。
+
+---
+
+#### Q4. 解釋任務如何建立、掛入 Ready/Delay 清單、被選出執行、再進入睡眠/喚醒。
+
+- **建立**：呼叫 `xTaskCreate()`，內部透過 `prvInitialiseNewTask()` 建立 TCB 與初始堆疊，接著 `prvAddNewTaskToReadyList()` 把任務插入對應優先權的 Ready List。  
+- **掛入 Ready**：任務的 `xStateListItem` 被尾插到 Ready List，與同優先權任務 round-robin 輪流。  
+- **被選出執行**：排程器用 `taskSELECT_HIGHEST_PRIORITY_TASK()` 找到最高優先權的 Ready 任務，更新 `pxCurrentTCB`，並做 context switch。  
+- **進入睡眠/阻塞**：呼叫 `vTaskDelay()` 或等待資源時，任務會被 `prvAddCurrentTaskToDelayedList()` 移到 Delayed List，依「喚醒 tick」排序。  
+- **喚醒**：系統 tick 透過 `xTaskIncrementTick()` 檢查到期任務，或事件觸發，把任務移回 Ready List，等待下次被排程。  
+
+---
+
+#### Q5. 為什麼同優先權任務能輪流執行（round-robin）？
+- Ready List 採用 **尾插入（listINSERT_END）**，同優先權的任務會被 FIFO 排列。  
+- 排程器使用 **`listGET_OWNER_OF_NEXT_ENTRY()`** 走訪 Ready List。  
+- 每個 Tick 到來（若 `configUSE_TIME_SLICING = 1`），當前任務會被移到尾端，下一個同優先權任務被選中。  
+- → 確保同優先權任務能公平輪流使用 CPU。
+
+---
+
+#### Q6. 什麼情況會觸發任務切換（yield/context switch）？
+- **新任務或高優先權任務 Ready**：  
+  建立新任務或事件喚醒任務時，若它的優先權比當前任務高，排程器會馬上切換。  
+- **時間片到期**：  
+  當前任務與其他 Ready 任務同優先權，Tick 到來時會進行 round-robin 輪轉。  
+- **顯式呼叫 yield**：  
+  任務呼叫 `taskYIELD()`，或某些 API（如 `xQueueSend()` 失敗）內部觸發 yield，讓排程器重新挑選任務。  
+- **ISR 觸發切換**：  
+  ISR 透過 `portYIELD_FROM_ISR()` 告知排程器在中斷結束後立即切換任務。 
+
+---
+
+## 9.6 FreeRTOS list.c 鏈結清單解析
+
+### 9.6.1 資料結構
+
+#### 1. **List_t**（清單控制結構）
+```c
+typedef struct xLIST {
+    UBaseType_t uxNumberOfItems;     // 清單中的節點數量
+    ListItem_t *pxIndex;             // 走訪清單時的游標，記錄上一次取出的節點
+    MiniListItem_t xListEnd;         // End Marker，固定存在的「假節點」
+} List_t;
+```
+- **uxNumberOfItems**：清單長度。  
+- **pxIndex**：走訪時記錄「上一次取到的節點」，支援 round-robin。  
+- **xListEnd**：永遠存在的 **MiniListItem_t**，作為「清單頭/尾的標記」。  
+  - 形成 **環狀結構**：`head → ... → tail → xListEnd → head`。  
+  - 保證清單永遠有邊界，不需額外處理 NULL。  
+
+---
+
+#### 2. **ListItem_t**（清單節點）
+```c
+struct xLIST_ITEM {
+    TickType_t xItemValue;         // 排序用的值（例：任務喚醒 tick，或優先權）
+    struct xLIST_ITEM *pxNext;     // 下一個節點
+    struct xLIST_ITEM *pxPrevious; // 前一個節點
+    void *pvOwner;                 // 擁有此節點的物件 (通常是 TCB)
+    struct xLIST *pxContainer;     // 此節點目前所在的 List_t
+};
+
+typedef struct xLIST_ITEM ListItem_t;
+```
+- **xItemValue**：排序依據，數值越小越靠前（例：任務延遲的到期時間）。  
+- **pxNext / pxPrevious**：雙向鏈結，支援前後走訪。  
+- **pvOwner**：指向「此節點屬於誰」（通常是任務的 TCB）。  
+- **pxContainer**：指向「此節點目前在哪個清單」。 
+
+---
+
+#### 3. **MiniListItem_t**（清單頭 End Marker）
+```c
+struct xMINI_LIST_ITEM {
+    TickType_t xItemValue;         // 固定設為最大值，確保此節點永遠在清單最後
+    struct xLIST_ITEM *pxNext;
+    struct xLIST_ITEM *pxPrevious;
+};
+```
+- **特殊的 ListItem_t**：沒有 `pvOwner` 與 `pxContainer`。  
+- **用途**：  
+  - 作為 **清單頭尾的假節點**，確保清單永遠是環狀。  
+  - 其 `xItemValue` 固定為最大值，因此任何正常節點都會插在它前面。  
+  - 透過判斷是否回到此節點，就能知道清單是否走訪完畢。
+
+---
+
+### 9.6.2 清單初始化
+
+#### 1. **vListInitialise()**：初始化一個清單
+- 功能：建立一個「乾淨的清單」。  
+- 主要動作：  
+  1. 把 `uxNumberOfItems` 設為 0（清單一開始沒有節點）。  
+  2. 設定 `pxIndex` 指向 `xListEnd`（游標預設在 end marker 上）。  
+  3. 初始化 `xListEnd`（這個 MiniListItem_t）：  
+     - `xItemValue` 設為最大值（`portMAX_DELAY`）。  
+     - `pxNext` 和 `pxPrevious` 都指回自己 → 形成「自環」。  
+
+初始化後，清單的結構是：
+```
+xListEnd <-> xListEnd   （空清單）
+```
+- **vListInitialise()** = 建立一條空清單，裡面只有一個 end marker (`xListEnd`)，保證清單永遠環狀且有邊界。  
+
+---
+
+#### 2. **vListInitialiseItem()**：初始化單一節點
+- 功能：準備一個「獨立節點」（通常對應某個任務的 `xStateListItem`）。  
+- 主要動作：  
+  - 把節點的 `pxContainer` 設為 `NULL`，表示目前不屬於任何清單。  
+  - 其他欄位（如 `xItemValue`）會在插入清單時再設定。  
+
+這樣能避免一個節點「同時掛在兩個清單」，確保清單一致性。  
+
+- **vListInitialiseItem()** = 準備一個清單節點，尚未加入任何清單，等呼叫 `vListInsert()` / `vListInsertEnd()` 時才會掛上去；插入時會同時設定 `pvOwner` 指回它所屬的 TCB。  
+
+---
+
+#### FreeRTOS 中的對應關係
+- 一個 **任務 (Task)** = 一個 **TCB** (`tskTaskControlBlock`)。  
+- 每個 TCB 裡都有一個 **`xStateListItem`**（型別為 `ListItem_t`）。  
+- 因此，**節點代表的就是一個任務**。  
+- `pvOwner` 會指回 TCB 本身，讓清單節點和任務產生雙向關聯。  
+
+---
+
+### 9.6.3 插入與移除
+
+#### 0. 火車系統的隱喻
+
+##### 建造火車（`vListInitialise()`）
+`vListInitialise()` 就像是建造一列新的火車（`List_t`，例如 **Ready List** 或 **Delayed List**）。  
+
+- 一開始火車沒有任何車廂（`uxNumberOfItems = 0`）。  
+- 系統會先放上一節特殊的 **哨兵車廂**（`xListEnd`），它同時扮演火車的頭與尾，確保清單是環狀且不會出現 `NULL`。  
+- 此時巡查車廂的指標（`pxIndex`）只能指向這節哨兵車廂 `xListEnd`。 
+
+##### 車廂與工單（`ListItem_t`）
+每一節車廂（`ListItem_t`）都附有一份工單，內容包含：  
+
+- **重要性值**（`xItemValue`）：數字越小代表越重要，插入時會排在越前面。  
+  - 哨兵車廂的 `xItemValue` 永遠是最大值，確保它始終位於最後。  
+- **相鄰車廂**（`pxNext` / `pxPrevious`）：記錄車廂的前後鏈結。  
+- **車廂的擁有者**（`pvOwner`）：通常指向任務的 **TCB**，代表哪位「乘客」。  
+- **所屬火車**（`pxContainer`）：指向該車廂目前所在的火車（某個 `List_t`，例如 Ready List 或 Delayed List）。  
+
+##### 任務與車廂的關聯
+每個任務（乘客）的 **TCB** 會準備常見的兩張工單：  
+
+- `xStateListItem` → 用來放進 **Ready / Delayed / Suspended List**。  
+- `xEventListItem` → 用來放進 **Event List**（等待事件時）。  
+
+舉例：  
+- 當 `xStateListItem` 在 Ready 狀態，就會被插入 **Ready List**。  
+- 當任務呼叫 `vTaskDelay()`，這個 `xStateListItem` 會從 Ready List 移出，插入 **Delayed List**。  
+
+若要新增車廂，則需填寫一份申請單（`vListInsert()`），指定要加入的火車（`pxList`）以及對應的工單（`pxNewListItem`）。  
+
+---
+
+#### 1. `vListInsert()`（排序插入）
+- **用途**：根據 `xItemValue` 排序，把節點插到清單裡正確的位置。  
+- **常見場景**：  
+  - **Delayed List**：任務呼叫 `vTaskDelay()` 時，會把 `xStateListItem` 插入 Delayed List，排序依據就是「喚醒 tick」。  
+- **重點**：  
+  - `xItemValue` 小的節點會排在前面。  
+  - `xListEnd.xItemValue` 永遠是最大值 → 確保它在最後。  
+- **比喻**：  
+  就像把新車廂（節點）插入一列火車（清單，例如 Delayed List）。  
+  插入前需要填寫工單，內容包含：  
+  - 要插入的火車 (`pxList`)  
+  - 車廂的工單 (`pxNewListItem`)  
+
+  系統會依 **重要性值（`xItemValue`）** 自動安排車廂的位置，並更新它與相鄰車廂的關聯，以及所屬火車資訊。  
+
+###### 函式原型
+```c
+void vListInsert( List_t * const pxList,
+                  ListItem_t * const pxNewListItem )
+```
+
+- `pxList`：要插入的清單（例如某個 Delayed List）。  
+- `pxNewListItem`：要被插入的節點（`ListItem_t`，通常隸屬某個 TCB）。  
+
+---
+
+#### 2. `vListInsertEnd()`（尾插入）
+- **用途**：將節點直接插入清單的最後一個有效項目前，也就是 **永遠放在 `xListEnd` 的前面**。  
+  這種方式不考慮 `xItemValue`，純粹按照「先來後到」的順序排列。  
+- **常見場景**：  
+  - **Ready List**：在同一個優先權層級下，所有任務都會放在相同的 Ready List。  
+    當一個任務用完時間片（time slice）或主動讓出 CPU 時，它會透過 `vListInsertEnd()` 被放到該 Ready List 的尾端。  
+    這樣其他同優先權的任務就能輪到 CPU，實現 **Round-robin（輪詢排程）**。  
+- **重點**：  
+  - 通常由呼叫端在插入前就把 `pvOwner` 設為對應的 **TCB**，`vListInsertEnd()` 本身僅負責鏈結節點，不會主動修改 `pvOwner`。  
+  - 由於是尾插法，不會因 `xItemValue` 改變順序，因此適合用在 **公平輪流執行** 的場景。    
+
+##### 函式原型
+```c
+void vListInsertEnd( List_t * const pxList,
+                     ListItem_t * const pxNewListItem )
+```
+
+- `pxList`：要插入的清單（通常是某個 Ready List）。  
+- `pxNewListItem`：要插入的節點（`ListItem_t`，對應某個任務的 TCB）。   
+
+---
+
+#### 3. `uxListRemove()`（移除節點）
+- **用途**：  
+  將某個節點（`ListItem_t`）從它所在的清單（`List_t`）移除，並更新清單狀態。  
+- **常見場景**：  
+  - 任務從 **Ready → Blocked**（例如呼叫 `vTaskDelay()` 進入延遲）。  
+  - 任務從 **Blocked → Ready**（例如事件觸發、延遲時間到期）。  
+  這些情況都需要先從原清單移除，再掛到新清單。  
+- **運作方式**：  
+  1. 斷開當前節點與前後鏈結（`pxNext` / `pxPrevious`），保持清單完整。  
+  2. 將該節點的 `pxContainer` 清為 `NULL`，避免同一節點同時存在於多個清單。  
+  3. 清單的節點計數 `uxNumberOfItems` 減 1，維護清單長度正確。  
+- **重點**：  
+  - 移除過程會自動處理指標調整，確保清單維持雙向鏈結的正確性。  
+  - 若 `pxIndex` 正指向被移除的節點，實作會把 `pxIndex` 退回到前一個節點（`pxPrevious`），以維持走訪一致性。 
+
+##### 函式原型
+```c
+UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
+```
+
+- `pxItemToRemove`：要被移除的節點。  
+- **回傳值**：移除後，清單剩餘的節點數量（`uxNumberOfItems`）。   
+
+---
+
+#### 4. 狀態轉換流程總結
+- **Ready → Blocked**：`uxListRemove()` + `vListInsert()`  
+- **Blocked → Ready**：`uxListRemove()` + `vListInsertEnd()`   
+
+---
+
+### 9.6.4 清單走訪
+
+在 FreeRTOS 中，清單不只用來存放節點，還需要 **公平地巡訪**（走訪），特別是在 **同優先權任務的時間片輪轉（Round-robin）** 中。
+
+#### `listGET_OWNER_OF_NEXT_ENTRY()`
+- **用途**：  
+  從目前清單索引（`pxIndex`）往下取下一個節點的 `pvOwner`（通常是任務的 TCB）。  
+  - 若走到哨兵節點（`xListEnd`），會自動回到清單的第一個有效節點，確保清單是「環狀」的。  
+  - `listGET_OWNER_OF_NEXT_ENTRY()` 的存在，就是為了讓 FreeRTOS 的排程器能 **公平地在同優先權任務之間做 Round-robin**，避免某一個任務被永遠選中。  
+
+- **常見場景**：  
+  - **Ready List**：在同優先權清單內，透過 `listGET_OWNER_OF_NEXT_ENTRY()`，讓任務能依序輪流取得 CPU，實現 **Round-robin 排程**。  
+
+- **運作方式（火車隱喻）**：  
+  - 假設 Ready List（優先權 2）裡有三個任務：`T1, T2, T3`。  
+  - 想像巡查員（`pxIndex`）在火車上巡視車廂，初始情況：`pxIndex` 指向哨兵（車頭/車尾）。  
+  - 每呼叫一次 `listGET_OWNER_OF_NEXT_ENTRY()`，巡查員就往下一節車廂移動，並報告車廂的乘客（`pvOwner`）。  
+  - 若巡查到哨兵車廂（代表車尾），巡查員會自動繞回到車頭，開始新一輪的巡視，確保 `T1 → T2 → T3 → T1 …` 的公平輪流。
+
+#### 巨集定義
+```c
+#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )        \
+    do {                                                    \
+        List_t * const pxConstList = ( pxList );            \
+        /* 將索引移動到下一個節點 */                         \
+        ( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext; \
+                                                             \
+        /* 若遇到哨兵節點，則跳到第一個有效節點 */            \
+        if( ( pxConstList )->pxIndex == ( ListItem_t * ) &( ( pxConstList )->xListEnd ) ) \
+        {                                                    \
+            ( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext; \
+        }                                                    \
+                                                             \
+        /* 取出當前節點的擁有者（通常是任務的 TCB） */          \
+        ( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;       \
+    } while(0)
+```
+
+**參數說明**  
+- `pxList`：目標清單（例如某個 Ready List）。  
+- `pxTCB`：輸出變數，用來接收當前節點的擁有者（通常是任務的 TCB）。  
+
+---
+
+### 9.6.5 任務管理中的應用對照
+
+在 FreeRTOS 中，不同種類的清單（List）扮演著 **任務狀態管理** 的角色。透過前面介紹的清單操作（插入、移除、走訪），系統能維持 **Ready / Blocked / Suspended** 等狀態轉換。本節對照各清單在任務管理中的實際應用。
+
+---
+
+#### 1. Ready List（就緒清單）
+- **用途**：存放所有「準備執行」的任務，依優先權分層。  
+- **操作方式**：  
+  - 使用 **尾插入**（`vListInsertEnd()`），新任務會插在尾端。  
+  - 保證同優先權下是 **FIFO**，並且搭配 `listGET_OWNER_OF_NEXT_ENTRY()` 完成 **Round-robin 輪流排程**。  
+- **火車比喻**：  
+  - 一條 Ready 火車就是一個優先權層級。  
+  - 每個任務（乘客）上車後，會排在隊伍最後。當時間片用完時，任務下車再重新排到最後。  
+  - 確保大家輪流坐到駕駛位（CPU）。
+
+---
+
+#### 2. Delayed List（延遲清單）
+- **用途**：存放呼叫 `vTaskDelay()` 或 `vTaskDelayUntil()` 的任務，直到指定 tick 到期才會被喚醒。  
+- **操作方式**：  
+  - 使用 **排序插入**（`vListInsert()`），依照「到期 tick」由小到大排列。  
+  - 系統每個 tick 都會檢查表頭的任務是否到期，若到期則移回 Ready List。  
+- **火車比喻**：  
+  - 火車上依「鬧鐘時間」排序，誰先到時間誰先下車。  
+  - 哨兵車廂的 `xItemValue` 永遠最大，保證排序不會亂。
+
+---
+
+#### 3. Event List（事件清單）
+- **用途**：存放等待事件（例如 Queue、Semaphore、Mutex）的任務。  
+- **操作方式**：  
+  - 插入時會依 **任務優先權排序**（高優先權在前）。  
+  - 當事件發生（例如 Queue 有資料），清單頭的最高優先權任務會先被喚醒。  
+- **火車比喻**：  
+  - 任務在車站排隊領獎品（事件）。  
+  - 排隊規則不是先來先到，而是 **位階高（優先權大）的乘客站在最前面**，確保他們先上車。
+
+---
+
+#### 4. xPendingReadyList（待搬移清單）
+- **用途**：存放在 **中斷服務常式（ISR）** 中被喚醒的任務。  
+- **操作方式**：  
+  - ISR 不能直接修改 Ready List（因為與排程器共用，容易出現競態）。  
+  - 因此先把任務放進 `xPendingReadyList`，等退出中斷後，再一次性移到對應的 Ready List。  
+- **火車比喻**：  
+  - ISR 就像臨時站務員，先把任務旅客集中到「臨時月台」。  
+  - 當中斷結束，系統再把這些旅客送回對應的 Ready 火車，避免在繁忙時段插隊出錯。
+
+---
+
+### 9.6.6 重點整理與常見考題
+
+#### FreeRTOS 清單模組核心觀念
+1. **清單的角色**  
+   - FreeRTOS 使用雙向鏈結串列（List_t）來管理任務狀態。  
+   - 每個任務的 TCB 內含 `xStateListItem`、`xEventListItem`，分別掛到不同清單。  
+
+2. **主要 API 功能**  
+   - `vListInitialise()`：建立清單，放上哨兵節點。  
+   - `vListInsert()`：排序插入（依 `xItemValue`，如延遲時間）。  
+   - `vListInsertEnd()`：尾插入（FIFO，用於 Ready List）。  
+   - `uxListRemove()`：從清單移除節點，並維護鏈結正確性。  
+   - `listGET_OWNER_OF_NEXT_ENTRY()`：巡訪下一節點，用於 Round-robin。  
+
+3. **清單與任務狀態對照**  
+   - **Ready List**：尾插入 + 巡訪 → FIFO + Round-robin。  
+   - **Delayed List**：排序插入 → Tick 到期順序喚醒。  
+   - **Event List**：依優先權反序排序，高優先權先被喚醒。  
+   - **xPendingReadyList**：暫存 ISR 喚醒的任務，中斷結束後再搬回 Ready List。  
+
+---
+
+#### Q1. 為什麼 Ready List 要用尾插入（`vListInsertEnd()`）？
+- 保證同優先權任務 **FIFO** 排列。  
+- 搭配 `listGET_OWNER_OF_NEXT_ENTRY()` 走訪，確保 **Round-robin 輪流**。  
+- 避免同一個任務一直霸佔 CPU。  
+
+---
+
+#### Q2. 為什麼 Delayed List 要用排序插入（`vListInsert()`）？
+- 任務呼叫 `vTaskDelay()` 後，要依「喚醒 Tick 值」排序。  
+- Tick 中斷時只需檢查清單頭，就能快速判斷是否有任務到期。  
+- **效率高，不需要全清單遍歷**。  
+
+---
+
+#### Q3. Event List 的排序依據是什麼？為什麼？
+- 排序依 **任務優先權（Priority）**，而非 Tick 值或 FIFO。  
+- 事件發生時，必須讓 **高優先權任務** 優先被喚醒，才能達到即時性。  
+- 範例：多個任務等待 Queue → Queue 有資料時，高優先權任務先獲得。  
+
+---
+
+#### Q4. 為什麼需要 xPendingReadyList？
+- ISR 中不能直接修改 Ready List（避免與排程器競態）。  
+- 所以先把任務插入 xPendingReadyList。  
+- 中斷結束後，由核心統一搬回 Ready List。  
+- 確保 **中斷與排程器互動安全**。  
+
+---
+
+#### Q5. 為什麼同優先權任務能公平輪流執行？
+- Ready List 採用 **尾插入（FIFO）**。  
+- `listGET_OWNER_OF_NEXT_ENTRY()` 每次巡訪取下一個任務。  
+- Tick 到期後，當前任務會被移到尾端，下一個任務上 CPU。  
+- → 實現 **Round-robin（時間片輪轉）**。  
+
+---
+
+#### Q6. 清單在 FreeRTOS 任務管理中的地位
+- **Ready List** → 管理「誰可以立刻跑」。  
+- **Delayed List** → 管理「誰要等多久」。  
+- **Event List** → 管理「誰在等事件」。  
+- **xPendingReadyList** → 管理「ISR 喚醒的任務」。  
+- **一句話總結**：清單是 FreeRTOS 的「鐵路系統」，所有任務都在不同的火車上輪流進出，排程器只需檢查清單，就能知道下一步該換誰執行。 
+
+---
+
+## 9.7 FreeRTOS queue.c 任務間通訊解析
+
+理解 queue.c 的重點在於：  
+- 如何建立與初始化 Queue。  
+- 如何在任務間傳遞資料。  
+- 如何處理阻塞與喚醒。  
+- 為什麼同一套機制可以涵蓋 Queue / Semaphore / Mutex。
+
+---
+
+### 9.7.0 任務間通訊與同步基本概念
+
+**Queue（佇列）、Semaphore（信號量）與 Mutex（互斥鎖）** 都是基於 Queue 機制實作出來的，不同之處在於應用場景。
+
+---
+
+#### 1. Queue（佇列）
+
+- **定義**：一種 **FIFO（先進先出）** 的資料結構，可以把 Queue 想像成一個帶規則的 **buffer（緩衝區）**。  
+
+- **用途**：  
+  - 在 FreeRTOS 中，Queue 是 **任務間通訊（message passing）** 的主要方式，可傳遞資料或指令。  
+  - 也是 Semaphore 與 Mutex 的基礎。  
+
+- **Queue 的本質**  
+  在 FreeRTOS 裡，Queue 其實就是一個 **環形緩衝區（circular buffer）**，外加兩個等待佇列：  
+  - `xTasksWaitingToSend`：當 Queue **滿了** → 想送資料的任務被掛進來。  
+  - `xTasksWaitingToReceive`：當 Queue **空了** → 想收資料的任務被掛進來。 
+
+所以 Queue 不只是單純的 FIFO buffer，還負責管理「任務的同步與阻塞」。
+
+- **基本運作**：  
+  - 任務 A（Producer）將資料放進 Queue。  
+  - 任務 B（Consumer）從 Queue 取出資料。  
+  - 如果 Queue **滿了** → Producer 會被阻塞，直到有空位。  
+  - 如果 Queue **空了** → Consumer 會被阻塞，直到有資料。
+
+##### Queue 的月台信箱隱喻
+
+Queue 就像月台上的一個 **信箱**，用來存放「信件」（資料或指令）。  
+
+- **存放規則（FIFO）**  
+  - 信件放入的順序就是被取出的順序（先放先取），確保傳遞的公平與一致。  
+  - 信箱有固定的容量（Queue length），一旦裝滿就必須等到有空位才能再放新信件。 
+
+- **乘客（任務）與信件**  
+  - 乘客（任務）在出發前會查看信箱是否有**可取用的**信件（Queue 不區分訊息的「屬主」）。  
+  - 若成功取信，就上名為 **Ready List** 的火車，等待 CPU 載走開始執行。  
+  - 若沒有且允許等待，任務就改搭**事件火車（Event List）**，先在月台上等候條件達成。  
+  - 多位乘客可能同時競爭同一封信，最終誰能優先取得，取決於**任務優先權**與**排隊順序**。 
+
+- **月台等待區（List_t）**  
+  - **信箱滿了**：想投遞信件的乘客改搭 `xTasksWaitingToSend` 這班**事件火車**等待空位。  
+  - **信箱空了**：想收信的乘客改搭 `xTasksWaitingToReceive` 這班**事件火車**等待新信件。  
+  - 這些事件火車專門載著「等待中」的乘客，直到條件被滿足才會被轉送到 Ready List。    
+  - 如果乘客等待過久（timeout），就會自動放棄，直接回到 Ready List，繼續進行其他工作。
+
+- **列車長（Scheduler）的調度**  
+  - 當信件狀態改變（投遞或收取成功）或等待逾時，列車長會把對應乘客從事件火車**換乘**到 **Ready List**。  
+  - 若被喚醒乘客的**優先權更高**，列車長會立刻讓他下車直奔 CPU，搶占目前正在執行的任務。  
+
+#### 2. Semaphore（信號量）
+
+- **定義**：Semaphore 是一種 **同步機制** 與 **資源管理機制**。  
+  - **同步（Synchronization）**：用來在不同任務或中斷之間「發訊號」，確保事件的先後順序。  
+    - 例子：任務要等 ISR 發出「完成」訊號後才能繼續。  
+  - **資源計數（Resource Counting）**：用來表示「目前還有多少資源可用」，避免多個任務同時搶用有限資源。  
+    - 例子：有 5 個連線插槽，就發 5 張票；任務用完要歸還，別人才拿得到。  
+
+- **種類**：  
+  - **Binary Semaphore（二元信號量）**：本質就是一個長度 = 1 的 Queue，裡面存放「0 或 1」，常用於事件通知。  
+    - 例如：ISR 結束後，透過 Binary Semaphore 喚醒等待的任務。  
+  - **Counting Semaphore（計數型信號量）**：就像長度 > 1 的 Queue，用來記錄可用資源數。
+    - 例如：有 5 個相同資源，最多允許 5 個任務同時取得。  
+
+- **特性**：  
+  - 本質上是「容量有限制的 Queue」，`itemSize = 0`（不存放資料，只存放「資源計數」）。  
+
+##### Semaphore 的月台信箱隱喻
+
+Semaphore 就像月台上的一個 **票務亭**，不是用來傳遞信件，而是發放「月台票」（資源使用權）。  
+
+- **Binary Semaphore（二元信號量）**  
+  - 票務亭只有 **1 張月台票**。  
+  - 當票被拿走時，後來的乘客只能在等待火車（Event List）上等，直到票被歸還。  
+  - 這就像 **一次只允許一個任務通行**，常用於事件通知。  
+  - 例子：ISR 把票投入票亭 → 任務就能領到票並被喚醒。  
+
+- **Counting Semaphore（計數型信號量）**  
+  - 票務亭有 **多張相同的月台票**。  
+  - 最多有 N 個乘客同時持票上車；當票用完，其他人只能排隊等待。  
+  - 適合表示 **有限資源池**（例如 5 台相同的機器）。  
+
+- **特性**  
+  - 跟 Queue 不同，票務亭 **不存放「內容物」**，只有票的數量。  
+  - 所以可以把它看作「itemSize = 0 的 Queue」，專門用來控管資源使用。  
+  - 若乘客等候過久（timeout），就會放棄排隊，回到 Ready List 做其他工作。  
+
+- **列車長（Scheduler）的角色**  
+  - 當票務亭補回票（例如任務釋放或 ISR 投票），列車長會通知等待中的乘客，讓他們從事件火車換乘到 Ready List。
+  - 若被喚醒乘客的優先權較高，列車長會立刻安排他上車，搶占目前執行中的任務。  
+
+#### 3. Mutex（互斥鎖）
+
+- **定義**：Mutex（Mutual Exclusion，互斥鎖）是一種 **任務之間的資源保護機制**。  
+  - 用來確保 **同一時間只有一個任務能存取共享資源**（例如：同一塊記憶體、同一個硬體介面）。  
+  - 本質上和 Binary Semaphore 類似，但多了 **優先權繼承（Priority Inheritance）** 的機制，避免高優先權任務被低優先權任務阻塞太久。  
+
+- **用途**：  
+  - 保護臨界區（Critical Section）。  
+  - 確保資源同一時間只會被一個任務佔用。  
+  - 常用於 **共享裝置存取**（UART、SPI、I2C 等）。  
+
+- **特性**：  
+  - 本質是 Binary Semaphore 的特化版，但有 **任務擁有者（Owner）** 的概念。  
+  - 任務取得 Mutex 後必須由**同一個任務釋放**，不可被其他任務或 ISR 直接歸還。  
+  - 具有 **優先權繼承**：當低優先權任務持有 Mutex 時，若有高優先權任務等待該 Mutex，低優先權任務會暫時「提升優先權」，直到釋放 Mutex，避免 **優先權反轉（Priority Inversion）**。  
+
+- **舉例**：  
+  - 多個任務要同時寫一個 UART，為了避免輸出混亂，可以用 Mutex 來確保一次只允許一個任務操作 UART。  
+
+##### Mutex 的月台票亭隱喻
+
+Mutex 就像月台上的一個 **專屬票亭**，發放一張「專屬票」，用來確保資源一次只被一位乘客（任務）獨佔。  
+
+- **專屬票的特性**  
+  - 只有 **原本拿票的乘客** 才能歸還，不能代還。  
+  - 一旦乘客持有票，就能獨佔某個資源（例如：售票窗口、候車室、共用變數）。  
+  - 不像 Semaphore 那樣只管「票數」，Mutex 更強調「擁有者」的概念。  
+
+- **優先權繼承（Priority Inheritance）**  
+  - 如果低優先權的乘客持有票，而有高優先權的乘客正在等票：  
+    - 列車長會暫時幫低優先權乘客「升級月台票」→ 讓他被優先處理。  
+    - 當低優先權乘客完成任務並歸還票後，再恢復原本的等級。  
+  - 這樣可以避免 **優先權反轉（Priority Inversion）**，確保高優先權乘客不會被卡太久。  
+
+- **列車長（Scheduler）的角色**  
+  - 當票被歸還時，列車長會通知等待中的乘客，從事件火車換乘到 Ready List。  
+  - 若新喚醒的乘客優先權較高，就會立即上車搶占 CPU。  
+
+- **應用場合**  
+  - 常用於需要「互斥」的情境，例如共享硬體外設、共用全域變數、或必須序列化的臨界區操作。
+
+---
+
+### 9.7.1 核心資料結構
+
+**Queue_t（struct QueueDefinition）**  
+
+這是 *queue.c* 的核心結構，所有的 **Queue / Semaphore / Mutex** 都基於它實作。  
+不同 `FreeRTOSConfig.h` 設定會影響欄位數量，但核心不變。
+
+#### 結構原型（精簡版）
+```c
+typedef struct QueueDefinition
+{
+    int8_t * pcHead;        /* Queue 儲存區起始位址 */
+    int8_t * pcWriteTo;     /* 下一個寫入位置 */
+
+    union
+    {
+        QueuePointers_t xQueue;     /* 當作 Queue 使用 */
+        SemaphoreData_t xSemaphore; /* 當作 Semaphore 或 Mutex 使用 */
+    } u;
+
+    List_t xTasksWaitingToSend;    /* 等待投遞的任務清單 */
+    List_t xTasksWaitingToReceive; /* 等待接收的任務清單 */
+
+    volatile UBaseType_t uxMessagesWaiting; /* 當前訊息數量 */
+    UBaseType_t uxLength;                   /* Queue 長度（能容納多少項目） */
+    UBaseType_t uxItemSize;                 /* 每個項目的大小 */
+
+    volatile int8_t cRxLock;  /* Receive 鎖定計數 */
+    volatile int8_t cTxLock;  /* Send 鎖定計數 */
+
+    /* 其他欄位由設定選項決定，例如：
+       - ucStaticallyAllocated（記憶體配置方式）
+       - pxQueueSetContainer（Queue Set 支援）
+       - uxQueueNumber / ucQueueType（Trace facility） */
+} xQUEUE;
+
+typedef xQUEUE Queue_t;
+```
+
+#### 欄位解析
+
+- **資料區管理**  
+  - `int8_t * pcHead;`  
+    Queue 儲存區的起始位址（信箱的開頭）。  
+
+  - `int8_t * pcWriteTo;`  
+    下一個要寫入的位置（信件將投遞到這裡）。  
+
+  - `union { QueuePointers_t xQueue; SemaphoreData_t xSemaphore; } u;`  
+    Queue 與 Semaphore 共用的額外資訊。   
+
+- **任務等待清單**  
+  - `List_t xTasksWaitingToSend;`  
+    任務想投遞資料但 Queue 滿了，就被掛到這班火車等待。  
+
+  - `List_t xTasksWaitingToReceive;`  
+    任務想收資料但 Queue 空了，就被掛到這班火車等待。   
+
+- **狀態資訊（信箱狀態）**
+  - `volatile UBaseType_t uxMessagesWaiting;`  
+    當前 Queue 中的訊息數量（信箱裡有幾封信）。  
+
+  - `UBaseType_t uxLength;`  
+    Queue 可容納的項目數量（信箱大小，不是 byte 數）。  
+
+  - `UBaseType_t uxItemSize;`  
+    每個項目的大小（每封信的大小）。    
+
+- **Lock / Unlock 機制**
+  - `volatile int8_t cRxLock;`  
+    Queue 鎖定期間的 **Receive 操作次數**。  
+
+  - `volatile int8_t cTxLock;`  
+    Queue 鎖定期間的 **Send 操作次數**。  
+
+  （避免中斷與任務同時操作 Queue 時產生競爭問題，解鎖後一次性處理通知。）  
+
+- **條件編譯的擴充欄位**
+
+  - `pxQueueSetContainer;`  
+    若 Queue 被加入 Queue Set，指向它的容器。  
+
+---
+
+### 9.7.2 建立與初始化
+
+Queue / Semaphore / Mutex 的建立，就像在月台上「蓋一個新的信箱或票務亭」，差別只在於用途不同，但施工流程其實是一樣的。
+
+#### 主要 API
+
+- `xQueueGenericCreate()`  
+  建立通用 Queue，就像建造一個「通用信箱」，不管是 Queue / Semaphore / Mutex，最後都會走到這個流程，內部同時處理靜態/動態配置。
+
+- `xQueueCreateMutex()`  
+  建立互斥鎖（Mutex 本質是 itemSize = 0 的 Queue，並加入擁有者與優先權繼承機制），就像蓋一個 **專屬票亭**，只有一張票，並且加上「票必須本人歸還」與「優先權繼承」規則。 
+
+- `xQueueCreateCountingSemaphore()`  
+  建立計數型信號量（本質是長度 > 1、itemSize = 0 的 Queue），如同蓋一個 **多票票亭**，一次可發放 N 張相同的票。
+
+- `xQueueCreateStatic()`  
+  靜態建立 Queue，需由使用者提供控制結構與儲存空間，自己準備磚頭與水泥（記憶體與 buffer），不靠系統倉庫（heap）。  
+
+#### 初始化流程
+
+1. **配置記憶體 → 蓋信箱 / 票亭基座** 
+   - 動態建立：呼叫 `pvPortMalloc()` 分配 Queue_t + buffer，如同系統工人（`pvPortMalloc()`）幫你拿磚頭蓋好。    
+   - 靜態建立：使用者提供控制區與 buffer，自己帶材料（buffer + 控制結構）給工人。  
+
+2. **初始化 Queue_t → 擺放信箱內部格子**  
+   - 設定 `pcHead` → buffer (信箱)起始位址。  
+   - 設定 `pcWriteTo` → buffer 起點（或第一個可用位置），下一封信要放的格子。
+   - 清空 `uxMessagesWaiting` → 一開始信箱是空的。   
+   - 設定 `uxLength`、`uxItemSize` → 貼上「容量標籤」，規定這個信箱能放多少封、每封大小多少。    
+
+3. **初始化等待清單 → 設置等候區火車**    
+   - `xTasksWaitingToSend` → 清空，準備放入「Queue 滿時等待的任務」，「想寄信卻滿了」的乘客，專屬等候火車。    
+   - `xTasksWaitingToReceive` → 清空，準備放入「Queue 空時等待的任務」，「想收信卻沒有」的乘客，專屬等候火車。   
+
+4. **初始化 Lock 狀態 → 上鎖檢查**  
+   - 將 `cRxLock`、`cTxLock` 設為「未鎖定」。  
+   - 意思是信箱剛蓋好，還沒開始整理。  
+   - 如果之後需要暫時封箱（中斷或任務同時操作），會先把信件暫放一旁，等解鎖後再一次性處理通知。  
+
+#### 實務重點
+
+- **動態 vs 靜態建立**  
+  - 動態：使用 `xQueueCreate()` → 底層呼叫 `xQueueGenericCreate()` → `pvPortMalloc()` 分配。  
+  - 靜態：使用 `xQueueCreateStatic()`，由應用程式提供記憶體，確保可控性與避免 heap 依賴，更適合嵌入式。  
+
+- **不同類型的差異**  
+  - Queue → 正規信箱，能存放一封封信件（資料）。  
+  - Semaphore → 票務亭，只管票數，不管內容。  
+  - Mutex → 專屬票亭，票只能由原乘客歸還，還有「優先權繼承」規則避免大乘客卡太久。
+
+- **共通觀念**  
+  - 不論是 Queue / Semaphore / Mutex，本質上都是先「建立 Queue_t 並初始化」，再依類型套上額外邏輯。  
+
+---
+
+### 9.7.3 任務間通訊 API
+
+任務之間透過 Queue 交換資料或訊號，核心在於「**傳送**」與「**接收**」，並且支援 **阻塞 / 超時 / ISR 場景**。
+
+#### 傳送 API
+- `xQueueGenericSend()`（基底函式，其他傳送 API 都會呼叫它）
+  - **Queue 有空位** → 立即把資料寫入，返回成功。就像把信件直接投進信箱。 
+  - **Queue 滿了** →  
+    - 若 `xTicksToWait > 0` → 任務被掛到 `xTasksWaitingToSend`（事件清單），進入阻塞直到有空位。就像信箱塞滿了，乘客只好先搭「等待火車」等信箱有空格。  
+    - 若 `xTicksToWait = 0` → 立即返回失敗，不阻塞。就像乘客不願意排隊，直接放棄寄信。  
+
+- 常見封裝：  
+  - `xQueueSendToBack()` → 傳送到 Queue 尾端（最常用）。  
+  - `xQueueSendToFront()` → 傳送到 Queue 前端，類似插隊寄信，讓緊急信件優先處理。  
+  - `xQueueOverwrite()` → 針對長度 = 1 的 Queue，覆蓋舊資料，常用於「狀態更新」，只保留最新的一封信。  
+
+#### 接收 API
+- `xQueueReceive()`  
+  - **Queue 有資料** → 立即讀取，返回成功。就像乘客打開信箱拿到信件。  
+  - **Queue 空了** →  
+    - 若 `xTicksToWait > 0` → 任務被掛到 `xTasksWaitingToReceive`，進入阻塞直到有資料。就像信箱暫時沒有信，乘客搭上「等候火車」等待新信件投遞。  
+    - 若 `xTicksToWait = 0` → 立即返回失敗，代表不願意等待。  
+
+- 常見封裝：  
+  - `xQueuePeek()` → 偷看 Queue 頭端資料但不移除，就像打開信箱看內容但不拿出來。  
+
+- **關鍵控制**  
+  - `taskENTER_CRITICAL()` / `taskEXIT_CRITICAL()`：Queue 的底層資料區（buffer）可能同時被多個角色操作，例如 A 任務正在送信（`xQueueSend`）、B 任務正在收信（`xQueueReceive`），而中斷服務常式（ISR）也可能透過 `xQueueSendFromISR()` 操作同一個 Queue。  
+    - 呼叫 `taskENTER_CRITICAL()` → 暫時關閉中斷（或至少提升遮罩等級），確保接下來的程式片段不會被打斷。  
+    - 完成操作後，再呼叫 `taskEXIT_CRITICAL()` → 恢復中斷。  
+    - 整個流程就是 **critical section（臨界區）保護機制**，避免多核心或中斷同時打開信箱導致資料衝突（data corruption）。  
+  - 阻塞與喚醒都透過 **Event List 機制** 完成，列車長（Scheduler）會根據狀態把等待的乘客換乘到 Ready List。  
+
+#### ISR 版本
+- `xQueueGenericSendFromISR()` / `xQueueReceiveFromISR()`  
+  - ISR 中不能阻塞，只能立即返回。就像「快遞員」只能當場投遞或取走，不允許排隊等候。  
+  - 若成功操作 Queue，會透過 `pxHigherPriorityTaskWoken` 通知列車長，在中斷結束後立即切換任務，讓高優先權乘客直接上車執行。  
+
+---
+
+### 9.7.4 特殊應用 API
+
+#### Mutex（互斥鎖）
+- **建立**：`xQueueCreateMutex()`  
+- **操作**：  
+  - `xQueueTakeMutexRecursive()`  
+  - `xQueueGiveMutexRecursive()`  
+- **特性**：  
+  - 基於 Queue 實作，`itemSize = 0`。  
+  - 必須由「持有票的任務」自己歸還，不能代還，就像專屬票只能由原乘客退回。  
+  - 支援 **優先權繼承（Priority Inheritance）**：  
+    - 若低優先權任務持有 Mutex，而高優先權任務在等候，系統會暫時提升低優先權任務的優先級，讓他快點釋放資源，避免 **優先權反轉（Priority Inversion）**。  
+
+#### Semaphore（信號量）
+- **Binary Semaphore（二元信號量）**  
+  - 本質是容量 = 1 的 Queue。  
+  - 常用於 **事件通知**，例如 ISR 投遞一張票 → 喚醒等待的任務。  
+  - 就像票務亭只有一張票，誰先領到誰先上車。  
+
+- **Counting Semaphore（計數型信號量）**  
+  - 本質是容量 > 1 的 Queue。  
+  - 可同時允許 N 個任務取得資源，常用於「有限資源池」（例如多台相同機器）。  
+  - 就像票務亭有多張票，可以同時發給多位乘客。  
+
+- **關鍵 API**  
+  - `xQueueSemaphoreTake()`：用於任務等待資源或事件。就像乘客去票亭領票，若沒有票就只能排隊等候。   
+
+---
+
+### 9.7.5 重點整理與常見考題
+
+#### 重點整理
+- **Queue_t（核心結構）**：Queue / Semaphore / Mutex 都基於同一個結構實作。  
+- **建立方式**：`xQueueGenericCreate()` 為共用基底，Mutex / Semaphore 只是額外包裝與邏輯。  
+- **初始化流程**：配置記憶體 → 初始化 Queue_t → 初始化等待清單 → 設定 Lock 狀態。  
+- **任務通訊 API**：支援傳送 / 接收，並提供阻塞、超時、ISR 版本。  
+- **Critical Section**：透過 `taskENTER_CRITICAL()` / `taskEXIT_CRITICAL()` 保護臨界區，避免中斷或多核心同時存取 Queue。  
+- **特殊應用**：  
+  - Mutex：支援優先權繼承，避免優先權反轉。  
+  - Binary Semaphore：事件通知（如 ISR 喚醒任務）。  
+  - Counting Semaphore：管理有限資源池。  
+
+#### Q1. Queue 滿 / 空時任務怎麼處理？
+- **Queue 滿**：  
+  - `xTicksToWait > 0` → 任務阻塞，掛到 `xTasksWaitingToSend` 等待清單。  
+  - `xTicksToWait = 0` → 立即返回失敗。  
+- **Queue 空**：  
+  - `xTicksToWait > 0` → 任務阻塞，掛到 `xTasksWaitingToReceive` 等待清單。  
+  - `xTicksToWait = 0` → 立即返回失敗。  
+- **面試回覆**：  
+「Queue 滿或空時，任務會依 `xTicksToWait` 決定是否阻塞，阻塞的任務會被掛到對應等待清單，否則立即返回。」
+
+#### Q2. Queue 本質是什麼？
+- **核心**：環形緩衝區（circular buffer）+ 兩個等待清單（Send/Receive）。  
+- **面試回覆**：  
+「Queue 本質上就是一個環形緩衝區，加上兩個等待清單，分別管理等待傳送和等待接收的任務。」
+
+#### Q3. Queue 與 Semaphore/Mutex 的差別在哪？為什麼共用 Queue_t？
+- Queue：用來傳遞資料。  
+- Semaphore：用來表示資源數量或事件發生。  
+- Mutex：用來做互斥，支援優先權繼承。  
+- 三者共用 Queue_t，因為都需要「任務同步」和「等待清單」，差別只在規則。  
+- **面試回覆**：  
+「三者的差別在於用途不同，但都需要任務同步與等待清單，因此共用 Queue_t，只是把行為規則套上去。」
+
+#### Q4. 為什麼 Queue 可以實現 Mutex / Semaphore？
+- 因為 Queue_t 已經具備：  
+  - 任務阻塞 / 喚醒機制（等待清單）。  
+  - 狀態管理（信件數量可當票數）。  
+- 所以只要把 `itemSize` 設為 0，就能變成 Mutex 或 Semaphore。  
+- **面試回覆**：  
+「因為 Queue_t 內建了等待清單與狀態管理，只要把資料單元大小設為 0，就能改成資源控制用途，所以能延伸實作 Mutex 與 Semaphore。」
+
+#### Q5. 說出 Queue 建立 API 有哪些？差別在哪？
+- 動態：`xQueueCreate()` → 透過 `pvPortMalloc()` 配置記憶體。  
+- 靜態：`xQueueCreateStatic()` → 使用者自行提供控制結構與 buffer。  
+- **面試回覆**：  
+「Queue 有動態與靜態兩種建立方式，動態依賴 heap，靜態由使用者提供記憶體，更適合嵌入式環境。」
+
+#### Q6. 如何用 Queue 在任務之間傳遞資料？
+- 任務 A：`xQueueSend()` 把資料送進 Queue。  
+- 任務 B：`xQueueReceive()` 從 Queue 取出資料。  
+- 支援阻塞、超時，保證同步。  
+- **面試回覆**：  
+「Queue 是最常用的任務間通訊方式，一端送、一端收，系統會管理同步與阻塞機制。」
+
+#### Q7. `xQueueOverwrite()` 適用於什麼情境？
+- 僅能用於 **Queue 長度 = 1**。  
+- 新資料會覆蓋舊資料。  
+- 常用於 **狀態更新**，例如感測器最新數值。  
+- **面試回覆**：  
+「`xQueueOverwrite()` 適合只需要最新值的情境，例如感測器讀值，它會覆蓋舊資料，確保接收端拿到的是最新狀態。」
+
+#### Q8. ISR 中使用 Queue API 與任務中有何不同？
+- 任務中：允許阻塞等待。  
+- ISR 中：不能阻塞，只能立即返回。  
+- **面試回覆**：  
+「任務可以用阻塞 API，但 ISR 不允許阻塞，所以在 ISR 中必須用特別設計的非阻塞版本。」
+
+#### Q9. 為什麼 ISR 不能用一般 API，要用 FromISR 版本？
+- 一般 API（例如 `xQueueSend()`）可能阻塞，而 ISR 絕對不能阻塞。  
+- FromISR 版本會立即返回，並支援 `pxHigherPriorityTaskWoken` 在中斷結束後切換任務。  
+- **面試回覆**：  
+「ISR 中必須用 FromISR 版本，因為 ISR 不能阻塞。這些 API 設計為立即返回，並能在中斷結束後安全喚醒高優先權任務。」
+
+#### Q10. Queue 的 Lock 機制 (cRxLock / cTxLock)
+
+- **作用是什麼？**  
+  - `cRxLock`：在 Queue 被鎖定期間，記錄「接收操作（Receive）」的次數。  
+  - `cTxLock`：在 Queue 被鎖定期間，記錄「傳送操作（Send）」的次數。  
+  - 主要用途：避免在 **中斷或多任務同時操作 Queue** 時，立即觸發多次喚醒或通知，導致效能浪費或狀態混亂。  
+
+- **為什麼需要「暫存通知，解鎖後一次處理」？**  
+  - 在臨界區（critical section）內，若每次操作都立刻喚醒等待任務，可能造成「重複切換任務」的開銷。  
+  - 使用 Lock 機制後：  
+    - 系統會先「累積計數」→ 把這段期間發生的操作記錄下來。  
+    - 等解鎖時，再一次性處理喚醒或通知，確保效率與一致性。  
+  - 就像「整理信箱時先上鎖，把投遞和收取的動作先記錄下來，等解鎖後再一次通知乘客」，避免中途插隊或反覆叫人。  
+
+> **面試回覆**：  
+「Queue 的 Lock 機制透過 `cRxLock` 和 `cTxLock` 記錄接收和傳送操作，在鎖定期間先暫存事件，等解鎖後再一次性處理通知。這樣能避免頻繁任務切換，提高效率，並確保狀態一致。」
+
+---
+
+## 9.8 FreeRTOS heap_4.c 記憶體管理解析
+
+### 9.8.1 記憶體管理的基本概念
+在 FreeRTOS 中，`heap_x.c` 檔案位於 `portable/MemMang` 資料夾，屬於 **記憶體管理的移植層**，提供多種不同策略的動態記憶體配置實作。  
+
+主要用途：  
+- 動態建立 **Task（任務）**  
+- 動態建立 **Queue（佇列）**  
+- 動態建立 **Semaphore（訊號量）**  
+- 動態建立 **Mutex（互斥鎖）**
+
+#### 火車比喻與 heap_x.c 的關聯
+火車系統都不是憑空冒出來的：  
+- **Task（乘客）** 需要 TCB（身份證）。  
+- **Queue（信箱）** 需要 buffer（信箱格子）。  
+- **List（火車）** 需要車廂（ListItem）。  
+
+這些建材都必須從 **heap_x.c** 來配置。  
+
+`heap_x.c` 就像「月台旁的倉庫」：  
+- 建立任務 → 從 heap 拿 TCB + stack。  
+- 建立 Queue → 從 heap 拿 Queue_t + buffer。  
+- 建立 ListItem → 從 heap 拿 ListItem 結構。  
+- 建立 Semaphore / Mutex → 同樣從 heap 拿控制結構。  
+
+可以將倉庫（heap）想成原本是一條長長的連續空間：  
+- 假設先後借了 100 單位與 200 單位的建材，在不同時間單獨歸還後 → 倉庫會出現許多小碎塊。  
+- 長時間下來，即使總空間足夠，仍可能因為被切碎而找不到「一塊連續的大空間」來分配。  
+
+所以這個倉庫有五種管理方式：  
+- 有些方式只會一直切割建材（heap_1），用過就不回收。  
+- 有些方式會允許歸還，但不會合併（heap_2）。  
+- 有些方式直接借用標準函式庫的 malloc/free（heap_3）。  
+- 有些方式會在歸還時，將相鄰的建材推在一起，避免碎片化（heap_4、heap_5）。 
+
+某些管理方式（如 heap_4）會檢查：  
+- **如果左右鄰居也是空的** → 把它們合併成一個更大的空閒區塊。  
+- **如果不是** → 就單獨保留這塊。  
+
+#### 各種 `heap_x.c` 策略比較
+
+1. `heap_1.c` — 單純配置（Only malloc）
+  - 僅支援配置（malloc），**不支援釋放（free）**。  
+  - **優點**：最簡單、最快速，無碎片化問題。  
+  - **缺點**：記憶體一旦配置就無法回收，僅適合任務/資源數量固定的系統。  
+
+2. `heap_2.c` — 可回收但不合併
+  - 支援 malloc/free。  
+  - 記憶體釋放後會回到 free list，但**不會合併相鄰空間**。  
+  - **缺點**：長時間運行容易產生碎片化。 
+
+3. `heap_3.c` — 包裝標準函式庫
+  - 直接呼叫 **C 標準函式庫的 malloc/free**。  
+  - **優點**：方便、開發快速。  
+  - **缺點**：不可預測延遲，行為依賴平台 malloc 實作，不適合即時系統。  
+
+4. `heap_4.c` — 可回收且合併（最常用）
+  - 支援 malloc/free。  
+  - 釋放記憶體時會嘗試**合併相鄰空閒區塊**，減少碎片化。  
+  - **優點**：穩定性與效率兼具，使用最廣泛。  
+  - **適合**：大部分中小型嵌入式系統。 
+
+5. `heap_5.c` — 多區域支援
+  - 功能與 heap_4 類似，但可管理 **多個非連續記憶體區域**。  
+  - **適合**：有多段 RAM 或外部 RAM 的複雜系統。  
+
+#### 為什麼選用 heap_4？
+- **特點**：支援 malloc/free，能釋放並合併相鄰區塊，效率與穩定性比 heap_2 更佳。  
+- **適用場景**：  
+  - 系統運行時間長，需要避免碎片化。  
+  - 記憶體需求動態變化，例如任務或 Queue 會在不同時間建立/刪除。  
+- **實務觀念**：  
+  - 若系統對即時性要求極高，建議還是優先採用靜態配置（例如 `xTaskCreateStatic()`）。  
+  - heap_4 適合作為一般嵌入式專案的預設選擇。  
+
+---
+
+### 9.8.2 heap_4 核心資料結構
+
+#### BlockLink_t 結構
+- **用途**  
+  `BlockLink_t` 是 **heap_4.c 用來管理空閒記憶體區塊的鏈結節點**。  
+  每個尚未被使用的區塊都會附上一張這樣的「庫存單」，由它們串起來形成 **Free List（空閒清單）**，方便記憶體管理程式分配與回收。  
+
+- **結構原型**
+  ```c
+  typedef struct A_BLOCK_LINK
+  {
+      struct A_BLOCK_LINK * pxNextFreeBlock; /**< 下一個空閒區塊 */
+      size_t xBlockSize;                     /**< 區塊大小（含這個控制結構本身） */
+  } BlockLink_t;
+  ```
+
+- **重要欄位**  
+  1. `struct A_BLOCK_LINK * pxNextFreeBlock`  
+     - 指向下一個空閒區塊。  
+     - 所有空閒區塊會依「**位址排序**」串成單向鏈結清單，釋放時方便檢查相鄰區塊是否能合併。   
+
+  2. `size_t xBlockSize`  
+     - 記錄區塊大小（包含這個控制結構本身）。  
+     - **最高位元（MSB）** 被用來標記狀態：  
+       - MSB = 1 → 區塊已被分配。  
+       - MSB = 0 → 區塊仍在 Free List 中。 
+
+- **火車比喻**  
+  - **BlockLink_t** 就像是「庫存單」：  
+    - `pxNextFreeBlock` → 指出「下一堆建材在哪裡」。  
+    - `xBlockSize` → 寫著「這堆建材有多大」，角落打勾（MSB）標示「在用 / 空閒」。  
+  - 管理員只要沿著庫存單清單走，就能掌握所有空閒區塊大小與位置，並快速判斷是否能合併。  
+
+#### Free List（空閒清單）
+- **用途**  
+  Free List 是由多個 `BlockLink_t` 串起來的**單向鏈結清單**，代表「目前可用的空閒記憶體區塊」。  
+  它本身不是一個結構，而是一條由哨兵節點維護的清單。  
+
+- **組成與特性**  
+  1. **按位址排序**  
+     - 所有 free block 依照記憶體位址由**小到大**排序。  
+     - 這樣釋放時只要檢查前後，就能判斷是否能合併。  
+
+  2. **單向鏈結清單**  
+     - 透過 `pxNextFreeBlock` 串起來，不需要雙向鏈結，降低額外成本。  
+
+  3. **特殊節點（哨兵）**  
+     - **起始哨兵（xStart）** → 指向第一個有效 free block，本身不是一個可分配的 free block，它只是個「固定頭節點」，所以它的 `xBlockSize` 沒有實際意義 → 設為 0。  
+     - **結尾哨兵（pxEnd）** → 被放在 heap 的結尾，用來標記清單結束。最後一個 free block 的 `pxNextFreeBlock` 會指向 `pxEnd`，而 `pxEnd->xBlockSize = 0`，本身不是可分配區塊。 
+
+- **運作流程**  
+  - **配置 (pvPortMalloc)**：    
+    - 從 Free List 的開頭（`xStart.pxNextFreeBlock`）**依序尋訪**，採用 **first-fit**：找到第一個 `xBlockSize >= 實際需求大小` 的 free block。  
+    - 若該區塊「比需求大很多」，且**切割後的剩餘空間仍 ≥ 最小可用區塊大小**（含標頭與對齊），就**拆成兩塊**：  
+      - 一塊分配給「呼叫者」（例如 Task、Queue 等 RTOS 元件）。  
+      - 剩餘部分保留在 Free List，更新其 BlockLink_t 與鏈結。  
+    - 對分配出去的區塊：**設置 `xBlockSize` 的 MSB**（標記為「已分配」），並回傳給呼叫者「資料區指標」（位於 BlockLink_t 標頭之後）。
+   
+  - **釋放 (vPortFree)**：  
+    - 由傳入指標回推到 BlockLink_t 標頭，並**清除 `xBlockSize` 的 MSB**（從「已分配」改為「空閒」）。  
+    - 沿著**按位址排序**的 Free List，找到它**應插入的位置**（落在兩個相鄰 free block 之間），插回清單。  
+    - 檢查前一塊與下一塊是否與本區塊**相鄰（地址連續）**：  
+      - 若相鄰則**合併**（更新 `xBlockSize`，調整 `pxNextFreeBlock`），以減少碎片化。  
+
+---
+
+### 9.8.3 初始化流程
+
+`heap_4.c` 在編譯時會從 **RAM** 中保留一塊「固定大小的記憶體區域」，作為 FreeRTOS 專用的 heap。  
+當使用 FreeRTOS API 建立 **Task、Queue、Semaphore、Mutex** 時，底層會呼叫 `pvPortMalloc()` 分配記憶體。  
+這個 `pvPortMalloc()` 並不是標準 C 的 `malloc()`，而是 FreeRTOS 提供的專屬配置器。
+
+#### 用途  
+在系統第一次呼叫 `pvPortMalloc()` 之前，`heap_4` 需要先透過 `prvHeapInit()` 完成初始化。  
+這個初始化流程會建立 **哨兵節點** 以及 **初始 Free List**，確保後續的配置與釋放能正常運作。  
+
+系統剛啟動時，heap 內容還是「空的」，因此 Free List 幾乎等於整個 heap 區域。  
+初始化完成後：  
+- **xStart（頭哨兵）** 是一個固定的控制節點，`xBlockSize = 0`，它的 `pxNextFreeBlock` 指向第一個真正的 free block。  
+- **第一個 free block** 代表整個 heap 的可用空間（扣除哨兵與結尾控制用的保留區）。  
+- **第一個 free block 的 `pxNextFreeBlock`** 則指向 **pxEnd（尾哨兵）**，表示鏈結清單結束。  
+
+因此，在剛完成 `prvHeapInit()` 的狀態下，Free List 裡僅有一個「可分配的區塊」，覆蓋幾乎整個 heap 空間。 
+
+#### 函式原型（精簡版）
+```c
+static void prvHeapInit( void )
+{
+    BlockLink_t *pxFirstFreeBlock;
+    size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
+    portPOINTER_SIZE_TYPE uxStartAddress, uxEndAddress;
+
+    /* 將 heap 起始位址對齊 */
+    uxStartAddress = ( portPOINTER_SIZE_TYPE ) ucHeap;
+    if( ( uxStartAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
+    {
+        uxStartAddress += ( portBYTE_ALIGNMENT - 1 );
+        uxStartAddress &= ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK );
+        xTotalHeapSize -= ( size_t )( uxStartAddress - ( portPOINTER_SIZE_TYPE ) ucHeap );
+    }
+
+    /* 建立起始哨兵 (xStart) */
+    xStart.pxNextFreeBlock = ( void * ) uxStartAddress;
+    xStart.xBlockSize = 0;
+
+    /* 建立結尾哨兵 (pxEnd) */
+    uxEndAddress = uxStartAddress + xTotalHeapSize;
+    uxEndAddress -= xHeapStructSize;               /* 保留標頭空間 */
+    uxEndAddress &= ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK );
+    pxEnd = ( BlockLink_t * ) uxEndAddress;
+    pxEnd->xBlockSize = 0;
+    pxEnd->pxNextFreeBlock = NULL;
+
+    /* 建立第一個 free block，覆蓋整個 heap 區域 */
+    pxFirstFreeBlock = ( BlockLink_t * ) uxStartAddress;
+    pxFirstFreeBlock->xBlockSize = ( size_t )( uxEndAddress - ( portPOINTER_SIZE_TYPE ) pxFirstFreeBlock );
+    pxFirstFreeBlock->pxNextFreeBlock = pxEnd;
+
+    /* 初始化全域統計量 */
+    xFreeBytesRemaining = pxFirstFreeBlock->xBlockSize;
+    xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+}
+```  
+
+#### 初始化步驟概述
+0. **對齊起點並調整可用大小**  
+   - 在 `heap_4.c` 裡，heap 是一個靜態陣列；它的起始位址（`&ucHeap[0]`）由編譯器配置，**不保證符合 CPU 對齊**，因此初始化時必須做 **alignment**。  
+   - 若對齊需求是 8 bytes，則例如：  
+     `0x1003 → 0x1008`、`0x1009 → 0x1010`。  
+   - 若原本 heap 起點是 `0x1002`，對齊到 `0x1008` 後，`0x1002 ~ 0x1007` 這 6 bytes 不能用，需自 `configTOTAL_HEAP_SIZE` 扣除，得到實際可用大小。
+
+1. **建立起始哨兵（xStart）**  
+   - `xStart` 為 **全域 BlockLink_t 結構本體**，位於 `.bss/.data`（**不在 heap 內**）。  
+   - 設定 `xStart.xBlockSize = 0`。  
+   - 作為固定頭節點，`xStart.pxNextFreeBlock` 指向 **第一個 free block**（即對齊後的 heap 起點）。  
+
+2. **建立結尾哨兵（pxEnd）**  
+   - `pxEnd` 為 **指標變數**（在 `.bss/.data`），**指向位於 heap 尾端的一個 BlockLink_t 哨兵節點本體**。  
+   - 初始化時將這個哨兵節點本體放在 **heap 的最後**（扣除標頭大小並再次對齊後的位置），並設 `pxEnd->xBlockSize = 0`。  
+   - **最後一個 free block 的 `pxNextFreeBlock` 會指向 `pxEnd`**，用以標記 Free List 的結尾。  
+
+3. **建立第一個 free block**  
+   - 系統初始化時，整個 heap（`ucHeap[]` 陣列，經過 alignment 調整後）會被描述成一個大的 free block。  
+   - 這個 free block 的大小需要扣除：  
+     - 起始對齊時浪費掉的 bytes。  
+     - 尾端哨兵所需的空間（`sizeof(BlockLink_t)`，注意：`pxEnd` 是指標，不是額外的空間）。  
+   - 因此：  
+     `xBlockSize = configTOTAL_HEAP_SIZE - alignment_overhead - sizeof(BlockLink_t)`  
+   - 並設定 `pxNextFreeBlock` 指向 `pxEnd`，表示這是唯一一塊 free block，後面緊接著尾端哨兵。  
+
+4. **串接 Free List**  
+   - 初始化完成後，Free List 的鏈結關係為：  
+     `xStart → 第一個 free block → pxEnd`  
+   - 此時 Free List 中只有 **一個有效的 free block**（涵蓋整個可用的 heap 區域）。  
+   - 後續每次配置 (pvPortMalloc) 就會從這個 free block 中切出一塊，釋放 (vPortFree) 則可能將區塊合併回來。 
+
+---
+
+### 9.8.4 重點整理與常見考題 
+
+#### 重點整理
+- **heap_x.c 系列**：提供五種記憶體管理策略（heap_1 ~ heap_5），由使用者在設定檔選擇。  
+- **BlockLink_t**：每個 free block 前的標頭，記錄大小 (`xBlockSize`) 與下一個區塊位置 (`pxNextFreeBlock`)，MSB 用來標記是否已被分配。  
+- **Free List**：所有 free block 依照位址由小到大串成單向鏈結清單，方便插入與合併。  
+- **哨兵節點**：  
+  - `xStart`（頭節點，不在 heap 內，`xBlockSize=0`）。  
+  - `pxEnd`（尾端節點，本體放在 heap 末尾，`xBlockSize=0`）。  
+- **初始化流程**：  
+  - 對齊 heap 起點並調整大小 → 建立 xStart、pxEnd → 建立第一個 free block → 串接 Free List。  
+- **配置流程 (pvPortMalloc)**：first-fit 找到合適區塊 → 必要時拆分 → 設置 MSB → 更新鏈結。  
+- **釋放流程 (vPortFree)**：清除 MSB → 插回 Free List → 檢查相鄰區塊 → 可合併則合併，降低碎片化。  
+- **實務考量**：  
+  - heap_4 可合併，長時間運行較穩定。  
+  - 但 RTOS 中仍建議能靜態配置就靜態配置，以保證即時性與可控性。  
+
+#### Q1. FreeRTOS 提供哪幾種 heap 管理策略？差別在哪？  
+- **heap_1**：只 malloc 不 free，簡單快速。  
+- **heap_2**：可 free，但不合併碎片。  
+- **heap_3**：直接呼叫標準 malloc/free，不保證即時性。  
+- **heap_4**：可 free 並合併相鄰碎片，最常用。  
+- **heap_5**：支援多個不連續的記憶體區域。  
+- **面試回覆**：  
+「heap_4 是最常用的，因為它支援 malloc/free 並能合併碎片，適合長時間運行的系統。」
+
+#### Q2. BlockLink_t 結構裡的兩個欄位（pxNextFreeBlock / xBlockSize）各自的用途是什麼？  
+- `pxNextFreeBlock`：指向下一個 free block，形成鏈結清單。  
+- `xBlockSize`：紀錄區塊大小，MSB 用來標記該區塊是否已分配。  
+- **面試回覆**：  
+「BlockLink_t 是每塊 free block 的標頭，記錄大小和下一塊位置，MSB 標示該區塊是否在用。」
+
+#### Q3. Free List 為什麼要照位址排序？  
+- 好處：釋放時只需檢查前後區塊即可判斷能否合併。  
+- **面試回覆**：  
+「因為 Free List 依位址排序，所以釋放時能快速找到位置並合併相鄰區塊，避免碎片化。」
+
+#### Q4. 初始化時，xStart / 第一個 free block / pxEnd 三者的關係是什麼？  
+- xStart：頭哨兵，指向第一個 free block。  
+- 第一個 free block：涵蓋整個 heap 的主要空間。  
+- pxEnd：尾哨兵，標記清單結尾。  
+- **面試回覆**：  
+「初始化後，Free List 就是 `xStart → 第一個 free block → pxEnd`。」
+
+#### Q5. 為什麼 heap 起點要做 alignment？  
+
+- **硬體原因**  
+  - 多數 CPU 的記憶體匯流排以「字 (word) 對齊」來存取。  
+  - 例如：32-bit CPU 一次讀 4 bytes，64-bit CPU 一次讀 8 bytes。  
+  - 若資料從未對齊位址開始（如 0x1003），CPU 可能要做「兩次存取再合併」，甚至在某些架構上直接觸發 **Bus Fault**。  
+
+- **效能原因**  
+  - 對齊存取僅需一次 cycle；未對齊存取會多出額外 cycle 或特殊處理，導致效能下降。  
+
+- **軟體相容性**  
+  - C 語言標準允許編譯器假設結構體成員是對齊的。  
+  - 如果 malloc 回傳未對齊位址，結構體存取可能失敗或造成 crash。  
+
+- **面試回覆**  
+「因為 CPU 的匯流排和指令集要求記憶體對齊。對齊後 CPU 一次就能正確抓到整個 word；未對齊則會降低效能，甚至導致 Bus Fault。因此 heap 初始化時要把起點調整到 alignment 邊界，浪費掉的空間會直接扣掉。」
+
+#### Q6. 剛初始化完成時，Free List 的鏈結長什麼樣子？  
+- 結構：`xStart → 第一個 free block → pxEnd`。  
+- **面試回覆**：  
+「剛開始時只有一個大 free block，頭尾哨兵把它包住。」
+
+#### Q7. 為什麼需要 pxEnd 這個尾端哨兵？  
+- 明確標記 Free List 的結尾，簡化操作。  
+- 沒有 pxEnd，最後一塊 free block 的處理會變複雜。  
+- **面試回覆**：  
+「pxEnd 是尾哨兵，用來標記結尾，沒有它會增加額外判斷。」  
+
+#### Q8. 初始化時第一個 free block 的大小怎麼計算？  
+- 公式：  
+  `xBlockSize = configTOTAL_HEAP_SIZE - alignment_overhead - sizeof(BlockLink_t)`  
+- **面試回覆**：  
+「第一個 free block 的大小 = 總大小 − 對齊浪費 − 尾端哨兵空間。」
+
+#### Q9. heap_4 如何降低碎片化風險？與 heap_2 相比有什麼優勢？若系統需要長期穩定運行，是否建議使用 heap_4？  
+- **heap_2**：釋放區塊後不會合併 → 容易產生碎片，長時間運行後即使總空間足夠，也可能找不到一塊連續大空間。  
+- **heap_4**：釋放時會檢查前後相鄰區塊，若連續則合併 → 有效降低碎片化風險。  
+- **長期穩定運行**：heap_4 適合大部分情況，但若系統強調即時性與高度可控，仍建議優先使用 **靜態配置**（如 `xTaskCreateStatic()`），完全避免碎片問題。  
+- **面試回覆**：  
+「heap_4 釋放時會合併相鄰區塊，能降低碎片化風險，這是它比 heap_2 更穩定的原因。不過如果系統需要絕對的穩定與即時性，會更建議使用靜態配置。」
+
+#### Q10. 為什麼 FreeRTOS 建議盡量用靜態配置（xTaskCreateStatic 等），而不是完全依賴 heap？  
+- malloc/free 在即時系統中有延遲與碎片化風險。  
+- 靜態配置可預測且可控。  
+- **面試回覆**：  
+「RTOS 中為了即時性，盡量用靜態配置，heap_4 適合一般需求，但靜態更安全可靠。」
+
+---
+
+## 9.9 FreeRTOSConfig.h 系統配置解析
+
+### 9.9.1 這份檔案負責什麼？（角色定位）
+
+- `FreeRTOSConfig.h` 是 **FreeRTOS 專案中最重要的設定檔**。  
+- 它不是核心程式碼的一部分，而是**專案自己提供的檔案**，由開發者來定義哪些功能要打開、資源要怎麼分配。  
+- 可以把它想像成 **總開關面板**，其他檔案像 `task.c`、`queue.c`、`list.c`、`heap_x.c` 都會依照這裡的開關來決定行為。
+
+1. **核心參數（Kernel basics）**
+   - 例如：
+     - `configUSE_PREEMPTION`：是否用搶佔式排程。
+     - `configTICK_RATE_HZ`：系統心跳頻率（通常設 1000 → 每 1ms 一次）。
+     - `configMAX_PRIORITIES`：最大任務優先權數。
+     - `configMINIMAL_STACK_SIZE`：Idle task / 小任務的堆疊大小。
+     - `configTOTAL_HEAP_SIZE`：整個 FreeRTOS 動態記憶體池大小。
+   - 這些決定了 **RTOS 的基本運作規則**。
+
+2. **功能開關（Features）**
+   - 控制哪些 RTOS 功能要啟用：
+     - `configUSE_MUTEXES` → Mutex 支援。
+     - `configUSE_COUNTING_SEMAPHORES` → Counting semaphore。
+     - `configUSE_TASK_NOTIFICATIONS` → Task Notification。
+     - `configUSE_TIMERS` → 軟體定時器（需要一個 Timer 服務任務）。
+     - `configUSE_QUEUE_SETS` → Queue Sets。
+     - `configUSE_STREAM_BUFFERS` / `configUSE_MESSAGE_BUFFERS` → Stream/Message buffer。
+   - 這些就像決定「專案裡要不要裝這些模組」。
+
+3. **中斷安全界線（IRQ gates）**
+   - 在 Cortex-M，**中斷優先權數字越小，越高優先**。
+   - `configMAX_SYSCALL_INTERRUPT_PRIORITY` → 設定 **能夠安全呼叫 FreeRTOS API 的最高中斷優先權**。  
+     - 比這個優先權高的 IRQ：不能呼叫任何 FreeRTOS API。  
+     - 比這個優先權低的 IRQ：可以安全呼叫 `xxxFromISR()`。
+   - 這是避免「高優先 IRQ 打斷 RTOS 臨界區」的安全線。
+
+4. **診斷鉤子（Hooks / Assert）**
+   - 用來 debug 或插入自訂程式碼：
+     - `configUSE_IDLE_HOOK` → Idle task 每次循環會呼叫。
+     - `configUSE_TICK_HOOK` → 每次 tick interrupt 呼叫。
+     - `configUSE_MALLOC_FAILED_HOOK` → 記憶體配置失敗呼叫。
+     - `configCHECK_FOR_STACK_OVERFLOW` → 任務堆疊溢位檢查。
+     - `configASSERT(x)` → 條件不成立時停住，方便 debug。
+   - 這些是「保護與除錯用的安全機制」。
+
+可以把 FreeRTOS 想像成一個「火車月台系統」：
+- **queue / list / heap** 是建材（信箱、火車、倉庫）。  
+- 這些建材要不要存在、能不能用，都要先透過 **`FreeRTOSConfig.h` 的開關**來決定。  
+- **IRQ gates** 就像月台的「閘門」，決定哪些乘客（中斷服務程式）能進來搭火車（呼叫 API）。  
+- **Hooks / Assert** 則像安全員，發現異常就拉下緊急煞車。
+
+所以 `FreeRTOSConfig.h` 就是整個 RTOS 的**總開關面板**，決定了核心參數（tick、優先權、堆疊）、功能模組（mutex、notification、timer）、中斷能不能安全呼叫 API，以及除錯機制（assert、stack overflow check）。所有任務、Queue、Heap 能不能運作，基本上都受它影響。
+
+---
+
+### 9.9.2 必要核心設定（Minimal viable set）
+
+> **目的**：這些參數是最小必要的設定，能讓 FreeRTOS 順利進入排程，並且讓像 `vTaskDelay()` 這樣的 API 可以正確運作。沒有這些，系統連基本的多工都跑不起來。
+
+---
+
+#### 1. 排程與時脈（Scheduling & Clock）
+
+- **`configUSE_PREEMPTION = 1`**
+  - 是否啟用 **搶佔式排程（Preemptive Scheduling）**。  
+  - 設為 1 → 高優先權任務能隨時中斷低優先權任務。  
+  - 設為 0 → 變成合作式（Cooperative），任務要自己「讓出 CPU」。  
+  - 大部分情況（特別是即時系統），都設為 1。
+
+- **`configCPU_CLOCK_HZ = SystemCoreClock`**
+  - 告訴 RTOS **CPU 的核心時脈頻率**。  
+  - 在 STM32 系列，`SystemCoreClock` 是 CMSIS 提供的全域變數，代表實際 CPU Hz（例如 180 MHz）。  
+  - FreeRTOS 會用這個值去計算 SysTick reload 值。
+
+- **`configTICK_RATE_HZ = 1000`**
+  - 定義 **一秒有多少個 tick**。  
+  - 1000 → 每 1ms 發生一次 SysTick 中斷。  
+  - `vTaskDelay(100)` 就表示延遲 100 個 tick，也就是 100ms。
+
+- **`configMAX_PRIORITIES = 7`**
+  - 任務優先權的級數（0 ~ 6）。  
+  - 數字越大 = 優先權越高。  
+  - 不需要設太大，因為每個優先權層級都會佔用一些資源。
+
+- **`configMINIMAL_STACK_SIZE = 128`**
+  - Idle Task 以及簡單任務的基準堆疊大小。  
+  - 單位是 **word（通常 4 bytes）**，所以 128 → 512 bytes。  
+  - 複雜任務需要自己在 `xTaskCreate()` 指定更大的堆疊。
+
+- **`configTOTAL_HEAP_SIZE = 16*1024`**
+  - FreeRTOS 內部用來配置記憶體的池大小（bytes）。  
+  - 建立任務（TCB + Stack）、Queue、Semaphore 都會從這裡分配。  
+  - 太小 → 任務建立失敗；太大 → 佔用 SRAM。  
+  - 面試常會問：「你怎麼決定 heap 大小？」 → 可以回答：「根據任務數量和 Stack 預估」。
+
+- **`configUSE_16_BIT_TICKS = 0`**
+  - 決定 tick counter 用 16-bit 還是 32-bit。  
+  - 設 0 → 用 32-bit，約可數十天不溢位。  
+  - 設 1 → 用 16-bit，節省記憶體，但最多只能計數到 65535 tick（若 1kHz = 65 秒就溢位）。  
+  - Cortex-M 系列一般都設 0。
+
+- **`configIDLE_SHOULD_YIELD = 1`**
+  - Idle Task 是否要主動讓出 CPU。  
+  - 設為 1 → Idle Task 如果有人跟它同優先權，會主動切換。  
+  - 一般保持 1。
+
+---
+
+#### 2. API 可用性（Which APIs are included）
+
+- **`INCLUDE_vTaskDelay = 1`**
+  - 是否允許使用 `vTaskDelay()`。  
+  - 這是最常用的 API → 用來讓任務延遲一段時間。
+
+- **`INCLUDE_vTaskDelayUntil = 1`**
+  - 是否允許使用 `vTaskDelayUntil()`。  
+  - 適合用在 **週期性任務**，能保證固定頻率，而不是單純「睡一段時間」。
+
+> 這兩個通常必開，不然最基本的 Task 延遲功能都沒辦法用。
+
+---
+
+#### 3. 核心例外對應（CMSIS Handler Mapping）
+
+FreeRTOS 在 Cortex-M 平台上，必須依靠三個「特殊例外中斷」才能運作。  
+這些 Handler 要正確對應到 CMSIS 預設的名稱，不然系統根本不會進入排程。
+
+**必要的三個 Handler**
+
+- **`vPortSVCHandler = SVC_Handler`**  
+  - SVC (Supervisor Call) 用來啟動第一個任務。  
+  - 當你呼叫 `vTaskStartScheduler()`，系統會透過一次 **SVC 呼叫**，把控制權切到第一個 Ready 任務。  
+  - 如果這個 Handler 沒接好 → RTOS 永遠停在 `main()`，任務不會啟動。
+
+- **`xPortPendSVHandler = PendSV_Handler`**  
+  - PendSV (Pended Supervisor Call) 是 **任務切換（Context Switch）的主角**。  
+  - 每次 RTOS 決定要換任務，就會觸發一次 PendSV。  
+  - 如果這個 Handler 沒接好 → 任務永遠不會切換（系統卡死在同一個任務）。
+
+- **`xPortSysTickHandler = SysTick_Handler`**  
+  - SysTick 是 Cortex-M 提供的「系統時基定時器」。  
+  - FreeRTOS 預設用它來產生 **tick interrupt**，每次中斷 tick count +1。  
+  - `vTaskDelay()`、時間片輪轉、任務延遲/喚醒全靠它。  
+  - 如果這個 Handler 沒接好 → `vTaskDelay()` 無效，系統沒有時間感。
+
+**若不用 SysTick，改用一般 Timer（如 TIM6/TIM7）**
+
+在 STM32 等 Cortex-M 專案中，FreeRTOS **預設使用 SysTick** 作為 RTOS tick 來源，因此 `FreeRTOSConfig.h` 會定義：
+
+```c
+#define xPortSysTickHandler SysTick_Handler
+```
+
+但若 SysTick 已被 **HAL 或其他模組佔用**，可改用一般 Timer（例如 TIM6）。  
+
+做法如下：  
+
+1. **在 Timer 的 IRQ Handler 中呼叫 FreeRTOS 的 Tick 函式：**
+   ```c
+   void TIM6_DAC_IRQHandler(void)
+   {
+       if(LL_TIM_IsActiveFlag_UPDATE(TIM6))
+       {
+           LL_TIM_ClearFlag_UPDATE(TIM6);
+           xPortSysTickHandler(); // 通知 FreeRTOS：tick +1
+       }
+   }
+   ```
+
+2. **修改 `FreeRTOSConfig.h`**  
+   - 不再將 `xPortSysTickHandler` 映射到 `SysTick_Handler`。  
+   - 因為 tick 來源已經改為 TIM6。   
+
+3. **確保 Timer 更新頻率 = `configTICK_RATE_HZ`**  
+   - 若 `configTICK_RATE_HZ = 1000`，Timer 必須每 **1ms 觸發一次中斷**。  
+   - 計算方式：  
+     ```
+     Timer頻率 = CPU時脈 / (Prescaler + 1)
+     更新週期 = (ARR + 1) / Timer頻率
+     ```
+   - 必須精準算到 1ms，否則 `vTaskDelay(100)` 就不會是 100ms。
+  
+> 補充 :
+1. **Handler 沒映射好** → RTOS 無法進入排程。  
+2. **SysTick 和 HAL 打架** → HAL 的 `SysTick_Handler()` 和 RTOS 衝突，時間會亂。  
+3. **Timer 設錯頻率** → `vTaskDelay(100)` 執行結果不是 100ms，而是過快或過慢。  
+
+**小結**
+
+在 Cortex-M 上，FreeRTOS 必須依賴三個核心例外：   
+
+- **SVC**：啟動第一個任務   
+- **PendSV**：負責任務切換。  
+- **SysTick 或 Timer**：提供系統時間基準（tick）。  
+
+這三個 Handler 必須在 `FreeRTOSConfig.h` 正確映射到 CMSIS 預設名稱，不然 RTOS 根本跑不起來。  
+如果不用 SysTick，而是改用 Timer（像 TIM6），就要在 Timer IRQ handler 裡呼叫 `xPortSysTickHandler()`，並保證 Timer 設定頻率與 `configTICK_RATE_HZ` 一致，這樣 `vTaskDelay()` 和排程才會正常。
+
+---
+
+### 9.9.3 中斷優先權與「可呼叫 API」的安全線
+
+**核心觀念**  
+在 FreeRTOS 中，**不是所有中斷都能呼叫 FreeRTOS API**（即使是 `FromISR` 版本）。  
+
+原因是 FreeRTOS API 在內部會操作核心資料結構，這些操作需要在臨界區 (Critical Section) 保護。如果**高優先權中斷**在臨界區期間進來並呼叫 API，就可能破壞排程器，導致**死鎖或錯誤**。  
+
+因此 FreeRTOS 規定：**只有優先權數字大於 `configMAX_SYSCALL_INTERRUPT_PRIORITY` 的中斷，才可以安全呼叫 API**。  
+否則必須用 **flag、信號量或事件** 通知任務，由任務再處理。 
+
+#### 1. 優先權數字的意義
+- 在 STM32F4（Cortex-M4F），有 **4 個優先權位元** → 可設定 0 ~ 15。  
+- **數字越小 → 優先權越高**。  
+
+#### 2. FreeRTOS 的規定
+- **`configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY = 5`**  
+  → 意味著 **優先權 ≤ 5** 的中斷 **不能呼叫 FreeRTOS API**。  
+- **只有優先權 > 5 的中斷（數字大）才可以安全呼叫 FreeRTOS API**。
+
+#### 3. 口訣
+- **高優先（小數字）= 快，但不能進 RTOS**。  
+- **低優先（大數字）= 慢，但可以呼叫 RTOS API**。  
+
+**範例**：  
+把 **USART IRQ** 設成優先權 7~10，這樣就能安全地在 UART 中斷裡用 `xQueueSendFromISR()`。
+
+#### 4. ISR 呼叫 FreeRTOS API 有什麼限制？
+
+要注意 `configMAX_SYSCALL_INTERRUPT_PRIORITY`。在 STM32F4，優先權數字 ≤ 5 的中斷不能呼叫 RTOS API，只有優先權數字大於 5 的中斷才行。
+
+---
+
+### 9.9.4 常見地雷與檢查清單（Checklist）
+
+1. **PRIGROUP 與 `configPRIO_BITS` 不一致** → NVIC 優先權解讀錯亂，ISR 呼叫 API 直接爆。  
+2. **把高優先（小數字）IRQ 放進 RTOS** → 例如把 `USART` 設成 3 然後呼叫 `xQueueSendFromISR()` → **違規**。  
+3. **SysTick 來源切換**：若不用 `SysTick_Handler` 當 tick（改 TIM6/TIM7），記得：
+   - 關 `xPortSysTickHandler` 映射、改在對應 IRQ 內呼叫 `xPortSysTickHandler()` 或移植層替代流程。  
+4. **Heap 不足**：任務建立失敗或 queue 建立失敗 → 先調 `configTOTAL_HEAP_SIZE`，再檢查 `heap_x.c` 選型。  
+5. **Hook 誤開**：Tick Hook 空轉太重或 Idle Hook 阻塞。Bring-up 階段建議全部關閉，逐步開啟。  
+6. **Timer Task 優先權過低**：延遲回呼卡住 → 建議設為次高（當前設定：`MAX_PRIORITIES-1`）。
+
+---
+
+### 9.9.5 Demo 與專案 FreeRTOS 設定差異
+
+以下是 **Demo 與專案設定檔的對照差異**：  
+
+#### 只在 Demo 有、專案沒有
+- `INCLUDE_vTaskPrioritySet`  
+- `INCLUDE_uxTaskPriorityGet`  
+- `INCLUDE_vTaskDelete`  
+- `INCLUDE_vTaskCleanUpResources`  
+- `INCLUDE_vTaskSuspend`  
+- `configUSE_APPLICATION_TASK_TAG`  
+- `configGENERATE_RUN_TIME_STATS`（*Demo=0，但仍有定義*）  
+- `configUSE_CO_ROUTINES`  
+- `configMAX_CO_ROUTINE_PRIORITIES`  
+
+#### 只在專案有、Demo 沒有
+- `configUSE_PORT_OPTIMISED_TASK_SELECTION`  
+- `configUSE_DAEMON_TASK_STARTUP_HOOK`  
+- `configUSE_TASK_NOTIFICATIONS`  
+- `configUSE_QUEUE_SETS`  
+- `configUSE_STREAM_BUFFERS`  
+- `configUSE_MESSAGE_BUFFERS`  
+- `configSUPPORT_STATIC_ALLOCATION`  
+- `configSUPPORT_DYNAMIC_ALLOCATION`  
+
+#### 雙方皆有，但數值不同的巨集
+- `configMAX_PRIORITIES`：Demo = 5；專案 = 7  
+- `configMINIMAL_STACK_SIZE`：Demo = 130（unsigned short）；專案 = 128（uint16\_t）  
+- `configTOTAL_HEAP_SIZE`：Demo = 75\*1024；專案 = 16\*1024  
+- `configMAX_TASK_NAME_LEN`：Demo = 10；專案 = 16  
+- `configUSE_IDLE_HOOK`：Demo = 1；專案 = 0  
+- `configUSE_TICK_HOOK`：Demo = 1；專案 = 1（相同，但專案註記為暫時橋接）  
+- `configUSE_TRACE_FACILITY`：Demo = 1；專案 = 0  
+- `configCHECK_FOR_STACK_OVERFLOW`：Demo = 2；專案 = 0  
+- `configUSE_MALLOC_FAILED_HOOK`：Demo = 1；專案 = 0  
+- `configTIMER_TASK_PRIORITY`：Demo = 2；專案 = `configMAX_PRIORITIES-1`  
+- `configTIMER_QUEUE_LENGTH`：Demo = 10；專案 = 8  
+- `configLIBRARY_LOWEST_INTERRUPT_PRIORITY`：Demo = `0xf`；專案 = `15`（等價表示）  
+
+> 其餘如 `configCPU_CLOCK_HZ`、`configTICK_RATE_HZ`、`configUSE_MUTEXES`、`configUSE_RECURSIVE_MUTEXES`、`configUSE_COUNTING_SEMAPHORES`、`configQUEUE_REGISTRY_SIZE`、`configPRIO_BITS`、`configKERNEL_INTERRUPT_PRIORITY`、`configMAX_SYSCALL_INTERRUPT_PRIORITY`、CMSIS handler 映射等，兩邊設定皆存在且語意一致。  
+
+---
+
+# 10. FreeRTOS 整合實作（空專案／無 .ioc 版）
 
 > 目標：加檔、編譯／連結與 NVIC 設定、HAL timebase 改 TIM6、三個 handler 接管、Smoke Test 驗證，以及把現有 `while(1)` 拆成 Tasks 的落地建議。  
 
 ---
 
-## 9.0 備份與分支
+## 10.0 備份與分支
 
 - 在 Git 開新分支：`feat/rtos-bringup`
 - 保留當前可正常運作的裸機版（可隨時回退）
 
 ---
 
-## 9.1 匯入檔案與編譯
+## 10.1 匯入檔案與編譯
 
-### 9.1.1 建議目錄結構（專案樹）
+### 10.1.1 建議目錄結構（專案樹）
 
 ```
 <ProjectRoot>/
@@ -5242,7 +7402,7 @@ int8_t i2c_master_read(uint32_t i2c_base, uint8_t slave_addr, uint8_t *data, uin
 
 ---
 
-### 9.1.2 加入 FreeRTOSConfig.h
+### 10.1.2 加入 FreeRTOSConfig.h
 
 於 `Inc` 新建資料夾 `FreeRTOS/`，新增檔案 `FreeRTOSConfig.h`，內容如下（最小可編譯模板）：
 
@@ -5343,7 +7503,7 @@ uint32_t SystemCoreClock = 180000000u;
 
 ---
 
-### 9.1.3 設定 Compiler Include Paths
+### 10.1.3 設定 Compiler Include Paths
 
 在 Project → Properties → C/C++ Build → Settings → MCU GCC Compiler → Include paths 加入：
 
@@ -5376,9 +7536,9 @@ uint32_t SystemCoreClock = 180000000u;
 
 ---
 
-## 9.2 FreeRTOS Bring-up（無 HAL）：Handler 映射、NVIC 優先權與 Smoke Test
+## 10.2 FreeRTOS Bring-up（無 HAL）：Handler 映射、NVIC 優先權與 Smoke Test
 
-### 9.2.1 Handler 對應（臨時橋接）
+### 10.2.1 Handler 對應（臨時橋接）
 
 > 目的：把 **SVC/PendSV/SysTick** 導到 FreeRTOS 的處理器，同時**確保 SysTick 只給 RTOS 使用**，不與其他實作衝突。  
 > 本專案未導入 HAL，因此臨時橋接時不呼叫 `HAL_IncTick()`，而是自行維護軟體計數 `uwTick`；若未來導入 HAL 或改用硬體 timebase（例如 TIM6）時，再把 Tick Hook 內改為 `HAL_IncTick()` 或關閉 Tick Hook 即可。
@@ -5460,7 +7620,7 @@ void DelayMs(uint32_t delay)
 
 ---
 
-### 9.2.2 NVIC 與 FreeRTOS 優先權設定（無 CMSIS 版）
+### 10.2.2 NVIC 與 FreeRTOS 優先權設定（無 CMSIS 版）
 
 不論有沒有 HAL，都要先把 **NVIC／優先權** 配置好，才能安全使用 FreeRTOS 的 **FromISR** 介面。
 
@@ -5517,7 +7677,7 @@ int main(void)
 
 ---
 
-### 9.2.3 Smoke Test：建立最小 Tasks 並暫停 super-loop
+### 10.2.3 Smoke Test：建立最小 Tasks 並暫停 super-loop
 
 在 `Src/main.c` 的 `#include` 區塊底下加這些宣告（與 hooks.c 對齊）：
 ```c
@@ -5589,9 +7749,9 @@ static void vBeat1000(void *arg)
 
 ---
 
-## 9.3 把 EXTI 事件改成 RTOS 同步 + 移除 super-loop 依賴
+## 10.3 把 EXTI 事件改成 RTOS 同步 + 移除 super-loop 依賴
 
-### 9.3.1 將 EXTI 旗標改為 RTOS 同步（FromISR → Semaphore）
+### 10.3.1 將 EXTI 旗標改為 RTOS 同步（FromISR → Semaphore）
 
 **目的**：super-loop 已停用，原本 `button_event_pending` / `touch_event_pending` 的旗標沒人輪詢。改為在 ISR 內用 `xSemaphoreGiveFromISR()` 喚醒對應任務。
 
@@ -5629,7 +7789,7 @@ void EXTI15_10_IRQHandler(void) {
 
 ---
 
-### 9.3.2 心跳任務：改用 RTOS tick（避免依賴 `uwTick`）
+### 10.3.2 心跳任務：改用 RTOS tick（避免依賴 `uwTick`）
 
 現在 vBeat1000() 仍印 uwTick，但這個變數不一定有在 tick hook 裡自增，容易看起來「不動」。直接用 RTOS 的 tick 最穩。
 
@@ -5652,7 +7812,7 @@ static void vBeat1000(void *arg)
 
 ---
 
-### 9.3.3 把 super-loop 的邏輯改成任務
+### 10.3.3 把 super-loop 的邏輯改成任務
 
 #### 在 `main.c` 檔頭（或全域區）宣告 semaphore
 
@@ -5663,7 +7823,7 @@ SemaphoreHandle_t semButton = NULL;
 SemaphoreHandle_t semTouch  = NULL;
 ```
 
-### 新增 UI 任務：固定更新 LCD、處理觸控模式 timeout
+#### 新增 UI 任務：固定更新 LCD、處理觸控模式 timeout
 
 ```c
 /* 每 16ms 更新一次畫面 + 檢查觸控模式是否該結束 */
@@ -5690,7 +7850,7 @@ static void TaskUI(void *arg)
 }
 ```
 
-### 在 `main()`（啟動 scheduler 之前）建立同步物件與任務
+#### 在 `main()`（啟動 scheduler 之前）建立同步物件與任務
 
 ```c
 /* --- RTOS 同步物件 --- */
@@ -5718,7 +7878,7 @@ vTaskStartScheduler();
 
 ---
 
-## 9.3.4 刪除 `vBlink500()`（避免搶同一顆 LED）
+### 10.3.4 刪除 `vBlink500()`（避免搶同一顆 LED）
 
 `vBlink500()` 只是早期 smoke test；現在 `TaskButton` 會快閃同一顆 LED（PG14）。移除 `vBlink500()` 及其 `xTaskCreate()` 可避免兩個任務互相覆蓋 LED 狀態。
 
@@ -5861,20 +8021,79 @@ vTaskStartScheduler();
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
-# 10.
+# 11.
 
 ---
 
-## 7.1 SDRAM 與 FMC 控制器簡介
+## 11.1 SDRAM 與 FMC 控制器簡介
 
 STM32F429 除了內建的 SRAM、Flash 等內部記憶體外，為了擴充儲存容量與提升資料存取效率，常會透過外部介面擴接多種記憶體模組，例如 SRAM、Flash 與 SDRAM。
 
 在 LCD 顯示應用中，由於 frame buffer 體積龐大，STM32 的內部 SRAM 通常無法容納完整畫面資料。  
 為了確保畫面顯示的流暢與穩定，系統常將圖像內容暫存於 **SDRAM**，再由 **LTDC（LCD-TFT Controller）模組** 自動掃描該記憶體區塊並輸出至 LCD 螢幕。因此，MCU 必須能有效地與 SDRAM 通訊與存取。
 
-### 7.1.1 FMC 系統架構概述
+### 11.1.1 FMC 系統架構概述
 
 根據參考手冊第 37.1 節（FMC main features）與 37.2 節（Block diagram）描述，**FMC（Flexible Memory Controller）** 提供一個高度整合的外部記憶體控制模組，整體系統可分為三個主要區塊：
 
@@ -5914,7 +8133,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 7.1.2 SDRAM 控制器功能說明
+### 11.1.2 SDRAM 控制器功能說明
 
 根據 37.7.1（SDRAM controller main features），STM32 所內建的 SDRAM 控制器具備下列特性：
 
@@ -5928,7 +8147,7 @@ FMC 模組的主要功能包括：
 
 ---
 
-### 7.1.3 SDRAM 對外介面腳位說明
+### 11.1.3 SDRAM 對外介面腳位說明
 
 根據 RM0090 第 37.7.2 節（**SDRAM External Memory Interface Signals**），  
 STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊。
@@ -5958,9 +8177,9 @@ STM32F429 的 FMC SDRAM 控制器透過下列 I/O 腳位與 SDRAM 晶片通訊�
 
 ---
 
-## 7.2 SDRAM 初始化
+## 11.2 SDRAM 初始化
 
-### 7.2.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
+### 11.2.1 SDRAM 記憶體 GPIO 腳位初始化（FMC 控制器）
 
 #### SDRAM 與 GPIO 對應關係整理（依原理圖）
 
@@ -6118,7 +8337,7 @@ void fmc_sdram_gpio_init(void)
 
 ---
 
-### 7.2.2 SDRAM 初始化步驟
+### 11.2.2 SDRAM 初始化步驟
 
 #### 開啟 AHB3 時脈
 
@@ -6197,7 +8416,7 @@ SDRAM 的初始化完全由**軟體控制**。
 
 ---
 
-### 7.2.3 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
+### 11.2.3 設定 FMC_SDCR 與 FMC_SDTR 暫存器（Bank1）
 
 從 FMC 的觀點來看，外部記憶體被劃分為 6 個固定大小為 256 MByte 的 bank，FMC 控制器分配記憶體空間來對應不同種類的外部記憶體
 
@@ -6290,7 +8509,7 @@ void fmc_init(void){
 }
 ````
 
-### 7.2.4 依序送出五個 JEDEC 初始化指令至 SDRAM
+### 11.2.4 依序送出五個 JEDEC 初始化指令至 SDRAM
 
 | 動作                                                                | 解釋                      | 對應章節                                               |
 | ----------------------------------------------------------------- | ----------------------- | -------------------------------------------------- |
