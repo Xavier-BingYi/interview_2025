@@ -145,6 +145,9 @@ static void TaskTouch(void *arg)
     	/* 由 EXTI15_10_IRQHandler 給 semaphore 後才會醒來 */
 	    xSemaphoreTake(semTouch, portMAX_DELAY);   // EXTI15 → giveFromISR
 
+	    /* Delay 2ms to ensure the touch controller has written data into FIFO.
+	       Without this, reading immediately after interrupt may return empty (239,319,0). */
+	    vTaskDelay(pdMS_TO_TICKS(2));
 
         /* 把你原本 super-loop 裡 touch 的處理搬過來 */
         /* 進入觸控模式 2s、讀一次座標（你現有的流程） */
