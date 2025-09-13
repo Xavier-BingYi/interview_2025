@@ -12,6 +12,8 @@
 #include <rcc.h>
 #include <clock.h>
 
+uint32_t SystemCoreClock = 180000000u;
+
 static inline void pwr_cr_write_field(pwr_cr_field_t field, uint32_t value){
     uint32_t addr = PWR_BASE + PWR_CR_OFFSET;
     uint8_t shift = (uint8_t)field;

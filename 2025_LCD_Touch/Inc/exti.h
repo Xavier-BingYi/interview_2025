@@ -84,6 +84,7 @@ typedef enum {
 
 extern volatile uint8_t button_event_pending; // button event flag (set in EXTI0 IRQ)
 extern volatile uint8_t touch_event_pending;  // touch event flag (set in EXTI15_10 IRQ)
+extern volatile uint8_t lcd_rotate_tick;
 
 void exti_init(void);                                                     // init EXTI/NVIC
 void exti_select_port(SYSCFG_EXTI_LINE exti_line, uint8_t port_code);    // map EXTI line to GPIO port

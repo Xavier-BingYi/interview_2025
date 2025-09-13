@@ -17,9 +17,15 @@
 #include <i2c.h>
 #include <lcd_render.h>
 #include <button.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+extern SemaphoreHandle_t semButton;
+extern SemaphoreHandle_t semTouch;
 
 volatile uint8_t button_event_pending = 0;
 volatile uint8_t touch_event_pending = 0;
+volatile uint8_t lcd_rotate_tick = 0;
 
 void exti_gpio_init(void) {
 	rcc_enable_ahb1_clock(RCC_AHB1EN_GPIOA);
@@ -137,23 +143,29 @@ void nvic_set_priority(IRQn_Type irqn, NVIC_Priority priority) {
 }
 
 void EXTI0_IRQHandler(void) {
-    exti_clear_pending_flag(SYSCFG_EXTI0);    // clear EXTI line0 pending
-    button_event_pending = 1;                 // set button event flag
+    exti_clear_pending_flag(SYSCFG_EXTI0);    // Clear EXTI line 0 pending flag
+    // button_event_pending = 1;                 // set button event flag; Deprecated legacy flag
+
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xSemaphoreGiveFromISR(semButton, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
 }
 
 void TIM7_IRQHandler(void) {
-    timer_set_sr(TIMER7, 0);                  // clear TIM7 interrupt flag
+    timer_set_sr(TIMER7, 0);                  // Clear TIM7 interrupt flag
 
-    //lcd_time_state = (uint8_t)((lcd_time_state + 1) & 3);
-
-    if (++lcd_rotation_state > 3)             // update rotation state (0–3)
-        lcd_rotation_state = 0;
+    lcd_rotate_tick = 1;
 
     green_led_state ^= 1;                     // toggle LED state
     gpio_set_outdata(GPIOG_BASE, GPIO_PIN_13, green_led_state); // update LED output
 }
 
 void EXTI15_10_IRQHandler(void) {
-    exti_clear_pending_flag(SYSCFG_EXTI15);   // clear EXTI line15 pending
-    touch_event_pending = 1;                  // set touch event flag
+	exti_clear_pending_flag(SYSCFG_EXTI15);   // Clear EXTI line 15 pending flag
+    // touch_event_pending = 1;                  // set touch event flag; Deprecated legacy flag
+
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    xSemaphoreGiveFromISR(semTouch, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
