@@ -23,7 +23,7 @@ STM32F429 Discovery kit
 
 ---
 
-## 1.2 低階記憶體存取函式（裸機開發基礎）
+## 1.2 Memory-Mapped I/O 基礎函式（裸機開發基礎）
 
 為方便直接操作 STM32 的 memory-mapped registers，可撰寫以下兩個函式，透過內嵌組語對記憶體位址進行寫入與讀取。
 
